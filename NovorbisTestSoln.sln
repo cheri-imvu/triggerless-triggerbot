@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NVorbis", "NVorbis\NVorbis.csproj", "{D79462D7-03C1-41A8-9CD4-5827155DEDFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuneTriggerer", "TuneTriggerer\TuneTriggerer.csproj", "{CA83BAED-E6B8-434A-A483-6F81A9A22748}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triggerless.TriggerBot", "Triggerless.TriggerBot\Triggerless.TriggerBot.csproj", "{CA83BAED-E6B8-434A-A483-6F81A9A22748}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

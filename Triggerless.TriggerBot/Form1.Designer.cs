@@ -1,4 +1,4 @@
-﻿namespace TuneTriggerer
+﻿namespace Triggerless.TriggerBot
 {
     partial class Form1
     {
@@ -31,15 +31,15 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.label1 = new System.Windows.Forms.Label();
             this.splitter = new System.Windows.Forms.SplitContainer();
-            this.picFilter = new System.Windows.Forms.PictureBox();
-            this.txtSearch = new System.Windows.Forms.TextBox();
             this.gridSearchResults = new System.Windows.Forms.DataGridView();
+            this.txtSearch = new System.Windows.Forms.TextBox();
+            this.picFilter = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
             this.splitter.Panel1.SuspendLayout();
             this.splitter.Panel2.SuspendLayout();
             this.splitter.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picFilter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridSearchResults)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picFilter)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -71,26 +71,6 @@
             this.splitter.SplitterDistance = 374;
             this.splitter.TabIndex = 1;
             // 
-            // picFilter
-            // 
-            this.picFilter.Image = ((System.Drawing.Image)(resources.GetObject("picFilter.Image")));
-            this.picFilter.Location = new System.Drawing.Point(11, 10);
-            this.picFilter.Name = "picFilter";
-            this.picFilter.Size = new System.Drawing.Size(32, 32);
-            this.picFilter.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.picFilter.TabIndex = 0;
-            this.picFilter.TabStop = false;
-            // 
-            // txtSearch
-            // 
-            this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtSearch.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSearch.Location = new System.Drawing.Point(49, 10);
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(310, 28);
-            this.txtSearch.TabIndex = 1;
-            // 
             // gridSearchResults
             // 
             this.gridSearchResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -104,6 +84,26 @@
             this.gridSearchResults.Size = new System.Drawing.Size(368, 681);
             this.gridSearchResults.TabIndex = 2;
             // 
+            // txtSearch
+            // 
+            this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSearch.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSearch.Location = new System.Drawing.Point(49, 10);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(310, 28);
+            this.txtSearch.TabIndex = 1;
+            // 
+            // picFilter
+            // 
+            this.picFilter.Image = ((System.Drawing.Image)(resources.GetObject("picFilter.Image")));
+            this.picFilter.Location = new System.Drawing.Point(11, 10);
+            this.picFilter.Name = "picFilter";
+            this.picFilter.Size = new System.Drawing.Size(32, 32);
+            this.picFilter.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.picFilter.TabIndex = 0;
+            this.picFilter.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -111,7 +111,7 @@
             this.ClientSize = new System.Drawing.Size(1126, 732);
             this.Controls.Add(this.splitter);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Triggerless TriggerBot";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.splitter.Panel1.ResumeLayout(false);
             this.splitter.Panel1.PerformLayout();
@@ -119,8 +119,8 @@
             this.splitter.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).EndInit();
             this.splitter.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.picFilter)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridSearchResults)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picFilter)).EndInit();
             this.ResumeLayout(false);
 
         }

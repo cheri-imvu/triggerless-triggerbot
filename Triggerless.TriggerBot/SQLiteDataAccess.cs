@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TuneTriggerer
+namespace Triggerless.TriggerBot
 {
     public class SQLiteDataAccess
     {
@@ -49,7 +49,7 @@ namespace TuneTriggerer
 
         public SQLiteConnection GetAppCacheCxn() 
         {
-            var appCachePath = Path.Combine(AppData, "Triggerless", "TuneTriggerer");
+            var appCachePath = Path.Combine(AppData, "Triggerless", "TriggerBot");
             if (!Directory.Exists(appCachePath)) { Directory.CreateDirectory(appCachePath); }
             var appCacheFile = Path.Combine(appCachePath, "appCache.sqlite");
             if (!File.Exists(appCacheFile))
@@ -62,7 +62,7 @@ namespace TuneTriggerer
                         cxnCreate.Open();
 
                         var sqlCreate = "CREATE TABLE products (" +
-                            "product_id BIGINT PRIMARY KEY, image BLOB, has_ogg BOOLEAN NOT NULL, title VARCHAR(32), creator VARCHAR(32));";
+                            "product_id BIGINT PRIMARY KEY, image_bytes BLOB, has_ogg BOOLEAN NOT NULL, title VARCHAR(32), creator VARCHAR(32));";
                         var cmd = new SQLiteCommand(sqlCreate, cxnCreate);
                         cmd.ExecuteNonQuery();
 

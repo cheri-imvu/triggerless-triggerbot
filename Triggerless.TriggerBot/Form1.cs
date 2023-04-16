@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
-namespace TuneTriggerer
+namespace Triggerless.TriggerBot
 {
     public partial class Form1 : Form
     {
         private const string OGG_FILE = @"E:\AUDIO\MUSIC\Steely Dan\Aja\New Folder\02-Aja.ogg";
-        private ProductSearch.Results _searchResults = null;
 
         public Form1()
         {
