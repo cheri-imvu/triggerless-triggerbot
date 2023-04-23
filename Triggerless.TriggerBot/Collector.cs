@@ -19,6 +19,7 @@ namespace Triggerless.TriggerBot
 {
     public partial class Collector
     {
+        private object _lock = new object();
 
         public class CollectorEventArgs : EventArgs { }
 
@@ -79,40 +80,43 @@ namespace Triggerless.TriggerBot
             var tasks = new List<Task>();
             var cycleStart = DateTime.Now;
 
-            foreach (var product in workingProducts)
+            using (var cxnAppCache = sda.GetAppCacheCxn())
             {
-                await semaphore.WaitAsync();
-                try
+                foreach (var product in workingProducts)
                 {
-                    tasks.Add(Task.Run(async () =>
+                    await semaphore.WaitAsync();
+                    try
                     {
-                        var result = await ScanOne(product);
+                        tasks.Add(Task.Run(async () =>
+                        {
+                            var result = await ScanOne(product, cxnAppCache);
 
-                        Interlocked.Increment(ref numberComplete);
-                    }));
+                            Interlocked.Increment(ref numberComplete);
+                        }));
+                    }
+                    finally
+                    {
+                        semaphore.Release();
+                    }
+
                 }
-                finally
-                {
-                    semaphore.Release();
-                }
+
+                await Task.WhenAll(tasks);
 
             }
 
-            await Task.WhenAll(tasks);
             Debug.WriteLine($"Cycle complete {workingProducts.Count} items in {(DateTime.Now - cycleStart).TotalMilliseconds} ms");
 
         }
 
-        public async Task<ScanResult> ScanOne(ProductInfo product)
+        public async Task<ScanResult> ScanOne(ProductInfo product, System.Data.SQLite.SQLiteConnection connAppCache)
         {
             var result = new ScanResult { Result = ScanResultType.Pending };
             var sda = new SQLiteDataAccess();
 
             // See if any ogg files exist
-            using (var connAppCache = sda.GetAppCacheCxn())
             using (var client = new HttpClient())
             {
-                await connAppCache.OpenAsync();
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
                 var url = GetUrl(product.ProductId, "_contents.json");
                 string httpResult;
@@ -129,7 +133,11 @@ namespace Triggerless.TriggerBot
                         //NOTE: Very early products may give a 404 error. We should save to DB with has_ogg = 0
                         var insertPayload = new { product_id = product.ProductId, has_ogg = 0, title = product.ProductName, creator = product.CreatorName };
                         var sql = "INSERT INTO products (product_id, has_ogg, title, creator) VALUES (@product_id, @has_ogg, @title, @creator);";
-                        await connAppCache.ExecuteAsync(sql, insertPayload);
+                        lock (_lock)
+                        {
+                            connAppCache.Execute(sql, insertPayload);
+                        }
+                        
                     }
                     result.Result = ScanResultType.NetworkError;                    
                     return result;
@@ -145,7 +153,11 @@ namespace Triggerless.TriggerBot
                     result.Result = ScanResultType.JsonError;
                     var insertPayload = new {product_id = product.ProductId, has_ogg = 0, title = product.ProductName, creator = product.CreatorName };
                     var sql = "INSERT INTO products (product_id, has_ogg, title, creator) VALUES (@product_id, @has_ogg, @title, @creator);";
-                    await connAppCache.ExecuteAsync(sql, insertPayload);
+                    lock (_lock)
+                    {
+                        connAppCache.Execute(sql, insertPayload);
+                    }
+                    
                     return result;
                 }
 
@@ -155,7 +167,10 @@ namespace Triggerless.TriggerBot
                     result.Result = ScanResultType.Success;
                     var insertPayload = new { product_id = product.ProductId, has_ogg = 0, title = product.ProductName, creator = product.CreatorName };
                     var sql = "INSERT INTO products (product_id, has_ogg, title, creator) VALUES (@product_id, @has_ogg, @title, @creator);";
-                    await connAppCache.ExecuteAsync(sql, insertPayload);
+                    lock (_lock)
+                    {
+                        connAppCache.Execute(sql, insertPayload);
+                    }
                     return result;
                 }
 
@@ -171,7 +186,9 @@ namespace Triggerless.TriggerBot
                         image_bytes = imageBytes
                     };
                     var sql = "INSERT INTO products (product_id, has_ogg, title, creator, image_bytes) VALUES (@product_id, @has_ogg, @title, @creator, @image_bytes);";
-                    await connAppCache.ExecuteAsync(sql, insertPayload);
+                    lock (_lock) { 
+                        connAppCache.Execute(sql,insertPayload); 
+                    }
                 } 
                 catch (Exception exc)
                 {
@@ -311,9 +328,12 @@ namespace Triggerless.TriggerBot
 
                 var sqlInsertTrigger = "INSERT INTO product_triggers (product_id, prefix, sequence, trigger, ogg_name, length_ms) VALUES " +
                     "(@ProductId, @Prefix, @Sequence, @TriggerName, @OggName, @LengthMS);";
-                foreach(var trigger in triggerList)
+                lock (_lock)
                 {
-                    connAppCache.Execute(sqlInsertTrigger, trigger);
+                    foreach (var trigger in triggerList)
+                    {
+                        connAppCache.Execute(sqlInsertTrigger, trigger);
+                    }
                 }
             }
 
