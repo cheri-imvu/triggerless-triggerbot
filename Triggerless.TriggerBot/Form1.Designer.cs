@@ -34,6 +34,7 @@
             this.gridSearchResults = new System.Windows.Forms.DataGridView();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.picFilter = new System.Windows.Forms.PictureBox();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
             this.splitter.Panel1.SuspendLayout();
             this.splitter.Panel2.SuspendLayout();
@@ -66,6 +67,7 @@
             // 
             // splitter.Panel2
             // 
+            this.splitter.Panel2.Controls.Add(this.button1);
             this.splitter.Panel2.Controls.Add(this.label1);
             this.splitter.Size = new System.Drawing.Size(1126, 732);
             this.splitter.SplitterDistance = 374;
@@ -104,6 +106,16 @@
             this.picFilter.TabIndex = 0;
             this.picFilter.TabStop = false;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(105, 256);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(165, 50);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -132,6 +144,7 @@
         private System.Windows.Forms.DataGridView gridSearchResults;
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.PictureBox picFilter;
+        private System.Windows.Forms.Button button1;
     }
 }
 

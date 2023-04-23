@@ -1,6 +1,7 @@
 ﻿using NVorbis.Contracts;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -37,9 +38,16 @@ namespace NVorbis
         public static double GetOggLengthMS(Stream stream)
         {
             double result = 0;
-            using (var vorbRead = new VorbisReader(stream, false))
+            try
             {
-                result = vorbRead.TotalTime.TotalMilliseconds;
+                using (var vorbRead = new VorbisReader(stream, false))
+                {
+                    result = vorbRead.TotalTime.TotalMilliseconds;
+                }
+            }
+            catch (Exception exc)
+            { 
+                Debugger.Break();
             }
             return result;
         }

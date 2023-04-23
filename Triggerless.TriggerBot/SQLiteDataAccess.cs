@@ -39,7 +39,7 @@ namespace Triggerless.TriggerBot
         public SQLiteConnection GetProductCacheCxn()
         {
             var productCacheFile = Path.Combine(AppData, "IMVU", "productInfoCache.db");
-            if (File.Exists(productCacheFile))
+            if (!File.Exists(productCacheFile))
             {
                 throw new ApplicationException("IMVU Classic Client is not installed");
             }
@@ -62,12 +62,12 @@ namespace Triggerless.TriggerBot
                         cxnCreate.Open();
 
                         var sqlCreate = "CREATE TABLE products (" +
-                            "product_id BIGINT PRIMARY KEY, image_bytes BLOB, has_ogg BOOLEAN NOT NULL, title VARCHAR(32), creator VARCHAR(32));";
+                            "product_id BIGINT PRIMARY KEY, image_bytes BLOB, has_ogg BOOLEAN NOT NULL, title NVARCHAR(32), creator VARCHAR(32));";
                         var cmd = new SQLiteCommand(sqlCreate, cxnCreate);
                         cmd.ExecuteNonQuery();
 
-                        sqlCreate = "CREATE TABLE triggers (" +
-                            "product_id BIGINT, sequence INTEGER, trigger VARCHAR(24), length_ms INTEGER, PRIMARY KEY(product_id ASC, sequence ASC)";
+                        sqlCreate = "CREATE TABLE product_triggers (" +
+                            "product_id BIGINT, prefix VARCHAR(24), sequence INTEGER, trigger VARCHAR(24), ogg_name VARCHAR(64), length_ms REAL, PRIMARY KEY(product_id ASC, prefix ASC, sequence ASC));";
                         cmd.CommandText = sqlCreate;
                         cmd.ExecuteNonQuery();
                     }
@@ -77,7 +77,7 @@ namespace Triggerless.TriggerBot
                     }
                 }                
             }
-            return new SQLiteConnection(appCacheFile);
+            return new SQLiteConnection($"Data Source={appCacheFile}");
         }
     }
 }
