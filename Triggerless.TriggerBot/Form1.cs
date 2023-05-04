@@ -28,9 +28,9 @@ namespace Triggerless.TriggerBot
 
         private void button1_Click(object sender, EventArgs e)
         {
-            new SQLiteDataAccess().DeleteAppCache();
+            //new SQLiteDataAccess().DeleteAppCache();
             var c = new Collector();
-            c.ScanDatabases();
+            c.ScanDatabasesAsync();
         }
     }
 }

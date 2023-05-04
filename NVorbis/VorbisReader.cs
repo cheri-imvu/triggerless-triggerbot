@@ -46,8 +46,8 @@ namespace NVorbis
                 }
             }
             catch (Exception exc)
-            { 
-                Debugger.Break();
+            {
+                Debug.WriteLine($"GetOggLengthMS failed: {exc.Message}");
             }
             return result;
         }

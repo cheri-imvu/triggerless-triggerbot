@@ -38,9 +38,8 @@ namespace Triggerless.TriggerBot
         public static string GetUrl(long pid, string filename) => string.Format(GetUrlTemplate(pid), filename);
 
 
-        public void ScanDatabases()
+        public async Task ScanDatabasesAsync()
         {
-            //Debugger.Break();
             var sda = new SQLiteDataAccess();
             var productList = new List<ProductInfo>();
             var existingProductIDs = new HashSet<long>();
@@ -75,32 +74,35 @@ namespace Triggerless.TriggerBot
             //var maxConcurrentThreads = 5;
             //var semaphore = new SemaphoreSlim(maxConcurrentThreads);
             //var tasks = new List<Task>();
+            var maxConcurrentThreads = 5;
+            var semaphore = new SemaphoreSlim(maxConcurrentThreads);
+            var tasks = new List<Task>();
             var cycleStart = DateTime.Now;
 
             using (var cxnAppCache = sda.GetAppCacheCxn())
             {
                 foreach (var product in workingProducts)
                 {
-                    //await semaphore.WaitAsync();
+                    await semaphore.WaitAsync();
                     try
                     {
-                        //tasks.Add(Task.Run(async () =>
-                        //{
+                        tasks.Add(Task.Run(async () =>
+                        {
                             // run sychronously for now
-                            var result = ScanOne(product, cxnAppCache);
+                            var result = await ScanOne(product, cxnAppCache);
                             Debug.WriteLine($"{product.ProductName}\t{result.Result}\t{result.Message}");
 
                             Interlocked.Increment(ref numberComplete);
-                        //}));
+                        }));
                     }
                     finally
                     {
-                        //semaphore.Release();
+                        semaphore.Release();
                     }
 
                 }
 
-                //await Task.WhenAll(tasks);
+                await Task.WhenAll(tasks);
 
             }
 
@@ -108,7 +110,7 @@ namespace Triggerless.TriggerBot
 
         }
 
-        public ScanResult ScanOne(ProductInfo product, System.Data.SQLite.SQLiteConnection connAppCache)
+        public async Task<ScanResult> ScanOne(ProductInfo product, System.Data.SQLite.SQLiteConnection connAppCache)
         {
             var result = new ScanResult { Result = ScanResultType.Pending };
             var sda = new SQLiteDataAccess();
@@ -125,7 +127,8 @@ namespace Triggerless.TriggerBot
                 ContentsJsonItem[] jsonContents;
                 try
                 {
-                    httpResult = client.GetStringAsync(url).Result;                    
+                    httpResult = await client.GetStringAsync(url);
+                    //httpResult = client.GetStringAsync(url).Result;
                 }
                 catch (Exception ex)
                 {
@@ -184,8 +187,8 @@ namespace Triggerless.TriggerBot
                 try
                 {
                     client.DefaultRequestHeaders.Clear();
-                    //var imageBytes = await client.GetByteArrayAsync(product.ProductImage);
-                    var imageBytes = client.GetByteArrayAsync(product.ProductImage).Result;
+                    var imageBytes = await client.GetByteArrayAsync(product.ProductImage);
+                    //var imageBytes = client.GetByteArrayAsync(product.ProductImage).Result;
 
                     var insertPayload = new {
                         product_id = product.ProductId,
@@ -199,7 +202,7 @@ namespace Triggerless.TriggerBot
                         connAppCache.Execute(sql,insertPayload); 
                     }
                 } 
-                catch (Exception exc)
+                catch (Exception)
                 {
                     result.Message = "Unable to retrieve product icon";
                     result.Result = ScanResultType.NetworkError;
@@ -214,9 +217,10 @@ namespace Triggerless.TriggerBot
                 var docIndex = new XmlDocument();
                 try
                 {
-                    docIndex.Load(client.GetStreamAsync(GetUrl(pid, "index.xml")).Result);
+                    //docIndex.Load(client.GetStreamAsync(GetUrl(pid, "index.xml")).Result);
+                    docIndex.Load(await client.GetStreamAsync(GetUrl(pid, "index.xml")));
                 }
-                catch (Exception exc)
+                catch (Exception)
                 {
                     result.Result = ScanResultType.XmlError;
                     result.Message = "Unable to retrieve index.xml file";
@@ -258,7 +262,7 @@ namespace Triggerless.TriggerBot
 
                             triggerList.Add(triggerEntry);
                         }
-                        catch (Exception exc) {
+                        catch (Exception) {
                             result.Result = ScanResultType.JsonError;
                             result.Message = "Malformed product file";
                             lock (_lock)
@@ -355,50 +359,70 @@ namespace Triggerless.TriggerBot
                     result.Message = $"No Useful triggers found";
                     return result;
                 }
+
+                if (triggerList.Count < 4)
+                {
+                    lock (_lock)
+                    {
+                        connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");
+                    }
+                    result.Result = ScanResultType.NoUsefulTriggers;
+                    result.Message = $"4 Triggers required to qualify as a song";
+                    return result;
+                }
                 #endregion
 
                 #region Retrive OGG file lengths
-                var lengthDict = new ConcurrentDictionary<string, double>();
+
                 ////var maxConcurrentThreads = 1;
                 //var semaphore = new SemaphoreSlim(maxConcurrentThreads);
                 //var tasks = new List<Task>();
+                var maxConcurrentThreads = 2;
+                var semaphore = new SemaphoreSlim(maxConcurrentThreads);
+                var tasks = new List<Task>();
+
                 foreach (var trigger in triggerList)
                 {
                     var start = DateTime.Now;
                     //await semaphore.WaitAsync();
+                    await semaphore.WaitAsync();
                     try
                     {
-                        //tasks.Add(Task.Run(async () =>
-                        //{
-                        var urlLookup = trigger.Location;
-                        var musicUrl = GetUrl(product.ProductId, urlLookup);
-                        using (var triggerClient = new HttpClient())
+                        tasks.Add(Task.Run(async () =>
                         {
-                            try
+                            var urlLookup = trigger.Location;
+                            var musicUrl = GetUrl(product.ProductId, urlLookup);
+                            using (var triggerClient = new HttpClient())
                             {
-                                using (var stream = triggerClient.GetStreamAsync(musicUrl).Result)
+                                try
                                 {
-                                    var ms = new MemoryStream();
-                                    stream.CopyTo(ms);
-                                    trigger.LengthMS = NVorbis.VorbisReader.GetOggLengthMS(ms);
-                                    ms.Dispose();
+                                    //using (var stream = triggerClient.GetStreamAsync(musicUrl).Result)
+                                    using (var stream = await triggerClient.GetStreamAsync(musicUrl))
+                                    {
+                                        var ms = new MemoryStream();
+                                        stream.CopyTo(ms);
+                                        trigger.LengthMS = NVorbis.VorbisReader.GetOggLengthMS(ms);
+                                        ms.Dispose();
+                                    }
                                 }
-                            }
-                            catch (Exception exc)
-                            {
-                                result.Result = ScanResultType.NetworkError;
-                                result.Message = "Unable to download an OGG file";
-                                var sqlDelete = $"DELETE FROM product_triggers WHERE product_id = {product.ProductId};";
-                                lock (_lock)
+                                catch (Exception)
                                 {
-                                    connAppCache.Execute(sqlDelete);
-                                }
-                                return result;
+                                    /*
+                                    result.Result = ScanResultType.NetworkError;
+                                    result.Message = "Unable to download an OGG file";
+                                    var sqlDelete = $"DELETE FROM product_triggers WHERE product_id = {product.ProductId};";
+                                    lock (_lock)
+                                    {
+                                        connAppCache.Execute(sqlDelete);
+                                    }
+                                    return result;
+                                    */
 
+                                }
                             }
-                        }
-                        Debug.WriteLine($"\t{trigger.OggName} ({(DateTime.Now - start).TotalMilliseconds} ms)");
-                        //}));
+                            Debug.WriteLine($"\t{trigger.OggName} ({(DateTime.Now - start).TotalMilliseconds} ms)");
+                            //}));
+                        }));
                     }
                     catch (Exception exc)
                     {
@@ -406,12 +430,12 @@ namespace Triggerless.TriggerBot
                     }
                     finally
                     {
-                        //semaphore.Release();
+                        semaphore.Release();
                     }
                 }
 
 
-                //await Task.WhenAll(tasks);
+                await Task.WhenAll(tasks);
                 #endregion
 
                 #region Save Triggers to DB
