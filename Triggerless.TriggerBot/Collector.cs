@@ -18,18 +18,19 @@ namespace Triggerless.TriggerBot
     {
         private object _lock = new object();
 
-        public class CollectorEventArgs : EventArgs { }
+        public class CollectorEventArgs : EventArgs {
+            public int TotalProducts { get; set; }
+            public int CompletedProducts { get; set; }
+            public string Message { get; set; }
+        }
 
         public delegate void CollectorEventHandler (object sender, CollectorEventArgs e);
 
-        public event CollectorEventHandler EventOccurred;
+        public event CollectorEventHandler CollectorEvent;
 
         public void FireEvent(CollectorEventArgs e)
         {
-            if (EventOccurred != null)
-            {
-                EventOccurred (this, e);
-            }
+            CollectorEvent?.Invoke(this, e);
         }
 
 
@@ -64,16 +65,19 @@ namespace Triggerless.TriggerBot
 
             var workingProducts = productList.Where(pe => !existingProductIDs.Contains(pe.ProductId)).ToList();
 
-            // just to debug
-            //workingProducts = workingProducts.Skip(200).Take(100).ToList();
-
             var numberTotal = workingProducts.Count;
-            if (numberTotal == 0) return;
+            if (numberTotal == 0)
+            {
+                FireEvent(new CollectorEventArgs
+                {
+                    CompletedProducts = 0,
+                    TotalProducts = numberTotal,
+                    Message = "Nothing to update"
+                });
+                return;
+            }
 
             var numberComplete = 0;
-            //var maxConcurrentThreads = 5;
-            //var semaphore = new SemaphoreSlim(maxConcurrentThreads);
-            //var tasks = new List<Task>();
             var maxConcurrentThreads = 5;
             var semaphore = new SemaphoreSlim(maxConcurrentThreads);
             var tasks = new List<Task>();
@@ -93,6 +97,13 @@ namespace Triggerless.TriggerBot
                             Debug.WriteLine($"{product.ProductName}\t{result.Result}\t{result.Message}");
 
                             Interlocked.Increment(ref numberComplete);
+                            FireEvent(new CollectorEventArgs
+                            {
+                                CompletedProducts = numberComplete,
+                                TotalProducts = numberTotal,
+                                Message = $"{product.ProductName}"
+                            });
+
                         }));
                     }
                     finally
@@ -118,7 +129,6 @@ namespace Triggerless.TriggerBot
             // See if any ogg files exist
             using (var client = new HttpClient())
             {
-                //-----------------------------------------------------------------------------------
                 #region JsonContents
 
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
@@ -128,7 +138,6 @@ namespace Triggerless.TriggerBot
                 try
                 {
                     httpResult = await client.GetStringAsync(url);
-                    //httpResult = client.GetStringAsync(url).Result;
                 }
                 catch (Exception ex)
                 {
@@ -188,7 +197,6 @@ namespace Triggerless.TriggerBot
                 {
                     client.DefaultRequestHeaders.Clear();
                     var imageBytes = await client.GetByteArrayAsync(product.ProductImage);
-                    //var imageBytes = client.GetByteArrayAsync(product.ProductImage).Result;
 
                     var insertPayload = new {
                         product_id = product.ProductId,
@@ -211,13 +219,11 @@ namespace Triggerless.TriggerBot
                 #endregion
 
                 #region Read Index.xml and associate triggers
-                // Now we have all the lengths, time to find the actual triggers
 
                 var pid = product.ProductId;
                 var docIndex = new XmlDocument();
                 try
                 {
-                    //docIndex.Load(client.GetStreamAsync(GetUrl(pid, "index.xml")).Result);
                     docIndex.Load(await client.GetStreamAsync(GetUrl(pid, "index.xml")));
                 }
                 catch (Exception)
@@ -285,7 +291,6 @@ namespace Triggerless.TriggerBot
                 #endregion
 
                 #region Split Triggers and Prefixes
-                // split triggers by prefix and sequence
 
                 var numbers = "0123456789".ToCharArray();
                 foreach (var trigger in triggerList)
@@ -374,9 +379,6 @@ namespace Triggerless.TriggerBot
 
                 #region Retrive OGG file lengths
 
-                ////var maxConcurrentThreads = 1;
-                //var semaphore = new SemaphoreSlim(maxConcurrentThreads);
-                //var tasks = new List<Task>();
                 var maxConcurrentThreads = 2;
                 var semaphore = new SemaphoreSlim(maxConcurrentThreads);
                 var tasks = new List<Task>();
@@ -396,7 +398,6 @@ namespace Triggerless.TriggerBot
                             {
                                 try
                                 {
-                                    //using (var stream = triggerClient.GetStreamAsync(musicUrl).Result)
                                     using (var stream = await triggerClient.GetStreamAsync(musicUrl))
                                     {
                                         var ms = new MemoryStream();
@@ -421,7 +422,6 @@ namespace Triggerless.TriggerBot
                                 }
                             }
                             Debug.WriteLine($"\t{trigger.OggName} ({(DateTime.Now - start).TotalMilliseconds} ms)");
-                            //}));
                         }));
                     }
                     catch (Exception exc)
@@ -452,9 +452,6 @@ namespace Triggerless.TriggerBot
                 result.Message = $"{triggerList.Count} triggers found and added";
 
                 #endregion
-
-
-
             }
 
             return result;
