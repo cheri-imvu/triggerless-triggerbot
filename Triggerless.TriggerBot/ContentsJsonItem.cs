@@ -10,6 +10,7 @@ namespace Triggerless.TriggerBot
             [JsonProperty("original_dimensions")] public string OriginalDimensions { get; set; }
             [JsonProperty("name")] public string Name { get; set; }
             [JsonProperty("tags")] public string[] Tags { get; set; }
+            public string Location => string.IsNullOrWhiteSpace(Url) ? Name : Url;
         }
     }
 }

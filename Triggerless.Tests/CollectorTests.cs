@@ -12,12 +12,11 @@ namespace Triggerless.Tests
     public class CollectorTests
     {
         [Test]
-        public void TestCollect() 
+        public async Task TestCollectAsync() 
         {
-
+            new SQLiteDataAccess().DeleteAppCache();
             var collector = new Collector();
-            var x = collector.ScanDatabases();
-
+            collector.ScanDatabases();
         }
 
     }

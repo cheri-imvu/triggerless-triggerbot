@@ -47,6 +47,13 @@ namespace Triggerless.TriggerBot
             return new SQLiteConnection($"Data Source={productCacheFile}");
         }
 
+        public void DeleteAppCache()
+        {
+            var appCachePath = Path.Combine(AppData, "Triggerless", "TriggerBot");
+            var appCacheFile = Path.Combine(appCachePath, "appCache.sqlite");
+            if (!File.Exists(appCacheFile)) File.Delete(appCacheFile);
+        }
+
         public SQLiteConnection GetAppCacheCxn() 
         {
             var appCachePath = Path.Combine(AppData, "Triggerless", "TriggerBot");
@@ -67,7 +74,7 @@ namespace Triggerless.TriggerBot
                         cmd.ExecuteNonQuery();
 
                         sqlCreate = "CREATE TABLE product_triggers (" +
-                            "product_id BIGINT, prefix VARCHAR(24), sequence INTEGER, trigger VARCHAR(24), ogg_name VARCHAR(64), length_ms REAL, PRIMARY KEY(product_id ASC, prefix ASC, sequence ASC));";
+                            "product_id BIGINT, prefix VARCHAR(24), sequence INTEGER, trigger VARCHAR(24), ogg_name VARCHAR(64), location VARCHAR(64), length_ms REAL, PRIMARY KEY(product_id ASC, prefix ASC, sequence ASC));";
                         cmd.CommandText = sqlCreate;
                         cmd.ExecuteNonQuery();
                     }

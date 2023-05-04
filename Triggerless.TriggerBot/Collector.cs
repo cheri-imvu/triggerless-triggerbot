@@ -5,9 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
-using System.Security.Policy;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -41,7 +38,7 @@ namespace Triggerless.TriggerBot
         public static string GetUrl(long pid, string filename) => string.Format(GetUrlTemplate(pid), filename);
 
 
-        public async Task ScanDatabases()
+        public void ScanDatabases()
         {
             //Debugger.Break();
             var sda = new SQLiteDataAccess();
@@ -69,39 +66,41 @@ namespace Triggerless.TriggerBot
             var workingProducts = productList.Where(pe => !existingProductIDs.Contains(pe.ProductId)).ToList();
 
             // just to debug
-            workingProducts = workingProducts.Skip(200).Take(100).ToList();
+            //workingProducts = workingProducts.Skip(200).Take(100).ToList();
 
             var numberTotal = workingProducts.Count;
             if (numberTotal == 0) return;
 
             var numberComplete = 0;
-            var maxConcurrentThreads = 5;
-            var semaphore = new SemaphoreSlim(maxConcurrentThreads);
-            var tasks = new List<Task>();
+            //var maxConcurrentThreads = 5;
+            //var semaphore = new SemaphoreSlim(maxConcurrentThreads);
+            //var tasks = new List<Task>();
             var cycleStart = DateTime.Now;
 
             using (var cxnAppCache = sda.GetAppCacheCxn())
             {
                 foreach (var product in workingProducts)
                 {
-                    await semaphore.WaitAsync();
+                    //await semaphore.WaitAsync();
                     try
                     {
-                        tasks.Add(Task.Run(async () =>
-                        {
-                            var result = await ScanOne(product, cxnAppCache);
+                        //tasks.Add(Task.Run(async () =>
+                        //{
+                            // run sychronously for now
+                            var result = ScanOne(product, cxnAppCache);
+                            Debug.WriteLine($"{product.ProductName}\t{result.Result}\t{result.Message}");
 
                             Interlocked.Increment(ref numberComplete);
-                        }));
+                        //}));
                     }
                     finally
                     {
-                        semaphore.Release();
+                        //semaphore.Release();
                     }
 
                 }
 
-                await Task.WhenAll(tasks);
+                //await Task.WhenAll(tasks);
 
             }
 
@@ -109,7 +108,7 @@ namespace Triggerless.TriggerBot
 
         }
 
-        public async Task<ScanResult> ScanOne(ProductInfo product, System.Data.SQLite.SQLiteConnection connAppCache)
+        public ScanResult ScanOne(ProductInfo product, System.Data.SQLite.SQLiteConnection connAppCache)
         {
             var result = new ScanResult { Result = ScanResultType.Pending };
             var sda = new SQLiteDataAccess();
@@ -117,18 +116,22 @@ namespace Triggerless.TriggerBot
             // See if any ogg files exist
             using (var client = new HttpClient())
             {
+                //-----------------------------------------------------------------------------------
+                #region JsonContents
+
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
                 var url = GetUrl(product.ProductId, "_contents.json");
                 string httpResult;
                 ContentsJsonItem[] jsonContents;
                 try
                 {
-                    httpResult = await client.GetStringAsync(url);                    
+                    httpResult = client.GetStringAsync(url).Result;                    
                 }
-                catch (HttpRequestException ex)
+                catch (Exception ex)
                 {
                     result.Message = ex.Message;
-                    if (ex.Message.Contains("404"))
+                    bool is404 = ex.Message.Contains("404") || (ex.InnerException != null && ex.InnerException.Message.Contains("404"));
+                    if (is404)
                     {
                         //NOTE: Very early products may give a 404 error. We should save to DB with has_ogg = 0
                         var insertPayload = new { product_id = product.ProductId, has_ogg = 0, title = product.ProductName, creator = product.CreatorName };
@@ -137,9 +140,9 @@ namespace Triggerless.TriggerBot
                         {
                             connAppCache.Execute(sql, insertPayload);
                         }
-                        
+                        result.Message = "Product could not be downloaded (404)";
                     }
-                    result.Result = ScanResultType.NetworkError;                    
+                    result.Result = ScanResultType.NetworkError;       
                     return result;
                 }
 
@@ -160,11 +163,13 @@ namespace Triggerless.TriggerBot
                     
                     return result;
                 }
+                #endregion
 
+                #region Any OGG Files?
                 if (!jsonContents.Any(c => c.Name.ToLower().EndsWith(".ogg"))) // no OGG files found
                 {
                     result.Message = $"No OGG files found in product {product.ProductId}";
-                    result.Result = ScanResultType.Success;
+                    result.Result = ScanResultType.NoUsefulTriggers;
                     var insertPayload = new { product_id = product.ProductId, has_ogg = 0, title = product.ProductName, creator = product.CreatorName };
                     var sql = "INSERT INTO products (product_id, has_ogg, title, creator) VALUES (@product_id, @has_ogg, @title, @creator);";
                     lock (_lock)
@@ -173,11 +178,15 @@ namespace Triggerless.TriggerBot
                     }
                     return result;
                 }
+                #endregion
 
+                #region Product Image
                 try
                 {
                     client.DefaultRequestHeaders.Clear();
-                    var imageBytes = await client.GetByteArrayAsync(product.ProductImage);
+                    //var imageBytes = await client.GetByteArrayAsync(product.ProductImage);
+                    var imageBytes = client.GetByteArrayAsync(product.ProductImage).Result;
+
                     var insertPayload = new {
                         product_id = product.ProductId,
                         has_ogg = 1,
@@ -192,68 +201,28 @@ namespace Triggerless.TriggerBot
                 } 
                 catch (Exception exc)
                 {
-                    Debug.WriteLine($"{exc.Message}\r\n{exc.StackTrace}");
-                    Debugger.Break();
-                    throw exc; // not sure what to do otherwise, we'll see
+                    result.Message = "Unable to retrieve product icon";
+                    result.Result = ScanResultType.NetworkError;
+                    return result;
                 }
+                #endregion
 
-                var lengthDict = new ConcurrentDictionary<string, double>();
-                var maxConcurrentThreads = 5;
-                var semaphore = new SemaphoreSlim(maxConcurrentThreads);
-                var tasks = new List<Task>();
-                foreach (var jsonItem in jsonContents.Where(ji => ji.Name.ToLower().EndsWith(".ogg")))
-                {
-                    var start = DateTime.Now;
-                    await semaphore.WaitAsync();
-                    try
-                    {
-                        tasks.Add(Task.Run(async () =>
-                        {
-                            var urlLookup = (string.IsNullOrEmpty(jsonItem.Url)) ? jsonItem.Name : jsonItem.Url;
-                            var musicUrl = GetUrl(product.ProductId, urlLookup);
-                            using (var triggerClient = new HttpClient())
-                            {
-                                try
-                                {
-                                    using (var stream = await triggerClient.GetStreamAsync(musicUrl))
-                                    {
-                                        var ms = new MemoryStream();
-                                        stream.CopyTo(ms);
-                                        lengthDict[jsonItem.Name] = NVorbis.VorbisReader.GetOggLengthMS(ms);
-                                        ms.Dispose();
-                                    }
-                                }
-                                catch (Exception exc)
-                                {
-                                    Debug.WriteLine(exc.Message);
-                                    Debug.WriteLine(exc.StackTrace);
-                                    Debugger.Break();
-
-                                }
-                            }
-                        Debug.WriteLine($"{jsonItem.Name} {(DateTime.Now - start).TotalMilliseconds} ms)");
-                        }));
-                    }
-                    finally
-                    {
-                        semaphore.Release();
-                    }
-                }
-                await Task.WhenAll(tasks);
-
+                #region Read Index.xml and associate triggers
                 // Now we have all the lengths, time to find the actual triggers
 
                 var pid = product.ProductId;
                 var docIndex = new XmlDocument();
                 try
                 {
-                    docIndex.Load(await client.GetStreamAsync(GetUrl(pid, "index.xml")));
+                    docIndex.Load(client.GetStreamAsync(GetUrl(pid, "index.xml")).Result);
                 }
                 catch (Exception exc)
                 {
-                    Debug.WriteLine($"{exc.Message}\r\n{exc.StackTrace}");
-                    Debugger.Break();
+                    result.Result = ScanResultType.XmlError;
+                    result.Message = "Unable to retrieve index.xml file";
+                    return result;
                 }
+
                 var root = docIndex.DocumentElement;
                 long parentId = 0;
                 var triggerList = new List<TriggerEntry>();
@@ -276,18 +245,42 @@ namespace Triggerless.TriggerBot
                         var oggName = soundEl.InnerText;
                         if (!oggName.ToLower().EndsWith(".ogg")) continue;
 
-                        triggerList.Add(new TriggerEntry { 
-                            ProductId = product.ProductId,
-                            OggName = oggName,
-                            TriggerName = nameEl.InnerText,
-                            LengthMS = lengthDict[oggName],
-                            Sequence = 0
-                        });
+                        try
+                        {
+                            var triggerEntry = new TriggerEntry
+                            {
+                                ProductId = product.ProductId,
+                                OggName = oggName,
+                                TriggerName = nameEl.InnerText,
+                                Location = jsonContents.Where(j => j.Name.ToLower() == oggName.ToLower()).First()?.Location,
+                                Sequence = 0
+                            };
+
+                            triggerList.Add(triggerEntry);
+                        }
+                        catch (Exception exc) {
+                            result.Result = ScanResultType.JsonError;
+                            result.Message = "Malformed product file";
+                            lock (_lock)
+                            {
+                                connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");
+                            }
+                            return result;
+                        }
                     }
                 }
+                #endregion
 
+                #region OGG file in Template?
+                if (!triggerList.Any())
+                {
+                    result.Message = "Triggers were not found in XML file";
+                    result.Result = ScanResultType.NoUsefulTriggers;
+                    return result;
+                }
+                #endregion
 
-
+                #region Split Triggers and Prefixes
                 // split triggers by prefix and sequence
 
                 var numbers = "0123456789".ToCharArray();
@@ -323,11 +316,107 @@ namespace Triggerless.TriggerBot
                         }
                     }
                 }
+                #endregion
 
+                #region Filter Out Crappy Triggers
                 triggerList = triggerList.Where(t => t.Sequence != -1).OrderBy(t => t.Prefix).ThenBy(t => t.Sequence).ToList();
 
-                var sqlInsertTrigger = "INSERT INTO product_triggers (product_id, prefix, sequence, trigger, ogg_name, length_ms) VALUES " +
-                    "(@ProductId, @Prefix, @Sequence, @TriggerName, @OggName, @LengthMS);";
+                if (triggerList.Any(t => t.Prefix is null))
+                {
+                    lock (_lock)
+                    {
+                        connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");
+                    }
+                    result.Result = ScanResultType.NoUsefulTriggers;
+                    result.Message = $"Null prefixes are not allowed";
+                    return result;
+                }
+
+                var distinctPrefixes = triggerList.Select(t => t.Prefix.ToLower()).Distinct().Count();
+                if (distinctPrefixes != 1)
+                {
+                    lock (_lock)
+                    {
+                        connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");
+                    }
+                    result.Result = ScanResultType.NoUsefulTriggers;
+                    result.Message = $"Too many trigger prefixes ({distinctPrefixes})";
+                    return result;
+                }
+
+
+                if (triggerList.Count == 0)
+                {
+                    lock (_lock)
+                    {
+                        connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");
+                    }
+                    result.Result = ScanResultType.NoUsefulTriggers;
+                    result.Message = $"No Useful triggers found";
+                    return result;
+                }
+                #endregion
+
+                #region Retrive OGG file lengths
+                var lengthDict = new ConcurrentDictionary<string, double>();
+                ////var maxConcurrentThreads = 1;
+                //var semaphore = new SemaphoreSlim(maxConcurrentThreads);
+                //var tasks = new List<Task>();
+                foreach (var trigger in triggerList)
+                {
+                    var start = DateTime.Now;
+                    //await semaphore.WaitAsync();
+                    try
+                    {
+                        //tasks.Add(Task.Run(async () =>
+                        //{
+                        var urlLookup = trigger.Location;
+                        var musicUrl = GetUrl(product.ProductId, urlLookup);
+                        using (var triggerClient = new HttpClient())
+                        {
+                            try
+                            {
+                                using (var stream = triggerClient.GetStreamAsync(musicUrl).Result)
+                                {
+                                    var ms = new MemoryStream();
+                                    stream.CopyTo(ms);
+                                    trigger.LengthMS = NVorbis.VorbisReader.GetOggLengthMS(ms);
+                                    ms.Dispose();
+                                }
+                            }
+                            catch (Exception exc)
+                            {
+                                result.Result = ScanResultType.NetworkError;
+                                result.Message = "Unable to download an OGG file";
+                                var sqlDelete = $"DELETE FROM product_triggers WHERE product_id = {product.ProductId};";
+                                lock (_lock)
+                                {
+                                    connAppCache.Execute(sqlDelete);
+                                }
+                                return result;
+
+                            }
+                        }
+                        Debug.WriteLine($"\t{trigger.OggName} ({(DateTime.Now - start).TotalMilliseconds} ms)");
+                        //}));
+                    }
+                    catch (Exception exc)
+                    {
+                        Debug.WriteLine($"{exc.Message}");
+                    }
+                    finally
+                    {
+                        //semaphore.Release();
+                    }
+                }
+
+
+                //await Task.WhenAll(tasks);
+                #endregion
+
+                #region Save Triggers to DB
+                var sqlInsertTrigger = "INSERT INTO product_triggers (product_id, prefix, sequence, trigger, ogg_name, length_ms, location) VALUES " +
+                    "(@ProductId, @Prefix, @Sequence, @TriggerName, @OggName, @LengthMS, @Location);";
                 lock (_lock)
                 {
                     foreach (var trigger in triggerList)
@@ -335,6 +424,13 @@ namespace Triggerless.TriggerBot
                         connAppCache.Execute(sqlInsertTrigger, trigger);
                     }
                 }
+                result.Result = ScanResultType.Success;
+                result.Message = $"{triggerList.Count} triggers found and added";
+
+                #endregion
+
+
+
             }
 
             return result;

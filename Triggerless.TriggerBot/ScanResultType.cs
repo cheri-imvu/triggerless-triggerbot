@@ -10,7 +10,9 @@
             DecodingError = 3,
             SystemError = 4,
             Pending = 5,
-            JsonError = 6
+            JsonError = 6,
+            NoUsefulTriggers = 7,
+            XmlError = 8,
         }
     }
 }
