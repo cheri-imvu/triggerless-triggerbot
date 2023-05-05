@@ -73,7 +73,8 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProductInfo.cs" />
+    <Compile Include="ProductDisplayInfo.cs" />
+    <Compile Include="ProductSearchInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScanResult.cs" />
@@ -81,11 +82,20 @@
     <Compile Include="SQLiteDataAccess.cs" />
     <Compile Include="TriggerEntry.cs" />
     <Compile Include="TriggerResult.cs" />
+    <Compile Include="ProductCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProductCtrl.Designer.cs">
+      <DependentUpon>ProductCtrl.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="CacheScan.resx">
       <DependentUpon>CacheScan.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProductCtrl.resx">
+      <DependentUpon>ProductCtrl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -116,6 +126,9 @@
       <Project>{d79462d7-03c1-41a8-9cd4-5827155dedfb}</Project>
       <Name>NVorbis</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="assets\placeholder.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

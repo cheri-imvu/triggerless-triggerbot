@@ -36,20 +36,24 @@
             this.progScan = new System.Windows.Forms.ProgressBar();
             this.lblProduct = new System.Windows.Forms.Label();
             this.lblProgress = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlCollector = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.productCtrl1 = new Triggerless.TriggerBot.ProductCtrl();
+            this.lblProdId = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
             this.splitter.Panel1.SuspendLayout();
             this.splitter.Panel2.SuspendLayout();
             this.splitter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridSearchResults)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picFilter)).BeginInit();
-            this.panel1.SuspendLayout();
+            this.pnlCollector.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitter
             // 
             this.splitter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitter.Location = new System.Drawing.Point(0, 0);
             this.splitter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.splitter.Name = "splitter";
@@ -59,12 +63,16 @@
             this.splitter.Panel1.Controls.Add(this.gridSearchResults);
             this.splitter.Panel1.Controls.Add(this.txtSearch);
             this.splitter.Panel1.Controls.Add(this.picFilter);
+            this.splitter.Panel1MinSize = 200;
             // 
             // splitter.Panel2
             // 
-            this.splitter.Panel2.Controls.Add(this.panel1);
+            this.splitter.Panel2.Controls.Add(this.lblProdId);
+            this.splitter.Panel2.Controls.Add(this.pnlCollector);
+            this.splitter.Panel2.Controls.Add(this.button1);
+            this.splitter.Panel2.Controls.Add(this.productCtrl1);
             this.splitter.Size = new System.Drawing.Size(762, 561);
-            this.splitter.SplitterDistance = 253;
+            this.splitter.SplitterDistance = 200;
             this.splitter.SplitterWidth = 5;
             this.splitter.TabIndex = 1;
             // 
@@ -79,7 +87,7 @@
             this.gridSearchResults.Name = "gridSearchResults";
             this.gridSearchResults.RowHeadersWidth = 51;
             this.gridSearchResults.RowTemplate.Height = 24;
-            this.gridSearchResults.Size = new System.Drawing.Size(247, 503);
+            this.gridSearchResults.Size = new System.Drawing.Size(194, 503);
             this.gridSearchResults.TabIndex = 2;
             // 
             // txtSearch
@@ -90,7 +98,7 @@
             this.txtSearch.Location = new System.Drawing.Point(55, 11);
             this.txtSearch.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(182, 24);
+            this.txtSearch.Size = new System.Drawing.Size(129, 24);
             this.txtSearch.TabIndex = 1;
             // 
             // picFilter
@@ -130,16 +138,16 @@
             this.lblProgress.TabIndex = 2;
             this.lblProgress.Text = "Progress: ";
             // 
-            // panel1
+            // pnlCollector
             // 
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.progScan);
-            this.panel1.Controls.Add(this.lblProgress);
-            this.panel1.Controls.Add(this.lblProduct);
-            this.panel1.Location = new System.Drawing.Point(15, 11);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(350, 110);
-            this.panel1.TabIndex = 5;
+            this.pnlCollector.Controls.Add(this.label1);
+            this.pnlCollector.Controls.Add(this.progScan);
+            this.pnlCollector.Controls.Add(this.lblProgress);
+            this.pnlCollector.Controls.Add(this.lblProduct);
+            this.pnlCollector.Location = new System.Drawing.Point(15, 11);
+            this.pnlCollector.Name = "pnlCollector";
+            this.pnlCollector.Size = new System.Drawing.Size(350, 110);
+            this.pnlCollector.TabIndex = 5;
             // 
             // label1
             // 
@@ -150,6 +158,36 @@
             this.label1.Size = new System.Drawing.Size(197, 18);
             this.label1.TabIndex = 5;
             this.label1.Text = "Update from Inventory";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(35, 311);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(117, 43);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // productCtrl1
+            // 
+            this.productCtrl1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.productCtrl1.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productCtrl1.Location = new System.Drawing.Point(5, 174);
+            this.productCtrl1.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.productCtrl1.Name = "productCtrl1";
+            this.productCtrl1.ProductInfo = null;
+            this.productCtrl1.Size = new System.Drawing.Size(364, 89);
+            this.productCtrl1.TabIndex = 6;
+            // 
+            // lblProdId
+            // 
+            this.lblProdId.AutoSize = true;
+            this.lblProdId.Location = new System.Drawing.Point(34, 375);
+            this.lblProdId.Name = "lblProdId";
+            this.lblProdId.Size = new System.Drawing.Size(52, 18);
+            this.lblProdId.TabIndex = 8;
+            this.lblProdId.Text = "label2";
             // 
             // Form1
             // 
@@ -166,12 +204,13 @@
             this.splitter.Panel1.ResumeLayout(false);
             this.splitter.Panel1.PerformLayout();
             this.splitter.Panel2.ResumeLayout(false);
+            this.splitter.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).EndInit();
             this.splitter.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridSearchResults)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picFilter)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.pnlCollector.ResumeLayout(false);
+            this.pnlCollector.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -184,8 +223,11 @@
         private System.Windows.Forms.ProgressBar progScan;
         private System.Windows.Forms.Label lblProduct;
         private System.Windows.Forms.Label lblProgress;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlCollector;
         private System.Windows.Forms.Label label1;
+        private ProductCtrl productCtrl1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label lblProdId;
     }
 }
 

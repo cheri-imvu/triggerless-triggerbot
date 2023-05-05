@@ -2,7 +2,7 @@
 {
     public partial class Collector
     {
-        public class ProductInfo
+        public class ProductSearchInfo
         {
             public long ProductId { get; set; }
             public string ProductName { get; set; }

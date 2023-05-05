@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -7,7 +6,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Xml;
 using Dapper;
 using Newtonsoft.Json;
@@ -42,7 +40,7 @@ namespace Triggerless.TriggerBot
         public async Task ScanDatabasesAsync()
         {
             var sda = new SQLiteDataAccess();
-            var productList = new List<ProductInfo>();
+            var productList = new List<ProductSearchInfo>();
             var existingProductIDs = new HashSet<long>();
 
             using (var connProduct = sda.GetProductCacheCxn())
@@ -50,7 +48,7 @@ namespace Triggerless.TriggerBot
                 connProduct.Open();
                 var sql = "SELECT id as ProductId, products_name as ProductName, manufacturers_name as CreatorName, products_image as ProductImage FROM products ";
                 sql += $"WHERE {SQLiteDataAccess.AccessoryFilter}; ";
-                var products = connProduct.Query<ProductInfo>(sql);
+                var products = connProduct.Query<ProductSearchInfo>(sql);
                 productList.AddRange(products);
             }
 
@@ -115,13 +113,22 @@ namespace Triggerless.TriggerBot
 
                 await Task.WhenAll(tasks);
 
+                var sqlCleanup = @"
+                    UPDATE products SET has_ogg = 0 WHERE has_ogg = 1
+                    AND NOT EXISTS (SELECT product_id FROM product_triggers WHERE product_id = products.product_id);
+                ";
+                lock (_lock)
+                {
+                    cxnAppCache.Execute(sqlCleanup);
+                }
+
             }
 
             Debug.WriteLine($"Cycle complete {workingProducts.Count} items in {(DateTime.Now - cycleStart).TotalMilliseconds} ms");
 
         }
 
-        public async Task<ScanResult> ScanOne(ProductInfo product, System.Data.SQLite.SQLiteConnection connAppCache)
+        public async Task<ScanResult> ScanOne(ProductSearchInfo product, System.Data.SQLite.SQLiteConnection connAppCache)
         {
             var result = new ScanResult { Result = ScanResultType.Pending };
             var sda = new SQLiteDataAccess();

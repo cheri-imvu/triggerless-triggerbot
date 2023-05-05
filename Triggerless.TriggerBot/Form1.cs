@@ -1,8 +1,6 @@
-﻿using NVorbis;
+﻿using Dapper;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Triggerless.TriggerBot
@@ -43,6 +41,59 @@ namespace Triggerless.TriggerBot
                 progScan.Update();
                 lblProduct.Update();
                 lblProgress.Update();
+            }
+        }
+
+        
+        long _imageTestCounter = 0;
+        long[] _ids = null;
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var sda = new SQLiteDataAccess();
+            using (var cxn = sda.GetAppCacheCxn())
+            {
+                if (_ids == null) _ids = cxn.Query<long>("SELECT product_id from products where has_ogg = 1").ToArray();
+                var productId = _ids[_imageTestCounter];
+                lblProdId.Text = productId.ToString();
+                _imageTestCounter = (_imageTestCounter + 1) % _ids.Length;
+                
+                {
+                    var sql = $@"SELECT p.product_id,
+                       p.title,
+                       p.creator,
+                       p.image_bytes,
+                       pt.prefix,
+                       pt.sequence,
+                       pt.trigger,
+                       pt.length_ms
+                       FROM products p 
+                       INNER JOIN product_triggers pt ON (p.product_id = pt.product_id)
+                       WHERE p.product_id = {productId}
+                       ORDER BY pt.sequence;";
+
+                    var query = cxn.Query(sql);
+                    var productInfo = new ProductDisplayInfo();
+                    foreach (var item in query)
+                    {
+                        if (string.IsNullOrEmpty(productInfo.Name))
+                        {
+                            productInfo.Name = item.title;
+                            productInfo.Creator = item.creator;
+                            productInfo.ImageBytes = item.image_bytes;
+                            productInfo.Id = item.product_id;
+                        }
+                        productInfo.Triggers.Add(new TriggerDisplayInfo
+                        {
+                            LengthMS = (double)item.length_ms,
+                            Prefix = item.prefix,
+                            ProductId = (long)item.product_id,
+                            Sequence = (int)item.sequence,
+                            Trigger = item.trigger
+                        });
+                    }
+
+                    productCtrl1.ProductInfo = productInfo;
+                }
             }
         }
     }
