@@ -128,7 +128,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\favicon.ico" />
+    <Content Include="assets\filter-32x32.png" />
     <Content Include="assets\placeholder.png" />
+    <Content Include="assets\search.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

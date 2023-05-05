@@ -30,12 +30,6 @@ namespace Triggerless.TriggerBot
             InitializeComponent();
         }
 
-        ~ProductCtrl()
-        {
-            picProductImage?.BackgroundImage?.Dispose();
-            picProductImage?.Dispose();
-        }
-
         private ProductDisplayInfo _productInfo;
 
         public ProductDisplayInfo ProductInfo
