@@ -87,6 +87,7 @@
             this.linkOnDeck.TabStop = true;
             this.linkOnDeck.Text = "ON DECK >>";
             this.linkOnDeck.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.linkOnDeck.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOnDeck_LinkClicked);
             // 
             // ProductCtrl
             // 

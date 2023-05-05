@@ -14,6 +14,15 @@ namespace Triggerless.TriggerBot
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            productCtrl1.OnLinkClicked += (_, args) => {
+                var msg = $"Product Name is {args.ProductDisplayInfo.Name}";
+                MessageBox.Show(msg);
+            };
+        }
+
+        private void ProductCtrl1_OnLinkClicked(object sender, ProductCtrl.LinkClickedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private async void ScanInventory(object sender, EventArgs e)
