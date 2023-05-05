@@ -35,20 +35,21 @@
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
             this.pnlRight = new System.Windows.Forms.Panel();
-            this.lblProdId = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pnlCollector = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.progScan = new System.Windows.Forms.ProgressBar();
             this.lblProgress = new System.Windows.Forms.Label();
             this.lblProduct = new System.Windows.Forms.Label();
-            this.productCtrl1 = new Triggerless.TriggerBot.ProductCtrl();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
             this.splitter.Panel1.SuspendLayout();
             this.splitter.Panel2.SuspendLayout();
             this.splitter.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlRight.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.pnlCollector.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -102,7 +103,7 @@
             this.txtSearch.Location = new System.Drawing.Point(47, 11);
             this.txtSearch.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(239, 24);
+            this.txtSearch.Size = new System.Drawing.Size(239, 28);
             this.txtSearch.TabIndex = 1;
             this.txtSearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSearch_KeyPress);
             // 
@@ -119,33 +120,45 @@
             // 
             // pnlRight
             // 
-            this.pnlRight.Controls.Add(this.productCtrl1);
-            this.pnlRight.Controls.Add(this.lblProdId);
+            this.pnlRight.Controls.Add(this.textBox1);
             this.pnlRight.Controls.Add(this.button1);
+            this.pnlRight.Controls.Add(this.pictureBox1);
             this.pnlRight.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlRight.Location = new System.Drawing.Point(0, 0);
             this.pnlRight.Name = "pnlRight";
             this.pnlRight.Size = new System.Drawing.Size(485, 561);
             this.pnlRight.TabIndex = 9;
             // 
-            // lblProdId
+            // textBox1
             // 
-            this.lblProdId.AutoSize = true;
-            this.lblProdId.Location = new System.Drawing.Point(313, 437);
-            this.lblProdId.Name = "lblProdId";
-            this.lblProdId.Size = new System.Drawing.Size(52, 18);
-            this.lblProdId.TabIndex = 8;
-            this.lblProdId.Text = "label2";
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.Location = new System.Drawing.Point(56, 158);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBox1.Size = new System.Drawing.Size(409, 216);
+            this.textBox1.TabIndex = 2;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(172, 409);
+            this.button1.Location = new System.Drawing.Point(56, 117);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(117, 43);
-            this.button1.TabIndex = 7;
+            this.button1.Size = new System.Drawing.Size(111, 35);
+            this.button1.TabIndex = 1;
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(56, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(339, 86);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
             // pnlCollector
             // 
@@ -164,7 +177,7 @@
             this.label1.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(77, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(197, 18);
+            this.label1.Size = new System.Drawing.Size(241, 23);
             this.label1.TabIndex = 5;
             this.label1.Text = "Update from Inventory";
             // 
@@ -181,7 +194,7 @@
             this.lblProgress.AutoSize = true;
             this.lblProgress.Location = new System.Drawing.Point(89, 80);
             this.lblProgress.Name = "lblProgress";
-            this.lblProgress.Size = new System.Drawing.Size(82, 18);
+            this.lblProgress.Size = new System.Drawing.Size(104, 23);
             this.lblProgress.TabIndex = 2;
             this.lblProgress.Text = "Progress: ";
             // 
@@ -190,24 +203,13 @@
             this.lblProduct.AutoSize = true;
             this.lblProduct.Location = new System.Drawing.Point(3, 32);
             this.lblProduct.Name = "lblProduct";
-            this.lblProduct.Size = new System.Drawing.Size(76, 18);
+            this.lblProduct.Size = new System.Drawing.Size(94, 23);
             this.lblProduct.TabIndex = 3;
             this.lblProduct.Text = "Product: ";
             // 
-            // productCtrl1
-            // 
-            this.productCtrl1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.productCtrl1.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.productCtrl1.Location = new System.Drawing.Point(60, 459);
-            this.productCtrl1.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.productCtrl1.Name = "productCtrl1";
-            this.productCtrl1.ProductInfo = null;
-            this.productCtrl1.Size = new System.Drawing.Size(364, 89);
-            this.productCtrl1.TabIndex = 6;
-            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(880, 561);
             this.Controls.Add(this.splitter);
@@ -216,7 +218,6 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Form1";
             this.Text = "Triggerless TriggerBot";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.ScanInventory);
             this.splitter.Panel1.ResumeLayout(false);
             this.splitter.Panel2.ResumeLayout(false);
@@ -226,6 +227,7 @@
             this.pnlSearch.PerformLayout();
             this.pnlRight.ResumeLayout(false);
             this.pnlRight.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.pnlCollector.ResumeLayout(false);
             this.pnlCollector.PerformLayout();
             this.ResumeLayout(false);
@@ -240,13 +242,13 @@
         private System.Windows.Forms.Label lblProgress;
         private System.Windows.Forms.Panel pnlCollector;
         private System.Windows.Forms.Label label1;
-        private ProductCtrl productCtrl1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label lblProdId;
         private System.Windows.Forms.Panel pnlSearch;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.FlowLayoutPanel flowDisplay;
         private System.Windows.Forms.Panel pnlRight;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button button1;
     }
 }
 

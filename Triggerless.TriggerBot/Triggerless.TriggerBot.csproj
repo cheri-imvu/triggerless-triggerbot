@@ -59,12 +59,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CacheScan.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CacheScan.Designer.cs">
-      <DependentUpon>CacheScan.cs</DependentUpon>
-    </Compile>
     <Compile Include="Collector.cs" />
     <Compile Include="ContentsJsonItem.cs" />
     <Compile Include="Form1.cs">
@@ -88,9 +82,6 @@
     <Compile Include="ProductCtrl.Designer.cs">
       <DependentUpon>ProductCtrl.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="CacheScan.resx">
-      <DependentUpon>CacheScan.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -122,6 +113,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ManagedWinapi\ManagedWinapi.csproj">
+      <Project>{fbd3ec1e-47e2-4d2d-81c9-d6506125a09a}</Project>
+      <Name>ManagedWinapi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NVorbis\NVorbis.csproj">
       <Project>{d79462d7-03c1-41a8-9cd4-5827155dedfb}</Project>
       <Name>NVorbis</Name>

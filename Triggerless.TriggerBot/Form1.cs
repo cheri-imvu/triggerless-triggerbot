@@ -1,21 +1,63 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using ManagedWinapi.Windows;
 
 namespace Triggerless.TriggerBot
 {
     public partial class Form1 : Form
     {
+        private IntPtr _imvuMainWindow = IntPtr.Zero;
+        private IntPtr _imvuChatWindow = IntPtr.Zero;
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private bool CheckForImvu()
         {
+            _imvuChatWindow = IntPtr.Zero;
+            Process[] p = Process.GetProcesses();
+            Process imvuProc = null;
+            foreach (var proc in p)
+            {
+                if (proc.ToString().ToLower().Contains("imvuclient"))
+                {
+                    imvuProc = proc;
+                    break;
+                }
+            }
+            if (imvuProc == null)
+            {
+                MessageBox.Show("TriggerBot won't work if IMVU isn't running.", 
+                    "IMVU isn't running", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            _imvuMainWindow = imvuProc.MainWindowHandle;
+
+            var sysWindow = new SystemWindow(_imvuMainWindow);
+            var descendants = sysWindow.AllDescendantWindows;
+            foreach (var descendant in descendants)
+            {
+                if (descendant.ClassName == "ImvuNativeWindow" && descendant.Title == "Floating Tool")
+                {
+                    _imvuChatWindow = descendant.Parent.HWnd;
+                    break;
+                }
+            }
+
+            if (_imvuChatWindow == IntPtr.Zero)
+            {
+                MessageBox.Show("TriggerBot won't work if you're not in a chat room",
+                    "IMVU isn't running", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            return true;
         }
 
         private void ProductLinkClicked(object sender, ProductCtrl.LinkClickedEventArgs args)
@@ -24,7 +66,7 @@ namespace Triggerless.TriggerBot
             MessageBox.Show(msg);
         }
 
-        private async void ScanInventory(object sender, EventArgs e)
+        private async void ScanInventory(object sender, EventArgs e) //Form1.Shown
         {
             pnlCollector.BringToFront();
             btnSearch.Enabled = false;
@@ -56,60 +98,7 @@ namespace Triggerless.TriggerBot
                 lblProgress.Update();
             }
         }
-
         
-        long _imageTestCounter = 0;
-        long[] _ids = null;
-        private void button1_Click(object sender, EventArgs e)
-        {
-            var sda = new SQLiteDataAccess();
-            using (var cxn = sda.GetAppCacheCxn())
-            {
-                if (_ids == null) _ids = cxn.Query<long>("SELECT product_id from products where has_ogg = 1").ToArray();
-                var productId = _ids[_imageTestCounter];
-                lblProdId.Text = productId.ToString();
-                _imageTestCounter = (_imageTestCounter + 1) % _ids.Length;
-                
-                {
-                    var sql = $@"SELECT p.product_id,
-                       p.title,
-                       p.creator,
-                       p.image_bytes,
-                       pt.prefix,
-                       pt.sequence,
-                       pt.trigger,
-                       pt.length_ms
-                       FROM products p 
-                       INNER JOIN product_triggers pt ON (p.product_id = pt.product_id)
-                       WHERE p.product_id = {productId}
-                       ORDER BY p.product_id, pt.sequence;";
-
-                    var query = cxn.Query(sql);
-                    var productInfo = new ProductDisplayInfo();
-                    foreach (var item in query)
-                    {
-                        if (string.IsNullOrEmpty(productInfo.Name))
-                        {
-                            productInfo.Name = item.title;
-                            productInfo.Creator = item.creator;
-                            productInfo.ImageBytes = item.image_bytes;
-                            productInfo.Id = item.product_id;
-                        }
-                        productInfo.Triggers.Add(new TriggerDisplayInfo
-                        {
-                            LengthMS = (double)item.length_ms,
-                            Prefix = item.prefix,
-                            ProductId = (long)item.product_id,
-                            Sequence = (int)item.sequence,
-                            Trigger = item.trigger
-                        });
-                    }
-
-                    productCtrl1.ProductInfo = productInfo;
-                }
-            }
-        }
-
         private void DoSearch(object sender, EventArgs e)
         {
             flowDisplay.Controls.Clear();
@@ -217,5 +206,42 @@ namespace Triggerless.TriggerBot
                 e.Handled = true;
             }
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Process[] p = Process.GetProcesses();
+            Process imvuProc = null;
+            foreach (var proc in p)
+            {
+                if (proc.ToString().ToLower().Contains("imvuclient"))
+                {
+                    imvuProc = proc;
+                    break;
+                }
+            }
+            if (imvuProc != null)
+            {
+                var sysWindow = new SystemWindow(imvuProc.MainWindowHandle);
+                var descendants = sysWindow.AllDescendantWindows;
+                foreach (var descendant in descendants)
+                {
+                    if (descendant.ClassName == "ImvuNativeWindow" && descendant.Title == "Floating Tool")
+                    {
+                        BringWindowToTop(descendant.Parent.HWnd);
+                        SendKeys.Send("Hi There!~");
+                        break;
+                    }
+                }
+                
+            }
+        }
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool BringWindowToTop(IntPtr hWnd);
     }
 }
