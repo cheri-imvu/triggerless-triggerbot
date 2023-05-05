@@ -16,21 +16,6 @@ namespace Triggerless.TriggerBot
     {
         private object _lock = new object();
 
-        public class CollectorEventArgs : EventArgs {
-            public int TotalProducts { get; set; }
-            public int CompletedProducts { get; set; }
-            public string Message { get; set; }
-        }
-
-        public delegate void CollectorEventHandler (object sender, CollectorEventArgs e);
-
-        public event CollectorEventHandler CollectorEvent;
-
-        public void FireEvent(CollectorEventArgs e)
-        {
-            CollectorEvent?.Invoke(this, e);
-        }
-
 
         public static string GetUrlTemplate(long pid) => $"https://userimages-akm.imvu.com/productdata/{pid}/1/{{0}}";
 
