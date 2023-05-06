@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -12,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace Triggerless.TriggerBot
 {
-    public partial class Collector
+    public partial class Collector : Component
     {
         private object _lock = new object();
 

@@ -10,11 +10,14 @@ using ManagedWinapi.Windows;
 
 namespace Triggerless.TriggerBot
 {
-    public partial class Form1 : Form
+    public partial class TriggerBotMainForm : Form
     {
+        private bool _hush = true;
         private IntPtr _imvuMainWindow = IntPtr.Zero;
         private IntPtr _imvuChatWindow = IntPtr.Zero;
-        public Form1()
+        private ProductDisplayInfo _currentProductInfo = null;
+        private bool _isPlaying = false;
+        public TriggerBotMainForm()
         {
             InitializeComponent();
         }
@@ -34,7 +37,7 @@ namespace Triggerless.TriggerBot
             }
             if (imvuProc == null)
             {
-                MessageBox.Show("TriggerBot won't work if IMVU isn't running.", 
+                if (!_hush) MessageBox.Show("TriggerBot won't work if IMVU isn't running.", 
                     "IMVU isn't running", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
@@ -62,27 +65,28 @@ namespace Triggerless.TriggerBot
 
         private void ProductLinkClicked(object sender, ProductCtrl.LinkClickedEventArgs args)
         {
-            var msg = $"Product Name is {args.ProductDisplayInfo.Name}";
-            MessageBox.Show(msg);
+            productOnDeck.ProductInfo = args.ProductDisplayInfo;
+            productOnDeck.Visible = true;
+            btnEjectFromDeck.Enabled = true;
+            btnLoadToPlaying.Enabled = true;
         }
 
         private async void ScanInventory(object sender, EventArgs e) //Form1.Shown
         {
             pnlCollector.BringToFront();
             btnSearch.Enabled = false;
-            var c = new Collector();
-            c.CollectorEvent += new Collector.CollectorEventHandler(C_CollectorEvent);
-            await c.ScanDatabasesAsync();
+            await _collector.ScanDatabasesAsync();
             btnSearch.Enabled = true;
             pnlCollector.SendToBack();
             DoSearch(null, null);
+            CheckForImvu();
         }
 
-        private void C_CollectorEvent(object sender, Collector.CollectorEventArgs e)
+        private void OnCollectorEvent(object sender, Collector.CollectorEventArgs e)
         {
             if (InvokeRequired)
             {
-                Collector.CollectorEventHandler cb = new Collector.CollectorEventHandler(C_CollectorEvent);
+                Collector.CollectorEventHandler cb = new Collector.CollectorEventHandler(OnCollectorEvent);
                 Invoke(cb, new object[] {sender, e });
                 return;
             }
@@ -209,31 +213,6 @@ namespace Triggerless.TriggerBot
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Process[] p = Process.GetProcesses();
-            Process imvuProc = null;
-            foreach (var proc in p)
-            {
-                if (proc.ToString().ToLower().Contains("imvuclient"))
-                {
-                    imvuProc = proc;
-                    break;
-                }
-            }
-            if (imvuProc != null)
-            {
-                var sysWindow = new SystemWindow(imvuProc.MainWindowHandle);
-                var descendants = sysWindow.AllDescendantWindows;
-                foreach (var descendant in descendants)
-                {
-                    if (descendant.ClassName == "ImvuNativeWindow" && descendant.Title == "Floating Tool")
-                    {
-                        BringWindowToTop(descendant.Parent.HWnd);
-                        SendKeys.Send("Hi There!~");
-                        break;
-                    }
-                }
-                
-            }
         }
 
         [DllImport("user32.dll")]
@@ -243,5 +222,48 @@ namespace Triggerless.TriggerBot
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool BringWindowToTop(IntPtr hWnd);
+
+        private void RelocateBanner(object sender, EventArgs e)
+        {
+            var sizePanel = pnlBanner.Size;
+            var sizeBanner = picBanner.Size;
+            var left = (sizePanel.Width - sizeBanner.Width)/2;
+            picBanner.Location = new Point(left, picBanner.Location.Y);
+        }
+
+        private void MoveToPlaying(object sender, EventArgs e)
+        {
+            if (!_isPlaying && (CheckForImvu() || _hush))
+            {
+                productOnDeck.Visible = false;
+                btnLoadToPlaying.Enabled = false;
+                btnEjectFromDeck.Enabled = false;
+                _currentProductInfo = productOnDeck.ProductInfo;
+                lblNowPlaying.Text = $"\"{_currentProductInfo.Name}\" by {_currentProductInfo.Creator}";
+                FillTriggerGrid();
+            }
+
+        }
+
+        private void RemoveFromDeck(object sender, EventArgs e)
+        {
+            productOnDeck.Visible = false;
+            btnLoadToPlaying.Enabled = false;
+            btnEjectFromDeck.Enabled = false;
+        }
+
+        private void FillTriggerGrid()
+        {
+            gridTriggers.Rows.Clear();
+            if (_currentProductInfo != null)
+            {
+                foreach (var trigger in _currentProductInfo.Triggers)
+                {
+                    gridTriggers.Rows.Add(trigger.Trigger, (trigger.LengthMS / 1000).ToString("0.000"));
+                }
+                foreach (DataGridViewRow row in gridTriggers.Rows) row.Selected = false;
+                if (gridTriggers.Rows.Count > 0) gridTriggers.Rows[0].Selected = true;
+            }
+        }
     }
 }

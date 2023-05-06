@@ -31,6 +31,15 @@ namespace Triggerless.TriggerBot
         }
 
         private ProductDisplayInfo _productInfo;
+        private bool _hideOnDeck;
+        public bool HideOnDeck
+        {
+            get { return _hideOnDeck; } 
+            set {
+                linkOnDeck.Visible = !value;
+                _hideOnDeck = value;
+            }
+        }
 
         public ProductDisplayInfo ProductInfo
         {
