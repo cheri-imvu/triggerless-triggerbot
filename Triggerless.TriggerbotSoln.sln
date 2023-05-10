@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triggerless.Tests", "Trigge
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedWinapi", "ManagedWinapi\ManagedWinapi.csproj", "{FBD3EC1E-47E2-4D2D-81C9-D6506125A09A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioSegmenter", "AudioSegmenter\AudioSegmenter.csproj", "{4934E0F3-6083-43AF-8AA6-BE4D219E226B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triggerless.XAFLib", "E:\DEV\Triggerless\XAFLib\Triggerless.XAFLib.csproj", "{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{FBD3EC1E-47E2-4D2D-81C9-D6506125A09A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBD3EC1E-47E2-4D2D-81C9-D6506125A09A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBD3EC1E-47E2-4D2D-81C9-D6506125A09A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4934E0F3-6083-43AF-8AA6-BE4D219E226B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4934E0F3-6083-43AF-8AA6-BE4D219E226B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4934E0F3-6083-43AF-8AA6-BE4D219E226B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4934E0F3-6083-43AF-8AA6-BE4D219E226B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -7,20 +7,33 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using ManagedWinapi.Windows;
+using System.Threading;
+using static Triggerless.TriggerBot.ProductCtrl;
 
 namespace Triggerless.TriggerBot
 {
     public partial class TriggerBotMainForm : Form
     {
-        private bool _hush = true;
-        private IntPtr _imvuMainWindow = IntPtr.Zero;
-        private IntPtr _imvuChatWindow = IntPtr.Zero;
-        private ProductDisplayInfo _currentProductInfo = null;
-        private bool _isPlaying = false;
+        
         public TriggerBotMainForm()
         {
             InitializeComponent();
         }
+
+        #region IMVU Presence and Interation
+        // IMVU presence
+        private bool _hush = false;
+        private IntPtr _imvuMainWindow = IntPtr.Zero;
+        private IntPtr _imvuChatWindow = IntPtr.Zero;
+
+        // IMVU detection and interaction
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool BringWindowToTop(IntPtr hWnd);
 
         private bool CheckForImvu()
         {
@@ -37,7 +50,7 @@ namespace Triggerless.TriggerBot
             }
             if (imvuProc == null)
             {
-                if (!_hush) MessageBox.Show("TriggerBot won't work if IMVU isn't running.", 
+                if (!_hush) MessageBox.Show("TriggerBot can't play the triggers if IMVU isn't running. LOL", 
                     "IMVU isn't running", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
@@ -63,14 +76,17 @@ namespace Triggerless.TriggerBot
             return true;
         }
 
-        private void ProductLinkClicked(object sender, ProductCtrl.LinkClickedEventArgs args)
+        private void WearItem(object sender, WearItemEventArgs e)
         {
-            productOnDeck.ProductInfo = args.ProductDisplayInfo;
-            productOnDeck.Visible = true;
-            btnEjectFromDeck.Enabled = true;
-            btnLoadToPlaying.Enabled = true;
+            if (_imvuChatWindow == IntPtr.Zero) return;
+            BringWindowToTop(_imvuChatWindow);
+            SetForegroundWindow(_imvuChatWindow);
+            SendKeys.SendWait($" *use {e.ProductId}~");
         }
+        #endregion
 
+        #region Inventory Update
+        // Inventory Update
         private async void ScanInventory(object sender, EventArgs e) //Form1.Shown
         {
             pnlCollector.BringToFront();
@@ -82,6 +98,7 @@ namespace Triggerless.TriggerBot
             CheckForImvu();
         }
 
+        // Inventory Update
         private void OnCollectorEvent(object sender, Collector.CollectorEventArgs e)
         {
             if (InvokeRequired)
@@ -102,7 +119,10 @@ namespace Triggerless.TriggerBot
                 lblProgress.Update();
             }
         }
-        
+        #endregion
+
+        #region Product Search
+        // Product Search
         private void DoSearch(object sender, EventArgs e)
         {
             flowDisplay.Controls.Clear();
@@ -153,7 +173,11 @@ namespace Triggerless.TriggerBot
                 queryList = cxnAppCache.Query(sql).ToList();
             }
 
-            if (!queryList.Any()) return;
+            if (!queryList.Any())
+            {
+                flowDisplay.ResumeLayout(true);
+                return;
+            }
 
             foreach (var query in queryList)
             {
@@ -191,11 +215,13 @@ namespace Triggerless.TriggerBot
                 newControl.ProductInfo = info;
                 newControl.Size = new Size(364, 87);
                 newControl.OnLinkClicked += ProductLinkClicked;
+                newControl.OnWearItem += WearItem;
                 flowDisplay.Controls.Add(newControl);
             }
             flowDisplay.ResumeLayout(true);
         }
 
+        // Product Search
         private void txtSearch_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == Convert.ToChar(Keys.Return) && btnSearch.Enabled)
@@ -210,19 +236,9 @@ namespace Triggerless.TriggerBot
                 e.Handled = true;
             }
         }
+        #endregion
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-        }
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool SetForegroundWindow(IntPtr hWnd);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool BringWindowToTop(IntPtr hWnd);
-
+        #region GUI 
         private void RelocateBanner(object sender, EventArgs e)
         {
             var sizePanel = pnlBanner.Size;
@@ -231,6 +247,15 @@ namespace Triggerless.TriggerBot
             picBanner.Location = new Point(left, picBanner.Location.Y);
         }
 
+        private void stayOnTopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.TopMost = stayOnTopToolStripMenuItem.Checked;
+        }
+
+        #endregion
+
+        #region Product Selection
+        // Product Selection
         private void MoveToPlaying(object sender, EventArgs e)
         {
             if (!_isPlaying && (CheckForImvu() || _hush))
@@ -238,13 +263,18 @@ namespace Triggerless.TriggerBot
                 productOnDeck.Visible = false;
                 btnLoadToPlaying.Enabled = false;
                 btnEjectFromDeck.Enabled = false;
-                _currentProductInfo = productOnDeck.ProductInfo;
-                lblNowPlaying.Text = $"\"{_currentProductInfo.Name}\" by {_currentProductInfo.Creator}";
+                btnPlay.Enabled = true;
+                _currProductInfo = productOnDeck.ProductInfo;
+                lblNowPlaying.Text = $"\"{_currProductInfo.Name}\" by {_currProductInfo.Creator}";
                 FillTriggerGrid();
+                trackBarLag.Value = (int)_lagMS;
+                lblLag.Text = _lagMS.ToString();
+                pnlLag.Visible = true;
             }
 
         }
 
+        // Product Selection
         private void RemoveFromDeck(object sender, EventArgs e)
         {
             productOnDeck.Visible = false;
@@ -252,18 +282,184 @@ namespace Triggerless.TriggerBot
             btnEjectFromDeck.Enabled = false;
         }
 
+        // Product Selection
         private void FillTriggerGrid()
         {
             gridTriggers.Rows.Clear();
-            if (_currentProductInfo != null)
+            if (_currProductInfo != null)
             {
-                foreach (var trigger in _currentProductInfo.Triggers)
+                foreach (var trigger in _currProductInfo.Triggers)
                 {
                     gridTriggers.Rows.Add(trigger.Trigger, (trigger.LengthMS / 1000).ToString("0.000"));
                 }
                 foreach (DataGridViewRow row in gridTriggers.Rows) row.Selected = false;
                 if (gridTriggers.Rows.Count > 0) gridTriggers.Rows[0].Selected = true;
             }
+        }
+
+        // Product Selection
+        private void ProductLinkClicked(object sender, ProductCtrl.LinkClickedEventArgs args)
+        {
+            productOnDeck.ProductInfo = args.ProductDisplayInfo;
+            productOnDeck.Visible = true;
+            btnEjectFromDeck.Enabled = true;
+            btnLoadToPlaying.Enabled = true;
+        }
+        #endregion
+
+        #region Trigger Generation
+
+        private ProductDisplayInfo _currProductInfo = null;
+        private bool _isPlaying = false;
+        private int _currTriggerIndex;
+        private int _numberOfTriggers;
+        private List<string> _usedAdditionals = new List<string>();
+        private double _lagMS = 22;
+        private DateTime _triggerStartTime = DateTime.MinValue;
+
+
+        // Trigger Generation
+        private void _triggerTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            _triggerTimer.Stop();
+            Interlocked.Increment(ref _currTriggerIndex);
+            if (_currTriggerIndex < _numberOfTriggers)
+            {
+                PullTrigger();
+                return;
+            }
+            CleanupAfterPlay();
+        }
+
+        public void PullTrigger()
+        {
+            _triggerTimer.Interval = _currProductInfo.Triggers[_currTriggerIndex].LengthMS - _lagMS;
+            SetForegroundWindow(_imvuChatWindow);
+            _triggerTimer.Start();
+            _triggerStartTime = DateTime.Now;
+            SendKeys.SendWait(GetTriggerLine() + "~");
+
+            _progressTimer.Stop();
+            progTrigger.Value = 0;
+            _progressTimer.Start();
+
+            gridTriggers.Rows[_currTriggerIndex].Selected = true;
+            lblCurrPlayingTrigger.Text = GetTriggerLine();
+            if (!string.IsNullOrWhiteSpace(cboAdditionalTriggers.Text))
+            {
+                while (_usedAdditionals.Contains(cboAdditionalTriggers.Text))
+                {
+                    _usedAdditionals.Remove(cboAdditionalTriggers.Text);
+                }
+                _usedAdditionals.Insert(0, cboAdditionalTriggers.Text);
+                cboAdditionalTriggers.Items.Clear();
+                cboAdditionalTriggers.Items.AddRange(_usedAdditionals.ToArray());
+            }
+            cboAdditionalTriggers.Text = string.Empty;
+        }
+
+        private void StartPlaying(object sender, EventArgs e)
+        {
+            if (_currProductInfo == null) // sanity check
+            {
+                MessageBox.Show("Playback Error, no trigger product selected");
+                return;
+            }
+            _isPlaying = true;
+            BringWindowToTop(_imvuChatWindow);
+            _currTriggerIndex = 0;
+            _numberOfTriggers = _currProductInfo.Triggers.Count;
+            PullTrigger();
+            if (minimizeMenuItem.Checked) WindowState = FormWindowState.Minimized;
+            btnAbort.Enabled = true;
+            btnPlay.Enabled = false;
+        }
+
+        private string GetTriggerLine()
+        {
+            string result = "  /" + TrimTrigger(); // sometimes the first char gets cut off.
+            if (!string.IsNullOrEmpty(cboAdditionalTriggers.Text))
+            {
+                string[] bits = cboAdditionalTriggers.Text.Trim()
+                    .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (bits.Length > 0)
+                {
+                    for (int i = 0; i < bits.Length; i++)
+                    {
+                        result += " ";
+                        if (!bits[i].StartsWith("/")) result += "/";
+                        result += bits[i];
+                    }
+                }
+            }
+            if (result.Contains("~")) result = result.Replace("~", "{~}");
+            return result;
+        }
+
+        private string TrimTrigger()
+        {
+            string result = _currProductInfo.Triggers[_currTriggerIndex].Trigger;
+            int commaPos = result.IndexOf(",");
+            if (commaPos == -1) return result;
+            return result.Substring(0, commaPos);
+        }
+
+        private void AbortPlaying(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to abort?", "Abort Trigger Play?", 
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                CleanupAfterPlay();
+            }
+        }
+
+        private void CleanupAfterPlay()
+        {
+            _triggerTimer.Enabled = false;
+            _progressTimer.Enabled = false;
+            _isPlaying = false;
+            _currProductInfo = null;
+            gridTriggers.Rows.Clear();
+            lblNowPlaying.Text = "--Pending--";
+            btnPlay.Enabled = false;
+            btnAbort.Enabled = false;
+            pnlLag.Visible = false;
+            lblCurrPlayingTrigger.Text = "--Pending--";
+
+            if (productOnDeck.Visible && chkAutoCue.Checked)
+            {
+                MoveToPlaying(null, null);
+                StartPlaying(null, null);
+                chkAutoCue.Checked = false;
+            }
+        }
+
+        private void LagControlChanged(object sender, EventArgs e)
+        {
+            _lagMS = trackBarLag.Value;
+            lblLag.Text = _lagMS.ToString();
+        }
+
+        private void TriggerMadeProgress(object sender, EventArgs e)
+        {
+            var triggerMsecElapsed = (DateTime.Now - _triggerStartTime).TotalMilliseconds;
+            var percentProgress = 100 * triggerMsecElapsed / _currProductInfo.Triggers[_currTriggerIndex].LengthMS;
+            percentProgress = Math.Min(percentProgress, 100);
+            progTrigger.Value = (int)Math.Round(percentProgress);
+        }
+
+
+
+        #endregion
+
+        private void OpenAudioSlicer(object sender, EventArgs e)
+        {
+            if (TopMost)
+            {
+                stayOnTopToolStripMenuItem.Checked = false;
+                TopMost = false;
+            }
+            var result = new AudioSplicerForm().ShowDialog();
         }
     }
 }

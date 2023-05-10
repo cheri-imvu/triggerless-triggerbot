@@ -34,12 +34,14 @@
             this.lblCreator = new System.Windows.Forms.Label();
             this.lblTriggers = new System.Windows.Forms.Label();
             this.linkOnDeck = new System.Windows.Forms.LinkLabel();
+            this.linkWearItem = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).BeginInit();
             this.SuspendLayout();
             // 
             // picProductImage
             // 
             this.picProductImage.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picProductImage.BackgroundImage")));
+            this.picProductImage.Cursor = System.Windows.Forms.Cursors.Hand;
             this.picProductImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("picProductImage.InitialImage")));
             this.picProductImage.Location = new System.Drawing.Point(5, 4);
             this.picProductImage.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -80,7 +82,7 @@
             // linkOnDeck
             // 
             this.linkOnDeck.AutoSize = true;
-            this.linkOnDeck.Location = new System.Drawing.Point(258, 66);
+            this.linkOnDeck.Location = new System.Drawing.Point(256, 62);
             this.linkOnDeck.Name = "linkOnDeck";
             this.linkOnDeck.Size = new System.Drawing.Size(105, 18);
             this.linkOnDeck.TabIndex = 4;
@@ -89,12 +91,25 @@
             this.linkOnDeck.VisitedLinkColor = System.Drawing.Color.Blue;
             this.linkOnDeck.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOnDeck_LinkClicked);
             // 
+            // linkWearItem
+            // 
+            this.linkWearItem.AutoSize = true;
+            this.linkWearItem.Location = new System.Drawing.Point(113, 62);
+            this.linkWearItem.Name = "linkWearItem";
+            this.linkWearItem.Size = new System.Drawing.Size(82, 18);
+            this.linkWearItem.TabIndex = 5;
+            this.linkWearItem.TabStop = true;
+            this.linkWearItem.Text = "Wear Item";
+            this.linkWearItem.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.linkWearItem.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WearItem);
+            // 
             // ProductCtrl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(248)))));
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.linkWearItem);
             this.Controls.Add(this.linkOnDeck);
             this.Controls.Add(this.lblTriggers);
             this.Controls.Add(this.lblCreator);
@@ -117,5 +132,6 @@
         private System.Windows.Forms.Label lblCreator;
         private System.Windows.Forms.Label lblTriggers;
         private System.Windows.Forms.LinkLabel linkOnDeck;
+        private System.Windows.Forms.LinkLabel linkWearItem;
     }
 }

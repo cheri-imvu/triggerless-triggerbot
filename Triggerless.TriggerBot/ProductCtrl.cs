@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Windows.Forms;
 
 namespace Triggerless.TriggerBot
@@ -21,6 +23,18 @@ namespace Triggerless.TriggerBot
             }
 
             public ProductDisplayInfo ProductDisplayInfo { get; set; } 
+        }
+
+        public event WearItemEventHandler OnWearItem;
+        public delegate void WearItemEventHandler(object sender, WearItemEventArgs e);
+        public class WearItemEventArgs : EventArgs
+        {
+
+            public WearItemEventArgs(long productId)
+            {
+                ProductId = productId;
+            }
+            public long ProductId { get; set; }
         }
 
 
@@ -81,6 +95,24 @@ namespace Triggerless.TriggerBot
                 var args = new LinkClickedEventArgs(_productInfo);
                 OnLinkClicked?.Invoke(sender, args);
             }
+        }
+
+        private void ShowWebPage(object sender, EventArgs e)
+        {
+            if (_productInfo != null)
+            {
+                var uri = $"https://www.imvu.com/shop/product.php?products_id={_productInfo.Id}";
+                var psi = new System.Diagnostics.ProcessStartInfo();
+                psi.UseShellExecute = true;
+                psi.FileName = uri;
+                System.Diagnostics.Process.Start(psi);
+            }
+        }
+
+        private void WearItem(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (_productInfo == null) return;
+            OnWearItem?.Invoke(this, new WearItemEventArgs(_productInfo.Id));
         }
     }
 }

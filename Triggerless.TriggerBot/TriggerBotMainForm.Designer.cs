@@ -1,4 +1,6 @@
-﻿namespace Triggerless.TriggerBot
+﻿using System.ComponentModel;
+
+namespace Triggerless.TriggerBot
 {
     partial class TriggerBotMainForm
     {
@@ -30,15 +32,27 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TriggerBotMainForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitter = new System.Windows.Forms.SplitContainer();
             this.flowDisplay = new System.Windows.Forms.FlowLayoutPanel();
             this.pnlSearch = new System.Windows.Forms.Panel();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
             this.pnlRight = new System.Windows.Forms.Panel();
+            this.lblCurrPlayingTrigger = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.pnlLag = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.progTrigger = new System.Windows.Forms.ProgressBar();
+            this.label6 = new System.Windows.Forms.Label();
+            this.trackBarLag = new System.Windows.Forms.TrackBar();
+            this.label4 = new System.Windows.Forms.Label();
+            this.lblLag = new System.Windows.Forms.Label();
+            this.btnAbort = new System.Windows.Forms.Button();
+            this.btnPlay = new System.Windows.Forms.Button();
+            this.cboAdditionalTriggers = new System.Windows.Forms.ComboBox();
+            this.lblAdditional = new System.Windows.Forms.Label();
             this.gridTriggers = new System.Windows.Forms.DataGridView();
             this.colTrigger = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colLengthMS = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -47,6 +61,7 @@
             this.pnlBanner = new System.Windows.Forms.Panel();
             this.picBanner = new System.Windows.Forms.PictureBox();
             this.pnlOnDeck = new System.Windows.Forms.Panel();
+            this.chkAutoCue = new System.Windows.Forms.CheckBox();
             this.btnEjectFromDeck = new System.Windows.Forms.Button();
             this.btnLoadToPlaying = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -57,27 +72,53 @@
             this.lblProgress = new System.Windows.Forms.Label();
             this.lblProduct = new System.Windows.Forms.Label();
             this._collector = new Triggerless.TriggerBot.Collector();
-            this.lblAdditional = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.timer1 = new System.Timers.Timer();
+            this._triggerTimer = new System.Timers.Timer();
+            this._toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this._topMenu = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sliceAudioFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.minimizeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stayOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.computerSpeedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ancientToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lowEndToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.averageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.prettyNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gamerExtremeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.scanForNewProductsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.totalRescanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.doSomething1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.webPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutTriggerbotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._progressTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
             this.splitter.Panel1.SuspendLayout();
             this.splitter.Panel2.SuspendLayout();
             this.splitter.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlRight.SuspendLayout();
+            this.pnlLag.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarLag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridTriggers)).BeginInit();
             this.pnlBanner.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBanner)).BeginInit();
             this.pnlOnDeck.SuspendLayout();
             this.pnlCollector.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._triggerTimer)).BeginInit();
+            this._topMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitter
             // 
             this.splitter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitter.Location = new System.Drawing.Point(0, 0);
+            this.splitter.Location = new System.Drawing.Point(0, 24);
             this.splitter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.splitter.Name = "splitter";
             // 
@@ -91,7 +132,7 @@
             // 
             this.splitter.Panel2.Controls.Add(this.pnlRight);
             this.splitter.Panel2.Controls.Add(this.pnlCollector);
-            this.splitter.Size = new System.Drawing.Size(1015, 699);
+            this.splitter.Size = new System.Drawing.Size(1015, 675);
             this.splitter.SplitterDistance = 390;
             this.splitter.SplitterWidth = 5;
             this.splitter.TabIndex = 1;
@@ -102,7 +143,7 @@
             this.flowDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowDisplay.Location = new System.Drawing.Point(0, 48);
             this.flowDisplay.Name = "flowDisplay";
-            this.flowDisplay.Size = new System.Drawing.Size(390, 651);
+            this.flowDisplay.Size = new System.Drawing.Size(390, 627);
             this.flowDisplay.TabIndex = 4;
             // 
             // pnlSearch
@@ -125,6 +166,7 @@
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(239, 24);
             this.txtSearch.TabIndex = 1;
+            this._toolTip.SetToolTip(this.txtSearch, "Enter Search Term");
             this.txtSearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSearch_KeyPress);
             // 
             // btnSearch
@@ -135,12 +177,18 @@
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(35, 35);
             this.btnSearch.TabIndex = 2;
+            this._toolTip.SetToolTip(this.btnSearch, "Search Title, Creator & Triggers");
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.DoSearch);
             // 
             // pnlRight
             // 
-            this.pnlRight.Controls.Add(this.comboBox1);
+            this.pnlRight.Controls.Add(this.lblCurrPlayingTrigger);
+            this.pnlRight.Controls.Add(this.label5);
+            this.pnlRight.Controls.Add(this.pnlLag);
+            this.pnlRight.Controls.Add(this.btnAbort);
+            this.pnlRight.Controls.Add(this.btnPlay);
+            this.pnlRight.Controls.Add(this.cboAdditionalTriggers);
             this.pnlRight.Controls.Add(this.lblAdditional);
             this.pnlRight.Controls.Add(this.gridTriggers);
             this.pnlRight.Controls.Add(this.lblNowPlaying);
@@ -150,8 +198,139 @@
             this.pnlRight.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlRight.Location = new System.Drawing.Point(0, 0);
             this.pnlRight.Name = "pnlRight";
-            this.pnlRight.Size = new System.Drawing.Size(620, 699);
+            this.pnlRight.Size = new System.Drawing.Size(620, 675);
             this.pnlRight.TabIndex = 9;
+            // 
+            // lblCurrPlayingTrigger
+            // 
+            this.lblCurrPlayingTrigger.AutoSize = true;
+            this.lblCurrPlayingTrigger.Location = new System.Drawing.Point(292, 262);
+            this.lblCurrPlayingTrigger.Name = "lblCurrPlayingTrigger";
+            this.lblCurrPlayingTrigger.Size = new System.Drawing.Size(104, 18);
+            this.lblCurrPlayingTrigger.TabIndex = 17;
+            this.lblCurrPlayingTrigger.Text = "--Pending--";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(292, 236);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(181, 18);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "Current Playing Trigger";
+            // 
+            // pnlLag
+            // 
+            this.pnlLag.Controls.Add(this.label7);
+            this.pnlLag.Controls.Add(this.progTrigger);
+            this.pnlLag.Controls.Add(this.label6);
+            this.pnlLag.Controls.Add(this.trackBarLag);
+            this.pnlLag.Controls.Add(this.label4);
+            this.pnlLag.Controls.Add(this.lblLag);
+            this.pnlLag.Location = new System.Drawing.Point(287, 428);
+            this.pnlLag.Name = "pnlLag";
+            this.pnlLag.Size = new System.Drawing.Size(327, 105);
+            this.pnlLag.TabIndex = 15;
+            this.pnlLag.Visible = false;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 60);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(132, 18);
+            this.label7.TabIndex = 16;
+            this.label7.Text = "Trigger Progress";
+            // 
+            // progTrigger
+            // 
+            this.progTrigger.Location = new System.Drawing.Point(4, 81);
+            this.progTrigger.Name = "progTrigger";
+            this.progTrigger.Size = new System.Drawing.Size(315, 12);
+            this.progTrigger.TabIndex = 3;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(109, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(46, 18);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "msec";
+            // 
+            // trackBarLag
+            // 
+            this.trackBarLag.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarLag.Location = new System.Drawing.Point(6, 21);
+            this.trackBarLag.Maximum = 100;
+            this.trackBarLag.Name = "trackBarLag";
+            this.trackBarLag.Size = new System.Drawing.Size(317, 45);
+            this.trackBarLag.TabIndex = 12;
+            this.trackBarLag.ValueChanged += new System.EventHandler(this.LagControlChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(3, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(85, 18);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "Lag Factor";
+            // 
+            // lblLag
+            // 
+            this.lblLag.AutoSize = true;
+            this.lblLag.Location = new System.Drawing.Point(88, 0);
+            this.lblLag.Name = "lblLag";
+            this.lblLag.Size = new System.Drawing.Size(26, 18);
+            this.lblLag.TabIndex = 14;
+            this.lblLag.Text = "99";
+            this.lblLag.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // btnAbort
+            // 
+            this.btnAbort.Enabled = false;
+            this.btnAbort.Image = ((System.Drawing.Image)(resources.GetObject("btnAbort.Image")));
+            this.btnAbort.Location = new System.Drawing.Point(335, 189);
+            this.btnAbort.Name = "btnAbort";
+            this.btnAbort.Size = new System.Drawing.Size(34, 34);
+            this.btnAbort.TabIndex = 11;
+            this._toolTip.SetToolTip(this.btnAbort, "Abort Triggers");
+            this.btnAbort.UseVisualStyleBackColor = true;
+            this.btnAbort.Click += new System.EventHandler(this.AbortPlaying);
+            // 
+            // btnPlay
+            // 
+            this.btnPlay.Enabled = false;
+            this.btnPlay.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPlay.Image = ((System.Drawing.Image)(resources.GetObject("btnPlay.Image")));
+            this.btnPlay.Location = new System.Drawing.Point(293, 189);
+            this.btnPlay.Name = "btnPlay";
+            this.btnPlay.Size = new System.Drawing.Size(34, 34);
+            this.btnPlay.TabIndex = 10;
+            this._toolTip.SetToolTip(this.btnPlay, "Play Triggers");
+            this.btnPlay.UseVisualStyleBackColor = true;
+            this.btnPlay.Click += new System.EventHandler(this.StartPlaying);
+            // 
+            // cboAdditionalTriggers
+            // 
+            this.cboAdditionalTriggers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cboAdditionalTriggers.FormattingEnabled = true;
+            this.cboAdditionalTriggers.Location = new System.Drawing.Point(287, 144);
+            this.cboAdditionalTriggers.Name = "cboAdditionalTriggers";
+            this.cboAdditionalTriggers.Size = new System.Drawing.Size(327, 26);
+            this.cboAdditionalTriggers.TabIndex = 9;
+            // 
+            // lblAdditional
+            // 
+            this.lblAdditional.AutoSize = true;
+            this.lblAdditional.Location = new System.Drawing.Point(286, 121);
+            this.lblAdditional.Name = "lblAdditional";
+            this.lblAdditional.Size = new System.Drawing.Size(150, 18);
+            this.lblAdditional.TabIndex = 8;
+            this.lblAdditional.Text = "Additional Triggers";
             // 
             // gridTriggers
             // 
@@ -163,44 +342,37 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.gridTriggers.BackgroundColor = System.Drawing.SystemColors.Control;
             this.gridTriggers.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Lucida Sans Unicode", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridTriggers.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridTriggers.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.gridTriggers.ColumnHeadersHeight = 25;
             this.gridTriggers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridTriggers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colTrigger,
             this.colLengthMS});
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Lucida Sans Unicode", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.gridTriggers.DefaultCellStyle = dataGridViewCellStyle5;
             this.gridTriggers.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.gridTriggers.EnableHeadersVisualStyles = false;
             this.gridTriggers.Location = new System.Drawing.Point(4, 120);
+            this.gridTriggers.MultiSelect = false;
             this.gridTriggers.Name = "gridTriggers";
             this.gridTriggers.ReadOnly = true;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.gridTriggers.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.gridTriggers.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.gridTriggers.RowHeadersWidth = 5;
             this.gridTriggers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.gridTriggers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridTriggers.Size = new System.Drawing.Size(277, 437);
+            this.gridTriggers.Size = new System.Drawing.Size(277, 413);
             this.gridTriggers.TabIndex = 7;
             // 
             // colTrigger
@@ -262,34 +434,49 @@
             // pnlOnDeck
             // 
             this.pnlOnDeck.BackColor = System.Drawing.Color.Silver;
+            this.pnlOnDeck.Controls.Add(this.chkAutoCue);
             this.pnlOnDeck.Controls.Add(this.btnEjectFromDeck);
             this.pnlOnDeck.Controls.Add(this.btnLoadToPlaying);
             this.pnlOnDeck.Controls.Add(this.label2);
             this.pnlOnDeck.Controls.Add(this.productOnDeck);
             this.pnlOnDeck.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlOnDeck.Location = new System.Drawing.Point(0, 563);
+            this.pnlOnDeck.Location = new System.Drawing.Point(0, 539);
             this.pnlOnDeck.Name = "pnlOnDeck";
             this.pnlOnDeck.Size = new System.Drawing.Size(620, 136);
             this.pnlOnDeck.TabIndex = 3;
             // 
+            // chkAutoCue
+            // 
+            this.chkAutoCue.AutoSize = true;
+            this.chkAutoCue.Location = new System.Drawing.Point(107, 10);
+            this.chkAutoCue.Name = "chkAutoCue";
+            this.chkAutoCue.Size = new System.Drawing.Size(268, 22);
+            this.chkAutoCue.TabIndex = 5;
+            this.chkAutoCue.Text = "Auto play after this song is done";
+            this.chkAutoCue.UseVisualStyleBackColor = true;
+            // 
             // btnEjectFromDeck
             // 
+            this.btnEjectFromDeck.Enabled = false;
             this.btnEjectFromDeck.Image = ((System.Drawing.Image)(resources.GetObject("btnEjectFromDeck.Image")));
             this.btnEjectFromDeck.Location = new System.Drawing.Point(377, 94);
             this.btnEjectFromDeck.Name = "btnEjectFromDeck";
             this.btnEjectFromDeck.Size = new System.Drawing.Size(34, 34);
             this.btnEjectFromDeck.TabIndex = 4;
+            this._toolTip.SetToolTip(this.btnEjectFromDeck, "Remove from On Deck");
             this.btnEjectFromDeck.UseVisualStyleBackColor = true;
             this.btnEjectFromDeck.Click += new System.EventHandler(this.RemoveFromDeck);
             // 
             // btnLoadToPlaying
             // 
+            this.btnLoadToPlaying.Enabled = false;
             this.btnLoadToPlaying.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLoadToPlaying.Image = ((System.Drawing.Image)(resources.GetObject("btnLoadToPlaying.Image")));
             this.btnLoadToPlaying.Location = new System.Drawing.Point(377, 37);
             this.btnLoadToPlaying.Name = "btnLoadToPlaying";
             this.btnLoadToPlaying.Size = new System.Drawing.Size(34, 34);
             this.btnLoadToPlaying.TabIndex = 3;
+            this._toolTip.SetToolTip(this.btnLoadToPlaying, "Add to Now Playing");
             this.btnLoadToPlaying.UseVisualStyleBackColor = true;
             this.btnLoadToPlaying.Click += new System.EventHandler(this.MoveToPlaying);
             // 
@@ -315,6 +502,7 @@
             this.productOnDeck.ProductInfo = null;
             this.productOnDeck.Size = new System.Drawing.Size(364, 90);
             this.productOnDeck.TabIndex = 2;
+            this._toolTip.SetToolTip(this.productOnDeck, "Trigger Product On Deck");
             this.productOnDeck.Visible = false;
             // 
             // pnlCollector
@@ -368,39 +556,203 @@
             // 
             this._collector.CollectorEvent += new Triggerless.TriggerBot.Collector.CollectorEventHandler(this.OnCollectorEvent);
             // 
-            // lblAdditional
+            // _triggerTimer
             // 
-            this.lblAdditional.AutoSize = true;
-            this.lblAdditional.Location = new System.Drawing.Point(286, 97);
-            this.lblAdditional.Name = "lblAdditional";
-            this.lblAdditional.Size = new System.Drawing.Size(150, 18);
-            this.lblAdditional.TabIndex = 8;
-            this.lblAdditional.Text = "Additional Triggers";
+            this._triggerTimer.SynchronizingObject = this.picBanner;
+            this._triggerTimer.Elapsed += new System.Timers.ElapsedEventHandler(this._triggerTimer_Elapsed);
             // 
-            // comboBox1
+            // _topMenu
             // 
-            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(287, 120);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(327, 26);
-            this.comboBox1.TabIndex = 9;
+            this._topMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.optionsToolStripMenuItem,
+            this.actionsMenuItem,
+            this.debugToolStripMenuItem,
+            this.helpToolStripMenuItem});
+            this._topMenu.Location = new System.Drawing.Point(0, 0);
+            this._topMenu.Name = "_topMenu";
+            this._topMenu.Size = new System.Drawing.Size(1015, 24);
+            this._topMenu.TabIndex = 2;
+            this._topMenu.Text = "menuStrip1";
             // 
-            // Form1
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sliceAudioFileToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // sliceAudioFileToolStripMenuItem
+            // 
+            this.sliceAudioFileToolStripMenuItem.Name = "sliceAudioFileToolStripMenuItem";
+            this.sliceAudioFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sliceAudioFileToolStripMenuItem.Text = "Slice Audio File";
+            this.sliceAudioFileToolStripMenuItem.Click += new System.EventHandler(this.OpenAudioSlicer);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.minimizeMenuItem,
+            this.stayOnTopToolStripMenuItem,
+            this.computerSpeedToolStripMenuItem});
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.optionsToolStripMenuItem.Text = "Options";
+            // 
+            // minimizeMenuItem
+            // 
+            this.minimizeMenuItem.CheckOnClick = true;
+            this.minimizeMenuItem.Name = "minimizeMenuItem";
+            this.minimizeMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.minimizeMenuItem.Text = "Minimize On Play";
+            // 
+            // stayOnTopToolStripMenuItem
+            // 
+            this.stayOnTopToolStripMenuItem.CheckOnClick = true;
+            this.stayOnTopToolStripMenuItem.Name = "stayOnTopToolStripMenuItem";
+            this.stayOnTopToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.stayOnTopToolStripMenuItem.Text = "Stay on Top";
+            this.stayOnTopToolStripMenuItem.Click += new System.EventHandler(this.stayOnTopToolStripMenuItem_Click);
+            // 
+            // computerSpeedToolStripMenuItem
+            // 
+            this.computerSpeedToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ancientToolStripMenuItem,
+            this.lowEndToolStripMenuItem,
+            this.averageToolStripMenuItem,
+            this.prettyNewToolStripMenuItem,
+            this.gamerExtremeToolStripMenuItem});
+            this.computerSpeedToolStripMenuItem.Name = "computerSpeedToolStripMenuItem";
+            this.computerSpeedToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.computerSpeedToolStripMenuItem.Text = "Computer Speed";
+            // 
+            // ancientToolStripMenuItem
+            // 
+            this.ancientToolStripMenuItem.CheckOnClick = true;
+            this.ancientToolStripMenuItem.Name = "ancientToolStripMenuItem";
+            this.ancientToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.ancientToolStripMenuItem.Text = "Ancient";
+            // 
+            // lowEndToolStripMenuItem
+            // 
+            this.lowEndToolStripMenuItem.CheckOnClick = true;
+            this.lowEndToolStripMenuItem.Name = "lowEndToolStripMenuItem";
+            this.lowEndToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.lowEndToolStripMenuItem.Text = "Low End";
+            // 
+            // averageToolStripMenuItem
+            // 
+            this.averageToolStripMenuItem.Checked = true;
+            this.averageToolStripMenuItem.CheckOnClick = true;
+            this.averageToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.averageToolStripMenuItem.Name = "averageToolStripMenuItem";
+            this.averageToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.averageToolStripMenuItem.Text = "Average";
+            // 
+            // prettyNewToolStripMenuItem
+            // 
+            this.prettyNewToolStripMenuItem.CheckOnClick = true;
+            this.prettyNewToolStripMenuItem.Name = "prettyNewToolStripMenuItem";
+            this.prettyNewToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.prettyNewToolStripMenuItem.Text = "Pretty New";
+            // 
+            // gamerExtremeToolStripMenuItem
+            // 
+            this.gamerExtremeToolStripMenuItem.CheckOnClick = true;
+            this.gamerExtremeToolStripMenuItem.Name = "gamerExtremeToolStripMenuItem";
+            this.gamerExtremeToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.gamerExtremeToolStripMenuItem.Text = "Gamer Extreme";
+            // 
+            // actionsMenuItem
+            // 
+            this.actionsMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.scanForNewProductsToolStripMenuItem,
+            this.totalRescanToolStripMenuItem});
+            this.actionsMenuItem.Name = "actionsMenuItem";
+            this.actionsMenuItem.Size = new System.Drawing.Size(59, 20);
+            this.actionsMenuItem.Text = "Actions";
+            // 
+            // scanForNewProductsToolStripMenuItem
+            // 
+            this.scanForNewProductsToolStripMenuItem.Name = "scanForNewProductsToolStripMenuItem";
+            this.scanForNewProductsToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.scanForNewProductsToolStripMenuItem.Text = "Scan for New Products...";
+            this.scanForNewProductsToolStripMenuItem.Click += new System.EventHandler(this.ScanInventory);
+            // 
+            // totalRescanToolStripMenuItem
+            // 
+            this.totalRescanToolStripMenuItem.Name = "totalRescanToolStripMenuItem";
+            this.totalRescanToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.totalRescanToolStripMenuItem.Text = "Totally Rescan Inventory";
+            // 
+            // debugToolStripMenuItem
+            // 
+            this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.doSomething1ToolStripMenuItem});
+            this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
+            this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+            this.debugToolStripMenuItem.Text = "Debug";
+            // 
+            // doSomething1ToolStripMenuItem
+            // 
+            this.doSomething1ToolStripMenuItem.Name = "doSomething1ToolStripMenuItem";
+            this.doSomething1ToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.doSomething1ToolStripMenuItem.Text = "Do Something 1";
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.webPageToolStripMenuItem,
+            this.aboutTriggerbotToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // webPageToolStripMenuItem
+            // 
+            this.webPageToolStripMenuItem.Name = "webPageToolStripMenuItem";
+            this.webPageToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.webPageToolStripMenuItem.Text = "Web Page...";
+            // 
+            // aboutTriggerbotToolStripMenuItem
+            // 
+            this.aboutTriggerbotToolStripMenuItem.Name = "aboutTriggerbotToolStripMenuItem";
+            this.aboutTriggerbotToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.aboutTriggerbotToolStripMenuItem.Text = "About Triggerbot...";
+            // 
+            // _progressTimer
+            // 
+            this._progressTimer.Tick += new System.EventHandler(this.TriggerMadeProgress);
+            // 
+            // TriggerBotMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1015, 699);
             this.Controls.Add(this.splitter);
+            this.Controls.Add(this._topMenu);
             this.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this._topMenu;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Name = "Form1";
+            this.Name = "TriggerBotMainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Triggerless TriggerBot";
             this.Shown += new System.EventHandler(this.ScanInventory);
-            this.Move += new System.EventHandler(this.SaveSettings);
-            this.Resize += new System.EventHandler(this.SaveSettings);
             this.splitter.Panel1.ResumeLayout(false);
             this.splitter.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).EndInit();
@@ -409,6 +761,9 @@
             this.pnlSearch.PerformLayout();
             this.pnlRight.ResumeLayout(false);
             this.pnlRight.PerformLayout();
+            this.pnlLag.ResumeLayout(false);
+            this.pnlLag.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarLag)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridTriggers)).EndInit();
             this.pnlBanner.ResumeLayout(false);
             this.pnlBanner.PerformLayout();
@@ -417,7 +772,11 @@
             this.pnlOnDeck.PerformLayout();
             this.pnlCollector.ResumeLayout(false);
             this.pnlCollector.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._triggerTimer)).EndInit();
+            this._topMenu.ResumeLayout(false);
+            this._topMenu.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -446,9 +805,45 @@
         private System.Windows.Forms.DataGridView gridTriggers;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTrigger;
         private System.Windows.Forms.DataGridViewTextBoxColumn colLengthMS;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox cboAdditionalTriggers;
         private System.Windows.Forms.Label lblAdditional;
-        private System.Timers.Timer timer1;
+        private System.Timers.Timer _triggerTimer;
+        private System.Windows.Forms.ToolTip _toolTip;
+        private System.Windows.Forms.Button btnAbort;
+        private System.Windows.Forms.Button btnPlay;
+        private System.Windows.Forms.MenuStrip _topMenu;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sliceAudioFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem stayOnTopToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem computerSpeedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ancientToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem lowEndToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem averageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem prettyNewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gamerExtremeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem doSomething1ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem webPageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutTriggerbotToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem minimizeMenuItem;
+        private System.Windows.Forms.Panel pnlLag;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TrackBar trackBarLag;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lblLag;
+        private System.Windows.Forms.Label lblCurrPlayingTrigger;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ProgressBar progTrigger;
+        private System.Windows.Forms.Timer _progressTimer;
+        private System.Windows.Forms.ToolStripMenuItem actionsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem scanForNewProductsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem totalRescanToolStripMenuItem;
+        private System.Windows.Forms.CheckBox chkAutoCue;
     }
 }
 

@@ -10,44 +10,22 @@ using System.Xml.Serialization;
 
 namespace Triggerless.TriggerBot
 {
-    public partial class TriggerBotMainForm
+    public class TriggerBotSettings
     {
-        public class AppSettings
-        {
-
-        }
-
-        public class TriggerBot
-        {
-            public WindowSettings Window { get; set; }
-
-            public TriggerBot() 
-            { 
-                Window = new WindowSettings();
-            }
-
-        }
-        public class WindowSettings
-        {
-            public Point Location { get; set; }
-            public Size Size { get; set; }
-        }
-
-        private string AppData => Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        private string AppSettingsFile => Path.Combine(AppData, "Triggerless", "TriggerBot");
-
-        private void SaveSettings(object sender, EventArgs e)
-        {
-            if (File.Exists(AppSettingsFile))
-            {
-                File.Delete(AppSettingsFile);
-            }
-
-            var ser = new XmlSerializer(typeof(TriggerBot));
-            //ser.Serialize()
-
-        }
-
+        public int MainWindowLeft { get; set; }
+        public int MainWindowTop { get; set; }
+        public int MainWindowWidth { get; set; }
+        public int MainWindowHeight { get; set; }
+        public bool MainWindowTopMost { get; set; }
+        public bool MinimizeOnPlay { get; set; }
+        public string[] LastAdditionalTriggers { get; set; }
+        public string LastInitialDirectory { get; set; }
+        public int AudioQuality { get; set; }
+        public string MaxAudioLength { get; set; }
+        public bool DefaultToFemale { get; set; }
+        public bool GenerateIcons { get; set; }
+        public bool CleanUpOggFiles { get; set; }
+        public int LagMS { get; set; }
     }
 
 }
