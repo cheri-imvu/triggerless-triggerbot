@@ -37,12 +37,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.cboAudioLength = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.trackQuality = new System.Windows.Forms.TrackBar();
-            this.lblAudioQuality = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.txtPrefix = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -56,8 +50,20 @@
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.btnShowMe = new System.Windows.Forms.Button();
+            this.lblDuration = new System.Windows.Forms.Label();
             this._audioSegmenter = new Triggerless.TriggerBot.AudioSegmenter();
-            ((System.ComponentModel.ISupportInitialize)(this.trackQuality)).BeginInit();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.rdoAMS = new System.Windows.Forms.RadioButton();
+            this.rdoFMS = new System.Windows.Forms.RadioButton();
+            this.rdoHQM = new System.Windows.Forms.RadioButton();
+            this.rdoHQS = new System.Windows.Forms.RadioButton();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -81,7 +87,7 @@
             // 
             // dlgOpenFile
             // 
-            this.dlgOpenFile.Filter = "MP3,FLAC,OGG,WAV files|*.mp3;*.flac;*.ogg;*.wav|All Files|*.*";
+            this.dlgOpenFile.Filter = "MP3 files|*.mp3|All Files|*.*";
             // 
             // txtFilename
             // 
@@ -139,71 +145,11 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(5, 162);
+            this.label4.Location = new System.Drawing.Point(5, 154);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(112, 18);
             this.label4.TabIndex = 6;
             this.label4.Text = "Audio Quality:";
-            // 
-            // trackQuality
-            // 
-            this.trackQuality.LargeChange = 1;
-            this.trackQuality.Location = new System.Drawing.Point(229, 162);
-            this.trackQuality.Minimum = 1;
-            this.trackQuality.Name = "trackQuality";
-            this.trackQuality.Size = new System.Drawing.Size(426, 45);
-            this.trackQuality.TabIndex = 7;
-            this.trackQuality.Value = 5;
-            this.trackQuality.ValueChanged += new System.EventHandler(this.QualityChanged);
-            // 
-            // lblAudioQuality
-            // 
-            this.lblAudioQuality.AutoSize = true;
-            this.lblAudioQuality.Location = new System.Drawing.Point(435, 189);
-            this.lblAudioQuality.Name = "lblAudioQuality";
-            this.lblAudioQuality.Size = new System.Drawing.Size(17, 18);
-            this.lblAudioQuality.TabIndex = 8;
-            this.lblAudioQuality.Text = "5";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Lucida Sans Unicode", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(152, 150);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(71, 16);
-            this.label6.TabIndex = 9;
-            this.label6.Text = "Low quality";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Lucida Sans Unicode", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(152, 166);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(78, 16);
-            this.label7.TabIndex = 10;
-            this.label7.Text = "Smaller Files";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Lucida Sans Unicode", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(661, 166);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(73, 16);
-            this.label8.TabIndex = 12;
-            this.label8.Text = "Larger Files";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Lucida Sans Unicode", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(661, 150);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(75, 16);
-            this.label9.TabIndex = 11;
-            this.label9.Text = "High quality";
             // 
             // label10
             // 
@@ -234,7 +180,7 @@
             // 
             this.radioFemale.AutoSize = true;
             this.radioFemale.Checked = true;
-            this.radioFemale.Location = new System.Drawing.Point(12, 268);
+            this.radioFemale.Location = new System.Drawing.Point(12, 6);
             this.radioFemale.Name = "radioFemale";
             this.radioFemale.Size = new System.Drawing.Size(104, 22);
             this.radioFemale.TabIndex = 16;
@@ -246,7 +192,7 @@
             // radioMale
             // 
             this.radioMale.AutoSize = true;
-            this.radioMale.Location = new System.Drawing.Point(126, 268);
+            this.radioMale.Location = new System.Drawing.Point(126, 6);
             this.radioMale.Name = "radioMale";
             this.radioMale.Size = new System.Drawing.Size(138, 22);
             this.radioMale.TabIndex = 17;
@@ -319,7 +265,7 @@
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(701, 18);
             this.label14.TabIndex = 23;
-            this.label14.Text = "Please note that @Triggers will make 399 cr profit for every CHKN you submit usin" +
+            this.label14.Text = "Please note that @Triggers will make 220 cr profit for every CHKN you submit usin" +
     "g this tool.";
             // 
             // label15
@@ -341,11 +287,125 @@
             this.btnShowMe.UseVisualStyleBackColor = true;
             this.btnShowMe.Click += new System.EventHandler(this.ShowMeTheFile);
             // 
+            // lblDuration
+            // 
+            this.lblDuration.AutoSize = true;
+            this.lblDuration.Location = new System.Drawing.Point(578, 70);
+            this.lblDuration.Name = "lblDuration";
+            this.lblDuration.Size = new System.Drawing.Size(113, 18);
+            this.lblDuration.TabIndex = 26;
+            this.lblDuration.Text = "Duration: 0:00";
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.radioMale);
+            this.panel1.Controls.Add(this.radioFemale);
+            this.panel1.Location = new System.Drawing.Point(12, 261);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(274, 31);
+            this.panel1.TabIndex = 27;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.label8);
+            this.panel2.Controls.Add(this.label7);
+            this.panel2.Controls.Add(this.label6);
+            this.panel2.Controls.Add(this.label5);
+            this.panel2.Controls.Add(this.rdoAMS);
+            this.panel2.Controls.Add(this.rdoFMS);
+            this.panel2.Controls.Add(this.rdoHQM);
+            this.panel2.Controls.Add(this.rdoHQS);
+            this.panel2.Location = new System.Drawing.Point(128, 150);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(616, 58);
+            this.panel2.TabIndex = 28;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(158, 28);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(101, 18);
+            this.label8.TabIndex = 7;
+            this.label8.Text = "4:40 / CHKN";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(422, 28);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(101, 18);
+            this.label7.TabIndex = 6;
+            this.label7.Text = "7:51 / CHKN";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(294, 28);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(101, 18);
+            this.label6.TabIndex = 5;
+            this.label6.Text = "6:26 / CHKN";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(8, 28);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(101, 18);
+            this.label5.TabIndex = 4;
+            this.label5.Text = "3:36 / CHKN";
+            // 
+            // rdoAMS
+            // 
+            this.rdoAMS.AutoSize = true;
+            this.rdoAMS.Location = new System.Drawing.Point(425, 4);
+            this.rdoAMS.Name = "rdoAMS";
+            this.rdoAMS.Size = new System.Drawing.Size(102, 22);
+            this.rdoAMS.TabIndex = 3;
+            this.rdoAMS.Text = "AM Stereo";
+            this.rdoAMS.UseVisualStyleBackColor = true;
+            // 
+            // rdoFMS
+            // 
+            this.rdoFMS.AutoSize = true;
+            this.rdoFMS.Checked = true;
+            this.rdoFMS.Location = new System.Drawing.Point(297, 3);
+            this.rdoFMS.Name = "rdoFMS";
+            this.rdoFMS.Size = new System.Drawing.Size(100, 22);
+            this.rdoFMS.TabIndex = 2;
+            this.rdoFMS.TabStop = true;
+            this.rdoFMS.Text = "FM Stereo";
+            this.rdoFMS.UseVisualStyleBackColor = true;
+            // 
+            // rdoHQM
+            // 
+            this.rdoHQM.AutoSize = true;
+            this.rdoHQM.Location = new System.Drawing.Point(161, 3);
+            this.rdoHQM.Name = "rdoHQM";
+            this.rdoHQM.Size = new System.Drawing.Size(96, 22);
+            this.rdoHQM.TabIndex = 1;
+            this.rdoHQM.Text = "HQ Mono";
+            this.rdoHQM.UseVisualStyleBackColor = true;
+            // 
+            // rdoHQS
+            // 
+            this.rdoHQS.AutoSize = true;
+            this.rdoHQS.Location = new System.Drawing.Point(11, 3);
+            this.rdoHQS.Name = "rdoHQS";
+            this.rdoHQS.Size = new System.Drawing.Size(102, 22);
+            this.rdoHQS.TabIndex = 0;
+            this.rdoHQS.Text = "HQ Stereo";
+            this.rdoHQS.UseVisualStyleBackColor = true;
+            // 
             // AudioSplicerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(790, 445);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.lblDuration);
             this.Controls.Add(this.btnShowMe);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.label14);
@@ -354,17 +414,9 @@
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.checkOGGFiles);
             this.Controls.Add(this.checkIcons);
-            this.Controls.Add(this.radioMale);
-            this.Controls.Add(this.radioFemale);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.txtPrefix);
             this.Controls.Add(this.label10);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.lblAudioQuality);
-            this.Controls.Add(this.trackQuality);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.cboAudioLength);
             this.Controls.Add(this.label3);
@@ -380,7 +432,10 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Triggerless Audio Splicer";
             this.Load += new System.EventHandler(this.AudioSplicerForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.trackQuality)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -396,12 +451,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cboAudioLength;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TrackBar trackQuality;
-        private System.Windows.Forms.Label lblAudioQuality;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox txtPrefix;
         private System.Windows.Forms.Label label11;
@@ -416,5 +465,16 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Button btnShowMe;
         private AudioSegmenter _audioSegmenter;
+        private System.Windows.Forms.Label lblDuration;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.RadioButton rdoHQS;
+        private System.Windows.Forms.RadioButton rdoAMS;
+        private System.Windows.Forms.RadioButton rdoFMS;
+        private System.Windows.Forms.RadioButton rdoHQM;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label5;
     }
 }

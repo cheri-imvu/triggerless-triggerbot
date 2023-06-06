@@ -1,9 +1,7 @@
-﻿using ICSharpCode.SharpZipLib.Core;
-using ICSharpCode.SharpZipLib.Zip;
+﻿using ICSharpCode.SharpZipLib.Zip;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -11,9 +9,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Triggerless.XAFLib;
 
@@ -22,6 +18,7 @@ namespace Triggerless.TriggerBot
     public partial class AudioSplicerForm : Form
     {
         private string _outputPath;
+        private TimeSpan _duration = TimeSpan.Zero;
 
         public AudioSplicerForm()
         {
@@ -39,14 +36,41 @@ namespace Triggerless.TriggerBot
             if (result == DialogResult.OK)
             {
                 dlgOpenFile.InitialDirectory = Path.GetDirectoryName(dlgOpenFile.FileName);
-                txtFilename.Text = dlgOpenFile.FileName;
+                try
+                {
+                    using (var reader2 = new FlacFileReader())
+                    using (var reader = new Mp3FileReader(dlgOpenFile.FileName))
+                    {
+                        _duration = reader.TotalTime;
+                    }
+                    txtFilename.Text = dlgOpenFile.FileName;
+                    lblDuration.Text = $"Duration: {_duration.Minutes:00}:{_duration.Seconds:00}";
+
+                    if (_duration.TotalSeconds > new TimeSpan(0, 6, 26).TotalSeconds)
+                    {
+                        rdoAMS.Checked = true;
+                    } else if (_duration.TotalSeconds > new TimeSpan(0, 3, 36).TotalSeconds)
+                    {
+                        rdoFMS.Checked = true;
+                    } else
+                    {
+                        rdoHQS.Checked = true;
+                    }
+                }
+                catch (Exception) 
+                {
+                    _duration = TimeSpan.Zero;
+                    txtFilename.Text = string.Empty;
+                    MessageBox.Show("Unable to read MP3 file. Skipping this file", "Invalid MP3", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
             }
 
         }
 
         private void QualityChanged(object sender, EventArgs e)
         {
-            lblAudioQuality.Text = trackQuality.Value.ToString();
+            
         }
 
         private void ShowMeTheFile(object sender, EventArgs e)
@@ -156,8 +180,11 @@ namespace Triggerless.TriggerBot
                     var ffmpegLocation = Path.Combine(
                         Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location.Replace(@"\bin\Debug", "")),
                         "ffmpeg");
-                    var quality = int.Parse(trackQuality.Value.ToString());
-                    _audioSegmenter.RunFFmpeg(ffmpegLocation, inputFile, outputFile, quality);
+                    int option = rdoAMS.Checked ? 0 :
+                        rdoFMS.Checked ? 1 :
+                        rdoHQM.Checked ? 2 :
+                        rdoHQS.Checked ? 3 : 1;
+                    _audioSegmenter.RunFFmpeg(ffmpegLocation, inputFile, outputFile, option);
                 }
 
             } 

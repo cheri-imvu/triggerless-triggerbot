@@ -251,6 +251,11 @@ namespace Triggerless.TriggerBot
         {
             this.TopMost = stayOnTopToolStripMenuItem.Checked;
         }
+        private void aboutTriggerbotToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new AboutForm().ShowDialog(this);
+        }
+
 
         #endregion
 
@@ -377,9 +382,11 @@ namespace Triggerless.TriggerBot
 
         private string GetTriggerLine()
         {
-            string result = "  /" + TrimTrigger(); // sometimes the first char gets cut off.
-            if (!string.IsNullOrEmpty(cboAdditionalTriggers.Text))
+            bool hasAdditionalTriggers = !string.IsNullOrEmpty(cboAdditionalTriggers.Text);
+            string result = string.Empty; // sometimes the first char gets cut off.
+            if (hasAdditionalTriggers)
             {
+                result = $"  /{TrimTrigger()}";
                 string[] bits = cboAdditionalTriggers.Text.Trim()
                     .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 if (bits.Length > 0)
@@ -391,6 +398,10 @@ namespace Triggerless.TriggerBot
                         result += bits[i];
                     }
                 }
+            }
+            else
+            {
+                result = $"  {TrimTrigger()}";
             }
             if (result.Contains("~")) result = result.Replace("~", "{~}");
             return result;
@@ -425,6 +436,7 @@ namespace Triggerless.TriggerBot
             btnAbort.Enabled = false;
             pnlLag.Visible = false;
             lblCurrPlayingTrigger.Text = "--Pending--";
+            progScan.Value = 0;
 
             if (productOnDeck.Visible && chkAutoCue.Checked)
             {
@@ -448,8 +460,6 @@ namespace Triggerless.TriggerBot
             progTrigger.Value = (int)Math.Round(percentProgress);
         }
 
-
-
         #endregion
 
         private void OpenAudioSlicer(object sender, EventArgs e)
@@ -460,6 +470,18 @@ namespace Triggerless.TriggerBot
                 TopMost = false;
             }
             var result = new AudioSplicerForm().ShowDialog();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_isPlaying)
+            {
+                var result = MessageBox.Show("You're playing a tune, are you sure?", 
+                    "Exit Program?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.No) return;
+                CleanupAfterPlay();
+            }
+            Close();
         }
     }
 }

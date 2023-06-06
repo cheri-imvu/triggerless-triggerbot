@@ -102,11 +102,31 @@ namespace Triggerless.TriggerBot
         public static event OutputEventHandler OutputReceived;
         public static event OutputEventHandler ErrorReceived;
 
-        public void RunFFmpeg(string ffmpegLocation, string inputFile, string outputFile, int quality)
+        /*
+        -c codec            codec name
+        -b:a bitrate        audio bitrate
+        -ar rate            set audio sampling rate (in Hz)
+        -vol volume         change audio volume (256=normal)
+        -ac channels        set number of audio channels
+        -q:a quality        set audio quality (codec-specific)      
+         */
+
+        public void RunFFmpeg(string ffmpegLocation, string inputFile, string outputFile, int option)
         {
-            if (quality < 1 || quality > 10) throw new ArgumentException("Quality can only be from 1 to 10");
-            // Prepare the ffmpeg command
-            string arguments = $"-i \"{inputFile}\" -c:a libvorbis -q:a {quality} \"{outputFile}\"";
+
+            string[] options = { 
+            //Options
+            // 7.8 min per 2MB file
+                $"-b:a 32k -ar 22050",
+            // 6.4 min per 2MB file
+                $"-b:a 44k -ar 22050",
+            // 4.6 min per 2MB file
+                $"-q:a 1 -ac 1",
+            // 3.6 min per 2MB file
+                $"-q:a 1",
+            };
+
+            string arguments = $"-i \"{inputFile}\" -c:a libvorbis {options[option]} \"{outputFile}\"";
 
             // Create a ProcessStartInfo object
             ProcessStartInfo startInfo = new ProcessStartInfo
