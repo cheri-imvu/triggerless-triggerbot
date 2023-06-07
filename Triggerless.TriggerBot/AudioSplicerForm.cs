@@ -184,7 +184,7 @@ namespace Triggerless.TriggerBot
                         rdoFMS.Checked ? 1 :
                         rdoHQM.Checked ? 2 :
                         rdoHQS.Checked ? 3 : 1;
-                    _audioSegmenter.RunFFmpeg(ffmpegLocation, inputFile, outputFile, option);
+                    _audioSegmenter.RunFFmpeg(ffmpegLocation, inputFile, outputFile, option, _volume/100);
                 }
 
             } 

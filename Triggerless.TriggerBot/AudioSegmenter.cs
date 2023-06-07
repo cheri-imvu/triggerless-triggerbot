@@ -111,7 +111,7 @@ namespace Triggerless.TriggerBot
         -q:a quality        set audio quality (codec-specific)      
          */
 
-        public void RunFFmpeg(string ffmpegLocation, string inputFile, string outputFile, int option)
+        public void RunFFmpeg(string ffmpegLocation, string inputFile, string outputFile, int option, double volume = 1.0)
         {
 
             string[] options = { 
@@ -126,7 +126,9 @@ namespace Triggerless.TriggerBot
                 $"-q:a 1",
             };
 
-            string arguments = $"-i \"{inputFile}\" -c:a libvorbis {options[option]} \"{outputFile}\"";
+            var volumeOption = volume == 1.0 ? "" : $" -filter:a \"volume={volume}\"";
+
+            string arguments = $"-i \"{inputFile}\" -c:a libvorbis {options[option]}{volumeOption} \"{outputFile}\"";
 
             // Create a ProcessStartInfo object
             ProcessStartInfo startInfo = new ProcessStartInfo
