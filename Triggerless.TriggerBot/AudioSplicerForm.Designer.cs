@@ -51,7 +51,6 @@
             this.label15 = new System.Windows.Forms.Label();
             this.btnShowMe = new System.Windows.Forms.Button();
             this.lblDuration = new System.Windows.Forms.Label();
-            this._audioSegmenter = new Triggerless.TriggerBot.AudioSegmenter();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
@@ -62,8 +61,15 @@
             this.rdoFMS = new System.Windows.Forms.RadioButton();
             this.rdoHQM = new System.Windows.Forms.RadioButton();
             this.rdoHQS = new System.Windows.Forms.RadioButton();
+            this.picWaveform = new System.Windows.Forms.PictureBox();
+            this._audioSegmenter = new Triggerless.TriggerBot.AudioSegmenter();
+            this.btnIncreaseVolume = new System.Windows.Forms.Button();
+            this.btnDecreaseVolume = new System.Windows.Forms.Button();
+            this.btnResetVolume = new System.Windows.Forms.Button();
+            this.lblVolume = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picWaveform)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -290,7 +296,7 @@
             // lblDuration
             // 
             this.lblDuration.AutoSize = true;
-            this.lblDuration.Location = new System.Drawing.Point(578, 70);
+            this.lblDuration.Location = new System.Drawing.Point(356, 43);
             this.lblDuration.Name = "lblDuration";
             this.lblDuration.Size = new System.Drawing.Size(113, 18);
             this.lblDuration.TabIndex = 26;
@@ -398,11 +404,64 @@
             this.rdoHQS.Text = "HQ Stereo";
             this.rdoHQS.UseVisualStyleBackColor = true;
             // 
+            // picWaveform
+            // 
+            this.picWaveform.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picWaveform.Location = new System.Drawing.Point(578, 49);
+            this.picWaveform.Name = "picWaveform";
+            this.picWaveform.Size = new System.Drawing.Size(200, 70);
+            this.picWaveform.TabIndex = 29;
+            this.picWaveform.TabStop = false;
+            // 
+            // btnIncreaseVolume
+            // 
+            this.btnIncreaseVolume.Location = new System.Drawing.Point(784, 46);
+            this.btnIncreaseVolume.Name = "btnIncreaseVolume";
+            this.btnIncreaseVolume.Size = new System.Drawing.Size(24, 26);
+            this.btnIncreaseVolume.TabIndex = 30;
+            this.btnIncreaseVolume.Text = "+";
+            this.btnIncreaseVolume.UseVisualStyleBackColor = true;
+            this.btnIncreaseVolume.Click += new System.EventHandler(this.IncreaseVolume);
+            // 
+            // btnDecreaseVolume
+            // 
+            this.btnDecreaseVolume.Location = new System.Drawing.Point(784, 96);
+            this.btnDecreaseVolume.Name = "btnDecreaseVolume";
+            this.btnDecreaseVolume.Size = new System.Drawing.Size(24, 26);
+            this.btnDecreaseVolume.TabIndex = 31;
+            this.btnDecreaseVolume.Text = "-";
+            this.btnDecreaseVolume.UseVisualStyleBackColor = true;
+            this.btnDecreaseVolume.Click += new System.EventHandler(this.DecreaseVolume);
+            // 
+            // btnResetVolume
+            // 
+            this.btnResetVolume.Location = new System.Drawing.Point(784, 71);
+            this.btnResetVolume.Name = "btnResetVolume";
+            this.btnResetVolume.Size = new System.Drawing.Size(24, 26);
+            this.btnResetVolume.TabIndex = 32;
+            this.btnResetVolume.Text = "·";
+            this.btnResetVolume.UseVisualStyleBackColor = true;
+            this.btnResetVolume.Click += new System.EventHandler(this.ResetVolume);
+            // 
+            // lblVolume
+            // 
+            this.lblVolume.AutoSize = true;
+            this.lblVolume.Location = new System.Drawing.Point(627, 119);
+            this.lblVolume.Name = "lblVolume";
+            this.lblVolume.Size = new System.Drawing.Size(111, 18);
+            this.lblVolume.TabIndex = 33;
+            this.lblVolume.Text = "Volume: 100%";
+            // 
             // AudioSplicerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(790, 445);
+            this.ClientSize = new System.Drawing.Size(810, 445);
+            this.Controls.Add(this.lblVolume);
+            this.Controls.Add(this.btnResetVolume);
+            this.Controls.Add(this.btnDecreaseVolume);
+            this.Controls.Add(this.btnIncreaseVolume);
+            this.Controls.Add(this.picWaveform);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.lblDuration);
@@ -436,6 +495,7 @@
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picWaveform)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -476,5 +536,10 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.PictureBox picWaveform;
+        private System.Windows.Forms.Button btnIncreaseVolume;
+        private System.Windows.Forms.Button btnDecreaseVolume;
+        private System.Windows.Forms.Button btnResetVolume;
+        private System.Windows.Forms.Label lblVolume;
     }
 }

@@ -483,5 +483,10 @@ namespace Triggerless.TriggerBot
             }
             Close();
         }
+
+        private void LoadForm(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ICSharpCode.SharpZipLib.Zip;
 using NAudio.Wave;
+using NAudio.WaveFormRenderer;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,6 +20,9 @@ namespace Triggerless.TriggerBot
     {
         private string _outputPath;
         private TimeSpan _duration = TimeSpan.Zero;
+        private System.Drawing.Image _waveform;
+        private const double INIT_VOLUME = 100;
+        private double _volume = INIT_VOLUME;
 
         public AudioSplicerForm()
         {
@@ -38,7 +42,6 @@ namespace Triggerless.TriggerBot
                 dlgOpenFile.InitialDirectory = Path.GetDirectoryName(dlgOpenFile.FileName);
                 try
                 {
-                    using (var reader2 = new FlacFileReader())
                     using (var reader = new Mp3FileReader(dlgOpenFile.FileName))
                     {
                         _duration = reader.TotalTime;
@@ -56,6 +59,8 @@ namespace Triggerless.TriggerBot
                     {
                         rdoHQS.Checked = true;
                     }
+                    CreateWaveform(txtFilename.Text);
+
                 }
                 catch (Exception) 
                 {
@@ -66,11 +71,6 @@ namespace Triggerless.TriggerBot
                 }
             }
 
-        }
-
-        private void QualityChanged(object sender, EventArgs e)
-        {
-            
         }
 
         private void ShowMeTheFile(object sender, EventArgs e)
@@ -284,6 +284,7 @@ namespace Triggerless.TriggerBot
 
             #endregion
 
+            #region Create PNG
             if (checkIcons.Checked)
             {
                 lblAction.Text = "Creating Icons";
@@ -316,6 +317,33 @@ namespace Triggerless.TriggerBot
             }
 
             lblAction.Text = "Complete";
+            #endregion
+        }
+
+        private void CreateWaveform(string filename)
+        {
+            var maxPeakProvider = new MaxPeakProvider();
+            var rmsPeakProvider = new RmsPeakProvider(200);
+            var samplingPeakProvider = new SamplingPeakProvider(200);
+            var averagePeakProvider = new AveragePeakProvider(4);
+            var renderSettings = new StandardWaveFormRendererSettings
+            {
+                Width = picWaveform.Width,
+                TopHeight = picWaveform.Height / 2,
+                BottomHeight = picWaveform.Height / 2,
+                BackgroundColor = Color.Transparent,
+                TopPeakPen = Pens.Blue,
+                BottomPeakPen = Pens.Blue,
+            };
+            var renderer = new WaveFormRenderer();
+            Cursor = Cursors.WaitCursor;
+            var waveStream = new Mp3FileReader(filename);
+            _waveform = renderer.Render(waveStream, averagePeakProvider, renderSettings);
+            waveStream.Dispose();
+            picWaveform.Image = _waveform;
+            _volume = 100;
+            Cursor = Cursors.Default;
+            UpdateVolume();
         }
 
         private void CreateTextImage(string text1, string text2, string outputFilename)
@@ -369,6 +397,7 @@ namespace Triggerless.TriggerBot
         }
 
 
+
         public void CreateChkn(string folder, string outputFilename, Template template, IEnumerable<string> filenames)
         {
             var indexFilename = Path.Combine(folder, "index.xml");
@@ -404,6 +433,101 @@ namespace Triggerless.TriggerBot
             {
                 Directory.CreateDirectory(_botPath);
             }
+            cboAudioLength.SelectedIndex = 1;
         }
+
+        private const double CROP_STEP = 25;
+
+        private void IncreaseVolume(object sender, EventArgs e)
+        {
+            RenderWaveform(_volume + CROP_STEP);
+        }
+
+        private void DecreaseVolume(object sender, EventArgs e)
+        {
+            if (_volume > CROP_STEP)
+            {
+                RenderWaveform(_volume - CROP_STEP);
+            }
+        }
+
+        private void ResetVolume(object sender, EventArgs e)
+        {
+            picWaveform.Image = _waveform;
+            _volume = 100;
+            UpdateVolume();
+        }
+
+        private void UpdateVolume()
+        {
+            lblVolume.Text = $"Volume: {_volume}%";
+        }
+
+        private void RenderWaveform(double newVolume)
+        {
+            string filename = @"D:\Temp\original-image.png";
+            if (File.Exists(filename)) { File.Delete(filename); }
+            _waveform.Save(filename, ImageFormat.Png);
+
+            double volumeChange = newVolume - INIT_VOLUME;
+            double stretchRatio = 1 + volumeChange / INIT_VOLUME; // Calculate the stretch ratio
+
+            float newHeight = (float)(_waveform.Height * stretchRatio);
+            float cropAmount = (newHeight - _waveform.Height);
+
+            // Create a new Bitmap object with the stretched size
+            var stretchedImage = new Bitmap(_waveform.Width, (int)newHeight);
+
+            // Create a Graphics object from the stretched image
+            using (Graphics g = Graphics.FromImage(stretchedImage))
+            {
+                // Set the interpolation mode to achieve a smoother stretch
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+                // Draw the stretched image
+                g.DrawImage(_waveform, new RectangleF(0, 0, _waveform.Width, newHeight));
+            }
+
+            filename = @"D:\Temp\stretched-image.png";
+            if (File.Exists(filename)) { File.Delete(filename); }
+            stretchedImage.Save(filename, ImageFormat.Png);
+
+            // Create a new Bitmap object with the desired size
+            Bitmap croppedImage = CropBitmap(stretchedImage, _waveform.Height);
+
+            filename = @"D:\Temp\cropped-image.png";
+            if (File.Exists(filename)) { File.Delete(filename); }
+            croppedImage.Save(filename, ImageFormat.Png);
+
+            // Assign the cropped image to picWaveform.Image
+            picWaveform.Image = croppedImage;
+
+            // Update the volume
+            _volume = newVolume;
+            UpdateVolume();
+        }
+
+        private Bitmap CropBitmap(Bitmap source, float cropHeight)
+        {
+            float sourceWidth = source.Width;
+            float sourceHeight = source.Height;
+
+            // Calculate the crop position and size
+            float cropTop = (sourceHeight - cropHeight) / 2;
+            RectangleF cropRect = new RectangleF(0, cropTop, sourceWidth, cropHeight);
+
+            // Create a new Bitmap object with the desired size
+            Bitmap destination = new Bitmap((int)sourceWidth, (int)cropHeight);
+
+            // Create a Graphics object from the destination Bitmap
+            using (Graphics g = Graphics.FromImage(destination))
+            {
+                // Draw the cropped portion onto the new image
+                g.DrawImage(source, new RectangleF(0, 0, sourceWidth, cropHeight), cropRect, GraphicsUnit.Pixel);
+            }
+
+            return destination;
+        }
+
     }
 }
