@@ -208,7 +208,9 @@ namespace Triggerless.TriggerBot
             lblAction.Update();
             var templates = new List<Template>();
             var listsOfFiles = new List<List<string>>();
-            var parentId = radioFemale.Checked ? 63535754 : 63540074;
+            var parentId = chkCheap.Checked ? 
+                radioFemale.Checked ? 38766202 : 48704863 : 
+                radioFemale.Checked ? 63535754 : 63540074;
 
             templates.Add(new Template { ParentProductID = parentId });
             listsOfFiles.Add(new List<string>());

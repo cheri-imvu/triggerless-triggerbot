@@ -434,9 +434,17 @@ namespace Triggerless.TriggerBot
                 #region Save Triggers to DB
                 var sqlInsertTrigger = "INSERT INTO product_triggers (product_id, prefix, sequence, trigger, ogg_name, length_ms, location) VALUES " +
                     "(@ProductId, @Prefix, @Sequence, @TriggerName, @OggName, @LengthMS, @Location);";
+
+                var triggers = triggerList.OrderBy(t => t.Sequence).ThenBy(t => t.TriggerName).ToList();
+                int seq = 1;
+                foreach (var t in triggers)
+                {
+                    t.Sequence = seq++;
+                }
+
                 lock (_lock)
                 {
-                    foreach (var trigger in triggerList)
+                    foreach (var trigger in triggers)
                     {
                         connAppCache.Execute(sqlInsertTrigger, trigger);
                     }

@@ -67,6 +67,7 @@
             this.btnDecreaseVolume = new System.Windows.Forms.Button();
             this.btnResetVolume = new System.Windows.Forms.Button();
             this.lblVolume = new System.Windows.Forms.Label();
+            this.chkCheap = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picWaveform)).BeginInit();
@@ -452,11 +453,22 @@
             this.lblVolume.TabIndex = 33;
             this.lblVolume.Text = "Volume: 100%";
             // 
+            // chkCheap
+            // 
+            this.chkCheap.AutoSize = true;
+            this.chkCheap.Location = new System.Drawing.Point(537, 297);
+            this.chkCheap.Name = "chkCheap";
+            this.chkCheap.Size = new System.Drawing.Size(74, 22);
+            this.chkCheap.TabIndex = 34;
+            this.chkCheap.Text = "Cheap";
+            this.chkCheap.UseVisualStyleBackColor = true;
+            // 
             // AudioSplicerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(810, 445);
+            this.Controls.Add(this.chkCheap);
             this.Controls.Add(this.lblVolume);
             this.Controls.Add(this.btnResetVolume);
             this.Controls.Add(this.btnDecreaseVolume);
@@ -541,5 +553,6 @@
         private System.Windows.Forms.Button btnDecreaseVolume;
         private System.Windows.Forms.Button btnResetVolume;
         private System.Windows.Forms.Label lblVolume;
+        private System.Windows.Forms.CheckBox chkCheap;
     }
 }

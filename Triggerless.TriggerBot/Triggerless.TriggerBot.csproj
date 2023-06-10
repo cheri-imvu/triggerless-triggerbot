@@ -153,6 +153,7 @@
       <DependentUpon>Collector.cs</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SingleProgramInstance.cs" />
     <Compile Include="TriggerBotMainForm.cs">
       <SubType>Form</SubType>
     </Compile>

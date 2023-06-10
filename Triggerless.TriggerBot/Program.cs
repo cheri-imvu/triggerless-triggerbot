@@ -14,9 +14,19 @@ namespace Triggerless.TriggerBot
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new TriggerBotMainForm());
+            using (SingleProgramInstance spi = new SingleProgramInstance("Triggerless.Triggerbot.0"))
+            {
+                if (spi.IsSingleInstance)
+                {
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    Application.Run(new TriggerBotMainForm());
+                }
+                else
+                {
+                    spi.RaiseOtherProcess();
+                }
+            }
         }
     }
 }
