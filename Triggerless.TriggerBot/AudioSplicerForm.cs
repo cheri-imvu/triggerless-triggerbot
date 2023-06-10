@@ -436,6 +436,9 @@ namespace Triggerless.TriggerBot
                 Directory.CreateDirectory(_botPath);
             }
             cboAudioLength.SelectedIndex = 1;
+            var amtProfit = Shared.Paid ? 0 : 220;
+            lblProfit.Text = $"Please note that @Triggers will make {amtProfit} cr profit for every CHKN you submit using this tool.";
+            chkCheap.Visible = Shared.Paid;
         }
 
         private const double CROP_STEP = 25;

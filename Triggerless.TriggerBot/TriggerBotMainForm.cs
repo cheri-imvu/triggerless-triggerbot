@@ -486,7 +486,7 @@ namespace Triggerless.TriggerBot
 
         private void LoadForm(object sender, EventArgs e)
         {
-
+            Shared.CheckIfPaid();
         }
     }
 }

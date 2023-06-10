@@ -47,7 +47,7 @@
             this.btnStart = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.lblAction = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
+            this.lblProfit = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.btnShowMe = new System.Windows.Forms.Button();
             this.lblDuration = new System.Windows.Forms.Label();
@@ -265,14 +265,14 @@
             this.lblAction.TabIndex = 22;
             this.lblAction.Text = "Idle";
             // 
-            // label14
+            // lblProfit
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(2, 418);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(701, 18);
-            this.label14.TabIndex = 23;
-            this.label14.Text = "Please note that @Triggers will make 220 cr profit for every CHKN you submit usin" +
+            this.lblProfit.AutoSize = true;
+            this.lblProfit.Location = new System.Drawing.Point(2, 418);
+            this.lblProfit.Name = "lblProfit";
+            this.lblProfit.Size = new System.Drawing.Size(701, 18);
+            this.lblProfit.TabIndex = 23;
+            this.lblProfit.Text = "Please note that @Triggers will make 220 cr profit for every CHKN you submit usin" +
     "g this tool.";
             // 
             // label15
@@ -479,7 +479,7 @@
             this.Controls.Add(this.lblDuration);
             this.Controls.Add(this.btnShowMe);
             this.Controls.Add(this.label15);
-            this.Controls.Add(this.label14);
+            this.Controls.Add(this.lblProfit);
             this.Controls.Add(this.lblAction);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.btnStart);
@@ -533,7 +533,7 @@
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label lblAction;
-        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label lblProfit;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Button btnShowMe;
         private AudioSegmenter _audioSegmenter;
