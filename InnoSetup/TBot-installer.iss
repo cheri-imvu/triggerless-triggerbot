@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Triggerless Triggerbot"
-#define MyAppVersion "0.3.1"
+#define MyAppVersion "0.4.0"
 #define MyAppPublisher "triggerless.com"
 #define MyAppURL "https://triggerless.com"
 #define MyAppExeName "TriggerBot.exe"
@@ -54,19 +54,23 @@ Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\x86
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Dapper.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ICSharpCode.SharpZipLib.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ManagedWinapi.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ManagedWinapiNativeHelper.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ManagedWinapiNativeHelper.dll"; DestDir: "{app}"; Flags: ignoreversion 
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Microsoft.Win32.Registry.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Microsoft.WindowsAPICodePack.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Microsoft.WindowsAPICodePack.Shell.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NAudio.Asio.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NAudio.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NAudio.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NAudio.Midi.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NAudio.Wasapi.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NAudio.WaveFormRenderer.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NAudio.WinForms.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NAudio.WinMM.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NVorbis.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Buffers.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Data.SQLite.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Drawing.Common.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Memory.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Numerics.Vectors.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}"; Flags: ignoreversion

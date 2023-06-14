@@ -9,15 +9,19 @@ using System.Windows.Forms;
 using ManagedWinapi.Windows;
 using System.Threading;
 using static Triggerless.TriggerBot.ProductCtrl;
+using System.Data;
+using System.Threading.Tasks;
 
 namespace Triggerless.TriggerBot
 {
     public partial class TriggerBotMainForm : Form
     {
-        
+        private Update _updater;
+
         public TriggerBotMainForm()
         {
             InitializeComponent();
+            _updater = new Update();
         }
 
         #region IMVU Presence and Interation
@@ -487,6 +491,29 @@ namespace Triggerless.TriggerBot
         private void LoadForm(object sender, EventArgs e)
         {
             Shared.CheckIfPaid();
+
+            _updater.CheckForUpdate();
+
+            if (_updater.IsUpgradeAvailable())
+            {
+                // Display the modal form to ask the user for their preference
+                using (var updateForm = new UpdateForm())
+                {
+                    var dialogResult = updateForm.ShowDialog();
+                    if (dialogResult == DialogResult.OK)
+                    {
+                        // User chose to update immediately
+                        _updater.RunSetupFile();
+                    }
+                    else if (dialogResult == DialogResult.Yes)
+                    {
+                        // User chose to update upon program exit
+                        _updater.SetRunSetupOnExit(true);
+                    }
+                    // If user chose to ignore, continue with the program
+                }
+            }
+
         }
     }
 }
