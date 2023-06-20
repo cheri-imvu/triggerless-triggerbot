@@ -13,9 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedWinapi", "ManagedWin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioSegmenter", "AudioSegmenter\AudioSegmenter.csproj", "{4934E0F3-6083-43AF-8AA6-BE4D219E226B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triggerless.XAFLib", "E:\DEV\Triggerless\XAFLib\Triggerless.XAFLib.csproj", "{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaveFormRendererLib", "WaveFormRendererLib\WaveFormRendererLib.csproj", "{9FAD7231-3B62-4A14-AC50-1747F49DB84C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triggerless.XAFLib", "E:\DEV\Triggerless\XAFLib\Triggerless.XAFLib.csproj", "{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,14 +43,14 @@ Global
 		{4934E0F3-6083-43AF-8AA6-BE4D219E226B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4934E0F3-6083-43AF-8AA6-BE4D219E226B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4934E0F3-6083-43AF-8AA6-BE4D219E226B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9FAD7231-3B62-4A14-AC50-1747F49DB84C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9FAD7231-3B62-4A14-AC50-1747F49DB84C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9FAD7231-3B62-4A14-AC50-1747F49DB84C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9FAD7231-3B62-4A14-AC50-1747F49DB84C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

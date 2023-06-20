@@ -31,5 +31,12 @@ namespace Triggerless.TriggerBot
         {
             DialogResult = DialogResult.No;
         }
+
+        public string VersionString { get; set; }
+
+        private void LoadForm(object sender, EventArgs e)
+        {
+            lblVersion.Text = lblVersion.Text.Replace("{version}", $"({VersionString})");
+        }
     }
 }

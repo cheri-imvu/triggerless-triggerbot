@@ -702,6 +702,7 @@ namespace Triggerless.TriggerBot
             this.Name = "TriggerBotMainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Triggerless TriggerBot";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TriggerBotMainForm_FormClosing);
             this.Load += new System.EventHandler(this.LoadForm);
             this.Shown += new System.EventHandler(this.ScanInventory);
             this.splitter.Panel1.ResumeLayout(false);

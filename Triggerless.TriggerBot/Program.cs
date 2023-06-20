@@ -20,7 +20,8 @@ namespace Triggerless.TriggerBot
                 {
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
-                    Application.Run(new TriggerBotMainForm());
+                    MainForm = new TriggerBotMainForm();
+                    Application.Run(MainForm);
                 }
                 else
                 {
@@ -28,5 +29,7 @@ namespace Triggerless.TriggerBot
                 }
             }
         }
+
+        public static TriggerBotMainForm MainForm { get; set; }
     }
 }

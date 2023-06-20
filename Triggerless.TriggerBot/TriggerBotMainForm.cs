@@ -16,7 +16,7 @@ namespace Triggerless.TriggerBot
 {
     public partial class TriggerBotMainForm : Form
     {
-        private Update _updater;
+        private Update _updater;  
 
         public TriggerBotMainForm()
         {
@@ -491,29 +491,18 @@ namespace Triggerless.TriggerBot
         private void LoadForm(object sender, EventArgs e)
         {
             Shared.CheckIfPaid();
-
             _updater.CheckForUpdate();
+        }
 
-            if (_updater.IsUpgradeAvailable())
-            {
-                // Display the modal form to ask the user for their preference
-                using (var updateForm = new UpdateForm())
-                {
-                    var dialogResult = updateForm.ShowDialog();
-                    if (dialogResult == DialogResult.OK)
-                    {
-                        // User chose to update immediately
-                        _updater.RunSetupFile();
-                    }
-                    else if (dialogResult == DialogResult.Yes)
-                    {
-                        // User chose to update upon program exit
-                        _updater.SetRunSetupOnExit(true);
-                    }
-                    // If user chose to ignore, continue with the program
-                }
-            }
-
+        private void TriggerBotMainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            var reasons = new CloseReason[] { 
+                CloseReason.WindowsShutDown, 
+                CloseReason.TaskManagerClosing, 
+                CloseReason.ApplicationExitCall 
+            };
+            if (reasons.Contains(e.CloseReason)) return;
+            _updater.RunSetupFileIfRequired();
         }
     }
 }
