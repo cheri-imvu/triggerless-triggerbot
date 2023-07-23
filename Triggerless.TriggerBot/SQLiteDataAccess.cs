@@ -77,13 +77,20 @@ namespace Triggerless.TriggerBot
                             "product_id BIGINT, prefix VARCHAR(24), sequence INTEGER, trigger VARCHAR(24), ogg_name VARCHAR(64), location VARCHAR(64), length_ms REAL, PRIMARY KEY(product_id ASC, prefix ASC, sequence ASC));";
                         cmd.CommandText = sqlCreate;
                         cmd.ExecuteNonQuery();
+
+
                     }
                     catch (Exception ex)
                     {
                         throw new Exception($"Exception: {ex.Message} from {ex.Source}");
                     }
                 }                
-            }
+            } 
+
+            //Updates
+
+
+
             return new SQLiteConnection($"Data Source={appCacheFile}");
         }
     }

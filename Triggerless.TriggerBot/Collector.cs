@@ -370,7 +370,7 @@ namespace Triggerless.TriggerBot
                 }
                 #endregion
 
-                #region Retrive OGG file lengths
+                #region Retrieve OGG file lengths
 
                 var maxConcurrentThreads = 2;
                 var semaphore = new SemaphoreSlim(maxConcurrentThreads);

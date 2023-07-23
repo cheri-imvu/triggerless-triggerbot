@@ -279,6 +279,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Triggerless\XAFLib\Triggerless.XAFLib.csproj">
+      <Project>{a1312551-9229-4c9c-b2eb-5b5bf4d5adae}</Project>
+      <Name>Triggerless.XAFLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ManagedWinapi\ManagedWinapi.csproj">
       <Project>{fbd3ec1e-47e2-4d2d-81c9-d6506125a09a}</Project>
       <Name>ManagedWinapi</Name>
@@ -290,10 +294,6 @@
     <ProjectReference Include="..\WaveFormRendererLib\WaveFormRendererLib.csproj">
       <Project>{9fad7231-3b62-4a14-ac50-1747f49db84c}</Project>
       <Name>WaveFormRendererLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="E:\DEV\Triggerless\XAFLib\Triggerless.XAFLib.csproj">
-      <Project>{a1312551-9229-4c9c-b2eb-5b5bf4d5adae}</Project>
-      <Name>Triggerless.XAFLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

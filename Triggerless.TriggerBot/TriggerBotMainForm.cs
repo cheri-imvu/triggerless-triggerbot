@@ -218,7 +218,7 @@ namespace Triggerless.TriggerBot
                 newControl.Name = $"productCtrl_{info.Id}";
                 newControl.ProductInfo = info;
                 newControl.Size = new Size(364, 87);
-                newControl.OnLinkClicked += ProductLinkClicked;
+                newControl.OnLinkClicked += SendToDeck;
                 newControl.OnWearItem += WearItem;
                 flowDisplay.Controls.Add(newControl);
             }
@@ -307,8 +307,15 @@ namespace Triggerless.TriggerBot
         }
 
         // Product Selection
-        private void ProductLinkClicked(object sender, ProductCtrl.LinkClickedEventArgs args)
+        private void SendToDeck(object sender, ProductCtrl.LinkClickedEventArgs args)
         {
+            // Sometimes LengthMS gets set to zero, no idea why. We need to double check the list
+            var coll = new Collector();
+            if (!coll.Verify(args.ProductDisplayInfo))
+            {
+                MessageBox.Show("The data for this product cannot be verified.", "Bad Product Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             productOnDeck.ProductInfo = args.ProductDisplayInfo;
             productOnDeck.Visible = true;
             btnEjectFromDeck.Enabled = true;
