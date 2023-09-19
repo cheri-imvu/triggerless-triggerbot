@@ -164,6 +164,7 @@ namespace Triggerless.TriggerBot
         {
             var result = new ScanResult { Result = ScanResultType.Pending };
             var sda = new SQLiteDataAccess();
+            const int MIN_NUMBER_OF_OGGS = 2;
 
             // See if any ogg files exist
             using (var client = new HttpClient())
@@ -404,14 +405,14 @@ namespace Triggerless.TriggerBot
                     return result;
                 }
 
-                if (triggerList.Count < 4)
+                if (triggerList.Count < MIN_NUMBER_OF_OGGS)
                 {
                     lock (_lock)
                     {
                         connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");
                     }
                     result.Result = ScanResultType.NoUsefulTriggers;
-                    result.Message = $"4 Triggers required to qualify as a song";
+                    result.Message = $"{MIN_NUMBER_OF_OGGS} Triggers required to qualify as a song";
                     return result;
                 }
                 #endregion
