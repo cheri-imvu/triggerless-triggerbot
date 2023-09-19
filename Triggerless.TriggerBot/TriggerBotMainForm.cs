@@ -218,11 +218,29 @@ namespace Triggerless.TriggerBot
                 newControl.Name = $"productCtrl_{info.Id}";
                 newControl.ProductInfo = info;
                 newControl.Size = new Size(364, 87);
-                newControl.OnLinkClicked += SendToDeck;
+                newControl.OnDeckLinkClicked += SendToDeck;
                 newControl.OnWearItem += WearItem;
+                newControl.OnExcludeSong += ExcludeSong;
+                
                 flowDisplay.Controls.Add(newControl);
             }
             flowDisplay.ResumeLayout(true);
+        }
+
+        private void ExcludeSong(object sender, ExcludeSongEventArgs e)
+        {
+            var msg = $"Are you sure you want to remove {e.Title} from search? Nothing will be deleted from your IMVU inventory.";
+            var result = MessageBox.Show(msg, "Remove Tune?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.No) return;
+
+            if (_collector.ExcludeSong(e.ProductId))
+            {
+                flowDisplay.Controls.RemoveByKey($"productCtrl_{e.ProductId}");
+            } else
+            {
+                MessageBox.Show($"Unable to remove {e.Title} at this time", "Database Glitch", MessageBoxButtons.OK);
+            }
+            //throw new NotImplementedException();
         }
 
         // Product Search
@@ -330,7 +348,7 @@ namespace Triggerless.TriggerBot
         private int _currTriggerIndex;
         private int _numberOfTriggers;
         private List<string> _usedAdditionals = new List<string>();
-        private double _lagMS = 22;
+        private double _lagMS = 18;
         private DateTime _triggerStartTime = DateTime.MinValue;
 
 
@@ -393,26 +411,36 @@ namespace Triggerless.TriggerBot
 
         private string GetTriggerLine()
         {
+            var hideTriggers = chkHideTriggers.Checked;
+            var hider = "*imvu:trigger ";
             bool hasAdditionalTriggers = !string.IsNullOrEmpty(cboAdditionalTriggers.Text);
             string result = string.Empty; // sometimes the first char gets cut off.
             if (hasAdditionalTriggers)
             {
-                result = $"  /{TrimTrigger()}";
-                string[] bits = cboAdditionalTriggers.Text.Trim()
+                result = hideTriggers ? $"  {hider}{TrimTrigger()}" : $"  /{TrimTrigger()}";
+                string[] addnTriggers = cboAdditionalTriggers.Text.Trim()
                     .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (bits.Length > 0)
+                if (addnTriggers.Length > 0)
                 {
-                    for (int i = 0; i < bits.Length; i++)
+                    for (int i = 0; i < addnTriggers.Length; i++)
                     {
                         result += " ";
-                        if (!bits[i].StartsWith("/")) result += "/";
-                        result += bits[i];
+                        if (hideTriggers)
+                        {
+                            var addnTrigger = addnTriggers[i].Replace("/", "");
+                            result += $"{hider}{addnTrigger}";
+                        }
+                        else
+                        {
+                            if (!addnTriggers[i].StartsWith("/")) result += "/";
+                            result += addnTriggers[i];
+                        }
                     }
                 }
             }
             else
             {
-                result = $"  {TrimTrigger()}";
+                result = hideTriggers ? $"  {hider}{TrimTrigger()}" : $"  {TrimTrigger()}";
             }
             if (result.Contains("~")) result = result.Replace("~", "{~}");
             return result;
@@ -420,7 +448,11 @@ namespace Triggerless.TriggerBot
 
         private string TrimTrigger()
         {
+            var hideTriggers = chkHideTriggers.Checked;
+
             string result = _currProductInfo.Triggers[_currTriggerIndex].Trigger;
+            if (hideTriggers) result = result.Replace("/", "");
+            
             int commaPos = result.IndexOf(",");
             if (commaPos == -1) return result;
             return result.Substring(0, commaPos);
@@ -510,6 +542,21 @@ namespace Triggerless.TriggerBot
             };
             if (reasons.Contains(e.CloseReason)) return;
             _updater.RunSetupFileIfRequired();
+        }
+
+        private void RescanAll(object sender, EventArgs e)
+        {
+            var msg = "Are you sure you want to rescan? This will delete all Triggerbot data and scan the inventory and web all over again, and could take some time./n/nAre you certain?";
+            var dlgResult = MessageBox.Show(msg, "Rescan All Data?", 
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+            if (dlgResult == DialogResult.No) { return; }
+
+            if (_collector.ClearAppCache())
+            {
+                ScanInventory(null, null);
+            }
+
+
         }
     }
 }

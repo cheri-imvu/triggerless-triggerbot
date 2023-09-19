@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.Windows.Forms;
 
@@ -13,7 +14,7 @@ namespace Triggerless.TriggerBot
 
     public partial class ProductCtrl : UserControl
     {
-        public event LinkClickedEventHandler OnLinkClicked;
+        public event LinkClickedEventHandler OnDeckLinkClicked;
         public delegate void LinkClickedEventHandler(object sender, LinkClickedEventArgs e);
         public class LinkClickedEventArgs : EventArgs
         {
@@ -93,7 +94,7 @@ namespace Triggerless.TriggerBot
             if (e.Button == MouseButtons.Left)
             {
                 var args = new LinkClickedEventArgs(_productInfo);
-                OnLinkClicked?.Invoke(sender, args);
+                OnDeckLinkClicked?.Invoke(sender, args);
             }
         }
 
@@ -114,5 +115,43 @@ namespace Triggerless.TriggerBot
             if (_productInfo == null) return;
             OnWearItem?.Invoke(this, new WearItemEventArgs(_productInfo.Id));
         }
+
+        private void ProductImageClicked(object sender, EventArgs e)
+        {
+            var pictureBox = sender as PictureBox;
+            if (pictureBox == null) return;
+
+            var productControl = pictureBox.Parent as ProductCtrl; 
+            if (productControl == null) return;
+
+            var pdi = productControl.ProductInfo;
+            var url = $"https://www.imvu.com/shop/product.php?products_id={pdi.Id}";
+            Process.Start(url); 
+
+        }
+
+        private void ExcludeSong(object sender, EventArgs e)
+        {
+            var productCtrl = this as ProductCtrl;
+            var productId = this.ProductInfo.Id;
+            var title = this.ProductInfo.Name;
+
+            if (OnExcludeSong != null) OnExcludeSong(this, new ExcludeSongEventArgs(productId, title));
+        }
+
+        public class ExcludeSongEventArgs: EventArgs
+        {
+            public long ProductId { get; set; }
+            public string Title { get; set; }   
+
+            public ExcludeSongEventArgs(long id, string title)
+            {
+                ProductId = id;
+                Title = title;
+            }
+        }
+
+        public delegate void ExcludeSongEventHandler(object sender, ExcludeSongEventArgs e);
+        public event ExcludeSongEventHandler OnExcludeSong;
     }
 }
