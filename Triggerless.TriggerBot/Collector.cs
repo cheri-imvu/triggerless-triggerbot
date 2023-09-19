@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
 using Dapper;
 using Newtonsoft.Json;
@@ -22,7 +23,52 @@ namespace Triggerless.TriggerBot
 
         public static string GetUrl(long pid, string filename) => string.Format(GetUrlTemplate(pid), filename);
 
+        public bool ClearAppCache()
+        {
+            var result = false;
 
+            using (var conn = new SQLiteDataAccess().GetAppCacheCxn())
+            {
+                try
+                {
+                    conn.Open();
+                    var sql = "DELETE FROM product_triggers;";
+                    conn.Execute(sql);
+                    sql = "DELETE FROM products;";
+                    conn.Execute(sql);
+                    result = true;
+                }
+                catch 
+                { 
+                    result = false;
+                }
+
+            }
+
+            return result;
+        }
+
+        public bool ExcludeSong(long productId)
+        {
+            bool result = false;
+            var sda = new SQLiteDataAccess();
+            using (var conn = sda.GetAppCacheCxn())
+            {
+                try
+                {
+                    conn.Open();
+                    var sql = $"UPDATE products SET has_ogg = 0 WHERE product_id = {productId}";
+                    conn.Execute(sql);
+                    result = true;
+                }
+                catch (Exception ex)
+                {
+                    //return false;
+                }
+            }
+            return result;
+
+        }
         public async Task ScanDatabasesAsync()
         {
             var sda = new SQLiteDataAccess();

@@ -35,7 +35,9 @@
             this.lblTriggers = new System.Windows.Forms.Label();
             this.linkOnDeck = new System.Windows.Forms.LinkLabel();
             this.linkWearItem = new System.Windows.Forms.LinkLabel();
+            this.picDeleteItem = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picDeleteItem)).BeginInit();
             this.SuspendLayout();
             // 
             // picProductImage
@@ -50,6 +52,7 @@
             this.picProductImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picProductImage.TabIndex = 0;
             this.picProductImage.TabStop = false;
+            this.picProductImage.Click += new System.EventHandler(this.ProductImageClicked);
             // 
             // lblName
             // 
@@ -103,12 +106,24 @@
             this.linkWearItem.VisitedLinkColor = System.Drawing.Color.Blue;
             this.linkWearItem.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WearItem);
             // 
+            // picDeleteItem
+            // 
+            this.picDeleteItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.picDeleteItem.Image = global::Triggerless.TriggerBot.Properties.Resources.exclude16;
+            this.picDeleteItem.Location = new System.Drawing.Point(345, 0);
+            this.picDeleteItem.Name = "picDeleteItem";
+            this.picDeleteItem.Size = new System.Drawing.Size(16, 16);
+            this.picDeleteItem.TabIndex = 6;
+            this.picDeleteItem.TabStop = false;
+            this.picDeleteItem.Click += new System.EventHandler(this.ExcludeSong);
+            // 
             // ProductCtrl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(248)))));
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.picDeleteItem);
             this.Controls.Add(this.linkWearItem);
             this.Controls.Add(this.linkOnDeck);
             this.Controls.Add(this.lblTriggers);
@@ -120,6 +135,7 @@
             this.Name = "ProductCtrl";
             this.Size = new System.Drawing.Size(364, 87);
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picDeleteItem)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -133,5 +149,6 @@
         private System.Windows.Forms.Label lblTriggers;
         private System.Windows.Forms.LinkLabel linkOnDeck;
         private System.Windows.Forms.LinkLabel linkWearItem;
+        private System.Windows.Forms.PictureBox picDeleteItem;
     }
 }

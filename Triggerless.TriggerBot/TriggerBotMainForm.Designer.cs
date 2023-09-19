@@ -40,6 +40,7 @@ namespace Triggerless.TriggerBot
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
             this.pnlRight = new System.Windows.Forms.Panel();
+            this.chkHideTriggers = new System.Windows.Forms.CheckBox();
             this.lblCurrPlayingTrigger = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.pnlLag = new System.Windows.Forms.Panel();
@@ -177,6 +178,7 @@ namespace Triggerless.TriggerBot
             // 
             // pnlRight
             // 
+            this.pnlRight.Controls.Add(this.chkHideTriggers);
             this.pnlRight.Controls.Add(this.lblCurrPlayingTrigger);
             this.pnlRight.Controls.Add(this.label5);
             this.pnlRight.Controls.Add(this.pnlLag);
@@ -194,6 +196,16 @@ namespace Triggerless.TriggerBot
             this.pnlRight.Name = "pnlRight";
             this.pnlRight.Size = new System.Drawing.Size(620, 675);
             this.pnlRight.TabIndex = 9;
+            // 
+            // chkHideTriggers
+            // 
+            this.chkHideTriggers.AutoSize = true;
+            this.chkHideTriggers.Location = new System.Drawing.Point(295, 294);
+            this.chkHideTriggers.Name = "chkHideTriggers";
+            this.chkHideTriggers.Size = new System.Drawing.Size(128, 22);
+            this.chkHideTriggers.TabIndex = 18;
+            this.chkHideTriggers.Text = "Hide Triggers";
+            this.chkHideTriggers.UseVisualStyleBackColor = true;
             // 
             // lblCurrPlayingTrigger
             // 
@@ -643,6 +655,7 @@ namespace Triggerless.TriggerBot
             this.totalRescanToolStripMenuItem.Name = "totalRescanToolStripMenuItem";
             this.totalRescanToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.totalRescanToolStripMenuItem.Text = "Totally Rescan Inventory";
+            this.totalRescanToolStripMenuItem.Click += new System.EventHandler(this.RescanAll);
             // 
             // debugToolStripMenuItem
             // 
@@ -790,6 +803,7 @@ namespace Triggerless.TriggerBot
         private System.Windows.Forms.ToolStripMenuItem scanForNewProductsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem totalRescanToolStripMenuItem;
         private System.Windows.Forms.CheckBox chkAutoCue;
+        private System.Windows.Forms.CheckBox chkHideTriggers;
     }
 }
 
