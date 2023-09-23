@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.Reflection;
 
 namespace Triggerless.TriggerBot
 {
@@ -12,5 +13,7 @@ namespace Triggerless.TriggerBot
                 Paid = true;
             }
         }
+
+        public static string VersionNumber => Assembly.GetEntryAssembly().GetName().Version.ToString();
     }
 }

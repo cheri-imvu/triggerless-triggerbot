@@ -31,8 +31,7 @@ namespace Triggerless.TriggerBot
 
         private void AboutForm_Load(object sender, EventArgs e)
         {
-            var version = Assembly.GetEntryAssembly().GetName().Version;
-            lblVersion.Text = "Version " + version;
+            lblVersion.Text = "Version " + Shared.VersionNumber;
         }
     }
 }

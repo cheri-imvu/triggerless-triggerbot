@@ -529,6 +529,7 @@ namespace Triggerless.TriggerBot
 
         private void LoadForm(object sender, EventArgs e)
         {
+            Text = $"Triggerless Triggerbot {Shared.VersionNumber}";
             Shared.CheckIfPaid();
             _updater.CheckForUpdate();
         }
