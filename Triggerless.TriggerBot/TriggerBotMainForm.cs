@@ -294,8 +294,8 @@ namespace Triggerless.TriggerBot
                 _currProductInfo = productOnDeck.ProductInfo;
                 lblNowPlaying.Text = $"\"{_currProductInfo.Name}\" by {_currProductInfo.Creator}";
                 FillTriggerGrid();
-                trackBarLag.Value = (int)_lagMS;
-                lblLag.Text = _lagMS.ToString();
+                trackBarLag.Value = LagMsToTrackBarValue();
+                lblLag.Text = _lagMS.ToString("0.00");
                 pnlLag.Visible = true;
             }
 
@@ -348,8 +348,33 @@ namespace Triggerless.TriggerBot
         private int _currTriggerIndex;
         private int _numberOfTriggers;
         private List<string> _usedAdditionals = new List<string>();
-        private double _lagMS = 18;
+
+        //---- LAG VALUES -----
+        private const double LAG_BAR_START = 12;
+        private const double LAG_BAR_END = 24;
+        private const double LAG_MS_DEFAULT = 18;
+        private const int LAG_TICKS_PER_MS = 4;
+
+
+        private double _lagMS = LAG_MS_DEFAULT;
         private DateTime _triggerStartTime = DateTime.MinValue;
+
+        private int LagMsToTrackBarValue()
+        {
+            int result = trackBarLag.Value;
+            if (_lagMS < LAG_BAR_START || _lagMS > LAG_BAR_END) return result;
+            result = (int)((_lagMS - LAG_BAR_START) * LAG_TICKS_PER_MS);
+
+            return result;
+        }
+
+        private double TrackBarValueToLagMs()
+        {
+            double result = _lagMS;
+            result = (double)trackBarLag.Value / LAG_TICKS_PER_MS + LAG_BAR_START;
+
+            return result;
+        }
 
 
         // Trigger Generation
@@ -491,8 +516,8 @@ namespace Triggerless.TriggerBot
 
         private void LagControlChanged(object sender, EventArgs e)
         {
-            _lagMS = trackBarLag.Value;
-            lblLag.Text = _lagMS.ToString();
+            _lagMS = TrackBarValueToLagMs();
+            lblLag.Text = _lagMS.ToString("0.00");
         }
 
         private void TriggerMadeProgress(object sender, EventArgs e)
@@ -559,5 +584,40 @@ namespace Triggerless.TriggerBot
 
 
         }
+
+        private void TrackBarInc(object sender, EventArgs e)
+        {
+            if (trackBarLag.Value >= trackBarLag.Maximum) return;
+            trackBarLag.Value++;
+        }
+
+        private void TrackBarIncInc(object sender, EventArgs e)
+        {
+            if (trackBarLag.Value >= trackBarLag.Maximum) return;
+            if (trackBarLag.Value > trackBarLag.Maximum - trackBarLag.LargeChange)
+            {
+                TrackBarInc(sender, e);
+                return;
+            }
+            trackBarLag.Value += trackBarLag.LargeChange;
+        }
+
+        private void TrackBarDec(object sender, EventArgs e)
+        {
+            if (trackBarLag.Value <= trackBarLag.Minimum) return;
+            trackBarLag.Value--;
+        }
+
+        private void TrackBarDecDec(object sender, EventArgs e)
+        {
+            if (trackBarLag.Value <= trackBarLag.Minimum) return;
+            if (trackBarLag.Value < trackBarLag.Minimum + trackBarLag.LargeChange)
+            {
+                TrackBarDec(sender, e);
+                return;
+            }
+            trackBarLag.Value -= trackBarLag.LargeChange;
+        }
+
     }
 }

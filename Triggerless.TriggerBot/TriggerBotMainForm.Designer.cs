@@ -44,12 +44,23 @@ namespace Triggerless.TriggerBot
             this.lblCurrPlayingTrigger = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.pnlLag = new System.Windows.Forms.Panel();
-            this.label7 = new System.Windows.Forms.Label();
-            this.progTrigger = new System.Windows.Forms.ProgressBar();
+            this.lblLagMinus = new System.Windows.Forms.Label();
+            this.lblLagMinusMinus = new System.Windows.Forms.Label();
+            this.lblLagPlusPlus = new System.Windows.Forms.Label();
+            this.lblLagPlus = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.trackBarLag = new System.Windows.Forms.TrackBar();
             this.label4 = new System.Windows.Forms.Label();
             this.lblLag = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.progTrigger = new System.Windows.Forms.ProgressBar();
+            this.trackBarLag = new System.Windows.Forms.TrackBar();
             this.btnAbort = new System.Windows.Forms.Button();
             this.btnPlay = new System.Windows.Forms.Button();
             this.cboAdditionalTriggers = new System.Windows.Forms.ComboBox();
@@ -127,7 +138,7 @@ namespace Triggerless.TriggerBot
             // 
             this.splitter.Panel2.Controls.Add(this.pnlRight);
             this.splitter.Panel2.Controls.Add(this.pnlCollector);
-            this.splitter.Size = new System.Drawing.Size(1015, 675);
+            this.splitter.Size = new System.Drawing.Size(1130, 675);
             this.splitter.SplitterDistance = 390;
             this.splitter.SplitterWidth = 5;
             this.splitter.TabIndex = 1;
@@ -194,7 +205,7 @@ namespace Triggerless.TriggerBot
             this.pnlRight.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlRight.Location = new System.Drawing.Point(0, 0);
             this.pnlRight.Name = "pnlRight";
-            this.pnlRight.Size = new System.Drawing.Size(620, 675);
+            this.pnlRight.Size = new System.Drawing.Size(735, 675);
             this.pnlRight.TabIndex = 9;
             // 
             // chkHideTriggers
@@ -227,22 +238,206 @@ namespace Triggerless.TriggerBot
             // 
             // pnlLag
             // 
-            this.pnlLag.Controls.Add(this.label7);
-            this.pnlLag.Controls.Add(this.progTrigger);
+            this.pnlLag.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlLag.BackColor = System.Drawing.SystemColors.Control;
+            this.pnlLag.Controls.Add(this.lblLagMinus);
+            this.pnlLag.Controls.Add(this.lblLagMinusMinus);
+            this.pnlLag.Controls.Add(this.lblLagPlusPlus);
+            this.pnlLag.Controls.Add(this.lblLagPlus);
+            this.pnlLag.Controls.Add(this.label8);
+            this.pnlLag.Controls.Add(this.label14);
+            this.pnlLag.Controls.Add(this.label13);
+            this.pnlLag.Controls.Add(this.label12);
+            this.pnlLag.Controls.Add(this.label11);
+            this.pnlLag.Controls.Add(this.label10);
+            this.pnlLag.Controls.Add(this.label9);
             this.pnlLag.Controls.Add(this.label6);
-            this.pnlLag.Controls.Add(this.trackBarLag);
             this.pnlLag.Controls.Add(this.label4);
             this.pnlLag.Controls.Add(this.lblLag);
-            this.pnlLag.Location = new System.Drawing.Point(287, 428);
+            this.pnlLag.Controls.Add(this.label7);
+            this.pnlLag.Controls.Add(this.progTrigger);
+            this.pnlLag.Controls.Add(this.trackBarLag);
+            this.pnlLag.Location = new System.Drawing.Point(287, 395);
             this.pnlLag.Name = "pnlLag";
-            this.pnlLag.Size = new System.Drawing.Size(327, 105);
+            this.pnlLag.Size = new System.Drawing.Size(441, 138);
             this.pnlLag.TabIndex = 15;
             this.pnlLag.Visible = false;
+            // 
+            // lblLagMinus
+            // 
+            this.lblLagMinus.AutoSize = true;
+            this.lblLagMinus.BackColor = System.Drawing.Color.Gray;
+            this.lblLagMinus.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblLagMinus.Font = new System.Drawing.Font("Lucida Console", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLagMinus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.lblLagMinus.Location = new System.Drawing.Point(165, 8);
+            this.lblLagMinus.Name = "lblLagMinus";
+            this.lblLagMinus.Size = new System.Drawing.Size(33, 19);
+            this.lblLagMinus.TabIndex = 35;
+            this.lblLagMinus.Text = " -";
+            this.lblLagMinus.Click += new System.EventHandler(this.TrackBarDec);
+            // 
+            // lblLagMinusMinus
+            // 
+            this.lblLagMinusMinus.AutoSize = true;
+            this.lblLagMinusMinus.BackColor = System.Drawing.Color.Gray;
+            this.lblLagMinusMinus.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblLagMinusMinus.Font = new System.Drawing.Font("Lucida Console", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLagMinusMinus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.lblLagMinusMinus.Location = new System.Drawing.Point(126, 8);
+            this.lblLagMinusMinus.Name = "lblLagMinusMinus";
+            this.lblLagMinusMinus.Size = new System.Drawing.Size(33, 19);
+            this.lblLagMinusMinus.TabIndex = 34;
+            this.lblLagMinusMinus.Text = "--";
+            this.lblLagMinusMinus.Click += new System.EventHandler(this.TrackBarDecDec);
+            // 
+            // lblLagPlusPlus
+            // 
+            this.lblLagPlusPlus.AutoSize = true;
+            this.lblLagPlusPlus.BackColor = System.Drawing.Color.Gray;
+            this.lblLagPlusPlus.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblLagPlusPlus.Font = new System.Drawing.Font("Lucida Console", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLagPlusPlus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.lblLagPlusPlus.Location = new System.Drawing.Point(339, 8);
+            this.lblLagPlusPlus.Name = "lblLagPlusPlus";
+            this.lblLagPlusPlus.Size = new System.Drawing.Size(33, 19);
+            this.lblLagPlusPlus.TabIndex = 33;
+            this.lblLagPlusPlus.Text = "++";
+            this.lblLagPlusPlus.Click += new System.EventHandler(this.TrackBarIncInc);
+            // 
+            // lblLagPlus
+            // 
+            this.lblLagPlus.AutoSize = true;
+            this.lblLagPlus.BackColor = System.Drawing.Color.Gray;
+            this.lblLagPlus.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblLagPlus.Font = new System.Drawing.Font("Lucida Console", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLagPlus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.lblLagPlus.Location = new System.Drawing.Point(300, 8);
+            this.lblLagPlus.Name = "lblLagPlus";
+            this.lblLagPlus.Size = new System.Drawing.Size(33, 19);
+            this.lblLagPlus.TabIndex = 32;
+            this.lblLagPlus.Text = "+ ";
+            this.lblLagPlus.Click += new System.EventHandler(this.TrackBarInc);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.BackColor = System.Drawing.Color.Black;
+            this.label8.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.ForeColor = System.Drawing.Color.Lime;
+            this.label8.Location = new System.Drawing.Point(414, 67);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(19, 12);
+            this.label8.TabIndex = 31;
+            this.label8.Text = "24";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.BackColor = System.Drawing.Color.Black;
+            this.label14.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.ForeColor = System.Drawing.Color.Lime;
+            this.label14.Location = new System.Drawing.Point(348, 67);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(19, 12);
+            this.label14.TabIndex = 30;
+            this.label14.Text = "22";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.BackColor = System.Drawing.Color.Black;
+            this.label13.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.ForeColor = System.Drawing.Color.Lime;
+            this.label13.Location = new System.Drawing.Point(279, 67);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(19, 12);
+            this.label13.TabIndex = 29;
+            this.label13.Text = "20";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.BackColor = System.Drawing.Color.Black;
+            this.label12.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.ForeColor = System.Drawing.Color.Lime;
+            this.label12.Location = new System.Drawing.Point(212, 67);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(19, 12);
+            this.label12.TabIndex = 28;
+            this.label12.Text = "18";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.BackColor = System.Drawing.Color.Black;
+            this.label11.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.ForeColor = System.Drawing.Color.Lime;
+            this.label11.Location = new System.Drawing.Point(146, 67);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(19, 12);
+            this.label11.TabIndex = 27;
+            this.label11.Text = "16";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.BackColor = System.Drawing.Color.Black;
+            this.label10.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.ForeColor = System.Drawing.Color.Lime;
+            this.label10.Location = new System.Drawing.Point(79, 67);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(19, 12);
+            this.label10.TabIndex = 26;
+            this.label10.Text = "14";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.BackColor = System.Drawing.Color.Black;
+            this.label9.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.ForeColor = System.Drawing.Color.Lime;
+            this.label9.Location = new System.Drawing.Point(10, 67);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(19, 12);
+            this.label9.TabIndex = 25;
+            this.label9.Text = "12";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(250, 7);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(46, 18);
+            this.label6.TabIndex = 24;
+            this.label6.Text = "msec";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(7, 7);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(85, 18);
+            this.label4.TabIndex = 22;
+            this.label4.Text = "Lag Factor";
+            // 
+            // lblLag
+            // 
+            this.lblLag.AutoSize = true;
+            this.lblLag.Location = new System.Drawing.Point(204, 7);
+            this.lblLag.Name = "lblLag";
+            this.lblLag.Size = new System.Drawing.Size(49, 18);
+            this.lblLag.TabIndex = 23;
+            this.lblLag.Text = "18.00";
+            this.lblLag.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 60);
+            this.label7.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(7, 91);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(132, 18);
             this.label7.TabIndex = 16;
@@ -250,49 +445,26 @@ namespace Triggerless.TriggerBot
             // 
             // progTrigger
             // 
-            this.progTrigger.Location = new System.Drawing.Point(4, 81);
+            this.progTrigger.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progTrigger.Location = new System.Drawing.Point(21, 113);
             this.progTrigger.Name = "progTrigger";
-            this.progTrigger.Size = new System.Drawing.Size(315, 12);
+            this.progTrigger.Size = new System.Drawing.Size(397, 10);
             this.progTrigger.TabIndex = 3;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(109, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(46, 18);
-            this.label6.TabIndex = 15;
-            this.label6.Text = "msec";
             // 
             // trackBarLag
             // 
-            this.trackBarLag.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarLag.Location = new System.Drawing.Point(6, 21);
-            this.trackBarLag.Maximum = 100;
+            this.trackBarLag.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.trackBarLag.LargeChange = 4;
+            this.trackBarLag.Location = new System.Drawing.Point(6, 33);
+            this.trackBarLag.Maximum = 48;
             this.trackBarLag.Name = "trackBarLag";
-            this.trackBarLag.Size = new System.Drawing.Size(317, 45);
+            this.trackBarLag.Size = new System.Drawing.Size(431, 45);
             this.trackBarLag.TabIndex = 12;
+            this.trackBarLag.TickFrequency = 4;
+            this.trackBarLag.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.trackBarLag.Value = 24;
             this.trackBarLag.ValueChanged += new System.EventHandler(this.LagControlChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(85, 18);
-            this.label4.TabIndex = 13;
-            this.label4.Text = "Lag Factor";
-            // 
-            // lblLag
-            // 
-            this.lblLag.AutoSize = true;
-            this.lblLag.Location = new System.Drawing.Point(88, 0);
-            this.lblLag.Name = "lblLag";
-            this.lblLag.Size = new System.Drawing.Size(26, 18);
-            this.lblLag.TabIndex = 14;
-            this.lblLag.Text = "99";
-            this.lblLag.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // btnAbort
             // 
@@ -326,7 +498,7 @@ namespace Triggerless.TriggerBot
             this.cboAdditionalTriggers.FormattingEnabled = true;
             this.cboAdditionalTriggers.Location = new System.Drawing.Point(287, 144);
             this.cboAdditionalTriggers.Name = "cboAdditionalTriggers";
-            this.cboAdditionalTriggers.Size = new System.Drawing.Size(327, 26);
+            this.cboAdditionalTriggers.Size = new System.Drawing.Size(442, 26);
             this.cboAdditionalTriggers.TabIndex = 9;
             // 
             // lblAdditional
@@ -426,7 +598,7 @@ namespace Triggerless.TriggerBot
             this.pnlBanner.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlBanner.Location = new System.Drawing.Point(0, 0);
             this.pnlBanner.Name = "pnlBanner";
-            this.pnlBanner.Size = new System.Drawing.Size(620, 88);
+            this.pnlBanner.Size = new System.Drawing.Size(735, 88);
             this.pnlBanner.TabIndex = 4;
             this.pnlBanner.Resize += new System.EventHandler(this.RelocateBanner);
             // 
@@ -451,7 +623,7 @@ namespace Triggerless.TriggerBot
             this.pnlOnDeck.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlOnDeck.Location = new System.Drawing.Point(0, 539);
             this.pnlOnDeck.Name = "pnlOnDeck";
-            this.pnlOnDeck.Size = new System.Drawing.Size(620, 136);
+            this.pnlOnDeck.Size = new System.Drawing.Size(735, 136);
             this.pnlOnDeck.TabIndex = 3;
             // 
             // chkAutoCue
@@ -577,7 +749,7 @@ namespace Triggerless.TriggerBot
             this.helpToolStripMenuItem});
             this._topMenu.Location = new System.Drawing.Point(0, 0);
             this._topMenu.Name = "_topMenu";
-            this._topMenu.Size = new System.Drawing.Size(1015, 24);
+            this._topMenu.Size = new System.Drawing.Size(1130, 24);
             this._topMenu.TabIndex = 2;
             this._topMenu.Text = "menuStrip1";
             // 
@@ -705,7 +877,7 @@ namespace Triggerless.TriggerBot
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1015, 699);
+            this.ClientSize = new System.Drawing.Size(1130, 699);
             this.Controls.Add(this.splitter);
             this.Controls.Add(this._topMenu);
             this.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -790,10 +962,7 @@ namespace Triggerless.TriggerBot
         private System.Windows.Forms.ToolStripMenuItem aboutTriggerbotToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem minimizeMenuItem;
         private System.Windows.Forms.Panel pnlLag;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TrackBar trackBarLag;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label lblLag;
         private System.Windows.Forms.Label lblCurrPlayingTrigger;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label7;
@@ -804,6 +973,20 @@ namespace Triggerless.TriggerBot
         private System.Windows.Forms.ToolStripMenuItem totalRescanToolStripMenuItem;
         private System.Windows.Forms.CheckBox chkAutoCue;
         private System.Windows.Forms.CheckBox chkHideTriggers;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lblLag;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label lblLagPlus;
+        private System.Windows.Forms.Label lblLagMinus;
+        private System.Windows.Forms.Label lblLagMinusMinus;
+        private System.Windows.Forms.Label lblLagPlusPlus;
     }
 }
 
