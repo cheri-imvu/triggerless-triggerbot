@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Triggerless Triggerbot"
-#define MyAppVersion "0.8.0"
+#define MyAppVersion "0.8.4"
 #define MyAppPublisher "triggerless.com"
 #define MyAppURL "https://triggerless.com"
 #define MyAppExeName "TriggerBot.exe"
@@ -152,6 +152,7 @@ Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Sys
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Security.Principal.Windows.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Threading.Tasks.Extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Triggerless.XAFLib.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\WindowsInput.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\TriggerBot.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 

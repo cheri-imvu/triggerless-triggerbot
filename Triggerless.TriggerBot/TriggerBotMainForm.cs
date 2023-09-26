@@ -395,12 +395,26 @@ namespace Triggerless.TriggerBot
             //SendKeys.SendWait(text + "~");
 
             // New Version
+
+            // get current clipboard text
+            string currClipText = string.Empty;
+            if (Clipboard.ContainsText())
+            {
+                currClipText = Clipboard.GetText();
+            }
             _sim.Keyboard.KeyPress(KeyCode.HOME);
             _sim.Keyboard.ModifiedKeyStroke(KeyCode.SHIFT, KeyCode.END);
-            _sim.Keyboard.KeyPress(KeyCode.DELETE);
+            _sim.Keyboard.ModifiedKeyStroke(KeyCode.CONTROL, KeyCode.VK_X);
             _sim.Keyboard.TextEntry(text);
             _sim.Keyboard.KeyPress(KeyCode.RETURN);
-
+            if (Clipboard.ContainsText())
+            {
+                string prevText =  Clipboard.GetText();
+                if (prevText != currClipText && !String.IsNullOrEmpty(prevText))
+                {
+                    _sim.Keyboard.TextEntry(prevText);
+                }
+            }
         }
 
         // Trigger Generation

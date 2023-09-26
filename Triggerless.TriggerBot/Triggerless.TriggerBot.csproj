@@ -50,6 +50,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>note.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.2.0.151\lib\net461\Dapper.dll</HintPath>
@@ -317,6 +320,7 @@
     <Content Include="assets\stop.png" />
     <Content Include="assets\triggerbot.png" />
     <Content Include="assets\x.png" />
+    <Content Include="note.ico" />
     <None Include="Resources\exclude16.png" />
   </ItemGroup>
   <ItemGroup>

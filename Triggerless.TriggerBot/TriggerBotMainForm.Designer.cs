@@ -81,6 +81,7 @@ namespace Triggerless.TriggerBot
             this.btnEjectFromDeck = new System.Windows.Forms.Button();
             this.btnLoadToPlaying = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.productOnDeck = new Triggerless.TriggerBot.ProductCtrl();
             this.pnlCollector = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.progScan = new System.Windows.Forms.ProgressBar();
@@ -94,12 +95,11 @@ namespace Triggerless.TriggerBot
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.tblConvertChkn = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
+            this.label19 = new System.Windows.Forms.Label();
             this._toolTip = new System.Windows.Forms.ToolTip(this.components);
             this._triggerTimer = new System.Timers.Timer();
             this._progressTimer = new System.Windows.Forms.Timer(this.components);
-            this.label19 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.productOnDeck = new Triggerless.TriggerBot.ProductCtrl();
             this._collector = new Triggerless.TriggerBot.Collector();
             this.tabAppContainer.SuspendLayout();
             this.tabPlayback.SuspendLayout();
@@ -717,6 +717,21 @@ namespace Triggerless.TriggerBot
             this.label2.TabIndex = 1;
             this.label2.Text = "ON DECK";
             // 
+            // productOnDeck
+            // 
+            this.productOnDeck.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(248)))));
+            this.productOnDeck.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.productOnDeck.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productOnDeck.HideOnDeck = true;
+            this.productOnDeck.Location = new System.Drawing.Point(5, 38);
+            this.productOnDeck.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.productOnDeck.Name = "productOnDeck";
+            this.productOnDeck.ProductInfo = null;
+            this.productOnDeck.Size = new System.Drawing.Size(364, 90);
+            this.productOnDeck.TabIndex = 2;
+            this._toolTip.SetToolTip(this.productOnDeck, "Trigger Product On Deck");
+            this.productOnDeck.Visible = false;
+            // 
             // pnlCollector
             // 
             this.pnlCollector.Controls.Add(this.label1);
@@ -850,14 +865,15 @@ namespace Triggerless.TriggerBot
             this.tblConvertChkn.Text = " MP3 to CHKN ";
             this.tblConvertChkn.UseVisualStyleBackColor = true;
             // 
-            // _triggerTimer
+            // button1
             // 
-            this._triggerTimer.SynchronizingObject = this.picBanner;
-            this._triggerTimer.Elapsed += new System.Timers.ElapsedEventHandler(this._triggerTimer_Elapsed);
-            // 
-            // _progressTimer
-            // 
-            this._progressTimer.Tick += new System.EventHandler(this.TriggerMadeProgress);
+            this.button1.Location = new System.Drawing.Point(446, 43);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(131, 31);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "Convert MP3";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.OpenAudioSlicer);
             // 
             // label19
             // 
@@ -868,29 +884,14 @@ namespace Triggerless.TriggerBot
             this.label19.TabIndex = 0;
             this.label19.Text = "This area is under construction. Click here to convert MP3 to IMVU CHKN:";
             // 
-            // button1
+            // _triggerTimer
             // 
-            this.button1.Location = new System.Drawing.Point(446, 43);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(131, 31);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Convert MP3";
-            this.button1.UseVisualStyleBackColor = true;
+            this._triggerTimer.SynchronizingObject = this.picBanner;
+            this._triggerTimer.Elapsed += new System.Timers.ElapsedEventHandler(this._triggerTimer_Elapsed);
             // 
-            // productOnDeck
+            // _progressTimer
             // 
-            this.productOnDeck.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(248)))));
-            this.productOnDeck.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.productOnDeck.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.productOnDeck.HideOnDeck = true;
-            this.productOnDeck.Location = new System.Drawing.Point(5, 38);
-            this.productOnDeck.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.productOnDeck.Name = "productOnDeck";
-            this.productOnDeck.ProductInfo = null;
-            this.productOnDeck.Size = new System.Drawing.Size(364, 90);
-            this.productOnDeck.TabIndex = 2;
-            this._toolTip.SetToolTip(this.productOnDeck, "Trigger Product On Deck");
-            this.productOnDeck.Visible = false;
+            this._progressTimer.Tick += new System.EventHandler(this.TriggerMadeProgress);
             // 
             // _collector
             // 

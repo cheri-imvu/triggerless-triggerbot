@@ -1,1 +1,1 @@
-CertUtil -hashfile Output\triggerbot-setup.0.8.0.exe MD5
+CertUtil -hashfile Output\triggerbot-setup.0.8.4.exe MD5
