@@ -1,4 +1,6 @@
-﻿using Dapper;
+﻿
+
+using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,12 +13,15 @@ using System.Threading;
 using static Triggerless.TriggerBot.ProductCtrl;
 using System.Data;
 using System.Threading.Tasks;
+using WindowsInput;
+using KeyCode = WindowsInput.Native.VirtualKeyCode;
 
 namespace Triggerless.TriggerBot
 {
     public partial class TriggerBotMainForm : Form
     {
-        private Update _updater;  
+        private Update _updater;
+        private IInputSimulator _sim = new InputSimulator();
 
         public TriggerBotMainForm()
         {
@@ -83,16 +88,17 @@ namespace Triggerless.TriggerBot
         private void WearItem(object sender, WearItemEventArgs e)
         {
             if (_imvuChatWindow == IntPtr.Zero) return;
-            BringWindowToTop(_imvuChatWindow);
-            SetForegroundWindow(_imvuChatWindow);
-            SendKeys.SendWait($" *use {e.ProductId}~");
+            var line = $" *use {e.ProductId}";
+            DispatchText(line);
+
         }
-        #endregion
+#endregion
 
         #region Inventory Update
         // Inventory Update
         private async void ScanInventory(object sender, EventArgs e) //Form1.Shown
         {
+            tabAppContainer.SelectedTab = tabPlayback;
             pnlCollector.BringToFront();
             btnSearch.Enabled = false;
             await _collector.ScanDatabasesAsync();
@@ -261,6 +267,36 @@ namespace Triggerless.TriggerBot
         #endregion
 
         #region GUI 
+        private void LoadForm(object sender, EventArgs e)
+        {
+            Text = $"Triggerless Triggerbot {Shared.VersionNumber}";
+            Shared.CheckIfPaid();
+            _updater.CheckForUpdate();
+        }
+
+        private void TriggerBotMainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (_isPlaying)
+            {
+                var result = MessageBox.Show("You're playing a tune, are you sure?",
+                    "Exit Program?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.No)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+                CleanupAfterPlay();
+            }
+
+            var reasons = new CloseReason[] {
+                CloseReason.WindowsShutDown,
+                CloseReason.TaskManagerClosing,
+                CloseReason.ApplicationExitCall
+            };
+            if (reasons.Contains(e.CloseReason)) return;
+            _updater.RunSetupFileIfRequired();
+        }
+
         private void RelocateBanner(object sender, EventArgs e)
         {
             var sizePanel = pnlBanner.Size;
@@ -269,9 +305,9 @@ namespace Triggerless.TriggerBot
             picBanner.Location = new Point(left, picBanner.Location.Y);
         }
 
-        private void stayOnTopToolStripMenuItem_Click(object sender, EventArgs e)
+        private void chkStayOnTop_Clicked(object sender, EventArgs e)
         {
-            this.TopMost = stayOnTopToolStripMenuItem.Checked;
+            this.TopMost = chkStayOnTop.Checked;
         }
         private void aboutTriggerbotToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -349,33 +385,23 @@ namespace Triggerless.TriggerBot
         private int _numberOfTriggers;
         private List<string> _usedAdditionals = new List<string>();
 
-        //---- LAG VALUES -----
-        private const double LAG_BAR_START = 12;
-        private const double LAG_BAR_END = 24;
-        private const double LAG_MS_DEFAULT = 18;
-        private const int LAG_TICKS_PER_MS = 4;
-
-
-        private double _lagMS = LAG_MS_DEFAULT;
-        private DateTime _triggerStartTime = DateTime.MinValue;
-
-        private int LagMsToTrackBarValue()
+        private void DispatchText(string text)
         {
-            int result = trackBarLag.Value;
-            if (_lagMS < LAG_BAR_START || _lagMS > LAG_BAR_END) return result;
-            result = (int)((_lagMS - LAG_BAR_START) * LAG_TICKS_PER_MS);
+            if (_imvuChatWindow == IntPtr.Zero) return;
+            BringWindowToTop(_imvuChatWindow);
+            SetForegroundWindow(_imvuChatWindow);
 
-            return result;
+            // Old Version
+            //SendKeys.SendWait(text + "~");
+
+            // New Version
+            _sim.Keyboard.KeyPress(KeyCode.HOME);
+            _sim.Keyboard.ModifiedKeyStroke(KeyCode.SHIFT, KeyCode.END);
+            _sim.Keyboard.KeyPress(KeyCode.DELETE);
+            _sim.Keyboard.TextEntry(text);
+            _sim.Keyboard.KeyPress(KeyCode.RETURN);
+
         }
-
-        private double TrackBarValueToLagMs()
-        {
-            double result = _lagMS;
-            result = (double)trackBarLag.Value / LAG_TICKS_PER_MS + LAG_BAR_START;
-
-            return result;
-        }
-
 
         // Trigger Generation
         private void _triggerTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -393,10 +419,9 @@ namespace Triggerless.TriggerBot
         public void PullTrigger()
         {
             _triggerTimer.Interval = _currProductInfo.Triggers[_currTriggerIndex].LengthMS - _lagMS;
-            SetForegroundWindow(_imvuChatWindow);
             _triggerTimer.Start();
             _triggerStartTime = DateTime.Now;
-            SendKeys.SendWait(GetTriggerLine() + "~");
+            DispatchText(GetTriggerLine());
 
             _progressTimer.Stop();
             progTrigger.Value = 0;
@@ -429,7 +454,7 @@ namespace Triggerless.TriggerBot
             _currTriggerIndex = 0;
             _numberOfTriggers = _currProductInfo.Triggers.Count;
             PullTrigger();
-            if (minimizeMenuItem.Checked) WindowState = FormWindowState.Minimized;
+            if (chkMinimizeOnPlay.Checked) WindowState = FormWindowState.Minimized;
             btnAbort.Enabled = true;
             btnPlay.Enabled = false;
         }
@@ -488,6 +513,7 @@ namespace Triggerless.TriggerBot
             if (MessageBox.Show("Are you sure you want to abort?", "Abort Trigger Play?", 
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                chkAutoCue.Checked = false;
                 CleanupAfterPlay();
             }
         }
@@ -514,6 +540,34 @@ namespace Triggerless.TriggerBot
             }
         }
 
+        #region LagControl and TrackBar
+
+        //---- LAG VALUES -----
+        private const double LAG_BAR_START = 0;
+        private const double LAG_BAR_END = 12;
+        private const double LAG_MS_DEFAULT = 4;
+        private const int LAG_TICKS_PER_MS = 4;
+
+        private double _lagMS = LAG_MS_DEFAULT;
+        private DateTime _triggerStartTime = DateTime.MinValue;
+
+        private int LagMsToTrackBarValue()
+        {
+            int result = trackBarLag.Value;
+            if (_lagMS < LAG_BAR_START || _lagMS > LAG_BAR_END) return result;
+            result = (int)((_lagMS - LAG_BAR_START) * LAG_TICKS_PER_MS);
+
+            return result;
+        }
+
+        private double TrackBarValueToLagMs()
+        {
+            double result = _lagMS;
+            result = (double)trackBarLag.Value / LAG_TICKS_PER_MS + LAG_BAR_START;
+
+            return result;
+        }
+
         private void LagControlChanged(object sender, EventArgs e)
         {
             _lagMS = TrackBarValueToLagMs();
@@ -526,63 +580,6 @@ namespace Triggerless.TriggerBot
             var percentProgress = 100 * triggerMsecElapsed / _currProductInfo.Triggers[_currTriggerIndex].LengthMS;
             percentProgress = Math.Min(percentProgress, 100);
             progTrigger.Value = (int)Math.Round(percentProgress);
-        }
-
-        #endregion
-
-        private void OpenAudioSlicer(object sender, EventArgs e)
-        {
-            if (TopMost)
-            {
-                stayOnTopToolStripMenuItem.Checked = false;
-                TopMost = false;
-            }
-            var result = new AudioSplicerForm().ShowDialog();
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (_isPlaying)
-            {
-                var result = MessageBox.Show("You're playing a tune, are you sure?", 
-                    "Exit Program?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (result == DialogResult.No) return;
-                CleanupAfterPlay();
-            }
-            Close();
-        }
-
-        private void LoadForm(object sender, EventArgs e)
-        {
-            Text = $"Triggerless Triggerbot {Shared.VersionNumber}";
-            Shared.CheckIfPaid();
-            _updater.CheckForUpdate();
-        }
-
-        private void TriggerBotMainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            var reasons = new CloseReason[] { 
-                CloseReason.WindowsShutDown, 
-                CloseReason.TaskManagerClosing, 
-                CloseReason.ApplicationExitCall 
-            };
-            if (reasons.Contains(e.CloseReason)) return;
-            _updater.RunSetupFileIfRequired();
-        }
-
-        private void RescanAll(object sender, EventArgs e)
-        {
-            var msg = "Are you sure you want to rescan? This will delete all Triggerbot data and scan the inventory and web all over again, and could take some time./n/nAre you certain?";
-            var dlgResult = MessageBox.Show(msg, "Rescan All Data?", 
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
-            if (dlgResult == DialogResult.No) { return; }
-
-            if (_collector.ClearAppCache())
-            {
-                ScanInventory(null, null);
-            }
-
-
         }
 
         private void TrackBarInc(object sender, EventArgs e)
@@ -618,6 +615,50 @@ namespace Triggerless.TriggerBot
             }
             trackBarLag.Value -= trackBarLag.LargeChange;
         }
+
+        #endregion
+
+        #endregion
+
+        private void OpenAudioSlicer(object sender, EventArgs e)
+        {
+            if (TopMost)
+            {
+                chkStayOnTop.Checked = false;
+                TopMost = false;
+            }
+            var result = new AudioSplicerForm().ShowDialog();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_isPlaying)
+            {
+                var result = MessageBox.Show("You're playing a tune, are you sure?", 
+                    "Exit Program?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.No) return;
+                CleanupAfterPlay();
+            }
+            Close();
+        }
+
+
+        private void RescanAll(object sender, EventArgs e)
+        {
+            var msg = "Are you sure you want to rescan? This will delete all Triggerbot data and scan the inventory and web all over again, and could take some time./n/nAre you certain?";
+            var dlgResult = MessageBox.Show(msg, "Rescan All Data?", 
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+            if (dlgResult == DialogResult.No) { return; }
+
+            tabAppContainer.SelectedTab = tabPlayback;
+            if (_collector.ClearAppCache())
+            {
+                ScanInventory(null, null);
+            }
+
+
+        }
+
 
     }
 }
