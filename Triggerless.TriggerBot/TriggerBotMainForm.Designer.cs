@@ -88,15 +88,24 @@ namespace Triggerless.TriggerBot
             this.lblProgress = new System.Windows.Forms.Label();
             this.lblProduct = new System.Windows.Forms.Label();
             this.tabTools = new System.Windows.Forms.TabPage();
-            this.btnRescanAll = new System.Windows.Forms.Button();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.btnScanNew = new System.Windows.Forms.Button();
-            this.label16 = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.label15 = new System.Windows.Forms.Label();
+            this.btnRescanAll = new System.Windows.Forms.Button();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.btnScanNew = new System.Windows.Forms.Button();
+            this.label18 = new System.Windows.Forms.Label();
             this.tblConvertChkn = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label19 = new System.Windows.Forms.Label();
+            this.chknControl1 = new Triggerless.TriggerBot.ChknControl();
+            this.tabAbout = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.lnkPage = new System.Windows.Forms.LinkLabel();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.lblCopyright = new System.Windows.Forms.Label();
+            this.lblVersion = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this._toolTip = new System.Windows.Forms.ToolTip(this.components);
             this._triggerTimer = new System.Timers.Timer();
             this._progressTimer = new System.Windows.Forms.Timer(this.components);
@@ -117,7 +126,11 @@ namespace Triggerless.TriggerBot
             this.pnlOnDeck.SuspendLayout();
             this.pnlCollector.SuspendLayout();
             this.tabTools.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.tblConvertChkn.SuspendLayout();
+            this.tabAbout.SuspendLayout();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._triggerTimer)).BeginInit();
             this.SuspendLayout();
             // 
@@ -126,6 +139,7 @@ namespace Triggerless.TriggerBot
             this.tabAppContainer.Controls.Add(this.tabPlayback);
             this.tabAppContainer.Controls.Add(this.tabTools);
             this.tabAppContainer.Controls.Add(this.tblConvertChkn);
+            this.tabAppContainer.Controls.Add(this.tabAbout);
             this.tabAppContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabAppContainer.Location = new System.Drawing.Point(0, 0);
             this.tabAppContainer.Name = "tabAppContainer";
@@ -781,12 +795,8 @@ namespace Triggerless.TriggerBot
             // 
             // tabTools
             // 
-            this.tabTools.Controls.Add(this.btnRescanAll);
-            this.tabTools.Controls.Add(this.label17);
-            this.tabTools.Controls.Add(this.label18);
-            this.tabTools.Controls.Add(this.btnScanNew);
-            this.tabTools.Controls.Add(this.label16);
-            this.tabTools.Controls.Add(this.label15);
+            this.tabTools.BackgroundImage = global::Triggerless.TriggerBot.Properties.Resources.bg2;
+            this.tabTools.Controls.Add(this.panel2);
             this.tabTools.Location = new System.Drawing.Point(4, 27);
             this.tabTools.Name = "tabTools";
             this.tabTools.Padding = new System.Windows.Forms.Padding(3);
@@ -795,94 +805,202 @@ namespace Triggerless.TriggerBot
             this.tabTools.Text = " Tools ";
             this.tabTools.UseVisualStyleBackColor = true;
             // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.Gainsboro;
+            this.panel2.Controls.Add(this.label15);
+            this.panel2.Controls.Add(this.btnRescanAll);
+            this.panel2.Controls.Add(this.label16);
+            this.panel2.Controls.Add(this.label17);
+            this.panel2.Controls.Add(this.btnScanNew);
+            this.panel2.Controls.Add(this.label18);
+            this.panel2.Location = new System.Drawing.Point(22, 21);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(712, 201);
+            this.panel2.TabIndex = 6;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(12, 24);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(234, 18);
+            this.label15.TabIndex = 0;
+            this.label15.Text = "Scan for new Music Products...";
+            // 
             // btnRescanAll
             // 
-            this.btnRescanAll.Location = new System.Drawing.Point(251, 102);
+            this.btnRescanAll.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.btnRescanAll.Location = new System.Drawing.Point(250, 112);
             this.btnRescanAll.Name = "btnRescanAll";
             this.btnRescanAll.Size = new System.Drawing.Size(92, 33);
             this.btnRescanAll.TabIndex = 5;
             this.btnRescanAll.Text = "Rescan All";
-            this.btnRescanAll.UseVisualStyleBackColor = true;
+            this.btnRescanAll.UseVisualStyleBackColor = false;
             this.btnRescanAll.Click += new System.EventHandler(this.RescanAll);
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(19, 143);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(841, 18);
-            this.label17.TabIndex = 4;
-            this.label17.Text = "Hint: This will wipe out all Triggerbot data, and rescan from your product cache " +
-    "and web data. Can take a  while";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(19, 110);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(196, 18);
-            this.label18.TabIndex = 3;
-            this.label18.Text = "Total Rescan of Inventory";
-            // 
-            // btnScanNew
-            // 
-            this.btnScanNew.Location = new System.Drawing.Point(250, 7);
-            this.btnScanNew.Name = "btnScanNew";
-            this.btnScanNew.Size = new System.Drawing.Size(92, 33);
-            this.btnScanNew.TabIndex = 2;
-            this.btnScanNew.Text = "Scan New";
-            this.btnScanNew.UseVisualStyleBackColor = true;
-            this.btnScanNew.Click += new System.EventHandler(this.ScanInventory);
             // 
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(13, 47);
+            this.label16.Location = new System.Drawing.Point(12, 57);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(686, 18);
             this.label16.TabIndex = 1;
             this.label16.Text = "Hint: in IMVU, go to Dress Up, Recently Added, to update new available inventory " +
     "products.";
             // 
-            // label15
+            // label17
             // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(13, 14);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(234, 18);
-            this.label15.TabIndex = 0;
-            this.label15.Text = "Scan for new Music Products...";
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(18, 153);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(565, 18);
+            this.label17.TabIndex = 4;
+            this.label17.Text = "This will wipe out all Triggerbot data, and rescan from your product cache.";
+            // 
+            // btnScanNew
+            // 
+            this.btnScanNew.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.btnScanNew.Location = new System.Drawing.Point(249, 17);
+            this.btnScanNew.Name = "btnScanNew";
+            this.btnScanNew.Size = new System.Drawing.Size(92, 33);
+            this.btnScanNew.TabIndex = 2;
+            this.btnScanNew.Text = "Scan New";
+            this.btnScanNew.UseVisualStyleBackColor = false;
+            this.btnScanNew.Click += new System.EventHandler(this.ScanInventory);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(18, 120);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(196, 18);
+            this.label18.TabIndex = 3;
+            this.label18.Text = "Total Rescan of Inventory";
             // 
             // tblConvertChkn
             // 
-            this.tblConvertChkn.Controls.Add(this.button1);
-            this.tblConvertChkn.Controls.Add(this.label19);
+            this.tblConvertChkn.BackgroundImage = global::Triggerless.TriggerBot.Properties.Resources.bg2;
+            this.tblConvertChkn.Controls.Add(this.chknControl1);
             this.tblConvertChkn.Location = new System.Drawing.Point(4, 27);
             this.tblConvertChkn.Name = "tblConvertChkn";
             this.tblConvertChkn.Padding = new System.Windows.Forms.Padding(3);
             this.tblConvertChkn.Size = new System.Drawing.Size(1141, 668);
             this.tblConvertChkn.TabIndex = 1;
-            this.tblConvertChkn.Text = " MP3 to CHKN ";
+            this.tblConvertChkn.Text = " MP3 Audio Splicer ";
             this.tblConvertChkn.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // chknControl1
             // 
-            this.button1.Location = new System.Drawing.Point(446, 43);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(131, 31);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Convert MP3";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.OpenAudioSlicer);
+            this.chknControl1.BackColor = System.Drawing.Color.Gainsboro;
+            this.chknControl1.Font = new System.Drawing.Font("Lucida Sans Unicode", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chknControl1.Location = new System.Drawing.Point(38, 30);
+            this.chknControl1.Margin = new System.Windows.Forms.Padding(4);
+            this.chknControl1.Name = "chknControl1";
+            this.chknControl1.Size = new System.Drawing.Size(860, 476);
+            this.chknControl1.TabIndex = 0;
             // 
-            // label19
+            // tabAbout
             // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(18, 14);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(553, 18);
-            this.label19.TabIndex = 0;
-            this.label19.Text = "This area is under construction. Click here to convert MP3 to IMVU CHKN:";
+            this.tabAbout.BackgroundImage = global::Triggerless.TriggerBot.Properties.Resources.bg2;
+            this.tabAbout.Controls.Add(this.panel1);
+            this.tabAbout.Location = new System.Drawing.Point(4, 27);
+            this.tabAbout.Name = "tabAbout";
+            this.tabAbout.Padding = new System.Windows.Forms.Padding(3);
+            this.tabAbout.Size = new System.Drawing.Size(1141, 668);
+            this.tabAbout.TabIndex = 3;
+            this.tabAbout.Text = " About ";
+            this.tabAbout.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Gainsboro;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.lnkPage);
+            this.panel1.Controls.Add(this.label20);
+            this.panel1.Controls.Add(this.label21);
+            this.panel1.Controls.Add(this.lblCopyright);
+            this.panel1.Controls.Add(this.lblVersion);
+            this.panel1.Controls.Add(this.label23);
+            this.panel1.Controls.Add(this.pictureBox1);
+            this.panel1.Location = new System.Drawing.Point(269, 57);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(413, 442);
+            this.panel1.TabIndex = 14;
+            // 
+            // lnkPage
+            // 
+            this.lnkPage.ActiveLinkColor = System.Drawing.Color.Blue;
+            this.lnkPage.AutoSize = true;
+            this.lnkPage.Location = new System.Drawing.Point(59, 365);
+            this.lnkPage.Name = "lnkPage";
+            this.lnkPage.Size = new System.Drawing.Size(275, 18);
+            this.lnkPage.TabIndex = 20;
+            this.lnkPage.TabStop = true;
+            this.lnkPage.Text = "https://triggerless.com/triggerbot/";
+            this.lnkPage.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.lnkPage.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkPage_Clicked);
+            // 
+            // label20
+            // 
+            this.label20.Location = new System.Drawing.Point(62, 283);
+            this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(318, 117);
+            this.label20.TabIndex = 19;
+            this.label20.Text = "Using C#, FFMPEG, NAudio, NVorbis, Dapper, SharpZipLib, SQLite, Triggerless.XAFLi" +
+    "b and ChatGPT ";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(59, 200);
+            this.label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(237, 18);
+            this.label21.TabIndex = 18;
+            this.label21.Text = "\"Let the Music Do the Talking!\"";
+            // 
+            // lblCopyright
+            // 
+            this.lblCopyright.AutoSize = true;
+            this.lblCopyright.Location = new System.Drawing.Point(62, 245);
+            this.lblCopyright.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblCopyright.Name = "lblCopyright";
+            this.lblCopyright.Size = new System.Drawing.Size(247, 18);
+            this.lblCopyright.TabIndex = 17;
+            this.lblCopyright.Text = "Copyright 2023 Triggerless.com";
+            // 
+            // lblVersion
+            // 
+            this.lblVersion.AutoSize = true;
+            this.lblVersion.Location = new System.Drawing.Point(119, 172);
+            this.lblVersion.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(119, 18);
+            this.lblVersion.TabIndex = 16;
+            this.lblVersion.Text = "Version 0.0.0.0";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(92, 145);
+            this.label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(176, 18);
+            this.label23.TabIndex = 15;
+            this.label23.Text = "Triggerless Triggerbot";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(34, 22);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(339, 86);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.TabIndex = 14;
+            this.pictureBox1.TabStop = false;
             // 
             // _triggerTimer
             // 
@@ -934,9 +1052,13 @@ namespace Triggerless.TriggerBot
             this.pnlCollector.ResumeLayout(false);
             this.pnlCollector.PerformLayout();
             this.tabTools.ResumeLayout(false);
-            this.tabTools.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.tblConvertChkn.ResumeLayout(false);
-            this.tblConvertChkn.PerformLayout();
+            this.tabAbout.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._triggerTimer)).EndInit();
             this.ResumeLayout(false);
 
@@ -1009,8 +1131,17 @@ namespace Triggerless.TriggerBot
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.CheckBox chkMinimizeOnPlay;
         private System.Windows.Forms.CheckBox chkStayOnTop;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TabPage tabAbout;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label lblCopyright;
+        private System.Windows.Forms.Label lblVersion;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.LinkLabel lnkPage;
+        private System.Windows.Forms.Panel panel2;
+        private ChknControl chknControl1;
     }
 }
 

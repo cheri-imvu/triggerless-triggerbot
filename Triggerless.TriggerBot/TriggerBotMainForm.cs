@@ -270,6 +270,8 @@ namespace Triggerless.TriggerBot
         private void LoadForm(object sender, EventArgs e)
         {
             Text = $"Triggerless Triggerbot {Shared.VersionNumber}";
+            lblVersion.Text = $"Version {Shared.VersionNumber}";
+            lblCopyright.Text = Shared.Copyright;
             Shared.CheckIfPaid();
             _updater.CheckForUpdate();
         }
@@ -309,11 +311,6 @@ namespace Triggerless.TriggerBot
         {
             this.TopMost = chkStayOnTop.Checked;
         }
-        private void aboutTriggerbotToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            new AboutForm().ShowDialog(this);
-        }
-
 
         #endregion
 
@@ -634,29 +631,7 @@ namespace Triggerless.TriggerBot
 
         #endregion
 
-        private void OpenAudioSlicer(object sender, EventArgs e)
-        {
-            if (TopMost)
-            {
-                chkStayOnTop.Checked = false;
-                TopMost = false;
-            }
-            var result = new AudioSplicerForm().ShowDialog();
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (_isPlaying)
-            {
-                var result = MessageBox.Show("You're playing a tune, are you sure?", 
-                    "Exit Program?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (result == DialogResult.No) return;
-                CleanupAfterPlay();
-            }
-            Close();
-        }
-
-
+        
         private void RescanAll(object sender, EventArgs e)
         {
             var msg = "Are you sure you want to rescan? This will delete all Triggerbot data and scan the inventory and web all over again, and could take some time./n/nAre you certain?";
@@ -673,6 +648,9 @@ namespace Triggerless.TriggerBot
 
         }
 
-
+        private void lnkPage_Clicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(lnkPage.Text);
+        }
     }
 }

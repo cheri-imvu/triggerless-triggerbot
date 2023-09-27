@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Reflection;
 
 namespace Triggerless.TriggerBot
@@ -15,5 +16,20 @@ namespace Triggerless.TriggerBot
         }
 
         public static string VersionNumber => Assembly.GetEntryAssembly().GetName().Version.ToString();
+
+        public static string Copyright
+        {
+            get
+            {
+                var attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+
+                
+                if (attributes.Length > 0)
+                {
+                    return (attributes[0] as AssemblyCopyrightAttribute).Copyright;
+                }
+                return $"Copyright @{DateTime.Now.Year}";
+            }
+        }
     }
 }

@@ -3,6 +3,8 @@ using NAudio.Wave;
 using NAudio.WaveFormRenderer;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -10,13 +12,15 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Triggerless.XAFLib;
 
 namespace Triggerless.TriggerBot
 {
-    public partial class AudioSplicerForm : Form
+    public partial class ChknControl : UserControl
     {
         private string _outputPath;
         private TimeSpan _duration = TimeSpan.Zero;
@@ -24,7 +28,7 @@ namespace Triggerless.TriggerBot
         private const double INIT_VOLUME = 100;
         private double _volume = INIT_VOLUME;
 
-        public AudioSplicerForm()
+        public ChknControl()
         {
             InitializeComponent();
         }
@@ -52,17 +56,19 @@ namespace Triggerless.TriggerBot
                     if (_duration.TotalSeconds > new TimeSpan(0, 6, 26).TotalSeconds)
                     {
                         rdoAMS.Checked = true;
-                    } else if (_duration.TotalSeconds > new TimeSpan(0, 3, 36).TotalSeconds)
+                    }
+                    else if (_duration.TotalSeconds > new TimeSpan(0, 3, 36).TotalSeconds)
                     {
                         rdoFMS.Checked = true;
-                    } else
+                    }
+                    else
                     {
                         rdoHQS.Checked = true;
                     }
                     CreateWaveform(txtFilename.Text);
 
                 }
-                catch (Exception) 
+                catch (Exception)
                 {
                     _duration = TimeSpan.Zero;
                     txtFilename.Text = string.Empty;
@@ -126,7 +132,8 @@ namespace Triggerless.TriggerBot
                 return;
             }
 
-            if (Regex.Match(txtPrefix.Text.Trim(), @"[\s,0-9<>:""/\\|?*]", RegexOptions.None).Success) {
+            if (Regex.Match(txtPrefix.Text.Trim(), @"[\s,0-9<>:""/\\|?*]", RegexOptions.None).Success)
+            {
                 MessageBox.Show("The chosen prefix does not conform to the rules.", "Unable to Continue", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtPrefix.SelectAll();
                 txtPrefix.Focus();
@@ -143,7 +150,7 @@ namespace Triggerless.TriggerBot
                 _outputPath = Path.Combine(_botPath, triggerPrefix + $"({increment})");
                 increment++;
             }
-            Directory.CreateDirectory(_outputPath );
+            Directory.CreateDirectory(_outputPath);
 
             lblAction.Text = "Slicing Audio File";
             lblAction.Update();
@@ -158,9 +165,9 @@ namespace Triggerless.TriggerBot
                 );
 
             }
-            catch (Exception ex )
+            catch (Exception ex)
             {
-                MessageBox.Show($"Unable to slice file for the following reason:\n{ex.Message}. Make sure you're not playing the file while trying to slice it.", 
+                MessageBox.Show($"Unable to slice file for the following reason:\n{ex.Message}. Make sure you're not playing the file while trying to slice it.",
                     "Unable to Slice", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 lblAction.Text = "Aborted Audio Slice";
                 return;
@@ -184,10 +191,10 @@ namespace Triggerless.TriggerBot
                         rdoFMS.Checked ? 1 :
                         rdoHQM.Checked ? 2 :
                         rdoHQS.Checked ? 3 : 1;
-                    _audioSegmenter.RunFFmpeg(ffmpegLocation, inputFile, outputFile, option, _volume/100);
+                    _audioSegmenter.RunFFmpeg(ffmpegLocation, inputFile, outputFile, option, _volume / 100);
                 }
 
-            } 
+            }
             catch (Exception exc)
             {
                 MessageBox.Show($"Unable to convert to OGG for the following reason: {exc.Message}",
@@ -208,8 +215,8 @@ namespace Triggerless.TriggerBot
             lblAction.Update();
             var templates = new List<Template>();
             var listsOfFiles = new List<List<string>>();
-            var parentId = chkCheap.Checked ? 
-                radioFemale.Checked ? 38766202 : 48704863 : 
+            var parentId = chkCheap.Checked ?
+                radioFemale.Checked ? 38766202 : 48704863 :
                 radioFemale.Checked ? 63535754 : 63540074;
 
             templates.Add(new Template { ParentProductID = parentId });
@@ -233,7 +240,7 @@ namespace Triggerless.TriggerBot
                     currentList = listsOfFiles[templateIndex];
                     cumulativeSize = 0;
                 }
-                
+
                 var action = new XAFLib.Action();
                 string triggerName = triggerPrefix;
                 triggerName += int.Parse(Path.GetFileNameWithoutExtension(filename).Replace(triggerPrefix, ""));
@@ -431,7 +438,7 @@ namespace Triggerless.TriggerBot
             cboAudioLength.SelectedIndex = 0;
             var docsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             _botPath = Path.Combine(docsPath, "Triggerbot");
-            if (!Directory.Exists(_botPath)) 
+            if (!Directory.Exists(_botPath))
             {
                 Directory.CreateDirectory(_botPath);
             }
@@ -535,4 +542,5 @@ namespace Triggerless.TriggerBot
         }
 
     }
+
 }

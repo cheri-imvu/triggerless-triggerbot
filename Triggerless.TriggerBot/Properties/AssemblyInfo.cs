@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("triggerless.com")]
 [assembly: AssemblyProduct("Triggerless.TriggerBot")]
-[assembly: AssemblyCopyright("Copyright ©  2023")]
+[assembly: AssemblyCopyright("Copyright ©2023 Triggerless.com")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
