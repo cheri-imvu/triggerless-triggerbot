@@ -515,7 +515,7 @@
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "ChknControl";
             this.Size = new System.Drawing.Size(861, 485);
-            this.Load += new System.EventHandler(this.AudioSplicerForm_Load);
+            this.Load += new System.EventHandler(this.SplicerControl_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);

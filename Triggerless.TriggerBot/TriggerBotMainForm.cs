@@ -1,19 +1,17 @@
 ﻿
 
 using Dapper;
+using ManagedWinapi.Windows;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
-using ManagedWinapi.Windows;
 using System.Threading;
-using static Triggerless.TriggerBot.ProductCtrl;
-using System.Data;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 using WindowsInput;
+using static Triggerless.TriggerBot.ProductCtrl;
 using KeyCode = WindowsInput.Native.VirtualKeyCode;
 
 namespace Triggerless.TriggerBot

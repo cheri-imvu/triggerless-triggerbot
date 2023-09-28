@@ -110,6 +110,7 @@ namespace Triggerless.TriggerBot
             this._triggerTimer = new System.Timers.Timer();
             this._progressTimer = new System.Windows.Forms.Timer(this.components);
             this._collector = new Triggerless.TriggerBot.Collector();
+            this.btnAllAddnTriggers = new System.Windows.Forms.Button();
             this.tabAppContainer.SuspendLayout();
             this.tabPlayback.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
@@ -227,6 +228,7 @@ namespace Triggerless.TriggerBot
             // 
             // pnlRight
             // 
+            this.pnlRight.Controls.Add(this.btnAllAddnTriggers);
             this.pnlRight.Controls.Add(this.chkMinimizeOnPlay);
             this.pnlRight.Controls.Add(this.chkStayOnTop);
             this.pnlRight.Controls.Add(this.chkHideTriggers);
@@ -559,7 +561,7 @@ namespace Triggerless.TriggerBot
             this.cboAdditionalTriggers.FormattingEnabled = true;
             this.cboAdditionalTriggers.Location = new System.Drawing.Point(287, 144);
             this.cboAdditionalTriggers.Name = "cboAdditionalTriggers";
-            this.cboAdditionalTriggers.Size = new System.Drawing.Size(447, 26);
+            this.cboAdditionalTriggers.Size = new System.Drawing.Size(368, 26);
             this.cboAdditionalTriggers.TabIndex = 9;
             // 
             // lblAdditional
@@ -1015,6 +1017,15 @@ namespace Triggerless.TriggerBot
             // 
             this._collector.CollectorEvent += new Triggerless.TriggerBot.Collector.CollectorEventHandler(this.OnCollectorEvent);
             // 
+            // btnAllAddnTriggers
+            // 
+            this.btnAllAddnTriggers.Location = new System.Drawing.Point(660, 141);
+            this.btnAllAddnTriggers.Name = "btnAllAddnTriggers";
+            this.btnAllAddnTriggers.Size = new System.Drawing.Size(74, 30);
+            this.btnAllAddnTriggers.TabIndex = 21;
+            this.btnAllAddnTriggers.Text = "more...";
+            this.btnAllAddnTriggers.UseVisualStyleBackColor = true;
+            // 
             // TriggerBotMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -1142,6 +1153,7 @@ namespace Triggerless.TriggerBot
         private System.Windows.Forms.LinkLabel lnkPage;
         private System.Windows.Forms.Panel panel2;
         private ChknControl chknControl1;
+        private System.Windows.Forms.Button btnAllAddnTriggers;
     }
 }
 

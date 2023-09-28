@@ -16,8 +16,7 @@ namespace Triggerless.TriggerBot
 {
     public partial class Collector : Component
     {
-        private object _lock = new object();
-
+        private object _dbLock = new object();
 
         public static string GetUrlTemplate(long pid) => $"https://userimages-akm.imvu.com/productdata/{pid}/1/{{0}}";
 
@@ -69,6 +68,7 @@ namespace Triggerless.TriggerBot
             return result;
 
         }
+
         public async Task ScanDatabasesAsync()
         {
             var sda = new SQLiteDataAccess();
@@ -149,7 +149,7 @@ namespace Triggerless.TriggerBot
                     UPDATE products SET has_ogg = 0 WHERE has_ogg = 1
                     AND NOT EXISTS (SELECT product_id FROM product_triggers WHERE product_id = products.product_id);
                 ";
-                lock (_lock)
+                lock (_dbLock)
                 {
                     cxnAppCache.Execute(sqlCleanup);
                 }
@@ -188,7 +188,7 @@ namespace Triggerless.TriggerBot
                         //NOTE: Very early products may give a 404 error. We should save to DB with has_ogg = 0
                         var insertPayload = new { product_id = product.ProductId, has_ogg = 0, title = product.ProductName, creator = product.CreatorName };
                         var sql = "INSERT INTO products (product_id, has_ogg, title, creator) VALUES (@product_id, @has_ogg, @title, @creator);";
-                        lock (_lock)
+                        lock (_dbLock)
                         {
                             connAppCache.Execute(sql, insertPayload);
                         }
@@ -208,7 +208,7 @@ namespace Triggerless.TriggerBot
                     result.Result = ScanResultType.JsonError;
                     var insertPayload = new {product_id = product.ProductId, has_ogg = 0, title = product.ProductName, creator = product.CreatorName };
                     var sql = "INSERT INTO products (product_id, has_ogg, title, creator) VALUES (@product_id, @has_ogg, @title, @creator);";
-                    lock (_lock)
+                    lock (_dbLock)
                     {
                         connAppCache.Execute(sql, insertPayload);
                     }
@@ -224,7 +224,7 @@ namespace Triggerless.TriggerBot
                     result.Result = ScanResultType.NoUsefulTriggers;
                     var insertPayload = new { product_id = product.ProductId, has_ogg = 0, title = product.ProductName, creator = product.CreatorName };
                     var sql = "INSERT INTO products (product_id, has_ogg, title, creator) VALUES (@product_id, @has_ogg, @title, @creator);";
-                    lock (_lock)
+                    lock (_dbLock)
                     {
                         connAppCache.Execute(sql, insertPayload);
                     }
@@ -246,7 +246,7 @@ namespace Triggerless.TriggerBot
                         image_bytes = imageBytes
                     };
                     var sql = "INSERT INTO products (product_id, has_ogg, title, creator, image_bytes) VALUES (@product_id, @has_ogg, @title, @creator, @image_bytes);";
-                    lock (_lock) { 
+                    lock (_dbLock) { 
                         connAppCache.Execute(sql,insertPayload); 
                     }
                 } 
@@ -311,7 +311,7 @@ namespace Triggerless.TriggerBot
                         catch (Exception) {
                             result.Result = ScanResultType.JsonError;
                             result.Message = "Malformed product file";
-                            lock (_lock)
+                            lock (_dbLock)
                             {
                                 connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");
                             }
@@ -372,7 +372,7 @@ namespace Triggerless.TriggerBot
 
                 if (triggerList.Any(t => t.Prefix is null))
                 {
-                    lock (_lock)
+                    lock (_dbLock)
                     {
                         connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");
                     }
@@ -384,7 +384,7 @@ namespace Triggerless.TriggerBot
                 var distinctPrefixes = triggerList.Select(t => t.Prefix.ToLower()).Distinct().Count();
                 if (distinctPrefixes != 1)
                 {
-                    lock (_lock)
+                    lock (_dbLock)
                     {
                         connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");
                     }
@@ -396,7 +396,7 @@ namespace Triggerless.TriggerBot
 
                 if (triggerList.Count == 0)
                 {
-                    lock (_lock)
+                    lock (_dbLock)
                     {
                         connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");
                     }
@@ -407,7 +407,7 @@ namespace Triggerless.TriggerBot
 
                 if (triggerList.Count < MIN_NUMBER_OF_OGGS)
                 {
-                    lock (_lock)
+                    lock (_dbLock)
                     {
                         connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");
                     }
@@ -452,7 +452,7 @@ namespace Triggerless.TriggerBot
                                     result.Result = ScanResultType.NetworkError;
                                     result.Message = "Unable to download an OGG file";
                                     var sqlDelete = $"DELETE FROM product_triggers WHERE product_id = {product.ProductId};";
-                                    lock (_lock)
+                                    lock (_dbLock)
                                     {
                                         connAppCache.Execute(sqlDelete);
                                     }
@@ -489,7 +489,7 @@ namespace Triggerless.TriggerBot
                     t.Sequence = seq++;
                 }
 
-                lock (_lock)
+                lock (_dbLock)
                 {
                     foreach (var trigger in triggers)
                     {

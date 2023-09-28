@@ -3,8 +3,6 @@ using NAudio.Wave;
 using NAudio.WaveFormRenderer;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -12,9 +10,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Triggerless.XAFLib;
 
@@ -90,21 +86,6 @@ namespace Triggerless.TriggerBot
             {
 
             }
-        }
-
-        private void GenerateIconsChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void CleanUpOggChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void FemaleMaleChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void StartConversion(object sender, EventArgs e)
@@ -433,7 +414,7 @@ namespace Triggerless.TriggerBot
 
         private string _botPath;
 
-        private void AudioSplicerForm_Load(object sender, EventArgs e)
+        private void SplicerControl_Load(object sender, EventArgs e)
         {
             cboAudioLength.SelectedIndex = 0;
             var docsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
