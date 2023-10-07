@@ -29,6 +29,23 @@ namespace Triggerless.TriggerBot
             InitializeComponent();
         }
 
+        public double AudioLength
+        {
+            get
+            {
+                return double.Parse(cboAudioLength.SelectedItem.ToString());
+            }
+            set
+            {
+                var valueString = value.ToString("0.0");
+                var found = cboAudioLength.FindStringExact(valueString);
+                if (found != -1)
+                {
+                    cboAudioLength.SelectedIndex = found;
+                }
+            }
+        }
+
         private void SelectFile(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(dlgOpenFile.InitialDirectory))

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label9 = new System.Windows.Forms.Label();
             this.lblVolume = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
@@ -55,7 +56,6 @@
             this.btnStart = new System.Windows.Forms.Button();
             this.checkOGGFiles = new System.Windows.Forms.CheckBox();
             this.checkIcons = new System.Windows.Forms.CheckBox();
-            this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
             this.lblProfit = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.txtPrefix = new System.Windows.Forms.TextBox();
@@ -67,8 +67,8 @@
             this.txtFilename = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
             this._audioSegmenter = new Triggerless.TriggerBot.AudioSegmenter();
-            this.label9 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -106,10 +106,19 @@
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(4, 4);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(851, 476);
             this.panel1.TabIndex = 0;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(28, 446);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(311, 18);
+            this.label9.TabIndex = 62;
+            this.label9.Text = "♥ Thank you for supporting our work! ♥";
             // 
             // lblVolume
             // 
@@ -377,10 +386,6 @@
             this.checkIcons.Text = "Generate 100x80 icons";
             this.checkIcons.UseVisualStyleBackColor = true;
             // 
-            // dlgOpenFile
-            // 
-            this.dlgOpenFile.Filter = "MP3 files|*.mp3|All Files|*.*";
-            // 
             // lblProfit
             // 
             this.lblProfit.AutoSize = true;
@@ -497,14 +502,9 @@
             this.label1.Text = "This Audio Splicer will convert an MP3, FLAC, OGG or WAV file into CHKN file(s) y" +
     "ou can upload to IMVU.";
             // 
-            // label9
+            // dlgOpenFile
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(28, 446);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(311, 18);
-            this.label9.TabIndex = 62;
-            this.label9.Text = "♥ Thank you for supporting our work! ♥";
+            this.dlgOpenFile.Filter = "MP3 files|*.mp3|All Files|*.*";
             // 
             // ChknControl
             // 
@@ -512,7 +512,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Lucida Sans Unicode", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ChknControl";
             this.Size = new System.Drawing.Size(861, 485);
             this.Load += new System.EventHandler(this.SplicerControl_Load);

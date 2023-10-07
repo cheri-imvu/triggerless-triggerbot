@@ -167,7 +167,8 @@ namespace Triggerless.TriggerBot
                        pt.prefix AS Prefix,
                        pt.sequence AS Sequence,
                        pt.trigger AS Trigger,
-                       pt.length_ms AS LengthMS
+                       pt.length_ms AS LengthMS,
+                       pt.addn_triggers AS AddnTriggers
                        FROM products p 
                        INNER JOIN product_triggers pt ON (p.product_id = pt.product_id)
                        WHERE p.has_ogg = 1
@@ -208,6 +209,7 @@ namespace Triggerless.TriggerBot
                 triggerInfo.LengthMS = query.LengthMS;
                 triggerInfo.Trigger = query.Trigger;
                 triggerInfo.ProductId = query.ProductId;
+                triggerInfo.AddnTriggers = query.AddnTriggers;
                 currentInfo.Triggers.Add(triggerInfo);
             }
             if (currentInfo != null && !string.IsNullOrEmpty(andClause)) infoList.Add(currentInfo);
@@ -272,10 +274,35 @@ namespace Triggerless.TriggerBot
             lblCopyright.Text = Shared.Copyright;
             Shared.CheckIfPaid();
             _updater.CheckForUpdate();
+            LoadSettings();
+        }
+
+        private void LoadSettings()
+        {
+            var sets = Properties.Settings.Default;
+            txtSearch.Text = sets.LastSearch;
+            DoSearch(null, null);
+
+            chkHideTriggers.Checked = sets.HideTriggers;
+            chkMinimizeOnPlay.Checked = sets.MinimizeOnPlay;
+            chkKeepOnTop.Checked = sets.KeepOnTop;
+            _lagMS = sets.InitialLagMS;
+            trackBarLag.Value = LagMsToTrackBarValue();
+            _splicer.AudioLength = sets.DefaultTriggerLength;
         }
 
         private void TriggerBotMainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            var sets = Properties.Settings.Default;
+            sets.KeepOnTop = chkKeepOnTop.Checked;
+            sets.MinimizeOnPlay = chkMinimizeOnPlay.Checked;
+            sets.HideTriggers = chkHideTriggers.Checked;
+            sets.DefaultTriggerLength = 18;
+            sets.InitialLagMS = _lagMS;
+            sets.LastSearch = txtSearch.Text;
+            sets.DefaultTriggerLength = _splicer.AudioLength;
+            sets.Save();
+
             if (_isPlaying)
             {
                 var result = MessageBox.Show("You're playing a tune, are you sure?",
@@ -307,7 +334,7 @@ namespace Triggerless.TriggerBot
 
         private void chkStayOnTop_Clicked(object sender, EventArgs e)
         {
-            this.TopMost = chkStayOnTop.Checked;
+            this.TopMost = chkKeepOnTop.Checked;
         }
 
         #endregion
@@ -323,11 +350,13 @@ namespace Triggerless.TriggerBot
                 btnEjectFromDeck.Enabled = false;
                 btnPlay.Enabled = true;
                 _currProductInfo = productOnDeck.ProductInfo;
+                _currTriggerIndex = 0;
                 lblNowPlaying.Text = $"\"{_currProductInfo.Name}\" by {_currProductInfo.Creator}";
                 FillTriggerGrid();
                 trackBarLag.Value = LagMsToTrackBarValue();
                 lblLag.Text = _lagMS.ToString("0.00");
                 pnlLag.Visible = true;
+                cboAdditionalTriggers.Text = _currProductInfo.Triggers[_currTriggerIndex].AddnTriggers;
             }
 
         }
@@ -419,6 +448,8 @@ namespace Triggerless.TriggerBot
             Interlocked.Increment(ref _currTriggerIndex);
             if (_currTriggerIndex < _numberOfTriggers)
             {
+                cboAdditionalTriggers.Text = _currProductInfo.Triggers[_currTriggerIndex].AddnTriggers;
+                cboAdditionalTriggers.Update();
                 PullTrigger();
                 return;
             }
@@ -649,6 +680,15 @@ namespace Triggerless.TriggerBot
         private void lnkPage_Clicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(lnkPage.Text);
+        }
+
+        private void AddnTriggersButtonClick(object sender, EventArgs e)
+        {
+            if (_currProductInfo == null) return;
+            var modalForm = new AddnTriggersForm() { Product = _currProductInfo };
+            modalForm.ShowDialog(this);
+            cboAdditionalTriggers.Text = _currProductInfo.Triggers[_currTriggerIndex].AddnTriggers;
+
         }
     }
 }

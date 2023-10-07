@@ -42,8 +42,9 @@ namespace Triggerless.TriggerBot
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
             this.pnlRight = new System.Windows.Forms.Panel();
+            this.btnAllAddnTriggers = new System.Windows.Forms.Button();
             this.chkMinimizeOnPlay = new System.Windows.Forms.CheckBox();
-            this.chkStayOnTop = new System.Windows.Forms.CheckBox();
+            this.chkKeepOnTop = new System.Windows.Forms.CheckBox();
             this.chkHideTriggers = new System.Windows.Forms.CheckBox();
             this.lblCurrPlayingTrigger = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -96,7 +97,7 @@ namespace Triggerless.TriggerBot
             this.btnScanNew = new System.Windows.Forms.Button();
             this.label18 = new System.Windows.Forms.Label();
             this.tblConvertChkn = new System.Windows.Forms.TabPage();
-            this.chknControl1 = new Triggerless.TriggerBot.ChknControl();
+            this._splicer = new Triggerless.TriggerBot.ChknControl();
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lnkPage = new System.Windows.Forms.LinkLabel();
@@ -110,7 +111,6 @@ namespace Triggerless.TriggerBot
             this._triggerTimer = new System.Timers.Timer();
             this._progressTimer = new System.Windows.Forms.Timer(this.components);
             this._collector = new Triggerless.TriggerBot.Collector();
-            this.btnAllAddnTriggers = new System.Windows.Forms.Button();
             this.tabAppContainer.SuspendLayout();
             this.tabPlayback.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
@@ -230,7 +230,7 @@ namespace Triggerless.TriggerBot
             // 
             this.pnlRight.Controls.Add(this.btnAllAddnTriggers);
             this.pnlRight.Controls.Add(this.chkMinimizeOnPlay);
-            this.pnlRight.Controls.Add(this.chkStayOnTop);
+            this.pnlRight.Controls.Add(this.chkKeepOnTop);
             this.pnlRight.Controls.Add(this.chkHideTriggers);
             this.pnlRight.Controls.Add(this.lblCurrPlayingTrigger);
             this.pnlRight.Controls.Add(this.label5);
@@ -250,6 +250,16 @@ namespace Triggerless.TriggerBot
             this.pnlRight.Size = new System.Drawing.Size(740, 662);
             this.pnlRight.TabIndex = 9;
             // 
+            // btnAllAddnTriggers
+            // 
+            this.btnAllAddnTriggers.Location = new System.Drawing.Point(660, 141);
+            this.btnAllAddnTriggers.Name = "btnAllAddnTriggers";
+            this.btnAllAddnTriggers.Size = new System.Drawing.Size(74, 30);
+            this.btnAllAddnTriggers.TabIndex = 21;
+            this.btnAllAddnTriggers.Text = "more...";
+            this.btnAllAddnTriggers.UseVisualStyleBackColor = true;
+            this.btnAllAddnTriggers.Click += new System.EventHandler(this.AddnTriggersButtonClick);
+            // 
             // chkMinimizeOnPlay
             // 
             this.chkMinimizeOnPlay.AutoSize = true;
@@ -260,16 +270,16 @@ namespace Triggerless.TriggerBot
             this.chkMinimizeOnPlay.Text = "Minimize On Play";
             this.chkMinimizeOnPlay.UseVisualStyleBackColor = true;
             // 
-            // chkStayOnTop
+            // chkKeepOnTop
             // 
-            this.chkStayOnTop.AutoSize = true;
-            this.chkStayOnTop.Location = new System.Drawing.Point(429, 294);
-            this.chkStayOnTop.Name = "chkStayOnTop";
-            this.chkStayOnTop.Size = new System.Drawing.Size(126, 22);
-            this.chkStayOnTop.TabIndex = 19;
-            this.chkStayOnTop.Text = "Keep On Top";
-            this.chkStayOnTop.UseVisualStyleBackColor = true;
-            this.chkStayOnTop.CheckedChanged += new System.EventHandler(this.chkStayOnTop_Clicked);
+            this.chkKeepOnTop.AutoSize = true;
+            this.chkKeepOnTop.Location = new System.Drawing.Point(429, 294);
+            this.chkKeepOnTop.Name = "chkKeepOnTop";
+            this.chkKeepOnTop.Size = new System.Drawing.Size(126, 22);
+            this.chkKeepOnTop.TabIndex = 19;
+            this.chkKeepOnTop.Text = "Keep On Top";
+            this.chkKeepOnTop.UseVisualStyleBackColor = true;
+            this.chkKeepOnTop.CheckedChanged += new System.EventHandler(this.chkStayOnTop_Clicked);
             // 
             // chkHideTriggers
             // 
@@ -883,7 +893,7 @@ namespace Triggerless.TriggerBot
             // tblConvertChkn
             // 
             this.tblConvertChkn.BackgroundImage = global::Triggerless.TriggerBot.Properties.Resources.bg2;
-            this.tblConvertChkn.Controls.Add(this.chknControl1);
+            this.tblConvertChkn.Controls.Add(this._splicer);
             this.tblConvertChkn.Location = new System.Drawing.Point(4, 27);
             this.tblConvertChkn.Name = "tblConvertChkn";
             this.tblConvertChkn.Padding = new System.Windows.Forms.Padding(3);
@@ -892,15 +902,15 @@ namespace Triggerless.TriggerBot
             this.tblConvertChkn.Text = " MP3 Audio Splicer ";
             this.tblConvertChkn.UseVisualStyleBackColor = true;
             // 
-            // chknControl1
+            // _splicer
             // 
-            this.chknControl1.BackColor = System.Drawing.Color.Gainsboro;
-            this.chknControl1.Font = new System.Drawing.Font("Lucida Sans Unicode", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chknControl1.Location = new System.Drawing.Point(38, 30);
-            this.chknControl1.Margin = new System.Windows.Forms.Padding(4);
-            this.chknControl1.Name = "chknControl1";
-            this.chknControl1.Size = new System.Drawing.Size(860, 476);
-            this.chknControl1.TabIndex = 0;
+            this._splicer.BackColor = System.Drawing.Color.Gainsboro;
+            this._splicer.Font = new System.Drawing.Font("Lucida Sans Unicode", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._splicer.Location = new System.Drawing.Point(38, 30);
+            this._splicer.Margin = new System.Windows.Forms.Padding(4);
+            this._splicer.Name = "_splicer";
+            this._splicer.Size = new System.Drawing.Size(860, 476);
+            this._splicer.TabIndex = 0;
             // 
             // tabAbout
             // 
@@ -1017,15 +1027,6 @@ namespace Triggerless.TriggerBot
             // 
             this._collector.CollectorEvent += new Triggerless.TriggerBot.Collector.CollectorEventHandler(this.OnCollectorEvent);
             // 
-            // btnAllAddnTriggers
-            // 
-            this.btnAllAddnTriggers.Location = new System.Drawing.Point(660, 141);
-            this.btnAllAddnTriggers.Name = "btnAllAddnTriggers";
-            this.btnAllAddnTriggers.Size = new System.Drawing.Size(74, 30);
-            this.btnAllAddnTriggers.TabIndex = 21;
-            this.btnAllAddnTriggers.Text = "more...";
-            this.btnAllAddnTriggers.UseVisualStyleBackColor = true;
-            // 
             // TriggerBotMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -1141,7 +1142,7 @@ namespace Triggerless.TriggerBot
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.CheckBox chkMinimizeOnPlay;
-        private System.Windows.Forms.CheckBox chkStayOnTop;
+        private System.Windows.Forms.CheckBox chkKeepOnTop;
         private System.Windows.Forms.TabPage tabAbout;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label20;
@@ -1152,7 +1153,7 @@ namespace Triggerless.TriggerBot
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.LinkLabel lnkPage;
         private System.Windows.Forms.Panel panel2;
-        private ChknControl chknControl1;
+        private ChknControl _splicer;
         private System.Windows.Forms.Button btnAllAddnTriggers;
     }
 }
