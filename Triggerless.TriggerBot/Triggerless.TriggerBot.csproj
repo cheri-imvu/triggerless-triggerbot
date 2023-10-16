@@ -282,7 +282,7 @@
       <DependentUpon>UpdateForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="assets\triggerbot.pdn" />
-    <None Include="current-version.json" />
+    <None Include="assets\current-version.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -331,7 +331,7 @@
     <Content Include="assets\triggerbot.png" />
     <Content Include="assets\x.png" />
     <Content Include="assets\note.ico" />
-    <None Include="Resources\exclude16.png" />
+    <None Include="assets\exclude16.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
