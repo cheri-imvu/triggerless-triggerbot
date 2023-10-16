@@ -385,11 +385,11 @@ namespace Triggerless.TriggerBot
         }
 
         // Product Selection
-        private void SendToDeck(object sender, ProductCtrl.LinkClickedEventArgs args)
+        private async void SendToDeck(object sender, ProductCtrl.LinkClickedEventArgs args)
         {
             // Sometimes LengthMS gets set to zero, no idea why. We need to double check the list
             var coll = new Collector();
-            if (!coll.Verify(args.ProductDisplayInfo))
+            if (!await coll.Verify(args.ProductDisplayInfo))
             {
                 MessageBox.Show("The data for this product cannot be verified.", "Bad Product Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -688,6 +688,11 @@ namespace Triggerless.TriggerBot
             var modalForm = new AddnTriggersForm() { Product = _currProductInfo };
             modalForm.ShowDialog(this);
             cboAdditionalTriggers.Text = _currProductInfo.Triggers[_currTriggerIndex].AddnTriggers;
+
+        }
+
+        private void _splicer_Load(object sender, EventArgs e)
+        {
 
         }
     }

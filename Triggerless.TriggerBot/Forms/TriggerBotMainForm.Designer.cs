@@ -32,8 +32,8 @@ namespace Triggerless.TriggerBot
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TriggerBotMainForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabAppContainer = new System.Windows.Forms.TabControl();
             this.tabPlayback = new System.Windows.Forms.TabPage();
             this.splitter = new System.Windows.Forms.SplitContainer();
@@ -97,7 +97,7 @@ namespace Triggerless.TriggerBot
             this.btnScanNew = new System.Windows.Forms.Button();
             this.label18 = new System.Windows.Forms.Label();
             this.tblConvertChkn = new System.Windows.Forms.TabPage();
-            this._splicer = new Triggerless.TriggerBot.ChknControl();
+            this._splicer = new Triggerless.TriggerBot.SplicerControl();
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lnkPage = new System.Windows.Forms.LinkLabel();
@@ -111,6 +111,9 @@ namespace Triggerless.TriggerBot
             this._triggerTimer = new System.Timers.Timer();
             this._progressTimer = new System.Windows.Forms.Timer(this.components);
             this._collector = new Triggerless.TriggerBot.Collector();
+            this.button1 = new System.Windows.Forms.Button();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
             this.tabAppContainer.SuspendLayout();
             this.tabPlayback.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
@@ -593,14 +596,14 @@ namespace Triggerless.TriggerBot
             | System.Windows.Forms.AnchorStyles.Left)));
             this.gridTriggers.BackgroundColor = System.Drawing.SystemColors.Control;
             this.gridTriggers.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridTriggers.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridTriggers.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.gridTriggers.ColumnHeadersHeight = 25;
             this.gridTriggers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridTriggers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -612,14 +615,14 @@ namespace Triggerless.TriggerBot
             this.gridTriggers.MultiSelect = false;
             this.gridTriggers.Name = "gridTriggers";
             this.gridTriggers.ReadOnly = true;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.gridTriggers.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.gridTriggers.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.gridTriggers.RowHeadersWidth = 5;
             this.gridTriggers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.gridTriggers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -820,6 +823,9 @@ namespace Triggerless.TriggerBot
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.Gainsboro;
+            this.panel2.Controls.Add(this.button1);
+            this.panel2.Controls.Add(this.label19);
+            this.panel2.Controls.Add(this.label22);
             this.panel2.Controls.Add(this.label15);
             this.panel2.Controls.Add(this.btnRescanAll);
             this.panel2.Controls.Add(this.label16);
@@ -828,7 +834,7 @@ namespace Triggerless.TriggerBot
             this.panel2.Controls.Add(this.label18);
             this.panel2.Location = new System.Drawing.Point(22, 21);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(712, 201);
+            this.panel2.Size = new System.Drawing.Size(712, 331);
             this.panel2.TabIndex = 6;
             // 
             // label15
@@ -904,6 +910,7 @@ namespace Triggerless.TriggerBot
             // 
             // _splicer
             // 
+            this._splicer.AudioLength = 19.5D;
             this._splicer.BackColor = System.Drawing.Color.Gainsboro;
             this._splicer.Font = new System.Drawing.Font("Lucida Sans Unicode", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._splicer.Location = new System.Drawing.Point(38, 30);
@@ -911,6 +918,7 @@ namespace Triggerless.TriggerBot
             this._splicer.Name = "_splicer";
             this._splicer.Size = new System.Drawing.Size(860, 476);
             this._splicer.TabIndex = 0;
+            this._splicer.Load += new System.EventHandler(this._splicer_Load);
             // 
             // tabAbout
             // 
@@ -1026,6 +1034,34 @@ namespace Triggerless.TriggerBot
             // _collector
             // 
             this._collector.CollectorEvent += new Triggerless.TriggerBot.Collector.CollectorEventHandler(this.OnCollectorEvent);
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.button1.Location = new System.Drawing.Point(250, 195);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(104, 33);
+            this.button1.TabIndex = 8;
+            this.button1.Text = "Deep Scan";
+            this.button1.UseVisualStyleBackColor = false;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(18, 236);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(565, 18);
+            this.label19.TabIndex = 7;
+            this.label19.Text = "This will wipe out all Triggerbot data, and rescan from your product cache.";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(18, 203);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(180, 18);
+            this.label22.TabIndex = 6;
+            this.label22.Text = "Deep Scan of Inventory";
             // 
             // TriggerBotMainForm
             // 
@@ -1153,8 +1189,11 @@ namespace Triggerless.TriggerBot
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.LinkLabel lnkPage;
         private System.Windows.Forms.Panel panel2;
-        private ChknControl _splicer;
+        private SplicerControl _splicer;
         private System.Windows.Forms.Button btnAllAddnTriggers;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label22;
     }
 }
 

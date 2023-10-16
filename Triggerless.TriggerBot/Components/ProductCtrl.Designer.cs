@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductCtrl));
             this.picProductImage = new System.Windows.Forms.PictureBox();
             this.lblName = new System.Windows.Forms.Label();
@@ -36,6 +37,7 @@
             this.linkOnDeck = new System.Windows.Forms.LinkLabel();
             this.linkWearItem = new System.Windows.Forms.LinkLabel();
             this.picDeleteItem = new System.Windows.Forms.PictureBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picDeleteItem)).BeginInit();
             this.SuspendLayout();
@@ -52,6 +54,7 @@
             this.picProductImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picProductImage.TabIndex = 0;
             this.picProductImage.TabStop = false;
+            this.toolTip1.SetToolTip(this.picProductImage, "Browse Product Page");
             this.picProductImage.Click += new System.EventHandler(this.ProductImageClicked);
             // 
             // lblName
@@ -150,5 +153,6 @@
         private System.Windows.Forms.LinkLabel linkOnDeck;
         private System.Windows.Forms.LinkLabel linkWearItem;
         private System.Windows.Forms.PictureBox picDeleteItem;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

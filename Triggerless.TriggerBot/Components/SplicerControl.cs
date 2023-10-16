@@ -3,6 +3,8 @@ using NAudio.Wave;
 using NAudio.WaveFormRenderer;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -16,15 +18,23 @@ using Triggerless.XAFLib;
 
 namespace Triggerless.TriggerBot
 {
-    public partial class ChknControl : UserControl
+    public partial class SplicerControl : UserControl
     {
         private string _outputPath;
         private TimeSpan _duration = TimeSpan.Zero;
         private System.Drawing.Image _waveform;
         private const double INIT_VOLUME = 100;
         private double _volume = INIT_VOLUME;
+        private Mp3FileReader _mp3FileReader;
 
-        public ChknControl()
+        public new void Dispose()
+        {
+            (this as Component).Dispose();
+            _mp3FileReader?.Dispose();
+            _mp3FileReader = null;
+        }
+
+        public SplicerControl()
         {
             InitializeComponent();
         }
@@ -33,7 +43,15 @@ namespace Triggerless.TriggerBot
         {
             get
             {
-                return double.Parse(cboAudioLength.SelectedItem.ToString());
+                try
+                {
+                    return double.Parse(cboAudioLength.SelectedItem.ToString());
+                }
+                catch(Exception)
+                {
+                    return 18;
+                }
+                
             }
             set
             {
@@ -48,6 +66,9 @@ namespace Triggerless.TriggerBot
 
         private void SelectFile(object sender, EventArgs e)
         {
+            _mp3FileReader?.Dispose();
+            _mp3FileReader = null;
+
             if (string.IsNullOrWhiteSpace(dlgOpenFile.InitialDirectory))
             {
                 var musicDir = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
@@ -59,10 +80,8 @@ namespace Triggerless.TriggerBot
                 dlgOpenFile.InitialDirectory = Path.GetDirectoryName(dlgOpenFile.FileName);
                 try
                 {
-                    using (var reader = new Mp3FileReader(dlgOpenFile.FileName))
-                    {
-                        _duration = reader.TotalTime;
-                    }
+                    _mp3FileReader = new Mp3FileReader(dlgOpenFile.FileName);
+                    _duration = _mp3FileReader.TotalTime;
                     txtFilename.Text = dlgOpenFile.FileName;
                     lblDuration.Text = $"Duration: {_duration.Minutes:00}:{_duration.Seconds:00}";
 
@@ -78,11 +97,13 @@ namespace Triggerless.TriggerBot
                     {
                         rdoHQS.Checked = true;
                     }
-                    CreateWaveform(txtFilename.Text);
+                    WaveformCreate(txtFilename.Text);
 
                 }
                 catch (Exception)
                 {
+                    _mp3FileReader?.Dispose();
+                    _mp3FileReader = null;
                     _duration = TimeSpan.Zero;
                     txtFilename.Text = string.Empty;
                     MessageBox.Show("Unable to read MP3 file. Skipping this file", "Invalid MP3", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -327,7 +348,7 @@ namespace Triggerless.TriggerBot
             #endregion
         }
 
-        private void CreateWaveform(string filename)
+        private void WaveformCreate(string filename)
         {
             var maxPeakProvider = new MaxPeakProvider();
             var rmsPeakProvider = new RmsPeakProvider(200);
@@ -341,12 +362,12 @@ namespace Triggerless.TriggerBot
                 BackgroundColor = Color.Transparent,
                 TopPeakPen = Pens.Blue,
                 BottomPeakPen = Pens.Blue,
+                
             };
             var renderer = new WaveFormRenderer();
             Cursor = Cursors.WaitCursor;
-            var waveStream = new Mp3FileReader(filename);
-            _waveform = renderer.Render(waveStream, averagePeakProvider, renderSettings);
-            waveStream.Dispose();
+            if (_mp3FileReader is null) _mp3FileReader = new Mp3FileReader(filename);
+            _waveform = renderer.Render(_mp3FileReader, averagePeakProvider, renderSettings);
             picWaveform.Image = _waveform;
             _volume = 100;
             Cursor = Cursors.Default;
@@ -450,14 +471,14 @@ namespace Triggerless.TriggerBot
 
         private void IncreaseVolume(object sender, EventArgs e)
         {
-            RenderWaveform(_volume + CROP_STEP);
+            WaveformRenderNewVolume(_volume + CROP_STEP);
         }
 
         private void DecreaseVolume(object sender, EventArgs e)
         {
             if (_volume > CROP_STEP)
             {
-                RenderWaveform(_volume - CROP_STEP);
+                WaveformRenderNewVolume(_volume - CROP_STEP);
             }
         }
 
@@ -473,9 +494,11 @@ namespace Triggerless.TriggerBot
             lblVolume.Text = $"Volume: {_volume}%";
         }
 
-        private void RenderWaveform(double newVolume)
+        private void WaveformRenderNewVolume(double newVolume)
         {
-            string filename = @"D:\Temp\original-image.png";
+            string tempPath = Path.GetTempPath();
+
+            string filename = Path.Combine(tempPath, "original-image.png");
             if (File.Exists(filename)) { File.Delete(filename); }
             _waveform.Save(filename, ImageFormat.Png);
 
@@ -498,14 +521,14 @@ namespace Triggerless.TriggerBot
                 g.DrawImage(_waveform, new RectangleF(0, 0, _waveform.Width, newHeight));
             }
 
-            filename = @"D:\Temp\stretched-image.png";
+            filename = Path.Combine(tempPath, "stretched-image.png");
             if (File.Exists(filename)) { File.Delete(filename); }
             stretchedImage.Save(filename, ImageFormat.Png);
 
             // Create a new Bitmap object with the desired size
             Bitmap croppedImage = CropBitmap(stretchedImage, _waveform.Height);
 
-            filename = @"D:\Temp\cropped-image.png";
+            filename = Path.Combine(tempPath, "cropped-image.png");
             if (File.Exists(filename)) { File.Delete(filename); }
             croppedImage.Save(filename, ImageFormat.Png);
 
@@ -539,6 +562,23 @@ namespace Triggerless.TriggerBot
             return destination;
         }
 
+        private void SplicerControl_ControlRemoved(object sender, ControlEventArgs e)
+        {
+            _mp3FileReader?.Dispose();
+            _mp3FileReader = null;
+        }
+
+        private void DebugRun(object sender, EventArgs e)
+        {
+            var playbackForm = new PlaybackForm();
+            playbackForm.Mp3FileReader = _mp3FileReader;
+            playbackForm.Owner = this.ParentForm;
+            playbackForm.StartPosition = FormStartPosition.CenterParent;
+            playbackForm.ShowDialog(this);
+            playbackForm.Dispose();
+
+        }
+        
     }
 
 }

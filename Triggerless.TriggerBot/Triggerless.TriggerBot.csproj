@@ -51,7 +51,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>note.ico</ApplicationIcon>
+    <ApplicationIcon>assets\note.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -178,70 +178,94 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddnTriggersForm.cs">
+    <Compile Include="Forms\AddnTriggersForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddnTriggersForm.Designer.cs">
+    <Compile Include="Forms\AddnTriggersForm.Designer.cs">
       <DependentUpon>AddnTriggersForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="AppSettings.cs" />
-    <Compile Include="AudioSegmenter.cs">
+    <Compile Include="Forms\DeepScanForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DeepScanForm.Designer.cs">
+      <DependentUpon>DeepScanForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AppSettings.cs" />
+    <Compile Include="Components\AudioSegmenter.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Models.cs" />
-    <Compile Include="SplicerControl.cs">
+    <Compile Include="Models\Models.cs" />
+    <Compile Include="Forms\PlaybackForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PlaybackForm.Designer.cs">
+      <DependentUpon>PlaybackForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\SplicerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SplicerControl.Designer.cs">
+    <Compile Include="Components\SplicerControl.Designer.cs">
       <DependentUpon>SplicerControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Collector.cs">
+    <Compile Include="Components\Collector.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="CollectorEvents.cs">
+    <Compile Include="Components\CollectorEvents.cs">
       <DependentUpon>Collector.cs</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Shared.cs" />
-    <Compile Include="SingleProgramInstance.cs" />
-    <Compile Include="TriggerBotMainForm.cs">
+    <Compile Include="Models\Shared.cs" />
+    <Compile Include="Models\SingleProgramInstance.cs" />
+    <Compile Include="Components\Triangle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Triangle.Designer.cs">
+      <DependentUpon>Triangle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TriggerBotMainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TriggerBotMainForm.Designer.cs">
+    <Compile Include="Forms\TriggerBotMainForm.Designer.cs">
       <DependentUpon>TriggerBotMainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProductDisplayInfo.cs" />
+    <Compile Include="Models\ProductDisplayInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SQLiteDataAccess.cs" />
-    <Compile Include="TriggerResult.cs">
+    <Compile Include="Models\SQLiteDataAccess.cs" />
+    <Compile Include="Components\TriggerResult.cs">
       <DependentUpon>Collector.cs</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ProductCtrl.cs">
+    <Compile Include="Components\ProductCtrl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ProductCtrl.Designer.cs">
+    <Compile Include="Components\ProductCtrl.Designer.cs">
       <DependentUpon>ProductCtrl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Update.cs" />
-    <Compile Include="UpdateForm.cs">
+    <Compile Include="Components\Update.cs" />
+    <Compile Include="Forms\UpdateForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UpdateForm.Designer.cs">
+    <Compile Include="Forms\UpdateForm.Designer.cs">
       <DependentUpon>UpdateForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="AddnTriggersForm.resx">
+    <EmbeddedResource Include="Forms\AddnTriggersForm.resx">
       <DependentUpon>AddnTriggersForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SplicerControl.resx">
+    <EmbeddedResource Include="Forms\PlaybackForm.resx">
+      <DependentUpon>PlaybackForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\SplicerControl.resx">
       <DependentUpon>SplicerControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TriggerBotMainForm.resx">
+    <EmbeddedResource Include="Components\Triangle.resx">
+      <DependentUpon>Triangle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TriggerBotMainForm.resx">
       <DependentUpon>TriggerBotMainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="ProductCtrl.resx">
+    <EmbeddedResource Include="Components\ProductCtrl.resx">
       <DependentUpon>ProductCtrl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -254,7 +278,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="UpdateForm.resx">
+    <EmbeddedResource Include="Forms\UpdateForm.resx">
       <DependentUpon>UpdateForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="assets\triggerbot.pdn" />
@@ -306,7 +330,7 @@
     <Content Include="assets\stop.png" />
     <Content Include="assets\triggerbot.png" />
     <Content Include="assets\x.png" />
-    <Content Include="note.ico" />
+    <Content Include="assets\note.ico" />
     <None Include="Resources\exclude16.png" />
   </ItemGroup>
   <ItemGroup>
@@ -321,6 +345,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

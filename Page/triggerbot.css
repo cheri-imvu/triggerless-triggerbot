@@ -14,14 +14,50 @@ body {
     text-align: left; /* This line aligns the text to the left */
     border-radius: 30px; 
     opacity: 0.8; 
-    background-color: #999999;
+    background-color: #444444;
     font-size: 1.2em; 
-    color: #88FFFF;
+    color: #8fa;
     padding-bottom: 5px;
-    padding-top: 5px;
-    padding-left: 10px;
+    padding-top: 10px;
+    padding-left: 20px;
     padding-right: 10px;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     border: solid 1px black;
+}
 
+.center-div a { 
+  font-weight: bold;
+  color: #fb6;
+  background-color: transparent;
+}
+
+.center-div a:hover { 
+  font-weight: bold;
+  color: #fb6;
+  background-color: #303;
+}
+
+.center-div a:visited {
+  font-weight: bold;
+  color: #fb6;
+  background-color: #303;
+}
+
+div.topic {
+  font-weight: bold;
+  font-size: 1.1em;
+  background-color: #303;
+  color: #fb6;
+  padding-left: 1em;
+  width: 60%;
+  border-radius: 15px; 
+}
+
+p.img-popup {
+  text-align: center;
+}
+
+p.img-popup a img {
+  width: 600px;
+  height: auto;
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dapper;
 
@@ -11,7 +12,7 @@ namespace Triggerless.TriggerBot
 {
     public partial class Collector
     {
-        public bool Verify(ProductDisplayInfo productDisplayInfo)
+        public async Task<bool> Verify(ProductDisplayInfo productDisplayInfo)
         {
             if (!productDisplayInfo.Triggers.Any(t => t.LengthMS == 0)) return true;
             var sda = new SQLiteDataAccess();
@@ -30,12 +31,11 @@ namespace Triggerless.TriggerBot
                     {
                         try
                         {
-                            using (var stream = triggerClient.GetStreamAsync(musicUrl).Result)
+                            using (var ms = new MemoryStream())
+                            using (var stream = await triggerClient.GetStreamAsync(musicUrl))
                             {
-                                var ms = new MemoryStream();
                                 stream.CopyTo(ms);
                                 trigger.LengthMS = NVorbis.VorbisReader.GetOggLengthMS(ms);
-                                ms.Dispose();
                             }
                         }
                         catch (Exception)
@@ -45,7 +45,9 @@ namespace Triggerless.TriggerBot
                         }
                     }
                     sql = $"UPDATE product_triggers SET length_ms = {trigger.LengthMS} {where}";
-                    conn.Execute(sql, payload);
+                    lock (_dbLock) {
+                       conn.Execute(sql, payload);
+                    } 
                 }
 
             }

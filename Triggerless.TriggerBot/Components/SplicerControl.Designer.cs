@@ -1,6 +1,6 @@
 ﻿namespace Triggerless.TriggerBot
 {
-    partial class ChknControl
+    partial class SplicerControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnDebug = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.lblVolume = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -77,6 +78,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.btnDebug);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.lblVolume);
             this.panel1.Controls.Add(this.panel2);
@@ -110,6 +112,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(851, 476);
             this.panel1.TabIndex = 0;
+            // 
+            // btnDebug
+            // 
+            this.btnDebug.Location = new System.Drawing.Point(691, 366);
+            this.btnDebug.Name = "btnDebug";
+            this.btnDebug.Size = new System.Drawing.Size(113, 30);
+            this.btnDebug.TabIndex = 63;
+            this.btnDebug.Text = "Debug Run...";
+            this.btnDebug.UseVisualStyleBackColor = true;
+            this.btnDebug.Click += new System.EventHandler(this.DebugRun);
             // 
             // label9
             // 
@@ -506,16 +518,17 @@
             // 
             this.dlgOpenFile.Filter = "MP3 files|*.mp3|All Files|*.*";
             // 
-            // ChknControl
+            // SplicerControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Lucida Sans Unicode", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "ChknControl";
+            this.Name = "SplicerControl";
             this.Size = new System.Drawing.Size(861, 485);
             this.Load += new System.EventHandler(this.SplicerControl_Load);
+            this.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.SplicerControl_ControlRemoved);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -570,5 +583,6 @@
         private AudioSegmenter _audioSegmenter;
         private System.Windows.Forms.OpenFileDialog dlgOpenFile;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button btnDebug;
     }
 }
