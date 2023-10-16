@@ -51,7 +51,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>assets\note.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\note.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -281,8 +281,8 @@
     <EmbeddedResource Include="Forms\UpdateForm.resx">
       <DependentUpon>UpdateForm.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="assets\triggerbot.pdn" />
-    <None Include="assets\current-version.json" />
+    <None Include="Assets\triggerbot.pdn" />
+    <None Include="Assets\current-version.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -320,18 +320,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\bg2.jpg" />
-    <Content Include="assets\favicon.ico" />
-    <Content Include="assets\filter-32x32.png" />
-    <Content Include="assets\placeholder.png" />
-    <Content Include="assets\play.png" />
-    <Content Include="assets\pointup.png" />
-    <Content Include="assets\search.png" />
-    <Content Include="assets\stop.png" />
-    <Content Include="assets\triggerbot.png" />
-    <Content Include="assets\x.png" />
-    <Content Include="assets\note.ico" />
-    <None Include="assets\exclude16.png" />
+    <None Include="Assets\bg2.jpg" />
+    <Content Include="Assets\favicon.ico" />
+    <Content Include="Assets\filter-32x32.png" />
+    <Content Include="Assets\placeholder.png" />
+    <Content Include="Assets\play.png" />
+    <Content Include="Assets\pointup.png" />
+    <Content Include="Assets\search.png" />
+    <Content Include="Assets\stop.png" />
+    <Content Include="Assets\triggerbot.png" />
+    <Content Include="Assets\x.png" />
+    <Content Include="Assets\note.ico" />
+    <None Include="Assets\exclude16.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
