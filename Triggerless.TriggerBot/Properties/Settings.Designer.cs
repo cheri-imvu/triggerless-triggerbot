@@ -94,5 +94,17 @@ namespace Triggerless.TriggerBot.Properties {
                 this["LastSearch"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("local")]
+        public string InstallationType {
+            get {
+                return ((string)(this["InstallationType"]));
+            }
+            set {
+                this["InstallationType"] = value;
+            }
+        }
     }
 }

@@ -38,6 +38,7 @@ namespace Triggerless.TriggerBot
             JObject jsonObject = JObject.Parse(jsonText);
             _setup = jsonObject["setup"].ToString();
             _latestVersion = new Version(jsonObject["version"].ToString());
+            var whatsNew = jsonObject["whatsNew"]?.ToString().Replace("|", Environment.NewLine);
 
             // Get expected MD5 hash
             var md5String = jsonObject["md5"].ToString();
@@ -66,6 +67,7 @@ namespace Triggerless.TriggerBot
 
             var updateForm = new UpdateForm();
             updateForm.VersionString = _latestVersion.ToString();
+            updateForm.WhatsNewText = whatsNew;
             var result = updateForm.ShowDialog();
             if (result == DialogResult.No) return;
 

@@ -10,10 +10,19 @@ namespace Triggerless.TriggerBot
         public static bool Paid { get; set; }
         public static void CheckIfPaid()
         {
-            string configPaid = ConfigurationManager.AppSettings["appLevel"];
-            if (configPaid == "paid" ) { 
-                Paid = true;
+            string installationType = Properties.Settings.Default.InstallationType;
+            if (string.IsNullOrEmpty(installationType))
+            {
+                Paid = false; 
+                return;
             }
+            
+            if (installationType.ToLower() == "triggerboss")
+            {
+                Paid = true;
+                return;
+            }
+            Paid = false;
         }
 
         public static string VersionNumber => Assembly.GetEntryAssembly().GetName().Version.ToString();

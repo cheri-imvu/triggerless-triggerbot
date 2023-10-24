@@ -10,6 +10,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using Triggerless.TriggerBot.Forms;
 using WindowsInput;
 using static Triggerless.TriggerBot.ProductCtrl;
 using KeyCode = WindowsInput.Native.VirtualKeyCode;
@@ -153,6 +154,11 @@ namespace Triggerless.TriggerBot
             else
             {
                 var search = txtSearch.Text.Trim();
+                if (search.ToLower() == "triggerboss")
+                {
+                    _splicer.ShowCheap();
+                    Properties.Settings.Default.InstallationType = "triggerboss";
+                }
                 andClause = $@" AND (
                     p.title LIKE '%{search}%' OR
                     p.creator LIKE '%{search}%' OR
@@ -482,7 +488,12 @@ namespace Triggerless.TriggerBot
             cboAdditionalTriggers.Text = string.Empty;
         }
 
-        private void StartPlaying(object sender, EventArgs e)
+        private void StartPlayingClicked(object sender, EventArgs e)
+        {
+            StartPlaying();
+        }
+
+        private void StartPlaying(int currentTriggerIndex = 0)
         {
             if (_currProductInfo == null) // sanity check
             {
@@ -491,7 +502,7 @@ namespace Triggerless.TriggerBot
             }
             _isPlaying = true;
             BringWindowToTop(_imvuChatWindow);
-            _currTriggerIndex = 0;
+            _currTriggerIndex = currentTriggerIndex;
             _numberOfTriggers = _currProductInfo.Triggers.Count;
             PullTrigger();
             if (chkMinimizeOnPlay.Checked) WindowState = FormWindowState.Minimized;
@@ -575,7 +586,7 @@ namespace Triggerless.TriggerBot
             if (productOnDeck.Visible && chkAutoCue.Checked)
             {
                 MoveToPlaying(null, null);
-                StartPlaying(null, null);
+                StartPlayingClicked(null, null);
                 chkAutoCue.Checked = false;
             }
         }
@@ -694,6 +705,26 @@ namespace Triggerless.TriggerBot
         private void _splicer_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void gridTriggers_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            int row = e.RowIndex; //header is -1, first row is 0
+            if (row < 0) return;
+            StartPlaying(row);
+        }
+
+        private async void btnDeepScan_Click(object sender, EventArgs e)
+        {
+            using (var f = new DeepScanForm())
+            {
+                f.Collector = _collector;
+                var dlgResult = f.ShowDialog(this);
+                if (dlgResult == DialogResult.OK)
+                {
+                    await _collector.DeepScanThese(f.SelectedProductIds);
+                }
+            }                
         }
     }
 }

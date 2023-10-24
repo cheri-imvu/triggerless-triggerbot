@@ -578,7 +578,11 @@ namespace Triggerless.TriggerBot
             playbackForm.Dispose();
 
         }
-        
+
+        internal void ShowCheap()
+        {
+            chkCheap.Visible = true;
+        }
     }
 
 }

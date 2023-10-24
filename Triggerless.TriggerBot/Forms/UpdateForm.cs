@@ -17,6 +17,11 @@ namespace Triggerless.TriggerBot
             InitializeComponent();
         }
 
+        public string WhatsNewText {
+            get => txtWhatsNew.Text;
+            set => txtWhatsNew.Text = value;
+        }
+
         private void btnUpdateImmediately_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;

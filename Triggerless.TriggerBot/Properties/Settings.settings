@@ -20,5 +20,8 @@
     <Setting Name="LastSearch" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="InstallationType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">local</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -82,7 +82,6 @@ namespace Triggerless.TriggerBot
             this.btnEjectFromDeck = new System.Windows.Forms.Button();
             this.btnLoadToPlaying = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.productOnDeck = new Triggerless.TriggerBot.ProductCtrl();
             this.pnlCollector = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.progScan = new System.Windows.Forms.ProgressBar();
@@ -90,6 +89,9 @@ namespace Triggerless.TriggerBot
             this.lblProduct = new System.Windows.Forms.Label();
             this.tabTools = new System.Windows.Forms.TabPage();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btnDeepScan = new System.Windows.Forms.Button();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.btnRescanAll = new System.Windows.Forms.Button();
             this.label16 = new System.Windows.Forms.Label();
@@ -97,7 +99,6 @@ namespace Triggerless.TriggerBot
             this.btnScanNew = new System.Windows.Forms.Button();
             this.label18 = new System.Windows.Forms.Label();
             this.tblConvertChkn = new System.Windows.Forms.TabPage();
-            this._splicer = new Triggerless.TriggerBot.SplicerControl();
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lnkPage = new System.Windows.Forms.LinkLabel();
@@ -110,10 +111,9 @@ namespace Triggerless.TriggerBot
             this._toolTip = new System.Windows.Forms.ToolTip(this.components);
             this._triggerTimer = new System.Timers.Timer();
             this._progressTimer = new System.Windows.Forms.Timer(this.components);
+            this.productOnDeck = new Triggerless.TriggerBot.ProductCtrl();
+            this._splicer = new Triggerless.TriggerBot.SplicerControl();
             this._collector = new Triggerless.TriggerBot.Collector();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
             this.tabAppContainer.SuspendLayout();
             this.tabPlayback.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
@@ -565,7 +565,7 @@ namespace Triggerless.TriggerBot
             this.btnPlay.TabIndex = 10;
             this._toolTip.SetToolTip(this.btnPlay, "Play Triggers");
             this.btnPlay.UseVisualStyleBackColor = true;
-            this.btnPlay.Click += new System.EventHandler(this.StartPlaying);
+            this.btnPlay.Click += new System.EventHandler(this.StartPlayingClicked);
             // 
             // cboAdditionalTriggers
             // 
@@ -628,6 +628,7 @@ namespace Triggerless.TriggerBot
             this.gridTriggers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridTriggers.Size = new System.Drawing.Size(277, 400);
             this.gridTriggers.TabIndex = 7;
+            this.gridTriggers.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridTriggers_CellDoubleClick);
             // 
             // colTrigger
             // 
@@ -746,21 +747,6 @@ namespace Triggerless.TriggerBot
             this.label2.TabIndex = 1;
             this.label2.Text = "ON DECK";
             // 
-            // productOnDeck
-            // 
-            this.productOnDeck.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(248)))));
-            this.productOnDeck.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.productOnDeck.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.productOnDeck.HideOnDeck = true;
-            this.productOnDeck.Location = new System.Drawing.Point(5, 38);
-            this.productOnDeck.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.productOnDeck.Name = "productOnDeck";
-            this.productOnDeck.ProductInfo = null;
-            this.productOnDeck.Size = new System.Drawing.Size(364, 90);
-            this.productOnDeck.TabIndex = 2;
-            this._toolTip.SetToolTip(this.productOnDeck, "Trigger Product On Deck");
-            this.productOnDeck.Visible = false;
-            // 
             // pnlCollector
             // 
             this.pnlCollector.Controls.Add(this.label1);
@@ -823,7 +809,7 @@ namespace Triggerless.TriggerBot
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.Gainsboro;
-            this.panel2.Controls.Add(this.button1);
+            this.panel2.Controls.Add(this.btnDeepScan);
             this.panel2.Controls.Add(this.label19);
             this.panel2.Controls.Add(this.label22);
             this.panel2.Controls.Add(this.label15);
@@ -836,6 +822,35 @@ namespace Triggerless.TriggerBot
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(712, 331);
             this.panel2.TabIndex = 6;
+            // 
+            // btnDeepScan
+            // 
+            this.btnDeepScan.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.btnDeepScan.Location = new System.Drawing.Point(250, 195);
+            this.btnDeepScan.Name = "btnDeepScan";
+            this.btnDeepScan.Size = new System.Drawing.Size(104, 33);
+            this.btnDeepScan.TabIndex = 8;
+            this.btnDeepScan.Text = "Deep Scan";
+            this.btnDeepScan.UseVisualStyleBackColor = false;
+            this.btnDeepScan.Click += new System.EventHandler(this.btnDeepScan_Click);
+            // 
+            // label19
+            // 
+            this.label19.Location = new System.Drawing.Point(18, 231);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(571, 41);
+            this.label19.TabIndex = 7;
+            this.label19.Text = "You can scan product files that might have been missed. Works for all products, i" +
+    "ncluding clothing and furniture.";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(18, 203);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(180, 18);
+            this.label22.TabIndex = 6;
+            this.label22.Text = "Deep Scan of Inventory";
             // 
             // label15
             // 
@@ -907,18 +922,6 @@ namespace Triggerless.TriggerBot
             this.tblConvertChkn.TabIndex = 1;
             this.tblConvertChkn.Text = " MP3 Audio Splicer ";
             this.tblConvertChkn.UseVisualStyleBackColor = true;
-            // 
-            // _splicer
-            // 
-            this._splicer.AudioLength = 19.5D;
-            this._splicer.BackColor = System.Drawing.Color.Gainsboro;
-            this._splicer.Font = new System.Drawing.Font("Lucida Sans Unicode", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._splicer.Location = new System.Drawing.Point(38, 30);
-            this._splicer.Margin = new System.Windows.Forms.Padding(4);
-            this._splicer.Name = "_splicer";
-            this._splicer.Size = new System.Drawing.Size(860, 476);
-            this._splicer.TabIndex = 0;
-            this._splicer.Load += new System.EventHandler(this._splicer_Load);
             // 
             // tabAbout
             // 
@@ -1031,37 +1034,36 @@ namespace Triggerless.TriggerBot
             // 
             this._progressTimer.Tick += new System.EventHandler(this.TriggerMadeProgress);
             // 
+            // productOnDeck
+            // 
+            this.productOnDeck.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(248)))));
+            this.productOnDeck.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.productOnDeck.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productOnDeck.HideOnDeck = true;
+            this.productOnDeck.Location = new System.Drawing.Point(5, 38);
+            this.productOnDeck.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.productOnDeck.Name = "productOnDeck";
+            this.productOnDeck.ProductInfo = null;
+            this.productOnDeck.Size = new System.Drawing.Size(364, 90);
+            this.productOnDeck.TabIndex = 2;
+            this._toolTip.SetToolTip(this.productOnDeck, "Trigger Product On Deck");
+            this.productOnDeck.Visible = false;
+            // 
+            // _splicer
+            // 
+            this._splicer.AudioLength = 19.5D;
+            this._splicer.BackColor = System.Drawing.Color.Gainsboro;
+            this._splicer.Font = new System.Drawing.Font("Lucida Sans Unicode", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._splicer.Location = new System.Drawing.Point(38, 30);
+            this._splicer.Margin = new System.Windows.Forms.Padding(4);
+            this._splicer.Name = "_splicer";
+            this._splicer.Size = new System.Drawing.Size(860, 476);
+            this._splicer.TabIndex = 0;
+            this._splicer.Load += new System.EventHandler(this._splicer_Load);
+            // 
             // _collector
             // 
             this._collector.CollectorEvent += new Triggerless.TriggerBot.Collector.CollectorEventHandler(this.OnCollectorEvent);
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.button1.Location = new System.Drawing.Point(250, 195);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(104, 33);
-            this.button1.TabIndex = 8;
-            this.button1.Text = "Deep Scan";
-            this.button1.UseVisualStyleBackColor = false;
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(18, 236);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(565, 18);
-            this.label19.TabIndex = 7;
-            this.label19.Text = "This will wipe out all Triggerbot data, and rescan from your product cache.";
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(18, 203);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(180, 18);
-            this.label22.TabIndex = 6;
-            this.label22.Text = "Deep Scan of Inventory";
             // 
             // TriggerBotMainForm
             // 
@@ -1191,7 +1193,7 @@ namespace Triggerless.TriggerBot
         private System.Windows.Forms.Panel panel2;
         private SplicerControl _splicer;
         private System.Windows.Forms.Button btnAllAddnTriggers;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnDeepScan;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label22;
     }

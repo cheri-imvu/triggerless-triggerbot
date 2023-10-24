@@ -33,6 +33,7 @@
             this.btnUpdateImmediately = new System.Windows.Forms.Button();
             this.btnUpdateOnExit = new System.Windows.Forms.Button();
             this.btnIgnore = new System.Windows.Forms.Button();
+            this.txtWhatsNew = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // lblVersion
@@ -46,7 +47,7 @@
             // 
             // btnUpdateImmediately
             // 
-            this.btnUpdateImmediately.Location = new System.Drawing.Point(77, 90);
+            this.btnUpdateImmediately.Location = new System.Drawing.Point(84, 194);
             this.btnUpdateImmediately.Name = "btnUpdateImmediately";
             this.btnUpdateImmediately.Size = new System.Drawing.Size(170, 34);
             this.btnUpdateImmediately.TabIndex = 1;
@@ -56,7 +57,7 @@
             // 
             // btnUpdateOnExit
             // 
-            this.btnUpdateOnExit.Location = new System.Drawing.Point(253, 90);
+            this.btnUpdateOnExit.Location = new System.Drawing.Point(260, 194);
             this.btnUpdateOnExit.Name = "btnUpdateOnExit";
             this.btnUpdateOnExit.Size = new System.Drawing.Size(170, 34);
             this.btnUpdateOnExit.TabIndex = 2;
@@ -66,7 +67,7 @@
             // 
             // btnIgnore
             // 
-            this.btnIgnore.Location = new System.Drawing.Point(429, 90);
+            this.btnIgnore.Location = new System.Drawing.Point(436, 194);
             this.btnIgnore.Name = "btnIgnore";
             this.btnIgnore.Size = new System.Drawing.Size(170, 34);
             this.btnIgnore.TabIndex = 3;
@@ -74,11 +75,20 @@
             this.btnIgnore.UseVisualStyleBackColor = true;
             this.btnIgnore.Click += new System.EventHandler(this.btnIgnore_Click);
             // 
+            // txtWhatsNew
+            // 
+            this.txtWhatsNew.Location = new System.Drawing.Point(90, 70);
+            this.txtWhatsNew.Multiline = true;
+            this.txtWhatsNew.Name = "txtWhatsNew";
+            this.txtWhatsNew.Size = new System.Drawing.Size(516, 95);
+            this.txtWhatsNew.TabIndex = 4;
+            // 
             // UpdateForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(692, 149);
+            this.ClientSize = new System.Drawing.Size(692, 240);
+            this.Controls.Add(this.txtWhatsNew);
             this.Controls.Add(this.btnIgnore);
             this.Controls.Add(this.btnUpdateOnExit);
             this.Controls.Add(this.btnUpdateImmediately);
@@ -92,6 +102,7 @@
             this.Text = "New Update Available";
             this.Load += new System.EventHandler(this.LoadForm);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -101,5 +112,6 @@
         private System.Windows.Forms.Button btnUpdateImmediately;
         private System.Windows.Forms.Button btnUpdateOnExit;
         private System.Windows.Forms.Button btnIgnore;
+        private System.Windows.Forms.TextBox txtWhatsNew;
     }
 }
