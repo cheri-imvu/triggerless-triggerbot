@@ -10,7 +10,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using Triggerless.TriggerBot.Forms;
 using WindowsInput;
 using static Triggerless.TriggerBot.ProductCtrl;
 using KeyCode = WindowsInput.Native.VirtualKeyCode;
@@ -153,12 +152,7 @@ namespace Triggerless.TriggerBot
             } 
             else
             {
-                var search = txtSearch.Text.Trim().Replace("'", "''");
-                if (search.ToLower() == "triggerboss")
-                {
-                    _splicer.ShowCheap();
-                    Properties.Settings.Default.InstallationType = "triggerboss";
-                }
+                var search = txtSearch.Text.Trim();
                 andClause = $@" AND (
                     p.title LIKE '%{search}%' OR
                     p.creator LIKE '%{search}%' OR
@@ -280,35 +274,10 @@ namespace Triggerless.TriggerBot
             lblCopyright.Text = Shared.Copyright;
             Shared.CheckIfPaid();
             _updater.CheckForUpdate();
-            LoadSettings();
-        }
-
-        private void LoadSettings()
-        {
-            var sets = Properties.Settings.Default;
-            txtSearch.Text = sets.LastSearch;
-            DoSearch(null, null);
-
-            chkHideTriggers.Checked = sets.HideTriggers;
-            chkMinimizeOnPlay.Checked = sets.MinimizeOnPlay;
-            chkKeepOnTop.Checked = sets.KeepOnTop;
-            _lagMS = sets.InitialLagMS;
-            trackBarLag.Value = LagMsToTrackBarValue();
-            _splicer.AudioLength = sets.DefaultTriggerLength;
         }
 
         private void TriggerBotMainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            var sets = Properties.Settings.Default;
-            sets.KeepOnTop = chkKeepOnTop.Checked;
-            sets.MinimizeOnPlay = chkMinimizeOnPlay.Checked;
-            sets.HideTriggers = chkHideTriggers.Checked;
-            sets.DefaultTriggerLength = 18;
-            sets.InitialLagMS = _lagMS;
-            sets.LastSearch = txtSearch.Text;
-            sets.DefaultTriggerLength = _splicer.AudioLength;
-            sets.Save();
-
             if (_isPlaying)
             {
                 var result = MessageBox.Show("You're playing a tune, are you sure?",
@@ -340,7 +309,7 @@ namespace Triggerless.TriggerBot
 
         private void chkStayOnTop_Clicked(object sender, EventArgs e)
         {
-            this.TopMost = chkKeepOnTop.Checked;
+            this.TopMost = chkStayOnTop.Checked;
         }
 
         #endregion
@@ -356,13 +325,11 @@ namespace Triggerless.TriggerBot
                 btnEjectFromDeck.Enabled = false;
                 btnPlay.Enabled = true;
                 _currProductInfo = productOnDeck.ProductInfo;
-                _currTriggerIndex = 0;
                 lblNowPlaying.Text = $"\"{_currProductInfo.Name}\" by {_currProductInfo.Creator}";
                 FillTriggerGrid();
                 trackBarLag.Value = LagMsToTrackBarValue();
                 lblLag.Text = _lagMS.ToString("0.00");
                 pnlLag.Visible = true;
-                cboAdditionalTriggers.Text = _currProductInfo.Triggers[_currTriggerIndex].AddnTriggers;
             }
 
         }
@@ -391,11 +358,11 @@ namespace Triggerless.TriggerBot
         }
 
         // Product Selection
-        private async void SendToDeck(object sender, ProductCtrl.LinkClickedEventArgs args)
+        private void SendToDeck(object sender, ProductCtrl.LinkClickedEventArgs args)
         {
             // Sometimes LengthMS gets set to zero, no idea why. We need to double check the list
             var coll = new Collector();
-            if (!await coll.Verify(args.ProductDisplayInfo))
+            if (!coll.Verify(args.ProductDisplayInfo))
             {
                 MessageBox.Show("The data for this product cannot be verified.", "Bad Product Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -455,7 +422,6 @@ namespace Triggerless.TriggerBot
             if (_currTriggerIndex < _numberOfTriggers)
             {
                 cboAdditionalTriggers.Text = _currProductInfo.Triggers[_currTriggerIndex].AddnTriggers;
-                cboAdditionalTriggers.Update();
                 PullTrigger();
                 return;
             }
@@ -488,12 +454,7 @@ namespace Triggerless.TriggerBot
             cboAdditionalTriggers.Text = string.Empty;
         }
 
-        private void StartPlayingClicked(object sender, EventArgs e)
-        {
-            StartPlaying();
-        }
-
-        private void StartPlaying(int currentTriggerIndex = 0)
+        private void StartPlaying(object sender, EventArgs e)
         {
             if (_currProductInfo == null) // sanity check
             {
@@ -502,7 +463,7 @@ namespace Triggerless.TriggerBot
             }
             _isPlaying = true;
             BringWindowToTop(_imvuChatWindow);
-            _currTriggerIndex = currentTriggerIndex;
+            _currTriggerIndex = 0;
             _numberOfTriggers = _currProductInfo.Triggers.Count;
             PullTrigger();
             if (chkMinimizeOnPlay.Checked) WindowState = FormWindowState.Minimized;
@@ -586,7 +547,7 @@ namespace Triggerless.TriggerBot
             if (productOnDeck.Visible && chkAutoCue.Checked)
             {
                 MoveToPlaying(null, null);
-                StartPlayingClicked(null, null);
+                StartPlaying(null, null);
                 chkAutoCue.Checked = false;
             }
         }
@@ -698,33 +659,7 @@ namespace Triggerless.TriggerBot
             if (_currProductInfo == null) return;
             var modalForm = new AddnTriggersForm() { Product = _currProductInfo };
             modalForm.ShowDialog(this);
-            cboAdditionalTriggers.Text = _currProductInfo.Triggers[_currTriggerIndex].AddnTriggers;
 
-        }
-
-        private void _splicer_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void gridTriggers_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            int row = e.RowIndex; //header is -1, first row is 0
-            if (row < 0) return;
-            StartPlaying(row);
-        }
-
-        private async void btnDeepScan_Click(object sender, EventArgs e)
-        {
-            using (var f = new DeepScanForm())
-            {
-                f.Collector = _collector;
-                var dlgResult = f.ShowDialog(this);
-                if (dlgResult == DialogResult.OK)
-                {
-                    await _collector.DeepScanThese(f.SelectedProductIds);
-                }
-            }                
         }
     }
 }

@@ -2,15 +2,8 @@
 using NAudio.WaveFormRenderer;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Triggerless.TriggerBot
 {
@@ -110,10 +103,6 @@ namespace Triggerless.TriggerBot
 
             comboBox1.SelectedIndex = 4;
             RenderTest(_trackBarValues[comboBox1.SelectedIndex]);
-        }
-
-        private void trackBar1_ValueChanged(object sender, EventArgs e)
-        {
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)

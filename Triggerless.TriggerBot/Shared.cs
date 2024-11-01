@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Reflection;
 
@@ -9,19 +10,10 @@ namespace Triggerless.TriggerBot
         public static bool Paid { get; set; }
         public static void CheckIfPaid()
         {
-            string installationType = Properties.Settings.Default.InstallationType;
-            if (string.IsNullOrEmpty(installationType))
-            {
-                Paid = false; 
-                return;
-            }
-            
-            if (installationType.ToLower() == "triggerboss")
-            {
+            string configPaid = ConfigurationManager.AppSettings["appLevel"];
+            if (configPaid == "paid" ) { 
                 Paid = true;
-                return;
             }
-            Paid = false;
         }
 
         public static string VersionNumber => Assembly.GetEntryAssembly().GetName().Version.ToString();

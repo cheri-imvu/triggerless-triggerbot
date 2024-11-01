@@ -1,67 +1,40 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Triggerless.TriggerBot
 {
     public class SQLiteDataAccess
     {
         public static string AccessoryFilter => @" cPath IN (
-            '[106, 40, 153, 144]',
-            '[106, 40, 153, 155]',
-            '[106, 40, 153, 372]',
-            '[106, 40, 153, 615]',
-            '[106, 40, 153, 1281]',
-            '[106, 40, 153, 1328]',
-            '[106, 40, 153, 2500]',
-            '[106, 40, 153, 2935]',
-            '[106, 40, 153, 2952]',
             '[106, 40, 153, 2956]',
+            '[106, 40, 153, 615]',
+            '[106, 40, 153, 2500]',
+            '[106, 40, 153, 1328]',
+            '[106, 40, 153, 144]',
+            '[106, 40, 153, 2952]',
+            '[106, 40, 153, 1281]',
+            '[106, 40, 153, 2935]',
+            '[106, 40, 153, 372]',
             '[106, 40, 153, 3094]',
+            '[106, 41, 71, 2501]',
+            '[106, 41, 71, 1329]',
             '[106, 41, 71, 148]',
-            '[106, 41, 71, 165]',
-            '[106, 41, 71, 334]',
-            '[106, 41, 71, 416]',
             '[106, 41, 71, 1072]',
+            '[106, 41, 71, 1437]',
+            '[106, 41, 71, 1268]',
+            '[106, 41, 71, 1927]',
             '[106, 41, 71, 1250]',
             '[106, 41, 71, 1251]',
-            '[106, 41, 71, 1268]',
-            '[106, 41, 71, 1329]',
-            '[106, 41, 71, 1437]',
-            '[106, 41, 71, 1739]',
-            '[106, 41, 71, 1927]',
-            '[106, 41, 71, 2501]',
-            '[106, 41, 71, 3095]'
+            '[106, 41, 71, 334]',
+            '[106, 41, 71, 3095]',
+            '[106, 41, 71, 416]'
             ) ";
-
-        /* 
-        106_40_153_144 // F Spice Glasses
-        106_40_153_155 // F New Accessories
-        106_40_153_372 // F King Glasses
-        106_40_153_615 // F Rings
-        106_40_153_1281 // F DJ System
-        106_40_153_1328 // F Actions
-        106_40_153_2500 // F Music Item
-        106_40_153_2935 // F Crimson Sounds
-        106_40_153_2952 // F Triggerless Music
-        106_40_153_2956 // F !!Music!!
-        106_40_153_3094 // F Miscellaneous
-        106_41_71_148 // M Glasses Kings
-        106_41_71_165 // M New Accessories
-        106_41_71_334 // M Headphones
-        106_41_71_416 // M Spice Glasses
-        106_41_71_1072 // M Boomboxes
-        106_41_71_1250 // M Guitar
-        106_41_71_1251 // M Guitars
-        106_41_71_1268 // M DJ System
-        106_41_71_1329 // M Actions
-        106_41_71_1437 // M Cow Bells
-        106_41_71_1739 // M Tools
-        106_41_71_1927 // M Frameless Glasses
-        106_41_71_2501 // M Music Items
-        106_41_71_3095 // M Miscellaneous
-         */
 
 
         public SQLiteConnection GetProductCacheCxn()
@@ -98,7 +71,7 @@ namespace Triggerless.TriggerBot
                         cmd.ExecuteNonQuery();
 
                         sqlCreate = "CREATE TABLE product_triggers (" +
-                            "product_id BIGINT, prefix VARCHAR(24), sequence INTEGER, trigger VARCHAR(24), ogg_name VARCHAR(64), location VARCHAR(64), length_ms REAL, addn_triggers VARCHAR(64), PRIMARY KEY(product_id ASC, prefix ASC, sequence ASC));";
+                            "product_id BIGINT, prefix VARCHAR(24), sequence INTEGER, trigger VARCHAR(24), ogg_name VARCHAR(64), location VARCHAR(64), length_ms REAL, addn_triggers VARCHAR(64) PRIMARY KEY(product_id ASC, prefix ASC, sequence ASC));";
                         cmd.CommandText = sqlCreate;
                         cmd.ExecuteNonQuery();
 

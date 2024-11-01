@@ -1,16 +1,16 @@
-﻿using Dapper;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
+using Dapper;
+using Newtonsoft.Json;
 
 namespace Triggerless.TriggerBot
 {
@@ -69,91 +69,7 @@ namespace Triggerless.TriggerBot
 
         }
 
-        public class ProductSearchEntry
-        {
-            public ProductSearchEntry(long productId, string name, string creator)
-            {
-                ProductId = productId;
-                Name = name;
-                Creator = creator;
-            }
-            public long ProductId { get; set; }
-            public string Name { get; set; }
-            public string Creator { get; set; }
-        }
-
-        public List<ProductSearchEntry> DeepScanList(string searchTerm)
-        {
-            List<ProductSearchEntry> result = new List<ProductSearchEntry>();
-            var sda = new SQLiteDataAccess();
-
-            IEnumerable<long> productIdsWithTriggers;
-            using (var appConnection = sda.GetAppCacheCxn())
-            { 
-                appConnection.Open();
-                var sql = $@"
-                    SELECT product_id FROM products WHERE has_ogg = 1
-                ";
-                productIdsWithTriggers = appConnection.Query<long>(sql);
-            }
-
-            using (var imvuConnection = sda.GetProductCacheCxn())
-            {
-                imvuConnection.Open();
-                var builder = new StringBuilder();
-                builder.Append($@"
-                    SELECT id AS ProductId, 
-                    products_name AS Name, 
-                    manufacturers_name AS Creator
-                    FROM products
-                    WHERE (manufacturers_name LIKE '%{searchTerm}%'
-                    OR products_name LIKE '%{searchTerm}%')
-                    AND id NOT IN (
-                ");
-                string delimiter = string.Empty;
-                foreach (var id in productIdsWithTriggers)
-                {
-                    builder.Append(delimiter + id);
-                    delimiter = ", ";
-                }
-                builder.Append(")");
-                foreach (var item in imvuConnection.Query<ProductSearchEntry>(builder.ToString()))
-                {
-                    result.Add(item);
-                }
-            }
-            return result;
-        }
-
-        public async Task DeepScanThese(List<long> selectedProductIds)
-        {
-            if (selectedProductIds.Count == 0) return;
-
-            StringBuilder builder = new StringBuilder();
-            var delimiter = string.Empty;
-            builder.Append("WHERE product_id IN (");
-            foreach (var productId in selectedProductIds)
-            {
-                builder.Append(delimiter +  productId);
-                delimiter = ", ";
-            }
-            builder.Append(")");
-            string whereClause = builder.ToString();
-
-            var sda = new SQLiteDataAccess();
-            using (var appConnection = sda.GetAppCacheCxn())
-            {
-                appConnection.Open();
-                var sql = $"DELETE FROM product_triggers {whereClause}";
-                appConnection.Execute(sql);
-                sql = $"DELETE FROM products {whereClause}";
-                appConnection.Execute(sql);
-            }
-
-            await ScanDatabasesAsync(whereClause.Replace("product_id", "id"));
-        }
-
-        public async Task ScanDatabasesAsync(string whereClause = null)
+        public async Task ScanDatabasesAsync()
         {
             var sda = new SQLiteDataAccess();
             var productList = new List<ProductSearchInfo>();
@@ -163,9 +79,7 @@ namespace Triggerless.TriggerBot
             {
                 connProduct.Open();
                 var sql = "SELECT id as ProductId, products_name as ProductName, manufacturers_name as CreatorName, products_image as ProductImage FROM products ";
-                sql += whereClause == null ?
-                    $"WHERE {SQLiteDataAccess.AccessoryFilter}; " :
-                    whereClause;
+                sql += $"WHERE {SQLiteDataAccess.AccessoryFilter}; ";
                 var products = connProduct.Query<ProductSearchInfo>(sql);
                 productList.AddRange(products);
             }
