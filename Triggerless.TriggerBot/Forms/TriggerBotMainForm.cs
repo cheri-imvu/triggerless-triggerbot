@@ -95,7 +95,7 @@ namespace Triggerless.TriggerBot
 
         #region Inventory Update
         // Inventory Update
-        private async void ScanInventory(object sender, EventArgs e) //Form1.Shown
+        private async void ScanInventory(object sender, EventArgs e) //TechSupport.Shown
         {
             tabAppContainer.SelectedTab = tabPlayback;
             pnlCollector.BringToFront();
@@ -725,6 +725,14 @@ namespace Triggerless.TriggerBot
                     await _collector.DeepScanThese(f.SelectedProductIds);
                 }
             }                
+        }
+
+        private void btnTechSupport_Click(object sender, EventArgs e)
+        {
+            using (var f = new TechSupport())
+            {
+                var dlgResult = f.ShowDialog(this);
+            }
         }
     }
 }
