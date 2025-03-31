@@ -41,6 +41,11 @@ namespace Triggerless.TriggerBot
         JsonError = 6,
         NoUsefulTriggers = 7,
         XmlError = 8,
+        ZeroTriggers = 9,
+        NullPrefixes = 10,
+        MixedPrefixes = 11,
+        NotEnoughOggs = 12,
+        ProductUnavailable = 13,
     }
 
     public class ProductSearchInfo

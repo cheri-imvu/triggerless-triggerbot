@@ -17,6 +17,21 @@ namespace Triggerless.TriggerBot
     public partial class Collector : Component
     {
         private object _dbLock = new object();
+        private object _logLock = new object();
+        private string _log = string.Empty;
+        private StringBuilder _logBuffer = new StringBuilder();
+
+        private void LogLine(string text)
+        {
+            lock (_logLock)
+            {
+                _logBuffer.AppendLine(text);
+            }
+            Debug.WriteLine(text);
+        }
+
+        public string Log { get => _log; }
+
 
         public static string GetUrlTemplate(long pid) => $"https://userimages-akm.imvu.com/productdata/{pid}/1/{{0}}";
 
@@ -150,10 +165,12 @@ namespace Triggerless.TriggerBot
                 appConnection.Execute(sql);
             }
 
-            await ScanDatabasesAsync(whereClause.Replace("product_id", "id"));
+            ScanDatabasesSync(whereClause.Replace("product_id", "id"));
+            //await ScanDatabasesSync(whereClause.Replace("product_id", "id"));
         }
 
-        public async Task ScanDatabasesAsync(string whereClause = null)
+        //public Task ScanDatabasesSync(string whereClause = null)
+        public  void ScanDatabasesSync(string whereClause = null)
         {
             var sda = new SQLiteDataAccess();
             var productList = new List<ProductSearchInfo>();
@@ -190,46 +207,34 @@ namespace Triggerless.TriggerBot
                     TotalProducts = numberTotal,
                     Message = "Nothing to update"
                 });
-                return;
+                //return;
             }
 
             var numberComplete = 0;
-            var maxConcurrentThreads = 5;
-            var semaphore = new SemaphoreSlim(maxConcurrentThreads);
-            var tasks = new List<Task>();
             var cycleStart = DateTime.Now;
+
+            if (_logBuffer == null) { _logBuffer = new StringBuilder(); }
+            _logBuffer.Clear();
 
             using (var cxnAppCache = sda.GetAppCacheCxn())
             {
                 foreach (var product in workingProducts)
                 {
-                    await semaphore.WaitAsync();
-                    try
+                    var start = DateTime.Now;
+                    FireEvent(new CollectorEventArgs
                     {
-                        tasks.Add(Task.Run(async () =>
-                        {
-                            // run sychronously for now
-                            var result = await ScanOne(product, cxnAppCache);
-                            Debug.WriteLine($"{product.ProductName}\t{result.Result}\t{result.Message}");
+                        CompletedProducts = numberComplete + 1,
+                        TotalProducts = numberTotal,
+                        Message = $"{product.ProductName}"
+                    });
+                    // run sychronously for now
+                    //var result = await ScanOne(product, cxnAppCache);
+                    var result = ScanProductAsync(product, cxnAppCache).Result;
+                    var elapsed = (DateTime.Now - start).TotalMilliseconds;
+                    LogLine($"  Start: {product.ProductName}\t{result.Result}\t{result.Message} took {elapsed} ms");
 
-                            Interlocked.Increment(ref numberComplete);
-                            FireEvent(new CollectorEventArgs
-                            {
-                                CompletedProducts = numberComplete,
-                                TotalProducts = numberTotal,
-                                Message = $"{product.ProductName}"
-                            });
-
-                        }));
-                    }
-                    finally
-                    {
-                        semaphore.Release();
-                    }
-
+                    Interlocked.Increment(ref numberComplete);
                 }
-
-                await Task.WhenAll(tasks);
 
                 var sqlCleanup = @"
                     UPDATE products SET has_ogg = 0 WHERE has_ogg = 1
@@ -242,12 +247,15 @@ namespace Triggerless.TriggerBot
 
             }
 
-            Debug.WriteLine($"Cycle complete {workingProducts.Count} items in {(DateTime.Now - cycleStart).TotalMilliseconds} ms");
-
+            var timeElapsed = (DateTime.Now - cycleStart);
+            LogLine($@"Cycle complete {workingProducts.Count} items. Time elapsed {timeElapsed:mm\:ss\:fff}");
+            _log = _logBuffer.ToString();
+            _logBuffer.Clear();
         }
 
-        public async Task<ScanResult> ScanOne(ProductSearchInfo product, System.Data.SQLite.SQLiteConnection connAppCache)
+        public async Task<ScanResult> ScanProductAsync(ProductSearchInfo product, System.Data.SQLite.SQLiteConnection connAppCache)
         {
+            var processorCount = Environment.ProcessorCount;
             var result = new ScanResult { Result = ScanResultType.Pending };
             var sda = new SQLiteDataAccess();
             const int MIN_NUMBER_OF_OGGS = 2;
@@ -263,7 +271,7 @@ namespace Triggerless.TriggerBot
                 ContentsJsonItem[] jsonContents;
                 try
                 {
-                    httpResult = await client.GetStringAsync(url);
+                    httpResult = client.GetStringAsync(url).Result;
                 }
                 catch (Exception ex)
                 {
@@ -278,9 +286,15 @@ namespace Triggerless.TriggerBot
                         {
                             connAppCache.Execute(sql, insertPayload);
                         }
-                        result.Message = "Product could not be downloaded (404)";
+                        result.Message = "  Unavailable Product could not be downloaded (404)";
+                        LogLine($"  Done. {product.ProductName} {result.Message}");
+                        result.Result = ScanResultType.ProductUnavailable;
                     }
-                    result.Result = ScanResultType.NetworkError;       
+                    else
+                    {
+                        LogLine($"**Done. ERROR {product.ProductName} {ex.Message}");
+                        result.Result = ScanResultType.NetworkError;
+                    }
                     return result;
                 }
 
@@ -292,13 +306,13 @@ namespace Triggerless.TriggerBot
                 {
                     result.Message = ex.Message;
                     result.Result = ScanResultType.JsonError;
-                    var insertPayload = new {product_id = product.ProductId, has_ogg = 0, title = product.ProductName, creator = product.CreatorName };
+                    var insertPayload = new { product_id = product.ProductId, has_ogg = 0, title = product.ProductName, creator = product.CreatorName };
                     var sql = "INSERT INTO products (product_id, has_ogg, title, creator) VALUES (@product_id, @has_ogg, @title, @creator);";
                     lock (_dbLock)
                     {
                         connAppCache.Execute(sql, insertPayload);
                     }
-                    
+                    LogLine($"**ERROR: {product.ProductName} JSON can't be deserialized");
                     return result;
                 }
                 #endregion
@@ -314,6 +328,7 @@ namespace Triggerless.TriggerBot
                     {
                         connAppCache.Execute(sql, insertPayload);
                     }
+                    LogLine($"  Done: {result.Result} {product.ProductName}");
                     return result;
                 }
                 #endregion
@@ -322,9 +337,10 @@ namespace Triggerless.TriggerBot
                 try
                 {
                     client.DefaultRequestHeaders.Clear();
-                    var imageBytes = await client.GetByteArrayAsync(product.ProductImage);
+                    var imageBytes = client.GetByteArrayAsync(product.ProductImage).Result;
 
-                    var insertPayload = new {
+                    var insertPayload = new
+                    {
                         product_id = product.ProductId,
                         has_ogg = 1,
                         title = product.ProductName,
@@ -332,12 +348,14 @@ namespace Triggerless.TriggerBot
                         image_bytes = imageBytes
                     };
                     var sql = "INSERT INTO products (product_id, has_ogg, title, creator, image_bytes) VALUES (@product_id, @has_ogg, @title, @creator, @image_bytes);";
-                    lock (_dbLock) { 
-                        connAppCache.Execute(sql,insertPayload); 
+                    lock (_dbLock)
+                    {
+                        connAppCache.Execute(sql, insertPayload);
                     }
-                } 
-                catch (Exception)
+                }
+                catch (Exception exc)
                 {
+                    LogLine($"**ERROR: GET Image for {product.ProductName} not downloaded: {exc.Message}");
                     result.Message = "Unable to retrieve product icon";
                     result.Result = ScanResultType.NetworkError;
                     return result;
@@ -350,11 +368,21 @@ namespace Triggerless.TriggerBot
                 var docIndex = new XmlDocument();
                 try
                 {
-                    docIndex.Load(await client.GetStreamAsync(GetUrl(pid, "index.xml")));
+                    var indexXml = client.GetStreamAsync(GetUrl(pid, "index.xml")).Result;
+                    docIndex.Load(indexXml);
+                }
+                catch (XmlException exc) 
+                {
+                    result.Result = ScanResultType.XmlError;
+                    result.Message = "ERROR: Malformed index XML";
+                    LogLine($"**{result.Message} {product.ProductName} {exc.Message}");
+                    return result;
+
                 }
                 catch (Exception)
                 {
-                    result.Result = ScanResultType.XmlError;
+                    LogLine($"ERROR: GET for Index failed {product.ProductName}");
+                    result.Result = ScanResultType.NetworkError;
                     result.Message = "Unable to retrieve index.xml file";
                     return result;
                 }
@@ -394,7 +422,8 @@ namespace Triggerless.TriggerBot
 
                             triggerList.Add(triggerEntry);
                         }
-                        catch (Exception) {
+                        catch (Exception)
+                        {
                             result.Result = ScanResultType.JsonError;
                             result.Message = "Malformed product file";
                             lock (_dbLock)
@@ -411,7 +440,8 @@ namespace Triggerless.TriggerBot
                 if (!triggerList.Any())
                 {
                     result.Message = "Triggers were not found in XML file";
-                    result.Result = ScanResultType.NoUsefulTriggers;
+                    result.Result = ScanResultType.ZeroTriggers;
+                    LogLine($"  Done. {product.ProductName} {result.Result}");
                     return result;
                 }
                 #endregion
@@ -444,7 +474,7 @@ namespace Triggerless.TriggerBot
                         if (string.IsNullOrEmpty(numberString))
                         {
                             trigger.Sequence = -1;
-                        } 
+                        }
                         else
                         {
                             trigger.Sequence = int.Parse(numberString);
@@ -462,8 +492,9 @@ namespace Triggerless.TriggerBot
                     {
                         connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");
                     }
-                    result.Result = ScanResultType.NoUsefulTriggers;
+                    result.Result = ScanResultType.NullPrefixes;
                     result.Message = $"Null prefixes are not allowed";
+                    LogLine($"  Done. {product.ProductName} {result.Result}");
                     return result;
                 }
 
@@ -474,8 +505,9 @@ namespace Triggerless.TriggerBot
                     {
                         connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");
                     }
-                    result.Result = ScanResultType.NoUsefulTriggers;
+                    result.Result = ScanResultType.MixedPrefixes;
                     result.Message = $"Too many trigger prefixes ({distinctPrefixes})";
+                    LogLine($"  Done. {product.ProductName} {result.Result}");
                     return result;
                 }
 
@@ -486,8 +518,9 @@ namespace Triggerless.TriggerBot
                     {
                         connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");
                     }
-                    result.Result = ScanResultType.NoUsefulTriggers;
+                    result.Result = ScanResultType.ZeroTriggers;
                     result.Message = $"No Useful triggers found";
+                    LogLine($"  Done. {product.ProductName} {result.Result}");
                     return result;
                 }
 
@@ -497,76 +530,74 @@ namespace Triggerless.TriggerBot
                     {
                         connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");
                     }
-                    result.Result = ScanResultType.NoUsefulTriggers;
+                    result.Result = ScanResultType.NotEnoughOggs;
                     result.Message = $"{MIN_NUMBER_OF_OGGS} Triggers required to qualify as a song";
+                    LogLine($"  Done. {product.ProductName} {result.Result} {MIN_NUMBER_OF_OGGS} required {triggerList.Count} found");
                     return result;
                 }
                 #endregion
 
                 #region Retrieve OGG file lengths
 
-                var maxConcurrentThreads = 2;
-                var semaphore = new SemaphoreSlim(maxConcurrentThreads);
-                var tasks = new List<Task>();
+                int maxThreads = 2 * processorCount / 3;
+                var semaphore = new SemaphoreSlim(maxThreads);
 
-                foreach (var trigger in triggerList)
+                var tasks = triggerList.Select(async trigger =>
                 {
-                    var start = DateTime.Now;
-                    //await semaphore.WaitAsync();
-                    await semaphore.WaitAsync();
+                    await semaphore.WaitAsync().ConfigureAwait(false);
                     try
                     {
-                        tasks.Add(Task.Run(async () =>
+                        var start = DateTime.Now;
+                        var urlLookup = trigger.Location;
+                        var musicUrl = GetUrl(product.ProductId, urlLookup);
+                        var tryCount = 0;
+
+                        using (var triggerClient = new HttpClient())
                         {
-                            var urlLookup = trigger.Location;
-                            var musicUrl = GetUrl(product.ProductId, urlLookup);
-                            using (var triggerClient = new HttpClient())
+                            while (tryCount < 10)
                             {
                                 try
                                 {
-                                    using (var stream = await triggerClient.GetStreamAsync(musicUrl))
+                                    await Task.Delay(50).ConfigureAwait(false);
+                                    using (var stream = await triggerClient.GetStreamAsync(musicUrl).ConfigureAwait(false))
+                                    using (var ms = new MemoryStream())
                                     {
-                                        var ms = new MemoryStream();
-                                        stream.CopyTo(ms);
+                                        await stream.CopyToAsync(ms).ConfigureAwait(false);
                                         trigger.LengthMS = NVorbis.VorbisReader.GetOggLengthMS(ms);
-                                        ms.Dispose();
                                     }
+                                    LogLine($"    TRIGGER OK: {trigger.OggName} ({(DateTime.Now - start).TotalMilliseconds} ms) {product.ProductName}");
+                                    break;
                                 }
                                 catch (Exception)
                                 {
-                                    /*
-                                    result.Result = ScanResultType.NetworkError;
-                                    result.Message = "Unable to download an OGG file";
-                                    var sqlDelete = $"DELETE FROM product_triggers WHERE product_id = {product.ProductId};";
-                                    lock (_dbLock)
-                                    {
-                                        connAppCache.Execute(sqlDelete);
-                                    }
-                                    return result;
-                                    */
-
+                                    tryCount++;
+                                    LogLine($"  **TRIGGER GET failed Try {tryCount}: {product.ProductName} {trigger.OggName} {trigger.TriggerName}");
+                                    await Task.Delay(50 * 2 * tryCount).ConfigureAwait(false);
                                 }
                             }
-                            Debug.WriteLine($"\t{trigger.OggName} ({(DateTime.Now - start).TotalMilliseconds} ms)");
-                        }));
+                        }
+                    }
+                    catch (HttpRequestException exc)
+                    {
+                        LogLine($"  **TRIGGER GET failed on last try {product.ProductName} {trigger.TriggerName} {trigger.OggName}");
                     }
                     catch (Exception exc)
                     {
-                        Debug.WriteLine($"{exc.Message}");
+                        LogLine($"**ERROR: {product.ProductName} {exc.Message}");
                     }
                     finally
                     {
                         semaphore.Release();
                     }
-                }
+                });
 
+                await Task.WhenAll(tasks).ConfigureAwait(false);
 
-                await Task.WhenAll(tasks);
                 #endregion
 
                 #region Save Triggers to DB
                 var sqlInsertTrigger = "INSERT INTO product_triggers (product_id, prefix, sequence, trigger, ogg_name, length_ms, location) VALUES " +
-                    "(@ProductId, @Prefix, @Sequence, @TriggerName, @OggName, @LengthMS, @Location);";
+                        "(@ProductId, @Prefix, @Sequence, @TriggerName, @OggName, @LengthMS, @Location);";
 
                 var triggers = triggerList.OrderBy(t => t.Sequence).ThenBy(t => t.TriggerName).ToList();
                 int seq = 1;
@@ -584,11 +615,12 @@ namespace Triggerless.TriggerBot
                 }
                 result.Result = ScanResultType.Success;
                 result.Message = $"{triggerList.Count} triggers found and added";
-
+                LogLine($"  Done. {product.ProductName} {result.Message}");
                 #endregion
-            }
 
-            return result;
-        }    
+                return result;
+
+            }
+        }
     }
 }

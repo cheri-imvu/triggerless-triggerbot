@@ -332,6 +332,7 @@
             this.chkCheap.TabIndex = 61;
             this.chkCheap.Text = "Cheap";
             this.chkCheap.UseVisualStyleBackColor = true;
+            this.chkCheap.CheckedChanged += new System.EventHandler(this.chkCheap_CheckedChanged);
             // 
             // label15
             // 
@@ -447,6 +448,7 @@
             this.cboAudioLength.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboAudioLength.FormattingEnabled = true;
             this.cboAudioLength.Items.AddRange(new object[] {
+            "20.0",
             "19.9",
             "19.5",
             "19.0",

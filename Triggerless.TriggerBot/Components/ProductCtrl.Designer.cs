@@ -87,27 +87,31 @@
             // 
             // linkOnDeck
             // 
-            this.linkOnDeck.AutoSize = true;
-            this.linkOnDeck.Location = new System.Drawing.Point(256, 62);
+            this.linkOnDeck.Font = new System.Drawing.Font("Lucida Sans Unicode", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkOnDeck.Location = new System.Drawing.Point(237, 62);
             this.linkOnDeck.Name = "linkOnDeck";
-            this.linkOnDeck.Size = new System.Drawing.Size(105, 18);
+            this.linkOnDeck.Size = new System.Drawing.Size(128, 18);
             this.linkOnDeck.TabIndex = 4;
             this.linkOnDeck.TabStop = true;
             this.linkOnDeck.Text = "ON DECK >>";
             this.linkOnDeck.VisitedLinkColor = System.Drawing.Color.Blue;
             this.linkOnDeck.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOnDeck_LinkClicked);
+            this.linkOnDeck.MouseEnter += new System.EventHandler(this.LinkEnter);
+            this.linkOnDeck.MouseLeave += new System.EventHandler(this.LinkLeave);
             // 
             // linkWearItem
             // 
-            this.linkWearItem.AutoSize = true;
+            this.linkWearItem.Font = new System.Drawing.Font("Lucida Sans Unicode", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkWearItem.Location = new System.Drawing.Point(113, 62);
             this.linkWearItem.Name = "linkWearItem";
-            this.linkWearItem.Size = new System.Drawing.Size(82, 18);
+            this.linkWearItem.Size = new System.Drawing.Size(106, 18);
             this.linkWearItem.TabIndex = 5;
             this.linkWearItem.TabStop = true;
             this.linkWearItem.Text = "Wear Item";
             this.linkWearItem.VisitedLinkColor = System.Drawing.Color.Blue;
             this.linkWearItem.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WearItem);
+            this.linkWearItem.MouseEnter += new System.EventHandler(this.LinkEnter);
+            this.linkWearItem.MouseLeave += new System.EventHandler(this.LinkLeave);
             // 
             // picDeleteItem
             // 

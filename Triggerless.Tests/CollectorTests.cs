@@ -16,7 +16,7 @@ namespace Triggerless.Tests
         {
             new SQLiteDataAccess().DeleteAppCache();
             var collector = new Collector();
-            await collector.ScanDatabasesAsync();
+            collector.ScanDatabasesSync();
         }
 
     }

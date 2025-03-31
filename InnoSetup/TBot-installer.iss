@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Triggerless Triggerbot"
-#define MyAppVersion "0.9.1"
+#define MyAppVersion "0.9.2"
 #define MyAppPublisher "triggerless.com"
 #define MyAppURL "https://triggerless.com"
 #define MyAppExeName "TriggerBot.exe"
@@ -108,7 +108,7 @@ end;
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}";
 
 [Files]
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\favicon.ico"; DestDir: "{app}"; Flags: ignoreversion

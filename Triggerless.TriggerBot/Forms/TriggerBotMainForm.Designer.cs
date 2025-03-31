@@ -32,8 +32,8 @@ namespace Triggerless.TriggerBot
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TriggerBotMainForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabAppContainer = new System.Windows.Forms.TabControl();
             this.tabPlayback = new System.Windows.Forms.TabPage();
             this.splitter = new System.Windows.Forms.SplitContainer();
@@ -42,6 +42,7 @@ namespace Triggerless.TriggerBot
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
             this.pnlRight = new System.Windows.Forms.Panel();
+            this.linkTimeItText = new System.Windows.Forms.LinkLabel();
             this.btnAllAddnTriggers = new System.Windows.Forms.Button();
             this.chkMinimizeOnPlay = new System.Windows.Forms.CheckBox();
             this.chkKeepOnTop = new System.Windows.Forms.CheckBox();
@@ -117,6 +118,7 @@ namespace Triggerless.TriggerBot
             this._triggerTimer = new System.Timers.Timer();
             this._progressTimer = new System.Windows.Forms.Timer(this.components);
             this._collector = new Triggerless.TriggerBot.Collector();
+            this.btnViewLog = new System.Windows.Forms.Button();
             this.tabAppContainer.SuspendLayout();
             this.tabPlayback.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
@@ -224,7 +226,7 @@ namespace Triggerless.TriggerBot
             // 
             this.btnSearch.Font = new System.Drawing.Font("Webdings", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.btnSearch.Image = ((System.Drawing.Image)(resources.GetObject("btnSearch.Image")));
-            this.btnSearch.Location = new System.Drawing.Point(293, 6);
+            this.btnSearch.Location = new System.Drawing.Point(318, 6);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(35, 35);
             this.btnSearch.TabIndex = 2;
@@ -234,6 +236,7 @@ namespace Triggerless.TriggerBot
             // 
             // pnlRight
             // 
+            this.pnlRight.Controls.Add(this.linkTimeItText);
             this.pnlRight.Controls.Add(this.btnAllAddnTriggers);
             this.pnlRight.Controls.Add(this.chkMinimizeOnPlay);
             this.pnlRight.Controls.Add(this.chkKeepOnTop);
@@ -255,6 +258,20 @@ namespace Triggerless.TriggerBot
             this.pnlRight.Name = "pnlRight";
             this.pnlRight.Size = new System.Drawing.Size(740, 662);
             this.pnlRight.TabIndex = 9;
+            // 
+            // linkTimeItText
+            // 
+            this.linkTimeItText.ActiveLinkColor = System.Drawing.Color.Blue;
+            this.linkTimeItText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkTimeItText.Font = new System.Drawing.Font("Lucida Sans Unicode", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkTimeItText.Location = new System.Drawing.Point(588, 324);
+            this.linkTimeItText.Name = "linkTimeItText";
+            this.linkTimeItText.Size = new System.Drawing.Size(132, 30);
+            this.linkTimeItText.TabIndex = 22;
+            this.linkTimeItText.TabStop = true;
+            this.linkTimeItText.Text = "TiimeIt Text";
+            this.linkTimeItText.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.linkTimeItText.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkTimeItText_LinkClicked);
             // 
             // btnAllAddnTriggers
             // 
@@ -533,6 +550,7 @@ namespace Triggerless.TriggerBot
             // 
             // trackBarLag
             // 
+            this.trackBarLag.AutoSize = false;
             this.trackBarLag.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.trackBarLag.LargeChange = 4;
             this.trackBarLag.Location = new System.Drawing.Point(6, 33);
@@ -599,14 +617,14 @@ namespace Triggerless.TriggerBot
             | System.Windows.Forms.AnchorStyles.Left)));
             this.gridTriggers.BackgroundColor = System.Drawing.SystemColors.Control;
             this.gridTriggers.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridTriggers.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridTriggers.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.gridTriggers.ColumnHeadersHeight = 25;
             this.gridTriggers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridTriggers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -618,14 +636,14 @@ namespace Triggerless.TriggerBot
             this.gridTriggers.MultiSelect = false;
             this.gridTriggers.Name = "gridTriggers";
             this.gridTriggers.ReadOnly = true;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.gridTriggers.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.gridTriggers.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.gridTriggers.RowHeadersWidth = 5;
             this.gridTriggers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.gridTriggers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -827,6 +845,7 @@ namespace Triggerless.TriggerBot
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.Gainsboro;
+            this.panel2.Controls.Add(this.btnViewLog);
             this.panel2.Controls.Add(this.btnTechSupport);
             this.panel2.Controls.Add(this.label24);
             this.panel2.Controls.Add(this.label25);
@@ -841,7 +860,7 @@ namespace Triggerless.TriggerBot
             this.panel2.Controls.Add(this.label18);
             this.panel2.Location = new System.Drawing.Point(22, 21);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(646, 386);
+            this.panel2.Size = new System.Drawing.Size(646, 415);
             this.panel2.TabIndex = 6;
             // 
             // btnTechSupport
@@ -974,7 +993,7 @@ namespace Triggerless.TriggerBot
             // 
             // _splicer
             // 
-            this._splicer.AudioLength = 19.5D;
+            this._splicer.AudioLength = 19.9D;
             this._splicer.BackColor = System.Drawing.Color.Gainsboro;
             this._splicer.Font = new System.Drawing.Font("Lucida Sans Unicode", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._splicer.Location = new System.Drawing.Point(38, 30);
@@ -1098,6 +1117,17 @@ namespace Triggerless.TriggerBot
             // _collector
             // 
             this._collector.CollectorEvent += new Triggerless.TriggerBot.Collector.CollectorEventHandler(this.OnCollectorEvent);
+            // 
+            // btnViewLog
+            // 
+            this.btnViewLog.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.btnViewLog.Location = new System.Drawing.Point(249, 362);
+            this.btnViewLog.Name = "btnViewLog";
+            this.btnViewLog.Size = new System.Drawing.Size(145, 33);
+            this.btnViewLog.TabIndex = 12;
+            this.btnViewLog.Text = "View Log";
+            this.btnViewLog.UseVisualStyleBackColor = false;
+            this.btnViewLog.Click += new System.EventHandler(this.btnViewLog_Click);
             // 
             // TriggerBotMainForm
             // 
@@ -1233,6 +1263,8 @@ namespace Triggerless.TriggerBot
         private System.Windows.Forms.Button btnTechSupport;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.LinkLabel linkTimeItText;
+        private System.Windows.Forms.Button btnViewLog;
     }
 }
 

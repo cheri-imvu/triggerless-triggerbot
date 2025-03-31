@@ -153,5 +153,23 @@ namespace Triggerless.TriggerBot
 
         public delegate void ExcludeSongEventHandler(object sender, ExcludeSongEventArgs e);
         public event ExcludeSongEventHandler OnExcludeSong;
+
+        private void LinkEnter(object sender, EventArgs e)
+        {
+            var link = sender as LinkLabel;
+            if (link == null) return;
+            link.BackColor = Color.FromArgb(216, 216, 255);
+            link.ForeColor = Color.LimeGreen;
+            link.VisitedLinkColor = link.ForeColor;
+        }
+
+        private void LinkLeave(object sender, EventArgs e)
+        {
+            var link = sender as LinkLabel;
+            if (link == null) return;
+            link.BackColor = Color.FromArgb(255, 255, 248);
+            link.ForeColor = Color.Blue;
+            link.VisitedLinkColor = link.ForeColor;
+        }
     }
 }

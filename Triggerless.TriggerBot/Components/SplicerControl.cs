@@ -582,6 +582,11 @@ namespace Triggerless.TriggerBot
         {
             chkCheap.Visible = true;
         }
+
+        private void chkCheap_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 
 }

@@ -6,8 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Triggerless.TriggerBot.Forms;
@@ -100,7 +102,8 @@ namespace Triggerless.TriggerBot
             tabAppContainer.SelectedTab = tabPlayback;
             pnlCollector.BringToFront();
             btnSearch.Enabled = false;
-            await _collector.ScanDatabasesAsync();
+            //await _collector.ScanDatabasesSync();
+            _collector.ScanDatabasesSync();
             btnSearch.Enabled = true;
             pnlCollector.SendToBack();
             DoSearch(null, null);
@@ -733,6 +736,42 @@ namespace Triggerless.TriggerBot
             {
                 var dlgResult = f.ShowDialog(this);
             }
+        }
+
+        private void linkTimeItText_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (_currProductInfo != null)
+            {
+                var sb = new StringBuilder();
+                double seconds = 0F;
+                
+                foreach (var trigger in _currProductInfo.Triggers)
+                {
+                    var line = $"<{seconds.ToString("0.000")}>*imvu:trigger {trigger.Trigger}";
+                    sb.AppendLine(line);
+                    seconds += trigger.LengthMS / 1000;
+                }
+
+                var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                var targetFolder = Path.Combine(appData, "Triggerless", "Transfer", "Files");
+                if (!Directory.Exists(targetFolder)) Directory.CreateDirectory(targetFolder);
+                var guid = Guid.NewGuid().ToString("N").Substring(0, 10);
+                var filename = guid + ".txt";
+                var filepath = Path.Combine(targetFolder, filename);
+                File.WriteAllText(filepath, sb.ToString());
+
+                Process.Start(filepath);
+                if (chkKeepOnTop.Checked) this.WindowState = FormWindowState.Minimized;
+            }
+
+        }
+
+        private void btnViewLog_Click(object sender, EventArgs e)
+        {
+            var f = new LogForm();
+            f.LogText = _collector.Log;
+            f.TopMost = this.TopMost;
+            f.ShowDialog();
         }
     }
 }
