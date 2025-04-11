@@ -228,12 +228,19 @@ namespace Triggerless.TriggerBot
                         Message = $"{product.ProductName}"
                     });
                     // run sychronously for now
-                    //var result = await ScanOne(product, cxnAppCache);
-                    var result = ScanProductAsync(product, cxnAppCache).Result;
-                    var elapsed = (DateTime.Now - start).TotalMilliseconds;
-                    LogLine($"  Start: {product.ProductName}\t{result.Result}\t{result.Message} took {elapsed} ms");
+                    //var result = await ScanOne(_product, cxnAppCache);
+                    try 
+                    {
+                        var result = ScanProductAsync(product, cxnAppCache).Result;
+                        var elapsed = (DateTime.Now - start).TotalMilliseconds;
+                        LogLine($"  Start: {product.ProductName}\t{result.Result}\t{result.Message} took {elapsed} ms");
 
-                    Interlocked.Increment(ref numberComplete);
+                        Interlocked.Increment(ref numberComplete);
+                    }
+                    catch (Exception ex) 
+                    {
+                        LogLine($"   ");
+                    }   
                 }
 
                 var sqlCleanup = @"
@@ -320,7 +327,7 @@ namespace Triggerless.TriggerBot
                 #region Any OGG Files?
                 if (!jsonContents.Any(c => c.Name.ToLower().EndsWith(".ogg"))) // no OGG files found
                 {
-                    result.Message = $"No OGG files found in product {product.ProductId}";
+                    result.Message = $"No OGG files found in _product {product.ProductId}";
                     result.Result = ScanResultType.NoUsefulTriggers;
                     var insertPayload = new { product_id = product.ProductId, has_ogg = 0, title = product.ProductName, creator = product.CreatorName };
                     var sql = "INSERT INTO products (product_id, has_ogg, title, creator) VALUES (@product_id, @has_ogg, @title, @creator);";
@@ -356,7 +363,7 @@ namespace Triggerless.TriggerBot
                 catch (Exception exc)
                 {
                     LogLine($"**ERROR: GET Image for {product.ProductName} not downloaded: {exc.Message}");
-                    result.Message = "Unable to retrieve product icon";
+                    result.Message = "Unable to retrieve _product icon";
                     result.Result = ScanResultType.NetworkError;
                     return result;
                 }
@@ -388,14 +395,28 @@ namespace Triggerless.TriggerBot
                 }
 
                 var root = docIndex.DocumentElement;
-                long parentId = 0;
+                long parentId;
                 var triggerList = new List<TriggerEntry>();
 
                 foreach (XmlElement item in root.ChildNodes)
                 {
                     if (item.Name == "__DATAIMPORT")
                     {
-                        parentId = long.Parse(item.InnerText.Replace("product://", "").Replace("/index.xml", ""));
+                        long tryparentId;
+                        string substituted = item.InnerText.Replace("product://", "").Replace("/index.xml", "");
+                        var parsed = long.TryParse(substituted, out tryparentId);
+                        if (!parsed)
+                        {
+                            var msg = $"**Error: Can't parse parent ID from {substituted} ";
+                            result.Result = ScanResultType.XmlError;
+                            result.Message = msg;
+                            LogLine(msg);
+                            return result;
+                        }
+                        else
+                        {
+                            parentId = tryparentId;
+                        }
                     }
 
                     if (item.Name.StartsWith("Action"))
@@ -425,7 +446,7 @@ namespace Triggerless.TriggerBot
                         catch (Exception)
                         {
                             result.Result = ScanResultType.JsonError;
-                            result.Message = "Malformed product file";
+                            result.Message = "Malformed _product file";
                             lock (_dbLock)
                             {
                                 connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");

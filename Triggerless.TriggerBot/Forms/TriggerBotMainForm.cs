@@ -97,12 +97,11 @@ namespace Triggerless.TriggerBot
 
         #region Inventory Update
         // Inventory Update
-        private async void ScanInventory(object sender, EventArgs e) //TechSupport.Shown
+        private void ScanInventory(object sender, EventArgs e)
         {
             tabAppContainer.SelectedTab = tabPlayback;
             pnlCollector.BringToFront();
             btnSearch.Enabled = false;
-            //await _collector.ScanDatabasesSync();
             _collector.ScanDatabasesSync();
             btnSearch.Enabled = true;
             pnlCollector.SendToBack();
@@ -137,91 +136,23 @@ namespace Triggerless.TriggerBot
         // Product Search
         private void DoSearch(object sender, EventArgs e)
         {
-            flowDisplay.Controls.Clear();
-            flowDisplay.SuspendLayout();
-            var productInfos = new List<ProductDisplayInfo>();
-
-            long currentProductId = 0;
-            ProductDisplayInfo currentInfo = null;
-            List<dynamic> queryList = null;
-            var infoList = new List<ProductDisplayInfo>();
-
-            var sda = new SQLiteDataAccess();
-            string andClause = string.Empty;
-            string limitClause = string.Empty;
-
-            if (string.IsNullOrEmpty(txtSearch.Text))
+            var searchTerm = txtSearch.Text.Trim().Replace("'", "''");
+            if (searchTerm.ToLower() == "triggerboss")
             {
-                limitClause = "LIMIT 500";
-            } 
-            else
-            {
-                var search = txtSearch.Text.Trim().Replace("'", "''");
-                if (search.ToLower() == "triggerboss")
-                {
-                    _splicer.ShowCheap();
-                    Properties.Settings.Default.InstallationType = "triggerboss";
-                }
-                andClause = $@" AND (
-                    p.title LIKE '%{search}%' OR
-                    p.creator LIKE '%{search}%' OR
-                    pt.prefix LIKE '%{search}%'
-                 )";
+                _splicer.ShowCheap();
+                Properties.Settings.Default.InstallationType = "triggerboss";
             }
 
-            var sql = $@"SELECT p.product_id AS ProductId,
-                       p.title AS Name,
-                       p.creator AS Creator,
-                       p.image_bytes AS ImageBytes,
-                       pt.prefix AS Prefix,
-                       pt.sequence AS Sequence,
-                       pt.trigger AS Trigger,
-                       pt.length_ms AS LengthMS,
-                       pt.addn_triggers AS AddnTriggers
-                       FROM products p 
-                       INNER JOIN product_triggers pt ON (p.product_id = pt.product_id)
-                       WHERE p.has_ogg = 1
-                        {andClause}
-                       ORDER BY p.product_id DESC, pt.sequence ASC
-                        {limitClause}
-                        ;";
+            flowSearchResults.Controls.Clear();
+            flowSearchResults.SuspendLayout();
 
-            using (var cxnAppCache = sda.GetAppCacheCxn())
-            {
-                queryList = cxnAppCache.Query(sql).ToList();
-            }
+            List<ProductDisplayInfo> infoList = SQLiteDataAccess.GetProductSearch(searchTerm);
 
-            if (!queryList.Any())
+            if (!infoList.Any())
             {
-                flowDisplay.ResumeLayout(true);
+                flowSearchResults.ResumeLayout(true);
                 return;
             }
-
-            foreach (var query in queryList)
-            {
-                if (currentProductId != query.ProductId)
-                {
-                    if (currentInfo != null)
-                    {
-                        infoList.Add(currentInfo);
-                    }
-                    currentProductId = query.ProductId;
-                    currentInfo = new ProductDisplayInfo();
-                    currentInfo.Id = query.ProductId;
-                    currentInfo.Name = query.Name;
-                    currentInfo.ImageBytes = query.ImageBytes;
-                    currentInfo.Creator = query.Creator;
-                }
-                var triggerInfo = new TriggerDisplayInfo();
-                triggerInfo.Prefix = query.Prefix;
-                triggerInfo.Sequence = (int)query.Sequence;
-                triggerInfo.LengthMS = query.LengthMS;
-                triggerInfo.Trigger = query.Trigger;
-                triggerInfo.ProductId = query.ProductId;
-                triggerInfo.AddnTriggers = query.AddnTriggers;
-                currentInfo.Triggers.Add(triggerInfo);
-            }
-            if (currentInfo != null && !string.IsNullOrEmpty(andClause)) infoList.Add(currentInfo);
 
             foreach (var info in infoList)
             {
@@ -237,20 +168,20 @@ namespace Triggerless.TriggerBot
                 newControl.OnWearItem += WearItem;
                 newControl.OnExcludeSong += ExcludeSong;
                 
-                flowDisplay.Controls.Add(newControl);
+                flowSearchResults.Controls.Add(newControl);
             }
-            flowDisplay.ResumeLayout(true);
+            flowSearchResults.ResumeLayout(true);
         }
 
         private void ExcludeSong(object sender, ExcludeSongEventArgs e)
         {
-            var msg = $"Are you sure you want to remove {e.Title} from search? Nothing will be deleted from your IMVU inventory.";
+            var msg = $"Are you sure you want to remove {e.Title} from searchTerm? Nothing will be deleted from your IMVU inventory.";
             var result = MessageBox.Show(msg, "Remove Tune?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (result == DialogResult.No) return;
 
             if (_collector.ExcludeSong(e.ProductId))
             {
-                flowDisplay.Controls.RemoveByKey($"productCtrl_{e.ProductId}");
+                flowSearchResults.Controls.RemoveByKey($"productCtrl_{e.ProductId}");
             } else
             {
                 MessageBox.Show($"Unable to remove {e.Title} at this time", "Database Glitch", MessageBoxButtons.OK);
@@ -400,7 +331,7 @@ namespace Triggerless.TriggerBot
             var coll = new Collector();
             if (!await coll.Verify(args.ProductDisplayInfo))
             {
-                MessageBox.Show("The data for this product cannot be verified.", "Bad Product Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("The data for this _product cannot be verified.", "Bad Product Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             productOnDeck.ProductInfo = args.ProductDisplayInfo;
@@ -500,7 +431,7 @@ namespace Triggerless.TriggerBot
         {
             if (_currProductInfo == null) // sanity check
             {
-                MessageBox.Show("Playback Error, no trigger product selected");
+                MessageBox.Show("Playback Error, no trigger _product selected");
                 return;
             }
             _isPlaying = true;
@@ -773,5 +704,6 @@ namespace Triggerless.TriggerBot
             f.TopMost = this.TopMost;
             f.ShowDialog();
         }
+
     }
 }

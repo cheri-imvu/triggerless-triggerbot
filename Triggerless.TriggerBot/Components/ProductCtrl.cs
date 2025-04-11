@@ -102,7 +102,7 @@ namespace Triggerless.TriggerBot
         {
             if (_productInfo != null)
             {
-                var uri = $"https://www.imvu.com/shop/product.php?products_id={_productInfo.Id}";
+                var uri = $"https://www.imvu.com/shop/_product.php?products_id={_productInfo.Id}";
                 var psi = new System.Diagnostics.ProcessStartInfo();
                 psi.UseShellExecute = true;
                 psi.FileName = uri;
@@ -125,7 +125,7 @@ namespace Triggerless.TriggerBot
             if (productControl == null) return;
 
             var pdi = productControl.ProductInfo;
-            var url = $"https://www.imvu.com/shop/product.php?products_id={pdi.Id}";
+            var url = $"https://www.imvu.com/shop/_product.php?products_id={pdi.Id}";
             Process.Start(url); 
 
         }
@@ -170,6 +170,11 @@ namespace Triggerless.TriggerBot
             link.BackColor = Color.FromArgb(255, 255, 248);
             link.ForeColor = Color.Blue;
             link.VisitedLinkColor = link.ForeColor;
+        }
+
+        private void lblName_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

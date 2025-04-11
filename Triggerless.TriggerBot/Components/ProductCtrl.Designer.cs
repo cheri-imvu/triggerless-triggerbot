@@ -60,12 +60,13 @@
             // lblName
             // 
             this.lblName.AutoSize = true;
-            this.lblName.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblName.Location = new System.Drawing.Point(113, 7);
+            this.lblName.Font = new System.Drawing.Font("Lucida Sans Unicode", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblName.Location = new System.Drawing.Point(113, 3);
             this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(240, 18);
+            this.lblName.Size = new System.Drawing.Size(215, 16);
             this.lblName.TabIndex = 1;
             this.lblName.Text = "012345678 012345678 0123";
+            this.lblName.Click += new System.EventHandler(this.lblName_Click);
             // 
             // lblCreator
             // 
@@ -117,7 +118,7 @@
             // 
             this.picDeleteItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.picDeleteItem.Image = global::Triggerless.TriggerBot.Properties.Resources.exclude16;
-            this.picDeleteItem.Location = new System.Drawing.Point(345, 0);
+            this.picDeleteItem.Location = new System.Drawing.Point(357, 0);
             this.picDeleteItem.Name = "picDeleteItem";
             this.picDeleteItem.Size = new System.Drawing.Size(16, 16);
             this.picDeleteItem.TabIndex = 6;
@@ -140,7 +141,7 @@
             this.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.Name = "ProductCtrl";
-            this.Size = new System.Drawing.Size(364, 87);
+            this.Size = new System.Drawing.Size(376, 87);
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picDeleteItem)).EndInit();
             this.ResumeLayout(false);
