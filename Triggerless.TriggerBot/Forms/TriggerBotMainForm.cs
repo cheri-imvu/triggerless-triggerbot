@@ -719,5 +719,15 @@ namespace Triggerless.TriggerBot
         {
 
         }
+
+        private void linkDiscord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(linkDiscord.Text);
+        }
+
+        private void flowPanelDiscord_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }
