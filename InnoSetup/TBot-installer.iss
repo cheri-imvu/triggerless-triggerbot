@@ -2,9 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Triggerless Triggerbot"
-#define MyAppVersion "0.9.3"
+#define MyAppVersion "0.9.5"
 #define MyAppPublisher "triggerless.com"
-#define MyAppURL "https://triggerless.com"
+#define MyAppURL "https://triggerless.com//triggerbot/"
 #define MyAppExeName "TriggerBot.exe"
 #define MyAppIcoName "favicon.ico"
 
@@ -112,7 +112,6 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\favicon.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\ffmpeg.exe"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\libbz2-1.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\libgcc_s_seh-1.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
@@ -125,10 +124,21 @@ Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffm
 
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\x64\SQLite.Interop.dll"; DestDir: "{app}\x64"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\x86\SQLite.Interop.dll"; DestDir: "{app}\x86"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\appCache.sqlite"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ConcurrentCollections.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Dapper.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\DSharpPlus.CommandsNext.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\DSharpPlus.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\DSharpPlus.Interactivity.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\EntityFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\EntityFramework.SqlServer.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ICSharpCode.SharpZipLib.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ManagedWinapi.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ManagedWinapiNativeHelper.dll"; DestDir: "{app}"; Flags: ignoreversion 
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Microsoft.Bcl.AsyncInterfaces.dll"; DestDir: "{app}"; Flags: ignoreversion 
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Microsoft.Extensions.DependencyInjection.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion 
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Microsoft.Extensions.DependencyInjection.dll"; DestDir: "{app}"; Flags: ignoreversion 
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Microsoft.Extensions.Logging.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion 
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Microsoft.Win32.Registry.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Microsoft.WindowsAPICodePack.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Microsoft.WindowsAPICodePack.Shell.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -143,14 +153,20 @@ Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NAu
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NVorbis.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Buffers.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Collections.Immutable.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Data.SQLite.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Data.SQLite.EF6.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Data.SQLite.Linq.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Diagnostics.DiagnosticSource.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Drawing.Common.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Memory.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Numerics.Vectors.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Security.AccessControl.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Security.Principal.Windows.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Threading.Channels.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Threading.Tasks.Extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Triggerless.XAFLib.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\WindowsInput.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\TriggerBot.exe.config"; DestDir: "{app}"; Flags: ignoreversion

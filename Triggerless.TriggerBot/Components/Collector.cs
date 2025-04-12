@@ -2,15 +2,19 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
+using System.Data.Entity.Migrations.Sql;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Triggerless.TriggerBot.Models;
 
 namespace Triggerless.TriggerBot
 {
@@ -26,8 +30,8 @@ namespace Triggerless.TriggerBot
             lock (_logLock)
             {
                 _logBuffer.AppendLine(text);
+                Debug.WriteLine(text);
             }
-            Debug.WriteLine(text);
         }
 
         public string Log { get => _log; }
@@ -140,7 +144,7 @@ namespace Triggerless.TriggerBot
             return result;
         }
 
-        public async Task DeepScanThese(List<long> selectedProductIds)
+        public void DeepScanThese(List<long> selectedProductIds)
         {
             if (selectedProductIds.Count == 0) return;
 
@@ -166,7 +170,6 @@ namespace Triggerless.TriggerBot
             }
 
             ScanDatabasesSync(whereClause.Replace("product_id", "id"));
-            //await ScanDatabasesSync(whereClause.Replace("product_id", "id"));
         }
 
         //public Task ScanDatabasesSync(string whereClause = null)
@@ -216,8 +219,17 @@ namespace Triggerless.TriggerBot
             if (_logBuffer == null) { _logBuffer = new StringBuilder(); }
             _logBuffer.Clear();
 
+            var stats = new Dictionary<ScanResultType, int>();
+            foreach (ScanResultType srt in (ScanResultType[])Enum.GetValues(typeof(ScanResultType))) // i hate this syntax
+            {
+                stats[srt] = 0;
+            }
+            double longest = 0;
+            string longestName = "No Product";
+
             using (var cxnAppCache = sda.GetAppCacheCxn())
             {
+
                 foreach (var product in workingProducts)
                 {
                     var start = DateTime.Now;
@@ -232,14 +244,20 @@ namespace Triggerless.TriggerBot
                     try 
                     {
                         var result = ScanProductAsync(product, cxnAppCache).Result;
+                        stats[result.Result]++;
                         var elapsed = (DateTime.Now - start).TotalMilliseconds;
-                        LogLine($"  Start: {product.ProductName}\t{result.Result}\t{result.Message} took {elapsed} ms");
+                        if (elapsed > longest) 
+                        { 
+                            longest = elapsed;
+                            longestName = product.ProductName;
+                        }
+                        LogLine($"  Product complete: {product.ProductName}\t{result.Result}\t{result.Message} took {elapsed} ms");
 
                         Interlocked.Increment(ref numberComplete);
                     }
                     catch (Exception ex) 
                     {
-                        LogLine($"   ");
+                        LogLine($"**ERROR: {ex.Message}");
                     }   
                 }
 
@@ -255,7 +273,16 @@ namespace Triggerless.TriggerBot
             }
 
             var timeElapsed = (DateTime.Now - cycleStart);
-            LogLine($@"Cycle complete {workingProducts.Count} items. Time elapsed {timeElapsed:mm\:ss\:fff}");
+            LogLine("\n----------------------- SUMMARY --------------------------------------------");
+            LogLine($@"Cycle complete {workingProducts.Count} items. Time elapsed {timeElapsed:mm\:ss\.fff}");
+
+            foreach (var entry in stats)
+            {
+                var line = "  " + entry.Key.ToString().PadRight("ProductUnavailable".Length) + entry.Value.ToString().PadLeft(5);
+                LogLine(line);
+            }
+            LogLine($"The slowest product was {longestName} which took ({longest} msec)");
+
             _log = _logBuffer.ToString();
             _logBuffer.Clear();
         }
@@ -565,17 +592,19 @@ namespace Triggerless.TriggerBot
 
                 var tasks = triggerList.Select(async trigger =>
                 {
+                    var tryCount = 0;
+                    var tryMax = 10;
                     await semaphore.WaitAsync().ConfigureAwait(false);
                     try
                     {
                         var start = DateTime.Now;
                         var urlLookup = trigger.Location;
                         var musicUrl = GetUrl(product.ProductId, urlLookup);
-                        var tryCount = 0;
 
                         using (var triggerClient = new HttpClient())
                         {
-                            while (tryCount < 10)
+                            bool bSuccess = false;
+                            while (tryCount < tryMax)
                             {
                                 try
                                 {
@@ -587,20 +616,31 @@ namespace Triggerless.TriggerBot
                                         trigger.LengthMS = NVorbis.VorbisReader.GetOggLengthMS(ms);
                                     }
                                     LogLine($"    TRIGGER OK: {trigger.OggName} ({(DateTime.Now - start).TotalMilliseconds} ms) {product.ProductName}");
+                                    bSuccess = true;
                                     break;
                                 }
-                                catch (Exception)
+                                catch (Exception exc)
                                 {
+
                                     tryCount++;
                                     LogLine($"  **TRIGGER GET failed Try {tryCount}: {product.ProductName} {trigger.OggName} {trigger.TriggerName}");
+                                    LogLine($"  **>> {exc.Message}");
                                     await Task.Delay(50 * 2 * tryCount).ConfigureAwait(false);
                                 }
+                            }
+                            if (!bSuccess)
+                            {
+                                string ouch = $"Unable to read trigger {trigger.TriggerName} for {product.ProductName} (pid = {product.ProductId}) after {tryMax} tries";
+                                _ = await Discord.SendMessage("Scan Failure", ouch).ConfigureAwait(false);
+                                LogLine($"  !!OUCH: {ouch}");
                             }
                         }
                     }
                     catch (HttpRequestException exc)
-                    {
-                        LogLine($"  **TRIGGER GET failed on last try {product.ProductName} {trigger.TriggerName} {trigger.OggName}");
+                    { 
+                        var msg = $"  **TRIGGER GET failed on last try {product.ProductName} {trigger.TriggerName} {trigger.OggName}";
+                        LogLine(msg);
+                        _ = await Discord.SendMessage("Trigger Download Failure", msg).ConfigureAwait(false);
                     }
                     catch (Exception exc)
                     {
@@ -610,7 +650,7 @@ namespace Triggerless.TriggerBot
                     {
                         semaphore.Release();
                     }
-                });
+                }).ToImmutableArray();
 
                 await Task.WhenAll(tasks).ConfigureAwait(false);
 

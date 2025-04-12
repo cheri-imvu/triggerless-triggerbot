@@ -21,5 +21,10 @@ namespace Triggerless.TriggerBot.Forms
             get => _logTextBox.Text; 
             set => _logTextBox.Text = value; 
         }
+
+        private void btnCopy_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(LogText);
+        }
     }
 }

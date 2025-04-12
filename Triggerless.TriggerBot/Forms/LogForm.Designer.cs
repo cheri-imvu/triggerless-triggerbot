@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LogForm));
             this._logTextBox = new System.Windows.Forms.TextBox();
+            this.btnCopy = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // _logTextBox
@@ -42,15 +43,29 @@
             this._logTextBox.Multiline = true;
             this._logTextBox.Name = "_logTextBox";
             this._logTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this._logTextBox.Size = new System.Drawing.Size(927, 450);
+            this._logTextBox.Size = new System.Drawing.Size(1155, 531);
             this._logTextBox.TabIndex = 0;
             this._logTextBox.Text = "Sample Text";
+            // 
+            // btnCopy
+            // 
+            this.btnCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCopy.Font = new System.Drawing.Font("Lucida Sans", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCopy.Location = new System.Drawing.Point(1053, 4);
+            this.btnCopy.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnCopy.Name = "btnCopy";
+            this.btnCopy.Size = new System.Drawing.Size(73, 29);
+            this.btnCopy.TabIndex = 1;
+            this.btnCopy.Text = "Copy";
+            this.btnCopy.UseVisualStyleBackColor = true;
+            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
             // 
             // LogForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(927, 450);
+            this.ClientSize = new System.Drawing.Size(1155, 531);
+            this.Controls.Add(this.btnCopy);
             this.Controls.Add(this._logTextBox);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -67,5 +82,6 @@
         #endregion
 
         private System.Windows.Forms.TextBox _logTextBox;
+        private System.Windows.Forms.Button btnCopy;
     }
 }

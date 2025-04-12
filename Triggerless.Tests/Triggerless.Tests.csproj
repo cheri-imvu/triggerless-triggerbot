@@ -54,12 +54,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Triggerless.TriggerBot\Triggerless.TriggerBot.csproj">
-      <Project>{ca83baed-e6b8-434a-a483-6f81a9a22748}</Project>
-      <Name>Triggerless.TriggerBot</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

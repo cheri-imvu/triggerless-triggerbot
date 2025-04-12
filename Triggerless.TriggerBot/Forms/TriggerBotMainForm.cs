@@ -648,7 +648,7 @@ namespace Triggerless.TriggerBot
             StartPlaying(row);
         }
 
-        private async void btnDeepScan_Click(object sender, EventArgs e)
+        private void btnDeepScan_Click(object sender, EventArgs e)
         {
             using (var f = new DeepScanForm())
             {
@@ -656,7 +656,7 @@ namespace Triggerless.TriggerBot
                 var dlgResult = f.ShowDialog(this);
                 if (dlgResult == DialogResult.OK)
                 {
-                    await _collector.DeepScanThese(f.SelectedProductIds);
+                    _collector.DeepScanThese(f.SelectedProductIds);
                 }
             }                
         }
@@ -705,5 +705,19 @@ namespace Triggerless.TriggerBot
             f.ShowDialog();
         }
 
+        private void pnlTools_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void tableLayoutPanel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

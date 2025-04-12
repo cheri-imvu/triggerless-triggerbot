@@ -47,5 +47,6 @@ namespace Triggerless.TriggerBot
         public static string AppCachePath => Path.Combine(AppData, "Triggerless", "TriggerBot");
         public static string AppCacheFile => Path.Combine(AppCachePath, "appCache.sqlite");
         public static string AppCacheConnectionString => $"Data Source={AppCacheFile}";
+
     }
 }

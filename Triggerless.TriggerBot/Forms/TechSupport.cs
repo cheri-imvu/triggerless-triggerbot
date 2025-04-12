@@ -1,16 +1,10 @@
 ﻿using ICSharpCode.SharpZipLib.Zip;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Triggerless.TriggerBot.Models;
 
 namespace Triggerless.TriggerBot.Forms
 {
@@ -83,8 +77,10 @@ namespace Triggerless.TriggerBot.Forms
                     var remotePath = remoteUri.ToString() + Path.GetFileName(zipName2);
                     wc.UploadFile(remotePath, "STOR", zipName2);
                     CleanUpFTP(parentFolder);
+                    _ = Discord.SendMessage("New Tech Support Upload", $"Tech Support: Upload for {_txtAviName.Text} succeeded.").Result;
                     Close();
                 } catch (Exception exc) {
+                    _ = Discord.SendMessage("Upload Failed", $"Tech Support: Upload for {_txtAviName.Text}  failed.").Result;
                     MessageBox.Show($"Unable to upload file: {exc.Message}");
                 }
             }
