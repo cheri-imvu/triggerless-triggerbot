@@ -496,6 +496,7 @@
             this.txtFilename.Name = "txtFilename";
             this.txtFilename.Size = new System.Drawing.Size(472, 31);
             this.txtFilename.TabIndex = 37;
+            this.txtFilename.TextChanged += new System.EventHandler(this.txtFilename_TextChanged);
             // 
             // label2
             // 
@@ -508,13 +509,15 @@
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(28, 17);
+            this.label1.Font = new System.Drawing.Font("Lucida Sans", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(28, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(779, 18);
+            this.label1.Size = new System.Drawing.Size(786, 49);
             this.label1.TabIndex = 35;
-            this.label1.Text = "This Audio Splicer will convert an MP3, FLAC, OGG or WAV file into CHKN file(s) y" +
-    "ou can upload to IMVU.";
+            this.label1.Text = "This Audio Splicer will convert an MP3 file into CHKN file(s) you can upload to I" +
+    "MVU.";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // dlgOpenFile
             // 

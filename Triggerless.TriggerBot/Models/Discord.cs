@@ -2,6 +2,7 @@
 using DSharpPlus;
 using System.Threading.Tasks;
 using System;
+using System.Net.Http;
 
 namespace Triggerless.TriggerBot.Models
 {
@@ -31,7 +32,17 @@ namespace Triggerless.TriggerBot.Models
         
             }
             return 0;
+        }
 
+        public static async Task<string> GetInviteLink()
+        {
+            string result = string.Empty;
+            using (var client = new HttpClient())
+            {
+                var code = await client.GetStringAsync("https://triggerless.com/triggerbot/invite-code.txt").ConfigureAwait(false);
+                result = $"https://discord.gg/{code}";
+            }
+            return result;
         }
         public static async Task<int> SendMessage(string title, string body)
         {

@@ -28,12 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LyricsCtrl));
             this.label1 = new System.Windows.Forms.Label();
             this.btnSelectProduct = new System.Windows.Forms.Button();
             this.picProductImage = new System.Windows.Forms.PictureBox();
             this.lblProductName = new System.Windows.Forms.Label();
             this.lblCreatorName = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -42,13 +45,12 @@
             this.label1.Font = new System.Drawing.Font("Lucida Sans", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(27, 24);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(238, 22);
+            this.label1.Size = new System.Drawing.Size(183, 17);
             this.label1.TabIndex = 0;
             this.label1.Text = "Select Trigger Product:";
             // 
             // btnSelectProduct
             // 
-            this.btnSelectProduct.Enabled = false;
             this.btnSelectProduct.Location = new System.Drawing.Point(309, 15);
             this.btnSelectProduct.Name = "btnSelectProduct";
             this.btnSelectProduct.Size = new System.Drawing.Size(64, 39);
@@ -70,7 +72,7 @@
             this.lblProductName.AutoSize = true;
             this.lblProductName.Location = new System.Drawing.Point(596, 26);
             this.lblProductName.Name = "lblProductName";
-            this.lblProductName.Size = new System.Drawing.Size(258, 22);
+            this.lblProductName.Size = new System.Drawing.Size(202, 17);
             this.lblProductName.TabIndex = 3;
             this.lblProductName.Text = "My Awesome Trigger Tune";
             // 
@@ -79,15 +81,26 @@
             this.lblCreatorName.AutoSize = true;
             this.lblCreatorName.Location = new System.Drawing.Point(596, 55);
             this.lblCreatorName.Name = "lblCreatorName";
-            this.lblCreatorName.Size = new System.Drawing.Size(166, 22);
+            this.lblCreatorName.Size = new System.Drawing.Size(130, 17);
             this.lblCreatorName.TabIndex = 4;
             this.lblCreatorName.Text = "by TriggerQueen";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(98, 178);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(720, 405);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.TabIndex = 5;
+            this.pictureBox1.TabStop = false;
+            // 
             // LyricsCtrl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 21F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightCyan;
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lblCreatorName);
             this.Controls.Add(this.lblProductName);
             this.Controls.Add(this.picProductImage);
@@ -99,6 +112,7 @@
             this.Size = new System.Drawing.Size(920, 661);
             this.Load += new System.EventHandler(this.LyricsCtrl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -111,5 +125,6 @@
         private System.Windows.Forms.PictureBox picProductImage;
         private System.Windows.Forms.Label lblProductName;
         private System.Windows.Forms.Label lblCreatorName;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

@@ -294,6 +294,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Models\Discord.cs" />
+    <Compile Include="Models\Extensions.cs" />
     <Compile Include="Models\Models.cs" />
     <Compile Include="Forms\PlaybackForm.cs">
       <SubType>Form</SubType>
@@ -452,6 +453,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\discord.png" />
+    <Content Include="Assets\under-construction.png" />
     <Content Include="ffmpeg\ffmpeg.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

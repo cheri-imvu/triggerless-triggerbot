@@ -125,7 +125,7 @@ namespace Triggerless.TriggerBot
             if (productControl == null) return;
 
             var pdi = productControl.ProductInfo;
-            var url = $"https://www.imvu.com/shop/_product.php?products_id={pdi.Id}";
+            var url = $"https://www.imvu.com/shop/product.php?products_id={pdi.Id}";
             Process.Start(url); 
 
         }

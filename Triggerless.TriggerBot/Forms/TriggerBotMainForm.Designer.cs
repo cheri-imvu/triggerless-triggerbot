@@ -32,8 +32,8 @@ namespace Triggerless.TriggerBot
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TriggerBotMainForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabAppContainer = new System.Windows.Forms.TabControl();
             this.tabPlayback = new System.Windows.Forms.TabPage();
             this.splitter = new System.Windows.Forms.SplitContainer();
@@ -123,7 +123,6 @@ namespace Triggerless.TriggerBot
             this.linkDiscord = new System.Windows.Forms.LinkLabel();
             this.lblDiscord = new System.Windows.Forms.Label();
             this.picDiscord = new System.Windows.Forms.PictureBox();
-            this.flowPanelDiscord = new System.Windows.Forms.FlowLayoutPanel();
             this.productOnDeck = new Triggerless.TriggerBot.ProductCtrl();
             this._splicer = new Triggerless.TriggerBot.SplicerControl();
             this.lyricsCtrl1 = new Triggerless.TriggerBot.Components.LyricsCtrl();
@@ -154,7 +153,6 @@ namespace Triggerless.TriggerBot
             ((System.ComponentModel.ISupportInitialize)(this._triggerTimer)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picDiscord)).BeginInit();
-            this.flowPanelDiscord.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabAppContainer
@@ -632,14 +630,14 @@ namespace Triggerless.TriggerBot
             | System.Windows.Forms.AnchorStyles.Left)));
             this.gridTriggers.BackgroundColor = System.Drawing.SystemColors.Control;
             this.gridTriggers.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridTriggers.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridTriggers.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.gridTriggers.ColumnHeadersHeight = 25;
             this.gridTriggers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridTriggers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -651,14 +649,14 @@ namespace Triggerless.TriggerBot
             this.gridTriggers.MultiSelect = false;
             this.gridTriggers.Name = "gridTriggers";
             this.gridTriggers.ReadOnly = true;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.gridTriggers.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.gridTriggers.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.gridTriggers.RowHeadersWidth = 5;
             this.gridTriggers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.gridTriggers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -1037,7 +1035,9 @@ namespace Triggerless.TriggerBot
             // 
             this.pnlAbout.BackColor = System.Drawing.Color.Gainsboro;
             this.pnlAbout.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlAbout.Controls.Add(this.flowPanelDiscord);
+            this.pnlAbout.Controls.Add(this.linkDiscord);
+            this.pnlAbout.Controls.Add(this.lblDiscord);
+            this.pnlAbout.Controls.Add(this.picDiscord);
             this.pnlAbout.Controls.Add(this.tableLayoutPanel1);
             this.pnlAbout.Font = new System.Drawing.Font("Lucida Sans", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlAbout.Location = new System.Drawing.Point(299, 85);
@@ -1208,53 +1208,41 @@ namespace Triggerless.TriggerBot
             // linkDiscord
             // 
             this.linkDiscord.ActiveLinkColor = System.Drawing.Color.Blue;
-            this.linkDiscord.AutoSize = true;
-            this.linkDiscord.Font = new System.Drawing.Font("Lucida Sans", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkDiscord.Location = new System.Drawing.Point(157, 10);
+            this.linkDiscord.Font = new System.Drawing.Font("Lucida Sans", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkDiscord.Location = new System.Drawing.Point(188, 396);
             this.linkDiscord.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
             this.linkDiscord.Name = "linkDiscord";
-            this.linkDiscord.Size = new System.Drawing.Size(211, 16);
+            this.linkDiscord.Size = new System.Drawing.Size(260, 20);
             this.linkDiscord.TabIndex = 22;
             this.linkDiscord.TabStop = true;
             this.linkDiscord.Text = "https://discord.gg/AY83wS33";
-            this.linkDiscord.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.linkDiscord.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.linkDiscord.VisitedLinkColor = System.Drawing.Color.Blue;
             this.linkDiscord.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkDiscord_LinkClicked);
             // 
             // lblDiscord
             // 
             this.lblDiscord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblDiscord.AutoSize = true;
             this.lblDiscord.BackColor = System.Drawing.Color.Transparent;
             this.lblDiscord.Font = new System.Drawing.Font("Lucida Sans", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDiscord.Location = new System.Drawing.Point(42, 11);
+            this.lblDiscord.Location = new System.Drawing.Point(60, 395);
             this.lblDiscord.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDiscord.Name = "lblDiscord";
-            this.lblDiscord.Size = new System.Drawing.Size(108, 16);
+            this.lblDiscord.Size = new System.Drawing.Size(145, 22);
             this.lblDiscord.TabIndex = 23;
             this.lblDiscord.Text = "Discord server:";
-            this.lblDiscord.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblDiscord.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblDiscord.Click += new System.EventHandler(this.lblDiscord_Click);
             // 
             // picDiscord
             // 
             this.picDiscord.Image = ((System.Drawing.Image)(resources.GetObject("picDiscord.Image")));
-            this.picDiscord.Location = new System.Drawing.Point(3, 3);
+            this.picDiscord.Location = new System.Drawing.Point(21, 390);
             this.picDiscord.Name = "picDiscord";
             this.picDiscord.Size = new System.Drawing.Size(32, 32);
             this.picDiscord.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.picDiscord.TabIndex = 24;
             this.picDiscord.TabStop = false;
-            // 
-            // flowPanelDiscord
-            // 
-            this.flowPanelDiscord.Controls.Add(this.picDiscord);
-            this.flowPanelDiscord.Controls.Add(this.lblDiscord);
-            this.flowPanelDiscord.Controls.Add(this.linkDiscord);
-            this.flowPanelDiscord.Location = new System.Drawing.Point(25, 403);
-            this.flowPanelDiscord.Name = "flowPanelDiscord";
-            this.flowPanelDiscord.Size = new System.Drawing.Size(442, 37);
-            this.flowPanelDiscord.TabIndex = 25;
-            this.flowPanelDiscord.Paint += new System.Windows.Forms.PaintEventHandler(this.flowPanelDiscord_Paint);
             // 
             // productOnDeck
             // 
@@ -1340,14 +1328,13 @@ namespace Triggerless.TriggerBot
             this.tabLyrics.ResumeLayout(false);
             this.tabAbout.ResumeLayout(false);
             this.pnlAbout.ResumeLayout(false);
+            this.pnlAbout.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._triggerTimer)).EndInit();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picDiscord)).EndInit();
-            this.flowPanelDiscord.ResumeLayout(false);
-            this.flowPanelDiscord.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1447,7 +1434,6 @@ namespace Triggerless.TriggerBot
         private System.Windows.Forms.LinkLabel linkDiscord;
         private System.Windows.Forms.Label lblDiscord;
         private System.Windows.Forms.PictureBox picDiscord;
-        private System.Windows.Forms.FlowLayoutPanel flowPanelDiscord;
     }
 }
 

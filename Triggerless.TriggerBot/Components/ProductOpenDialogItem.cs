@@ -9,6 +9,7 @@ namespace Triggerless.TriggerBot
     {
         private bool _selected = false;
         private ProductDisplayInfo _product;
+        public event EventHandler ItemDoubleClicked;
 
         public ProductDisplayInfo Product 
         { 
@@ -19,16 +20,10 @@ namespace Triggerless.TriggerBot
                 if (_product != null)
                 {
                     _productName.Text = $"{_product.Name} by {_product.Creator}";
-                    using (var s = new MemoryStream(_product.ImageBytes))
-                    {
-                        _productImage.Image = Image.FromStream(s);
-                    }
                 }
                 else
                 {
                     _productName.Text = "(Unknown) by (Unknown)";
-                    _productImage.Image?.Dispose();
-                    _productImage.Image = null;
                 }
             }
         }
@@ -49,21 +44,14 @@ namespace Triggerless.TriggerBot
                             sibling.Selected = false;
                         }
                     }
+                    FireProductSelected();
                 }
-                FireItemSelectedEvent(false);
             }
         }
 
         public ProductOpenDialogItem()
         {
             InitializeComponent();
-            this.Disposed += OnDispose; // why you make me do this, studio?
-        }
-
-        private void OnDispose(object sender, EventArgs e)
-        {
-            _productImage.Image?.Dispose();
-            base.Dispose();
         }
 
         private void MouseDownAnywhere(object sender, MouseEventArgs e)
@@ -75,25 +63,33 @@ namespace Triggerless.TriggerBot
         public class ProductItemSelectedEventArgs : EventArgs
         {
             public ProductDisplayInfo Product { get; private set; }
-            public bool DoubleClicked { get; private set; }
-            public ProductItemSelectedEventArgs(ProductDisplayInfo product, bool doubleClicked)
+
+            public ProductItemSelectedEventArgs(ProductDisplayInfo product)
             {
                 this.Product = product;
-                DoubleClicked = doubleClicked;
             }
         }
         public delegate void ProductItemSelectedHandler(object sender, ProductItemSelectedEventArgs e);
         public event ProductItemSelectedHandler ProductItemSelected;
-        private void FireItemSelectedEvent(bool doubleClicked)
+        private void FireProductSelected()
         {
-            ProductItemSelected?.Invoke(this, new ProductItemSelectedEventArgs(_product, doubleClicked));
+            if (ProductItemSelected != null)
+            {
+                ProductItemSelected(this, new ProductItemSelectedEventArgs(_product));
+            }
         }
 
         #endregion
 
         private void HandleDoubleClick(object sender, EventArgs e)
         {
-            FireItemSelectedEvent(true);
+            Selected = true;
+            ItemDoubleClicked?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void HandleClick(object sender, EventArgs e)
+        {
+            this.Selected = true;
         }
     }
 

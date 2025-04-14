@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Triggerless.TriggerBot.Forms;
+using Triggerless.TriggerBot.Models;
 using WindowsInput;
 using static Triggerless.TriggerBot.ProductCtrl;
 using KeyCode = WindowsInput.Native.VirtualKeyCode;
@@ -28,6 +29,7 @@ namespace Triggerless.TriggerBot
         {
             InitializeComponent();
             _updater = new Update();
+            linkDiscord.Text = Discord.GetInviteLink().Result;
         }
 
         #region IMVU Presence and Interation
@@ -726,6 +728,11 @@ namespace Triggerless.TriggerBot
         }
 
         private void flowPanelDiscord_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void lblDiscord_Click(object sender, EventArgs e)
         {
 
         }

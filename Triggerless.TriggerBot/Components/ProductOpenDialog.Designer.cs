@@ -37,20 +37,27 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.lblProductName = new System.Windows.Forms.Label();
+            this.pnlBottom = new System.Windows.Forms.Panel();
+            this.pnlTop = new System.Windows.Forms.Panel();
+            this.pnlMiddle = new System.Windows.Forms.Panel();
+            this.pnlBottom.SuspendLayout();
+            this.pnlTop.SuspendLayout();
+            this.pnlMiddle.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtSearch
             // 
-            this.txtSearch.Location = new System.Drawing.Point(93, 12);
+            this.txtSearch.Font = new System.Drawing.Font("Lucida Sans", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSearch.Location = new System.Drawing.Point(96, 15);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(254, 24);
+            this.txtSearch.Size = new System.Drawing.Size(236, 23);
             this.txtSearch.TabIndex = 0;
             this.txtSearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSearch_KeyPress);
             // 
             // btnSearch
             // 
             this.btnSearch.Image = ((System.Drawing.Image)(resources.GetObject("btnSearch.Image")));
-            this.btnSearch.Location = new System.Drawing.Point(353, 6);
+            this.btnSearch.Location = new System.Drawing.Point(350, 7);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(46, 38);
             this.btnSearch.TabIndex = 1;
@@ -60,9 +67,9 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 15);
+            this.label1.Location = new System.Drawing.Point(12, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 17);
+            this.label1.Size = new System.Drawing.Size(54, 15);
             this.label1.TabIndex = 2;
             this.label1.Text = "Search:";
             // 
@@ -72,19 +79,20 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this._flowProducts.AutoScroll = true;
-            this._flowProducts.AutoSize = true;
-            this._flowProducts.Location = new System.Drawing.Point(16, 47);
+            this._flowProducts.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this._flowProducts.Location = new System.Drawing.Point(12, 6);
             this._flowProducts.Name = "_flowProducts";
-            this._flowProducts.Size = new System.Drawing.Size(491, 394);
+            this._flowProducts.Size = new System.Drawing.Size(660, 506);
             this._flowProducts.TabIndex = 3;
             this._flowProducts.WrapContents = false;
             // 
             // btnOK
             // 
+            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(279, 477);
+            this.btnOK.Location = new System.Drawing.Point(451, 39);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(111, 43);
+            this.btnOK.Size = new System.Drawing.Size(99, 37);
             this.btnOK.TabIndex = 4;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
@@ -92,10 +100,11 @@
             // 
             // btnCancel
             // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(396, 477);
+            this.btnCancel.Location = new System.Drawing.Point(562, 39);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(111, 43);
+            this.btnCancel.Size = new System.Drawing.Size(99, 37);
             this.btnCancel.TabIndex = 5;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -104,35 +113,68 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(16, 444);
+            this.label2.Location = new System.Drawing.Point(13, 7);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(75, 17);
+            this.label2.Size = new System.Drawing.Size(68, 16);
             this.label2.TabIndex = 6;
             this.label2.Text = "Selected:";
             // 
             // lblProductName
             // 
             this.lblProductName.AutoSize = true;
-            this.lblProductName.Location = new System.Drawing.Point(104, 444);
+            this.lblProductName.Location = new System.Drawing.Point(94, 7);
             this.lblProductName.Name = "lblProductName";
-            this.lblProductName.Size = new System.Drawing.Size(54, 17);
+            this.lblProductName.Size = new System.Drawing.Size(50, 16);
             this.lblProductName.TabIndex = 7;
             this.lblProductName.Text = "(none)";
+            // 
+            // pnlBottom
+            // 
+            this.pnlBottom.AutoScroll = true;
+            this.pnlBottom.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.pnlBottom.Controls.Add(this.lblProductName);
+            this.pnlBottom.Controls.Add(this.label2);
+            this.pnlBottom.Controls.Add(this.btnOK);
+            this.pnlBottom.Controls.Add(this.btnCancel);
+            this.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlBottom.Font = new System.Drawing.Font("Lucida Sans", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pnlBottom.Location = new System.Drawing.Point(0, 573);
+            this.pnlBottom.Name = "pnlBottom";
+            this.pnlBottom.Size = new System.Drawing.Size(684, 88);
+            this.pnlBottom.TabIndex = 4;
+            // 
+            // pnlTop
+            // 
+            this.pnlTop.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.pnlTop.Controls.Add(this.label1);
+            this.pnlTop.Controls.Add(this.txtSearch);
+            this.pnlTop.Controls.Add(this.btnSearch);
+            this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlTop.Font = new System.Drawing.Font("Lucida Sans", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pnlTop.Location = new System.Drawing.Point(0, 0);
+            this.pnlTop.Name = "pnlTop";
+            this.pnlTop.Size = new System.Drawing.Size(684, 55);
+            this.pnlTop.TabIndex = 5;
+            // 
+            // pnlMiddle
+            // 
+            this.pnlMiddle.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.pnlMiddle.Controls.Add(this._flowProducts);
+            this.pnlMiddle.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlMiddle.Location = new System.Drawing.Point(0, 55);
+            this.pnlMiddle.Name = "pnlMiddle";
+            this.pnlMiddle.Size = new System.Drawing.Size(684, 518);
+            this.pnlMiddle.TabIndex = 6;
             // 
             // ProductOpenDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(519, 532);
-            this.Controls.Add(this.lblProductName);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnOK);
-            this.Controls.Add(this._flowProducts);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.btnSearch);
-            this.Controls.Add(this.txtSearch);
+            this.ClientSize = new System.Drawing.Size(684, 661);
+            this.Controls.Add(this.pnlMiddle);
+            this.Controls.Add(this.pnlTop);
+            this.Controls.Add(this.pnlBottom);
             this.Font = new System.Drawing.Font("Lucida Sans", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -140,8 +182,12 @@
             this.MinimizeBox = false;
             this.Name = "ProductOpenDialog";
             this.Text = "Choose Trigger Product";
+            this.pnlBottom.ResumeLayout(false);
+            this.pnlBottom.PerformLayout();
+            this.pnlTop.ResumeLayout(false);
+            this.pnlTop.PerformLayout();
+            this.pnlMiddle.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -155,5 +201,8 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblProductName;
+        private System.Windows.Forms.Panel pnlBottom;
+        private System.Windows.Forms.Panel pnlTop;
+        private System.Windows.Forms.Panel pnlMiddle;
     }
 }

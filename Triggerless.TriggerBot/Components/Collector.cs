@@ -297,6 +297,7 @@ namespace Triggerless.TriggerBot
             // See if any ogg files exist
             using (var client = new HttpClient())
             {
+
                 #region JsonContents
 
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));

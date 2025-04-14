@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
 namespace Triggerless.TriggerBot
 {
@@ -42,36 +36,31 @@ namespace Triggerless.TriggerBot
                 return;
             }
 
-            foreach (var product in infoList)
+            foreach (var product in infoList.OrderBy(p => p.Name.ToLower()))
             {
                 var newControl = new ProductOpenDialogItem();
                 newControl.Product = product;
                 newControl.BorderStyle = BorderStyle.FixedSingle;
                 newControl.Font = new Font("Lucida Sans Unicode", 11F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
                 newControl.Location = new Point(5, 194);
-                newControl.Margin = new Padding(5, 4, 5, 4);
+                newControl.Margin = new Padding(1,1,1,1);
                 newControl.Name = $"productCtrl_{product.Id}";
-                newControl.Size = new Size(_flowProducts.Width - 20, 48);
+                newControl.Width = _flowProducts.Width - 20;
                 newControl.ProductItemSelected += ProductSelected;
+                newControl.ItemDoubleClicked += ItemDoubleClicked;
                 _flowProducts.Controls.Add(newControl);
             }
             _flowProducts.ResumeLayout(true);
         }
 
+        private void ItemDoubleClicked(object sender, EventArgs e)
+        {
+            OK(this, new EventArgs());
+        }
+
         private void ProductSelected(object sender, ProductOpenDialogItem.ProductItemSelectedEventArgs e)
         {
-            var selection = sender as ProductOpenDialogItem;
-            if (selection != null) return;
-            _selectedProduct = selection.Product;
-
-            if (!e.DoubleClicked)
-            {
-                lblProductName.Text = $"{_selectedProduct.Name} by {_selectedProduct.Creator}";
-            }
-            else
-            {
-                OK(sender, new EventArgs());
-            }
+            _selectedProduct = e.Product;
         }
 
         private void OK(object sender, EventArgs e)
@@ -98,6 +87,7 @@ namespace Triggerless.TriggerBot
             {
                 SEARCH_TERM = txtSearch.Text;
                 SearchAndUpdateUI(SEARCH_TERM);
+                e.Handled = true;
             }
         }
     }
