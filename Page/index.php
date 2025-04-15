@@ -35,12 +35,18 @@
           <a href="audio-splice.png" target="_blank"><img src="audio-splice.png" /></a>
         </p>
         <div class="topic">Download Triggerbot</div>
-        <p>Download Triggerbot Setup 0.9.5 (beta): <a href="triggerbot-setup.0.9.5.exe">triggerbot-setup.0.9.5.exe</a> (15 MB). 
+        <p>Download Triggerbot Setup 0.10.0 (beta): <a href="triggerbot-setup.0.10.0.exe">triggerbot-setup.0.10.0.exe</a> (15 MB). 
           Once installed, you'll be prompted to upgrade when an update is available.</p>
-		<p>Join the Triggerless Discord server! Click here: <a href="https://discord.gg/AY83wS33" target="_blank">https://discord.gg/AY83wS33</a></p>
+		<p>Join the Triggerless Discord server! Click here: <a href="https://discord.gg/<?php include 'invite-code.txt' ?>" target="_blank">https://discord.gg/<?php include 'invite-code.txt' ?></a></p>
         <p>Instructional Video. View in fullscreen mode at 1080p HD for the most realistic experience.</p>
         <p><iframe style="z-index: 10;" width="750" height="422" src="https://www.youtube.com/embed/3p5k97eRWE4" title="YouTube video player" frameborder="0" 
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
+    </div>
+    <div class="center-div">
+      <div class="topic">What's new in Version 0.10.0 (beta)</div>
+      <ul>
+        <li>Fixed Rescan All Bug</li>
+      </ul>
     </div>
     <div class="center-div">
       <div class="topic">What's new in Version 0.9.5 (beta)</div>

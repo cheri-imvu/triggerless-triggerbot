@@ -12,10 +12,10 @@ namespace Triggerless.TriggerBot
             string installationType = Properties.Settings.Default.InstallationType;
             if (string.IsNullOrEmpty(installationType))
             {
-                Paid = false; 
+                Paid = false;
                 return;
             }
-            
+
             if (installationType.ToLower() == "triggerboss")
             {
                 Paid = true;
@@ -32,7 +32,7 @@ namespace Triggerless.TriggerBot
             {
                 var attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
 
-                
+
                 if (attributes.Length > 0)
                 {
                     return (attributes[0] as AssemblyCopyrightAttribute).Copyright;
@@ -47,6 +47,36 @@ namespace Triggerless.TriggerBot
         public static string AppCachePath => Path.Combine(AppData, "Triggerless", "TriggerBot");
         public static string AppCacheFile => Path.Combine(AppCachePath, "appCache.sqlite");
         public static string AppCacheConnectionString => $"Data Source={AppCacheFile}";
+
+        public static string LyricSheetsPath
+        {
+            get
+            {
+                var path = Path.Combine(TriggerbotDocsPath, "LyricSheets");
+                EnsurePath(path);
+                return path;
+            }
+        }
+
+        public static string FFmpegLocation => Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().
+                    Location.Replace(@"\bin\Debug", "")), "ffmpeg");
+
+        public static string TriggerbotDocsPath 
+        { 
+            get 
+            {
+                var docsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                var botPath = Path.Combine(docsPath, "Triggerbot");
+                EnsurePath(botPath);
+                return botPath;
+            } 
+        }
+
+        public static void EnsurePath(string directory)
+        {
+            if (!Directory.Exists(directory)) Directory.CreateDirectory (directory);
+        }
 
     }
 }

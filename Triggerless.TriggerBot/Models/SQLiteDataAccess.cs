@@ -174,6 +174,7 @@ namespace Triggerless.TriggerBot
                        pt.sequence AS Sequence,
                        pt.trigger AS Trigger,
                        pt.length_ms AS LengthMS,
+                       pt.location As Location,
                        pt.addn_triggers AS AddnTriggers
                        FROM products p 
                        INNER JOIN product_triggers pt ON (p.product_id = pt.product_id)
@@ -207,6 +208,7 @@ namespace Triggerless.TriggerBot
                 triggerInfo.Prefix = query.Prefix;
                 triggerInfo.Sequence = (int)query.Sequence;
                 triggerInfo.LengthMS = query.LengthMS;
+                triggerInfo.Location = query.Location;
                 triggerInfo.Trigger = query.Trigger;
                 triggerInfo.ProductId = query.ProductId;
                 triggerInfo.AddnTriggers = query.AddnTriggers;

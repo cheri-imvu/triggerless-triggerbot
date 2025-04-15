@@ -226,6 +226,7 @@ namespace Triggerless.TriggerBot
             }
             double longest = 0;
             string longestName = "No Product";
+            ScanResultType longestResultType = ScanResultType.Pending;
 
             using (var cxnAppCache = sda.GetAppCacheCxn())
             {
@@ -250,6 +251,7 @@ namespace Triggerless.TriggerBot
                         { 
                             longest = elapsed;
                             longestName = product.ProductName;
+                            longestResultType = result.Result;
                         }
                         LogLine($"  Product complete: {product.ProductName}\t{result.Result}\t{result.Message} took {elapsed} ms");
 
@@ -281,7 +283,7 @@ namespace Triggerless.TriggerBot
                 var line = "  " + entry.Key.ToString().PadRight("ProductUnavailable".Length) + entry.Value.ToString().PadLeft(5);
                 LogLine(line);
             }
-            LogLine($"The slowest product was {longestName} which took ({longest} msec)");
+            LogLine($"The slowest product was {longestName} which took ({longest} msec) with result {longestResultType}");
 
             _log = _logBuffer.ToString();
             _logBuffer.Clear();
@@ -590,6 +592,7 @@ namespace Triggerless.TriggerBot
 
                 int maxThreads = 2 * processorCount / 3;
                 var semaphore = new SemaphoreSlim(maxThreads);
+                bool successAll = true;
 
                 var tasks = triggerList.Select(async trigger =>
                 {
@@ -610,7 +613,8 @@ namespace Triggerless.TriggerBot
                                 try
                                 {
                                     await Task.Delay(50).ConfigureAwait(false);
-                                    using (var stream = await triggerClient.GetStreamAsync(musicUrl).ConfigureAwait(false))
+                                    // No need for a triggerClient, using the existing client shaves 20% off the time.
+                                    using (var stream = await client.GetStreamAsync(musicUrl).ConfigureAwait(false))
                                     using (var ms = new MemoryStream())
                                     {
                                         await stream.CopyToAsync(ms).ConfigureAwait(false);
@@ -634,6 +638,7 @@ namespace Triggerless.TriggerBot
                                 string ouch = $"Unable to read trigger {trigger.TriggerName} for {product.ProductName} (pid = {product.ProductId}) after {tryMax} tries";
                                 _ = await Discord.SendMessage("Scan Failure", ouch).ConfigureAwait(false);
                                 LogLine($"  !!OUCH: {ouch}");
+                                successAll = false;
                             }
                         }
                     }
@@ -656,6 +661,13 @@ namespace Triggerless.TriggerBot
                 await Task.WhenAll(tasks).ConfigureAwait(false);
 
                 #endregion
+
+                if (!successAll)
+                {
+                    result.Result = ScanResultType.NetworkError;
+                    result.Message = "At least one trigger could not be downloaded.";
+                    return result;
+                }
 
                 #region Save Triggers to DB
                 var sqlInsertTrigger = "INSERT INTO product_triggers (product_id, prefix, sequence, trigger, ogg_name, length_ms, location) VALUES " +

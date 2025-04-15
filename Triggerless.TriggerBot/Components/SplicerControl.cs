@@ -202,9 +202,7 @@ namespace Triggerless.TriggerBot
                 {
                     var inputFile = filename;
                     var outputFile = filename.Replace(".wav", ".ogg");
-                    var ffmpegLocation = Path.Combine(
-                        Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location.Replace(@"\bin\Debug", "")),
-                        "ffmpeg");
+                    var ffmpegLocation = Shared.FFmpegLocation;
                     int option = rdoAMS.Checked ? 0 :
                         rdoFMS.Checked ? 1 :
                         rdoHQM.Checked ? 2 :
@@ -454,12 +452,7 @@ namespace Triggerless.TriggerBot
         private void SplicerControl_Load(object sender, EventArgs e)
         {
             cboAudioLength.SelectedIndex = 0;
-            var docsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            _botPath = Path.Combine(docsPath, "Triggerbot");
-            if (!Directory.Exists(_botPath))
-            {
-                Directory.CreateDirectory(_botPath);
-            }
+            var docsPath = Shared.TriggerbotDocsPath;
             cboAudioLength.SelectedIndex = 1;
             var amtProfit = Shared.Paid ? 0 : 220;
             lblProfit.Text = $"Please note that @Triggers will make {amtProfit} cr profit for every CHKN you submit using this tool.";

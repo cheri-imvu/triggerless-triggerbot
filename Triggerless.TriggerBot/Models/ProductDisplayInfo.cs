@@ -22,6 +22,7 @@ namespace Triggerless.TriggerBot
         public string Prefix { get; set; }
         public string Trigger { get; set; }
         public double LengthMS { get; set; }
+        public string Location { get; set; }
         public string AddnTriggers { get; set; }
 
     }
