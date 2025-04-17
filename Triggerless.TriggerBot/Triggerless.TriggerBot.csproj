@@ -253,6 +253,10 @@
     <Compile Include="Components\LyricsCtrl.Designer.cs">
       <DependentUpon>LyricsCtrl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\LyricsStopwatch.cs" />
+    <Compile Include="Components\LyricsStopwatch.Designer.cs">
+      <DependentUpon>LyricsStopwatch.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\ProductOpenDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -282,6 +286,12 @@
     </Compile>
     <Compile Include="Forms\LogForm.Designer.cs">
       <DependentUpon>LogForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LyricsPaste.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LyricsPaste.Designer.cs">
+      <DependentUpon>LyricsPaste.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\TechSupport.cs">
       <SubType>Form</SubType>
@@ -380,6 +390,9 @@
     <EmbeddedResource Include="Forms\LogForm.resx">
       <DependentUpon>LogForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LyricsPaste.resx">
+      <DependentUpon>LyricsPaste.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\PlaybackForm.resx">
       <DependentUpon>PlaybackForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -455,6 +468,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\discord.png" />
+    <Content Include="Assets\nirvana.png" />
+    <Content Include="Assets\pause.png" />
     <Content Include="Assets\under-construction.png" />
     <Content Include="ffmpeg\ffmpeg.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

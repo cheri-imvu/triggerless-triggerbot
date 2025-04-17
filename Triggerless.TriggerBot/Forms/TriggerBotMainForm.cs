@@ -2,6 +2,7 @@
 
 using Dapper;
 using ManagedWinapi.Windows;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,6 +13,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using Triggerless.TriggerBot.Components;
 using Triggerless.TriggerBot.Forms;
 using Triggerless.TriggerBot.Models;
 using WindowsInput;
@@ -24,12 +26,20 @@ namespace Triggerless.TriggerBot
     {
         private Update _updater;
         private IInputSimulator _sim = new InputSimulator();
+        private LyricsStopwatch _lyricsStopwatch;
 
         public TriggerBotMainForm()
         {
             InitializeComponent();
             _updater = new Update();
             linkDiscord.Text = Discord.GetInviteLink().Result;
+            _lyricsStopwatch = new LyricsStopwatch();
+            _lyricsStopwatch.LyricReady += _lyricsStopwatch_LyricReady;
+        }
+
+        private void _lyricsStopwatch_LyricReady(object sender, LyricStopwatchEventArgs e)
+        {
+            DispatchText(e.Lyric);
         }
 
         #region IMVU Presence and Interation
@@ -299,8 +309,11 @@ namespace Triggerless.TriggerBot
                 lblLag.Text = _lagMS.ToString("0.00");
                 pnlLag.Visible = true;
                 cboAdditionalTriggers.Text = _currProductInfo.Triggers[_currTriggerIndex].AddnTriggers;
-            }
 
+                chkLyrics.Enabled = _currProductInfo.HasLyrics;
+                chkLyrics.Checked = _currProductInfo.HasLyrics;
+                _lyricsStopwatch.Product = _currProductInfo;
+            }
         }
 
         // Product Selection
@@ -444,6 +457,7 @@ namespace Triggerless.TriggerBot
             if (chkMinimizeOnPlay.Checked) WindowState = FormWindowState.Minimized;
             btnAbort.Enabled = true;
             btnPlay.Enabled = false;
+            if (chkLyrics.Checked) _lyricsStopwatch.Start();
         }
 
         private string GetTriggerLine()
@@ -620,8 +634,6 @@ namespace Triggerless.TriggerBot
             {
                 ScanInventory(null, null);
             }
-
-
         }
 
         private void lnkPage_Clicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -635,14 +647,8 @@ namespace Triggerless.TriggerBot
             var modalForm = new AddnTriggersForm() { Product = _currProductInfo };
             modalForm.ShowDialog(this);
             cboAdditionalTriggers.Text = _currProductInfo.Triggers[_currTriggerIndex].AddnTriggers;
-
         }
-
-        private void _splicer_Load(object sender, EventArgs e)
-        {
-
-        }
-
+        
         private void gridTriggers_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             int row = e.RowIndex; //header is -1, first row is 0
@@ -670,33 +676,10 @@ namespace Triggerless.TriggerBot
                 var dlgResult = f.ShowDialog(this);
             }
         }
-
         private void linkTimeItText_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (_currProductInfo != null)
-            {
-                var sb = new StringBuilder();
-                double seconds = 0F;
-                
-                foreach (var trigger in _currProductInfo.Triggers)
-                {
-                    var line = $"<{seconds.ToString("0.000")}>*imvu:trigger {trigger.Trigger}";
-                    sb.AppendLine(line);
-                    seconds += trigger.LengthMS / 1000;
-                }
-
-                var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                var targetFolder = Path.Combine(appData, "Triggerless", "Transfer", "Files");
-                if (!Directory.Exists(targetFolder)) Directory.CreateDirectory(targetFolder);
-                var guid = Guid.NewGuid().ToString("N").Substring(0, 10);
-                var filename = guid + ".txt";
-                var filepath = Path.Combine(targetFolder, filename);
-                File.WriteAllText(filepath, sb.ToString());
-
-                Process.Start(filepath);
-                if (chkKeepOnTop.Checked) this.WindowState = FormWindowState.Minimized;
-            }
-
+            if (chkKeepOnTop.Checked) this.WindowState = FormWindowState.Minimized;
+            Shared.GenerateTimeItText(_currProductInfo);
         }
 
         private void btnViewLog_Click(object sender, EventArgs e)
@@ -707,34 +690,9 @@ namespace Triggerless.TriggerBot
             f.ShowDialog();
         }
 
-        private void pnlTools_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void tableLayoutPanel2_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void linkDiscord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(linkDiscord.Text);
-        }
-
-        private void flowPanelDiscord_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void lblDiscord_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace Triggerless.TriggerBot
@@ -64,6 +65,14 @@ namespace Triggerless.TriggerBot
         [JsonProperty("tags")] public string[] Tags { get; set; }
         public string Location => string.IsNullOrWhiteSpace(Url) ? Name : Url;
     }
+
+    public class LyricEntry
+    {
+        public TimeSpan Time { get; set; }
+        public string Lyric { get; set; }
+    }
+
+
 
 
 }

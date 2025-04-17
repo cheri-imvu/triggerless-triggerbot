@@ -90,5 +90,29 @@ namespace Triggerless.TriggerBot
                 e.Handled = true;
             }
         }
+
+        private void ProductOpenDialog_Load(object sender, EventArgs e)
+        {
+        }
+
+        private void ProductOpenDialog_Shown(object sender, EventArgs e)
+        {
+            txtSearch.Focus();
+        }
+
+        private void pnlMiddle_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

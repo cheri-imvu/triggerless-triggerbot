@@ -1,6 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Windows.Forms;
 
 namespace Triggerless.TriggerBot
 {
@@ -78,5 +84,45 @@ namespace Triggerless.TriggerBot
             if (!Directory.Exists(directory)) Directory.CreateDirectory (directory);
         }
 
+        internal static void GenerateTimeItText(ProductDisplayInfo product)
+        {
+            if (product != null)
+            {
+                var sb = new StringBuilder();
+                double seconds = 0F;
+                var lyricList = new List<LyricEntry>();
+
+                foreach (var trigger in product.Triggers)
+                {
+                    lyricList.Add(new LyricEntry
+                    {
+                        Time = TimeSpan.FromSeconds(seconds),
+                        Lyric = $"*imvu:trigger {trigger.Trigger}"
+                    });
+                    var line = $"<{seconds.ToString("0.000")}>*imvu:trigger {trigger.Trigger}";
+                    seconds += trigger.LengthMS / 1000;
+                }
+
+                var tbLyricList = new List<LyricEntry>();
+                var tbName = Path.Combine(Shared.LyricSheetsPath, $"{product.Id}.lyrics");
+                if (File.Exists(tbName))
+                {
+                    tbLyricList = JsonConvert.DeserializeObject<List<LyricEntry>>(File.ReadAllText(tbName));
+                }
+                lyricList.AddRange(tbLyricList);
+                foreach (var lyricEntry in lyricList.OrderBy(l => l.Time))
+                {
+                    sb.AppendLine($"{lyricEntry.Time.TotalSeconds.ToString("0.000")} {lyricEntry.Lyric}");
+                }
+
+                var targetFolder = Shared.LyricSheetsPath;
+                var filename = $"{product.Id}.timeit.txt";
+                var filepath = Path.Combine(targetFolder, filename);
+                if (File.Exists(filepath)) File.Delete(filepath);
+                File.WriteAllText(filepath, sb.ToString());
+
+                Process.Start(filepath);
+            }
+        }
     }
 }

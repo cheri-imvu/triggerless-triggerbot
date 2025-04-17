@@ -162,10 +162,10 @@ namespace Triggerless.TriggerBot
             #region Audio Slicing
             var triggerPrefix = txtPrefix.Text.Trim();
             var increment = 1;
-            _outputPath = Path.Combine(_botPath, triggerPrefix);
+            _outputPath = Path.Combine(Shared.TriggerbotDocsPath, triggerPrefix);
             while (Directory.Exists(_outputPath))
             {
-                _outputPath = Path.Combine(_botPath, triggerPrefix + $"({increment})");
+                _outputPath = Path.Combine(Shared.TriggerbotDocsPath, triggerPrefix + $"({increment})");
                 increment++;
             }
             Directory.CreateDirectory(_outputPath);

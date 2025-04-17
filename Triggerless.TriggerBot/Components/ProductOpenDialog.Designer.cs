@@ -47,11 +47,12 @@
             // 
             // txtSearch
             // 
-            this.txtSearch.Font = new System.Drawing.Font("Lucida Sans", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSearch.Font = new System.Drawing.Font("Lucida Sans", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtSearch.Location = new System.Drawing.Point(96, 15);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(236, 23);
+            this.txtSearch.Size = new System.Drawing.Size(236, 25);
             this.txtSearch.TabIndex = 0;
+            this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
             this.txtSearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSearch_KeyPress);
             // 
             // btnSearch
@@ -67,11 +68,13 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Lucida Sans", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(54, 15);
+            this.label1.Size = new System.Drawing.Size(60, 17);
             this.label1.TabIndex = 2;
             this.label1.Text = "Search:";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // _flowProducts
             // 
@@ -165,6 +168,7 @@
             this.pnlMiddle.Name = "pnlMiddle";
             this.pnlMiddle.Size = new System.Drawing.Size(684, 518);
             this.pnlMiddle.TabIndex = 6;
+            this.pnlMiddle.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlMiddle_Paint);
             // 
             // ProductOpenDialog
             // 
@@ -182,6 +186,7 @@
             this.MinimizeBox = false;
             this.Name = "ProductOpenDialog";
             this.Text = "Choose Trigger Product";
+            this.Shown += new System.EventHandler(this.ProductOpenDialog_Shown);
             this.pnlBottom.ResumeLayout(false);
             this.pnlBottom.PerformLayout();
             this.pnlTop.ResumeLayout(false);

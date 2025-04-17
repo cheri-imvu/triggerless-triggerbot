@@ -369,7 +369,7 @@
             this.btnStart.ForeColor = System.Drawing.Color.White;
             this.btnStart.Location = new System.Drawing.Point(38, 315);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(122, 37);
+            this.btnStart.Size = new System.Drawing.Size(134, 37);
             this.btnStart.TabIndex = 47;
             this.btnStart.Text = "Let\'s Start!";
             this.btnStart.UseVisualStyleBackColor = false;
