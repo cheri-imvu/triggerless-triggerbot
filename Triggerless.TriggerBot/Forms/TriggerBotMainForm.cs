@@ -26,21 +26,14 @@ namespace Triggerless.TriggerBot
     {
         private Update _updater;
         private IInputSimulator _sim = new InputSimulator();
-        private LyricsStopwatch _lyricsStopwatch;
 
         public TriggerBotMainForm()
         {
             InitializeComponent();
             _updater = new Update();
             linkDiscord.Text = Discord.GetInviteLink().Result;
-            _lyricsStopwatch = new LyricsStopwatch();
-            _lyricsStopwatch.LyricReady += _lyricsStopwatch_LyricReady;
         }
 
-        private void _lyricsStopwatch_LyricReady(object sender, LyricStopwatchEventArgs e)
-        {
-            DispatchText(e.Lyric);
-        }
 
         #region IMVU Presence and Interation
         // IMVU presence
@@ -72,7 +65,7 @@ namespace Triggerless.TriggerBot
             }
             if (imvuProc == null)
             {
-                if (!_hush) MessageBox.Show("TriggerBot can't play the triggers if IMVU isn't running. LOL", 
+                if (!_hush) MessageBox.Show("TriggerBot can't play the triggers if IMVU isn't running. LOL",
                     "IMVU isn't running", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
@@ -105,7 +98,7 @@ namespace Triggerless.TriggerBot
             DispatchText(line);
 
         }
-#endregion
+        #endregion
 
         #region Inventory Update
         // Inventory Update
@@ -127,11 +120,11 @@ namespace Triggerless.TriggerBot
             if (InvokeRequired)
             {
                 Collector.CollectorEventHandler cb = new Collector.CollectorEventHandler(OnCollectorEvent);
-                Invoke(cb, new object[] {sender, e });
+                Invoke(cb, new object[] { sender, e });
                 return;
             }
 
-            if (e.TotalProducts > 0) 
+            if (e.TotalProducts > 0)
             {
                 progScan.Maximum = e.TotalProducts;
                 progScan.Value = e.CompletedProducts;
@@ -179,7 +172,7 @@ namespace Triggerless.TriggerBot
                 newControl.OnDeckLinkClicked += SendToDeck;
                 newControl.OnWearItem += WearItem;
                 newControl.OnExcludeSong += ExcludeSong;
-                
+
                 flowSearchResults.Controls.Add(newControl);
             }
             flowSearchResults.ResumeLayout(true);
@@ -212,7 +205,7 @@ namespace Triggerless.TriggerBot
 
             if (e.KeyChar == Convert.ToChar(Keys.Escape) && btnSearch.Enabled)
             {
-                txtSearch.Text = string.Empty; 
+                txtSearch.Text = string.Empty;
                 e.Handled = true;
             }
         }
@@ -280,7 +273,7 @@ namespace Triggerless.TriggerBot
         {
             var sizePanel = pnlBanner.Size;
             var sizeBanner = picBanner.Size;
-            var left = (sizePanel.Width - sizeBanner.Width)/2;
+            var left = (sizePanel.Width - sizeBanner.Width) / 2;
             picBanner.Location = new Point(left, picBanner.Location.Y);
         }
 
@@ -310,9 +303,12 @@ namespace Triggerless.TriggerBot
                 pnlLag.Visible = true;
                 cboAdditionalTriggers.Text = _currProductInfo.Triggers[_currTriggerIndex].AddnTriggers;
 
-                chkLyrics.Enabled = _currProductInfo.HasLyrics;
-                chkLyrics.Checked = _currProductInfo.HasLyrics;
-                _lyricsStopwatch.Product = _currProductInfo;
+                var hasLyrics = _currProductInfo.HasLyrics;
+                chkLyrics.Enabled = hasLyrics;
+                chkLyrics.Checked = hasLyrics;
+                _lyrics = hasLyrics ? _currProductInfo.Lyrics : null;
+
+
             }
         }
 
@@ -363,6 +359,11 @@ namespace Triggerless.TriggerBot
         private int _currTriggerIndex;
         private int _numberOfTriggers;
         private List<string> _usedAdditionals = new List<string>();
+        private int _lyricsIndex = -1;
+        private List<LyricEntry> _lyrics = null;
+        private int _lyricsLagMS = 0;
+
+        private object _kbdLock = new object();
 
         private void DispatchText(string text)
         {
@@ -376,22 +377,25 @@ namespace Triggerless.TriggerBot
             // New Version
 
             // get current clipboard text
-            string currClipText = string.Empty;
-            if (Clipboard.ContainsText())
+            lock (_kbdLock)
             {
-                currClipText = Clipboard.GetText();
-            }
-            _sim.Keyboard.KeyPress(KeyCode.HOME);
-            _sim.Keyboard.ModifiedKeyStroke(KeyCode.SHIFT, KeyCode.END);
-            _sim.Keyboard.ModifiedKeyStroke(KeyCode.CONTROL, KeyCode.VK_X);
-            _sim.Keyboard.TextEntry(text);
-            _sim.Keyboard.KeyPress(KeyCode.RETURN);
-            if (Clipboard.ContainsText())
-            {
-                string prevText =  Clipboard.GetText();
-                if (prevText != currClipText && !String.IsNullOrEmpty(prevText))
+                string currClipText = string.Empty;
+                if (Clipboard.ContainsText())
                 {
-                    _sim.Keyboard.TextEntry(prevText);
+                    currClipText = Clipboard.GetText();
+                }
+                _sim.Keyboard.KeyPress(KeyCode.HOME);
+                _sim.Keyboard.ModifiedKeyStroke(KeyCode.SHIFT, KeyCode.END);
+                _sim.Keyboard.ModifiedKeyStroke(KeyCode.CONTROL, KeyCode.VK_X);
+                _sim.Keyboard.TextEntry(text);
+                _sim.Keyboard.KeyPress(KeyCode.RETURN);
+                if (Clipboard.ContainsText())
+                {
+                    string prevText = Clipboard.GetText();
+                    if (prevText != currClipText && !String.IsNullOrEmpty(prevText))
+                    {
+                        _sim.Keyboard.TextEntry(prevText);
+                    }
                 }
             }
         }
@@ -413,7 +417,8 @@ namespace Triggerless.TriggerBot
 
         public void PullTrigger()
         {
-            _triggerTimer.Interval = _currProductInfo.Triggers[_currTriggerIndex].LengthMS - _lagMS;
+            var lagToUse = (_currTriggerIndex == 0) ? 0 : _lagMS;
+            _triggerTimer.Interval = _currProductInfo.Triggers[_currTriggerIndex].LengthMS - lagToUse;
             _triggerTimer.Start();
             _triggerStartTime = DateTime.Now;
             DispatchText(GetTriggerLine());
@@ -457,7 +462,12 @@ namespace Triggerless.TriggerBot
             if (chkMinimizeOnPlay.Checked) WindowState = FormWindowState.Minimized;
             btnAbort.Enabled = true;
             btnPlay.Enabled = false;
-            if (chkLyrics.Checked) _lyricsStopwatch.Start();
+            if (chkLyrics.Checked)
+            {
+                _lyricsIndex = 0;
+                _lyricTimer.Interval = (int)_lyrics[_lyricsIndex].Time.TotalMilliseconds - _lyricsLagMS;
+                _lyricTimer.Start();
+            }
         }
 
         private string GetTriggerLine()
@@ -503,7 +513,7 @@ namespace Triggerless.TriggerBot
 
             string result = _currProductInfo.Triggers[_currTriggerIndex].Trigger;
             if (hideTriggers) result = result.Replace("/", "");
-            
+
             int commaPos = result.IndexOf(",");
             if (commaPos == -1) return result;
             return result.Substring(0, commaPos);
@@ -511,7 +521,7 @@ namespace Triggerless.TriggerBot
 
         private void AbortPlaying(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to abort?", "Abort Trigger Play?", 
+            if (MessageBox.Show("Are you sure you want to abort?", "Abort Trigger Play?",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 chkAutoCue.Checked = false;
@@ -532,6 +542,9 @@ namespace Triggerless.TriggerBot
             pnlLag.Visible = false;
             lblCurrPlayingTrigger.Text = "--Pending--";
             progScan.Value = 0;
+
+            _lyricTimer.Enabled = false;
+            _lyricsIndex = -1;
 
             if (productOnDeck.Visible && chkAutoCue.Checked)
             {
@@ -621,11 +634,11 @@ namespace Triggerless.TriggerBot
 
         #endregion
 
-        
+
         private void RescanAll(object sender, EventArgs e)
         {
             var msg = "Are you sure you want to rescan? This will delete all Triggerbot data and scan the inventory and web all over again, and could take some time./n/nAre you certain?";
-            var dlgResult = MessageBox.Show(msg, "Rescan All Data?", 
+            var dlgResult = MessageBox.Show(msg, "Rescan All Data?",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
             if (dlgResult == DialogResult.No) { return; }
 
@@ -648,7 +661,7 @@ namespace Triggerless.TriggerBot
             modalForm.ShowDialog(this);
             cboAdditionalTriggers.Text = _currProductInfo.Triggers[_currTriggerIndex].AddnTriggers;
         }
-        
+
         private void gridTriggers_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             int row = e.RowIndex; //header is -1, first row is 0
@@ -666,7 +679,7 @@ namespace Triggerless.TriggerBot
                 {
                     _collector.DeepScanThese(f.SelectedProductIds);
                 }
-            }                
+            }
         }
 
         private void btnTechSupport_Click(object sender, EventArgs e)
@@ -693,6 +706,45 @@ namespace Triggerless.TriggerBot
         private void linkDiscord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(linkDiscord.Text);
+        }
+
+        private void _lyricTimer_Tick(object sender, EventArgs e)
+        {
+            if (_lyricsIndex == -1) return;
+            if (_lyricsIndex == _lyrics.Count - 1)
+            {
+                _lyricTimer.Stop();
+                var lyric = _lyrics[_lyricsIndex].Lyric;
+                DispatchText(lyric);
+                _lyricsIndex = -1;
+                _lyricTimer.Interval = 1000;
+            }
+            if (_lyricsIndex > -1 && _lyricsIndex < _lyrics.Count - 1)
+            {
+                _lyricTimer.Stop();
+                var lyric = _lyrics[_lyricsIndex].Lyric;
+                DispatchText(lyric);
+                _lyricsIndex++;
+                double ms = (_lyrics[_lyricsIndex].Time - _lyrics[_lyricsIndex - 1].Time).TotalMilliseconds;
+                double multiplier = GetMultiplier(
+                    _lyrics[_lyricsIndex].Time, 
+                    _lyrics[_lyricsIndex - 1].Time
+                );
+                _lyricTimer.Interval = (int)(ms * multiplier - _lagMS);
+                _lyricTimer.Start();
+            }
+        }
+
+        private double GetMultiplier(TimeSpan future, TimeSpan now)
+        {
+            // a little math here, the longer the difference between triggers,
+            // the closer to 1 the multiplier should be.
+            double b = 0.92; // this is the multiplier at 0 secs
+            double rise = 1.55; // this controls how fast we rise toward the asymptote
+            double secFuture = future.TotalSeconds;
+            double secNow = now.TotalSeconds;
+            double secDuration = secFuture - secNow;
+            return 1 - (1 - b) * Math.Exp(-rise);
         }
     }
 }

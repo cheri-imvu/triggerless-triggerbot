@@ -72,8 +72,11 @@ namespace Triggerless.TriggerBot.Components
 
         private void btnSelectProduct_Click(object sender, EventArgs e)
         {
+            var parentTopMost = ParentForm.TopMost;
+            ParentForm.TopMost = false;
             var dlg = new ProductOpenDialog();
             var result = dlg.ShowDialog();
+            ParentForm.TopMost = parentTopMost;
             if (result == DialogResult.OK && dlg.SelectedProduct != null)
             {
                 _product = dlg.SelectedProduct;

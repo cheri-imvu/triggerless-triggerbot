@@ -38,8 +38,10 @@
             this.linkWearItem = new System.Windows.Forms.LinkLabel();
             this.picDeleteItem = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.picLips = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picDeleteItem)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picLips)).BeginInit();
             this.SuspendLayout();
             // 
             // picProductImage
@@ -125,12 +127,23 @@
             this.picDeleteItem.TabStop = false;
             this.picDeleteItem.Click += new System.EventHandler(this.ExcludeSong);
             // 
+            // picLips
+            // 
+            this.picLips.Image = ((System.Drawing.Image)(resources.GetObject("picLips.Image")));
+            this.picLips.Location = new System.Drawing.Point(334, 35);
+            this.picLips.Name = "picLips";
+            this.picLips.Size = new System.Drawing.Size(24, 23);
+            this.picLips.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.picLips.TabIndex = 7;
+            this.picLips.TabStop = false;
+            // 
             // ProductCtrl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(248)))));
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.picLips);
             this.Controls.Add(this.picDeleteItem);
             this.Controls.Add(this.linkWearItem);
             this.Controls.Add(this.linkOnDeck);
@@ -144,6 +157,7 @@
             this.Size = new System.Drawing.Size(376, 87);
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picDeleteItem)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picLips)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -159,5 +173,6 @@
         private System.Windows.Forms.LinkLabel linkWearItem;
         private System.Windows.Forms.PictureBox picDeleteItem;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.PictureBox picLips;
     }
 }

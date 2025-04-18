@@ -128,6 +128,7 @@ namespace Triggerless.TriggerBot
             this._triggerTimer = new System.Timers.Timer();
             this._progressTimer = new System.Windows.Forms.Timer(this.components);
             this._collector = new Triggerless.TriggerBot.Collector();
+            this._lyricTimer = new System.Windows.Forms.Timer(this.components);
             this.tabAppContainer.SuspendLayout();
             this.tabPlayback.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
@@ -1293,6 +1294,10 @@ namespace Triggerless.TriggerBot
             // 
             this._collector.CollectorEvent += new Triggerless.TriggerBot.Collector.CollectorEventHandler(this.OnCollectorEvent);
             // 
+            // _lyricTimer
+            // 
+            this._lyricTimer.Tick += new System.EventHandler(this._lyricTimer_Tick);
+            // 
             // TriggerBotMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -1442,6 +1447,7 @@ namespace Triggerless.TriggerBot
         private System.Windows.Forms.Label lblDiscord;
         private System.Windows.Forms.PictureBox picDiscord;
         private System.Windows.Forms.CheckBox chkLyrics;
+        private System.Windows.Forms.Timer _lyricTimer;
     }
 }
 

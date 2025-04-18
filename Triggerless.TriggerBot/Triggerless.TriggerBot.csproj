@@ -253,10 +253,6 @@
     <Compile Include="Components\LyricsCtrl.Designer.cs">
       <DependentUpon>LyricsCtrl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Components\LyricsStopwatch.cs" />
-    <Compile Include="Components\LyricsStopwatch.Designer.cs">
-      <DependentUpon>LyricsStopwatch.cs</DependentUpon>
-    </Compile>
     <Compile Include="Components\ProductOpenDialog.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -84,6 +84,8 @@ namespace Triggerless.TriggerBot
                         var lastTrigger = triggers.LastOrDefault();
                         lblTriggers.Text = $"Triggers: {firstTrigger} - {lastTrigger}";
                     }
+
+                    picLips.Visible = value.HasLyrics;
                 }
                 _productInfo = value;
             }
