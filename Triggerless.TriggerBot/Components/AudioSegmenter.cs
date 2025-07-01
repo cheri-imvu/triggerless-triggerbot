@@ -127,7 +127,7 @@ namespace Triggerless.TriggerBot
                 if (duration < 0.5)
                     continue;
 
-                string outputFile = Path.Combine(outputDir, string.Format("{0}{1}.wav", filenamePrefix, successfulExports + 1));
+                string outputFile = Path.Combine(outputDir, string.Format("{0}{1:000}.wav", filenamePrefix, successfulExports + 1));
 
                 var psi = new ProcessStartInfo
                 {
