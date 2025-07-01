@@ -1,19 +1,12 @@
-﻿
-
-using Dapper;
-using ManagedWinapi.Windows;
-using Newtonsoft.Json;
+﻿using ManagedWinapi.Windows;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Triggerless.TriggerBot.Components;
 using Triggerless.TriggerBot.Forms;
 using Triggerless.TriggerBot.Models;
 using WindowsInput;
@@ -37,7 +30,6 @@ namespace Triggerless.TriggerBot
 
         #region IMVU Presence and Interation
         // IMVU presence
-        private bool _hush = false;
         private IntPtr _imvuMainWindow = IntPtr.Zero;
         private IntPtr _imvuChatWindow = IntPtr.Zero;
 
@@ -50,7 +42,7 @@ namespace Triggerless.TriggerBot
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool BringWindowToTop(IntPtr hWnd);
 
-        private bool CheckForImvu()
+        private bool CheckForImvu(bool force)
         {
             _imvuChatWindow = IntPtr.Zero;
             Process[] p = Process.GetProcesses();
@@ -63,9 +55,10 @@ namespace Triggerless.TriggerBot
                     break;
                 }
             }
+
             if (imvuProc == null)
             {
-                if (!_hush) MessageBox.Show("TriggerBot can't play the triggers if IMVU isn't running. LOL",
+                if (force) MessageBox.Show("TriggerBot can't play the triggers if IMVU isn't running. LOL",
                     "IMVU isn't running", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
@@ -111,7 +104,7 @@ namespace Triggerless.TriggerBot
             btnSearch.Enabled = true;
             pnlCollector.SendToBack();
             DoSearch(null, null);
-            CheckForImvu();
+            CheckForImvu(false);
         }
 
         // Inventory Update
@@ -288,7 +281,7 @@ namespace Triggerless.TriggerBot
         // Product Selection
         private void MoveToPlaying(object sender, EventArgs e)
         {
-            if (!_isPlaying && (CheckForImvu() || _hush))
+            if (!_isPlaying && (CheckForImvu(true)))
             {
                 productOnDeck.Visible = false;
                 btnLoadToPlaying.Enabled = false;
@@ -417,7 +410,11 @@ namespace Triggerless.TriggerBot
 
         public void PullTrigger()
         {
-            var lagToUse = (_currTriggerIndex == 0) ? 0 : _lagMS;
+            var lagToUse = _lagMS;
+            if (_currTriggerIndex == 0)
+            {
+                lagToUse = -200;
+            }
             _triggerTimer.Interval = _currProductInfo.Triggers[_currTriggerIndex].LengthMS - lagToUse;
             _triggerTimer.Start();
             _triggerStartTime = DateTime.Now;
@@ -563,6 +560,7 @@ namespace Triggerless.TriggerBot
         private const int LAG_TICKS_PER_MS = 4;
 
         private double _lagMS = LAG_MS_DEFAULT;
+        private double _tempLyricLagMS = 0;
         private DateTime _triggerStartTime = DateTime.MinValue;
 
         private int LagMsToTrackBarValue()
@@ -715,7 +713,7 @@ namespace Triggerless.TriggerBot
             {
                 _lyricTimer.Stop();
                 var lyric = _lyrics[_lyricsIndex].Lyric;
-                DispatchText(lyric);
+                if (chkLyrics.Checked) DispatchText(lyric);
                 _lyricsIndex = -1;
                 _lyricTimer.Interval = 1000;
             }
@@ -723,14 +721,19 @@ namespace Triggerless.TriggerBot
             {
                 _lyricTimer.Stop();
                 var lyric = _lyrics[_lyricsIndex].Lyric;
-                DispatchText(lyric);
+                if (chkLyrics.Checked) DispatchText(lyric);
                 _lyricsIndex++;
                 double ms = (_lyrics[_lyricsIndex].Time - _lyrics[_lyricsIndex - 1].Time).TotalMilliseconds;
                 double multiplier = GetMultiplier(
-                    _lyrics[_lyricsIndex].Time, 
+                    _lyrics[_lyricsIndex].Time,
                     _lyrics[_lyricsIndex - 1].Time
                 );
-                _lyricTimer.Interval = (int)(ms * multiplier - _lagMS);
+                int newInterval = (int)(ms * multiplier - _lagMS - _tempLyricLagMS);
+                if (newInterval > 0)
+                {
+                    _lyricTimer.Interval = (int)(ms * multiplier - _lagMS - _tempLyricLagMS);
+                }
+                Interlocked.Exchange(ref _tempLyricLagMS, 0);
                 _lyricTimer.Start();
             }
         }
@@ -745,6 +748,16 @@ namespace Triggerless.TriggerBot
             double secNow = now.TotalSeconds;
             double secDuration = secFuture - secNow;
             return 1 - (1 - b) * Math.Exp(-rise);
+        }
+
+        private void btnAddLyricLag_Click(object sender, EventArgs e)
+        {
+            Interlocked.Exchange(ref _tempLyricLagMS, _tempLyricLagMS + 500);
+        }
+
+        private void tabAppContainer_Selected(object sender, TabControlEventArgs e)
+        {
+            this.TopMost = (e.TabPage == tabPlayback) && chkKeepOnTop.Checked;
         }
     }
 }

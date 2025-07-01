@@ -34,6 +34,7 @@
             this.lblProductName = new System.Windows.Forms.Label();
             this.lblCreatorName = new System.Windows.Forms.Label();
             this.pnlTop = new System.Windows.Forms.Panel();
+            this.btnStop = new System.Windows.Forms.Button();
             this.lblTimer = new System.Windows.Forms.Label();
             this.btnPause = new System.Windows.Forms.Button();
             this.btnPlay = new System.Windows.Forms.Button();
@@ -49,11 +50,18 @@
             this.mnuDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuInsertBelow = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlControls = new System.Windows.Forms.Panel();
+            this.btnDeleteLyrics = new System.Windows.Forms.Button();
+            this.lblNudge = new System.Windows.Forms.Label();
+            this.btnMsMinus = new System.Windows.Forms.Button();
+            this.btnMsPlus = new System.Windows.Forms.Button();
+            this.lblMS = new System.Windows.Forms.Label();
+            this.txtMS = new System.Windows.Forms.TextBox();
+            this.btnTimeIt = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnGetLyrics = new System.Windows.Forms.Button();
             this._timer = new System.Windows.Forms.Timer(this.components);
-            this.btnTimeIt = new System.Windows.Forms.Button();
-            this.btnStop = new System.Windows.Forms.Button();
+            this.splitter = new System.Windows.Forms.SplitContainer();
+            this.ctlNeedsSave = new Triggerless.TriggerBot.Components.DirtyControl();
             this.pnlTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).BeginInit();
             this.pnlWave.SuspendLayout();
@@ -62,6 +70,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridLyrics)).BeginInit();
             this.ctxMenu.SuspendLayout();
             this.pnlControls.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
+            this.splitter.Panel1.SuspendLayout();
+            this.splitter.Panel2.SuspendLayout();
+            this.splitter.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnSelectProduct
@@ -79,18 +91,18 @@
             this.lblProductName.AutoSize = true;
             this.lblProductName.Location = new System.Drawing.Point(301, 8);
             this.lblProductName.Name = "lblProductName";
-            this.lblProductName.Size = new System.Drawing.Size(202, 17);
+            this.lblProductName.Size = new System.Drawing.Size(199, 17);
             this.lblProductName.TabIndex = 3;
-            this.lblProductName.Text = "My Awesome Trigger Tune";
+            this.lblProductName.Text = "Non-existent Trigger Tune";
             // 
             // lblCreatorName
             // 
             this.lblCreatorName.AutoSize = true;
             this.lblCreatorName.Location = new System.Drawing.Point(301, 31);
             this.lblCreatorName.Name = "lblCreatorName";
-            this.lblCreatorName.Size = new System.Drawing.Size(130, 17);
+            this.lblCreatorName.Size = new System.Drawing.Size(105, 17);
             this.lblCreatorName.TabIndex = 4;
-            this.lblCreatorName.Text = "by TriggerQueen";
+            this.lblCreatorName.Text = "by NoCreator";
             // 
             // pnlTop
             // 
@@ -107,6 +119,17 @@
             this.pnlTop.Name = "pnlTop";
             this.pnlTop.Size = new System.Drawing.Size(1053, 93);
             this.pnlTop.TabIndex = 6;
+            this.pnlTop.MouseDown += new System.Windows.Forms.MouseEventHandler(this.WaveMouseDown);
+            // 
+            // btnStop
+            // 
+            this.btnStop.Image = ((System.Drawing.Image)(resources.GetObject("btnStop.Image")));
+            this.btnStop.Location = new System.Drawing.Point(666, 17);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(53, 50);
+            this.btnStop.TabIndex = 8;
+            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
             // lblTimer
             // 
@@ -123,7 +146,7 @@
             // btnPause
             // 
             this.btnPause.Image = ((System.Drawing.Image)(resources.GetObject("btnPause.Image")));
-            this.btnPause.Location = new System.Drawing.Point(598, 17);
+            this.btnPause.Location = new System.Drawing.Point(607, 17);
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(53, 50);
             this.btnPause.TabIndex = 6;
@@ -133,7 +156,7 @@
             // btnPlay
             // 
             this.btnPlay.Image = ((System.Drawing.Image)(resources.GetObject("btnPlay.Image")));
-            this.btnPlay.Location = new System.Drawing.Point(539, 17);
+            this.btnPlay.Location = new System.Drawing.Point(548, 17);
             this.btnPlay.Name = "btnPlay";
             this.btnPlay.Size = new System.Drawing.Size(53, 50);
             this.btnPlay.TabIndex = 5;
@@ -170,14 +193,16 @@
             // pnlGrid
             // 
             this.pnlGrid.Controls.Add(this.gridLyrics);
+            this.pnlGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlGrid.Font = new System.Drawing.Font("Lucida Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pnlGrid.Location = new System.Drawing.Point(16, 137);
+            this.pnlGrid.Location = new System.Drawing.Point(0, 0);
             this.pnlGrid.Name = "pnlGrid";
-            this.pnlGrid.Size = new System.Drawing.Size(793, 474);
+            this.pnlGrid.Size = new System.Drawing.Size(850, 530);
             this.pnlGrid.TabIndex = 8;
             // 
             // gridLyrics
             // 
+            this.gridLyrics.AllowUserToResizeRows = false;
             this.gridLyrics.BackgroundColor = System.Drawing.Color.LightSeaGreen;
             this.gridLyrics.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridLyrics.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -189,8 +214,9 @@
             this.gridLyrics.Margin = new System.Windows.Forms.Padding(12);
             this.gridLyrics.Name = "gridLyrics";
             this.gridLyrics.RowTemplate.Height = 26;
-            this.gridLyrics.Size = new System.Drawing.Size(793, 474);
+            this.gridLyrics.Size = new System.Drawing.Size(850, 530);
             this.gridLyrics.TabIndex = 0;
+            this.gridLyrics.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridLyrics_CellValueChanged);
             this.gridLyrics.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gridLyrics_MouseDown);
             // 
             // Column1
@@ -206,7 +232,8 @@
             this.colLyric.HeaderText = "Lyric (Ctrl-B to set times)";
             this.colLyric.MinimumWidth = 25;
             this.colLyric.Name = "colLyric";
-            this.colLyric.Width = 600;
+            this.colLyric.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.colLyric.Width = 750;
             // 
             // ctxMenu
             // 
@@ -241,13 +268,88 @@
             // 
             // pnlControls
             // 
+            this.pnlControls.Controls.Add(this.btnDeleteLyrics);
+            this.pnlControls.Controls.Add(this.lblNudge);
+            this.pnlControls.Controls.Add(this.ctlNeedsSave);
+            this.pnlControls.Controls.Add(this.btnMsMinus);
+            this.pnlControls.Controls.Add(this.btnMsPlus);
+            this.pnlControls.Controls.Add(this.lblMS);
+            this.pnlControls.Controls.Add(this.txtMS);
             this.pnlControls.Controls.Add(this.btnTimeIt);
             this.pnlControls.Controls.Add(this.btnSave);
             this.pnlControls.Controls.Add(this.btnGetLyrics);
-            this.pnlControls.Location = new System.Drawing.Point(825, 140);
+            this.pnlControls.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlControls.Location = new System.Drawing.Point(0, 0);
             this.pnlControls.Name = "pnlControls";
-            this.pnlControls.Size = new System.Drawing.Size(184, 470);
+            this.pnlControls.Size = new System.Drawing.Size(199, 530);
             this.pnlControls.TabIndex = 9;
+            // 
+            // btnDeleteLyrics
+            // 
+            this.btnDeleteLyrics.Location = new System.Drawing.Point(14, 265);
+            this.btnDeleteLyrics.Name = "btnDeleteLyrics";
+            this.btnDeleteLyrics.Size = new System.Drawing.Size(156, 33);
+            this.btnDeleteLyrics.TabIndex = 9;
+            this.btnDeleteLyrics.Text = "Delete Lyrics";
+            this.btnDeleteLyrics.UseVisualStyleBackColor = true;
+            this.btnDeleteLyrics.Click += new System.EventHandler(this.btnDeleteLyrics_Click);
+            // 
+            // lblNudge
+            // 
+            this.lblNudge.AutoSize = true;
+            this.lblNudge.Location = new System.Drawing.Point(12, 173);
+            this.lblNudge.Name = "lblNudge";
+            this.lblNudge.Size = new System.Drawing.Size(60, 17);
+            this.lblNudge.TabIndex = 8;
+            this.lblNudge.Text = "Nudge:";
+            // 
+            // btnMsMinus
+            // 
+            this.btnMsMinus.Location = new System.Drawing.Point(146, 194);
+            this.btnMsMinus.Name = "btnMsMinus";
+            this.btnMsMinus.Size = new System.Drawing.Size(29, 26);
+            this.btnMsMinus.TabIndex = 6;
+            this.btnMsMinus.Text = "-";
+            this.btnMsMinus.UseVisualStyleBackColor = true;
+            this.btnMsMinus.Click += new System.EventHandler(this.btnMsMinus_Click);
+            // 
+            // btnMsPlus
+            // 
+            this.btnMsPlus.Location = new System.Drawing.Point(113, 194);
+            this.btnMsPlus.Name = "btnMsPlus";
+            this.btnMsPlus.Size = new System.Drawing.Size(29, 26);
+            this.btnMsPlus.TabIndex = 5;
+            this.btnMsPlus.Text = "+";
+            this.btnMsPlus.UseVisualStyleBackColor = true;
+            this.btnMsPlus.Click += new System.EventHandler(this.btnMsPlus_Click);
+            // 
+            // lblMS
+            // 
+            this.lblMS.AutoSize = true;
+            this.lblMS.Location = new System.Drawing.Point(72, 199);
+            this.lblMS.Name = "lblMS";
+            this.lblMS.Size = new System.Drawing.Size(28, 17);
+            this.lblMS.TabIndex = 4;
+            this.lblMS.Text = "ms";
+            // 
+            // txtMS
+            // 
+            this.txtMS.Location = new System.Drawing.Point(14, 196);
+            this.txtMS.Name = "txtMS";
+            this.txtMS.Size = new System.Drawing.Size(52, 25);
+            this.txtMS.TabIndex = 3;
+            this.txtMS.Text = "100";
+            this.txtMS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // btnTimeIt
+            // 
+            this.btnTimeIt.Location = new System.Drawing.Point(14, 122);
+            this.btnTimeIt.Name = "btnTimeIt";
+            this.btnTimeIt.Size = new System.Drawing.Size(156, 33);
+            this.btnTimeIt.TabIndex = 2;
+            this.btnTimeIt.Text = "Export TimeIt";
+            this.btnTimeIt.UseVisualStyleBackColor = true;
+            this.btnTimeIt.Click += new System.EventHandler(this.btnTimeIt_Click);
             // 
             // btnSave
             // 
@@ -273,33 +375,40 @@
             // 
             this._timer.Tick += new System.EventHandler(this.UpdateTimeLabel);
             // 
-            // btnTimeIt
+            // splitter
             // 
-            this.btnTimeIt.Location = new System.Drawing.Point(14, 122);
-            this.btnTimeIt.Name = "btnTimeIt";
-            this.btnTimeIt.Size = new System.Drawing.Size(156, 33);
-            this.btnTimeIt.TabIndex = 2;
-            this.btnTimeIt.Text = "Export TimeIt";
-            this.btnTimeIt.UseVisualStyleBackColor = true;
-            this.btnTimeIt.Click += new System.EventHandler(this.btnTimeIt_Click);
+            this.splitter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitter.Location = new System.Drawing.Point(0, 131);
+            this.splitter.Name = "splitter";
             // 
-            // btnStop
+            // splitter.Panel1
             // 
-            this.btnStop.Image = ((System.Drawing.Image)(resources.GetObject("btnStop.Image")));
-            this.btnStop.Location = new System.Drawing.Point(657, 17);
-            this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(53, 50);
-            this.btnStop.TabIndex = 8;
-            this.btnStop.UseVisualStyleBackColor = true;
-            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+            this.splitter.Panel1.Controls.Add(this.pnlGrid);
+            this.splitter.Panel1MinSize = 400;
+            // 
+            // splitter.Panel2
+            // 
+            this.splitter.Panel2.Controls.Add(this.pnlControls);
+            this.splitter.Size = new System.Drawing.Size(1053, 530);
+            this.splitter.SplitterDistance = 850;
+            this.splitter.TabIndex = 10;
+            // 
+            // ctlNeedsSave
+            // 
+            this.ctlNeedsSave.BackColor = System.Drawing.Color.Transparent;
+            this.ctlNeedsSave.Dirty = false;
+            this.ctlNeedsSave.Location = new System.Drawing.Point(180, 71);
+            this.ctlNeedsSave.Margin = new System.Windows.Forms.Padding(0);
+            this.ctlNeedsSave.Name = "ctlNeedsSave";
+            this.ctlNeedsSave.Size = new System.Drawing.Size(24, 24);
+            this.ctlNeedsSave.TabIndex = 7;
             // 
             // LyricsCtrl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MediumAquamarine;
-            this.Controls.Add(this.pnlControls);
-            this.Controls.Add(this.pnlGrid);
+            this.Controls.Add(this.splitter);
             this.Controls.Add(this.pnlWave);
             this.Controls.Add(this.pnlTop);
             this.Font = new System.Drawing.Font("Lucida Sans", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -307,7 +416,6 @@
             this.Name = "LyricsCtrl";
             this.Size = new System.Drawing.Size(1053, 661);
             this.Load += new System.EventHandler(this.LyricsCtrl_Load);
-            this.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.LyricsCtrl_ControlRemoved);
             this.pnlTop.ResumeLayout(false);
             this.pnlTop.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).EndInit();
@@ -317,6 +425,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridLyrics)).EndInit();
             this.ctxMenu.ResumeLayout(false);
             this.pnlControls.ResumeLayout(false);
+            this.pnlControls.PerformLayout();
+            this.splitter.Panel1.ResumeLayout(false);
+            this.splitter.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitter)).EndInit();
+            this.splitter.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -338,13 +451,21 @@
         private System.Windows.Forms.Timer _timer;
         private System.Windows.Forms.Label lblTimer;
         private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colLyric;
         private System.Windows.Forms.ContextMenuStrip ctxMenu;
         private System.Windows.Forms.ToolStripMenuItem mnuInsertAbove;
         private System.Windows.Forms.ToolStripMenuItem mnuDelete;
         private System.Windows.Forms.ToolStripMenuItem mnuInsertBelow;
         private System.Windows.Forms.Button btnTimeIt;
         private System.Windows.Forms.Button btnStop;
+        private System.Windows.Forms.Button btnMsMinus;
+        private System.Windows.Forms.Button btnMsPlus;
+        private System.Windows.Forms.Label lblMS;
+        private System.Windows.Forms.TextBox txtMS;
+        private System.Windows.Forms.SplitContainer splitter;
+        private DirtyControl ctlNeedsSave;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colLyric;
+        private System.Windows.Forms.Label lblNudge;
+        private System.Windows.Forms.Button btnDeleteLyrics;
     }
 }

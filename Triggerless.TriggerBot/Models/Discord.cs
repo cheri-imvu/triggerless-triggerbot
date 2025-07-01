@@ -1,39 +1,12 @@
-﻿using DSharpPlus.Entities;
-using DSharpPlus;
-using System.Threading.Tasks;
-using System;
+﻿using System;
 using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Triggerless.TriggerBot.Models
 {
-    public class Discord: IDisposable
+    public class Discord
     {
-        private static DiscordClient _client;
-        private static ulong _channelId = 1360224553208516638;
-
-        public static async Task<int> CleanupChannel()
-        {
-            if (_client == null)
-            {
-                await GetClient().ConfigureAwait(false);
-            }
-            DiscordChannel channel = await _client.GetChannelAsync(_channelId);
-            var messages = await channel.GetMessagesAsync(1000).ConfigureAwait(false);
-            foreach (var message in messages)
-            { 
-                if (message.Embeds.Count > 0) 
-                {
-                    var embed = message.Embeds[0];
-                    if (embed.Title == "Scan Failure")
-                    {
-                        await message.DeleteAsync("bug message").ConfigureAwait(false);
-                    }
-                }
-        
-            }
-            return 0;
-        }
-
         public static async Task<string> GetInviteLink()
         {
             string result = string.Empty;
@@ -44,77 +17,55 @@ namespace Triggerless.TriggerBot.Models
             }
             return result;
         }
-        public static async Task<int> SendMessage(string title, string body)
+
+        private static async Task<int> SendMessageToBotAsync(string apiUrl, string title, string body)
         {
-            try
+            var result = -1;
+            var payload = new
             {
-                if (_client == null)
-                {
-                    await GetClient().ConfigureAwait(false);
-                }
-
-                DiscordEmbedBuilder embed = new DiscordEmbedBuilder
-                {
-                    Color = DiscordColor.HotPink,
-                    Title = title,
-                    Description = body
-                };
-
-                DiscordChannel channel = await _client.GetChannelAsync(_channelId);
-
-                await channel.SendMessageAsync(embed).ConfigureAwait(false);
-
-                return 0;
-            }
-            catch (Exception ex) 
-            { 
-                return -1;
-            }
-
-        }
-
-        private static async Task GetClient()
-        {
-            string token;
-            using (var cxn = new SQLiteDataAccess().GetAppCacheCxn())
-            {
-                cxn.Open();
-                var sql = "SELECT value FROM settings WHERE setting='bot'";
-                var cmd = cxn.CreateCommand();
-                cmd.CommandText = sql;
-                var result = cmd.ExecuteScalar(System.Data.CommandBehavior.SingleResult);
-                token = result.ToString();
-            }
-
-            var discordConfig = new DiscordConfiguration()
-            {
-                Intents = DiscordIntents.All,
-                Token = token,
-                TokenType = TokenType.Bot,
-                AutoReconnect = true,
+                title = title,
+                body = body
             };
 
-            _client = new DiscordClient(discordConfig);
-            _client.Ready += (sender, args) => Task.CompletedTask;
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            await _client.ConnectAsync().ConfigureAwait(false);
-        }
-
-        public static void ShutdownClient()
-        {
-            _client.DisconnectAsync().RunSynchronously();
-            _client.Dispose();
-            _client = null;
-        }
-
-        public void Dispose()
-        {
-            if (_client != null)
+            using (var client = new HttpClient())
             {
-                _client.DisconnectAsync().RunSynchronously();
-                _client.Dispose();
-                _client = null;
+                try
+                {
+                    var response = await client.PostAsync(apiUrl, content);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine("Message sent successfully!");
+                        string responseString = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine("Server says: " + responseString);
+                        result = 0;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error: " + response.StatusCode);
+                        string error = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine("Details: " + error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception occurred:");
+                    Console.WriteLine(ex);
+                }
             }
+
+            return result;
+        }
+
+        public static async Task<int> SendMessage(string title, string body)
+        {
+            return await SendMessageToBotAsync(
+                "http://localhost:61120/api/bot/sendmessage",
+                title,
+                body
+            );
         }
     }
 }

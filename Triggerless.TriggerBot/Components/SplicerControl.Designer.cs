@@ -70,14 +70,19 @@
             this.label1 = new System.Windows.Forms.Label();
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
             this._audioSegmenter = new Triggerless.TriggerBot.AudioSegmenter();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.rdoMinima = new System.Windows.Forms.RadioButton();
+            this.rdoFixed = new System.Windows.Forms.RadioButton();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picWaveform)).BeginInit();
+            this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.panel4);
             this.panel1.Controls.Add(this.btnDebug);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.lblVolume);
@@ -465,19 +470,19 @@
             "11.0",
             "10.0",
             "9.0"});
-            this.cboAudioLength.Location = new System.Drawing.Point(296, 119);
+            this.cboAudioLength.Location = new System.Drawing.Point(442, 119);
             this.cboAudioLength.Name = "cboAudioLength";
-            this.cboAudioLength.Size = new System.Drawing.Size(128, 26);
+            this.cboAudioLength.Size = new System.Drawing.Size(115, 26);
             this.cboAudioLength.TabIndex = 40;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(31, 122);
+            this.label3.Location = new System.Drawing.Point(259, 122);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(256, 18);
+            this.label3.Size = new System.Drawing.Size(179, 18);
             this.label3.TabIndex = 39;
-            this.label3.Text = "Maximum OGG audio length (sec)";
+            this.label3.Text = "Fixed OGG length (sec)";
             // 
             // btnSelectFile
             // 
@@ -523,6 +528,37 @@
             // 
             this.dlgOpenFile.Filter = "MP3 files|*.mp3|All Files|*.*";
             // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.rdoFixed);
+            this.panel4.Controls.Add(this.rdoMinima);
+            this.panel4.Location = new System.Drawing.Point(17, 116);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(238, 36);
+            this.panel4.TabIndex = 64;
+            // 
+            // rdoMinima
+            // 
+            this.rdoMinima.AutoSize = true;
+            this.rdoMinima.Checked = true;
+            this.rdoMinima.Location = new System.Drawing.Point(17, 4);
+            this.rdoMinima.Name = "rdoMinima";
+            this.rdoMinima.Size = new System.Drawing.Size(99, 22);
+            this.rdoMinima.TabIndex = 0;
+            this.rdoMinima.Text = "Smart Cut";
+            this.rdoMinima.UseVisualStyleBackColor = true;
+            this.rdoMinima.CheckedChanged += new System.EventHandler(this.rdoMinima_CheckedChanged);
+            // 
+            // rdoFixed
+            // 
+            this.rdoFixed.AutoSize = true;
+            this.rdoFixed.Location = new System.Drawing.Point(130, 5);
+            this.rdoFixed.Name = "rdoFixed";
+            this.rdoFixed.Size = new System.Drawing.Size(98, 22);
+            this.rdoFixed.TabIndex = 1;
+            this.rdoFixed.Text = "Fixed Cut";
+            this.rdoFixed.UseVisualStyleBackColor = true;
+            // 
             // SplicerControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -541,6 +577,8 @@
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picWaveform)).EndInit();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -589,5 +627,8 @@
         private System.Windows.Forms.OpenFileDialog dlgOpenFile;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button btnDebug;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.RadioButton rdoFixed;
+        private System.Windows.Forms.RadioButton rdoMinima;
     }
 }

@@ -35,21 +35,29 @@
           <a href="audio-splice.png" target="_blank"><img src="audio-splice.png" /></a>
         </p>
         <div class="topic">Download Triggerbot</div>
-        <p>Download Triggerbot Setup 0.10.0 (beta): <a href="triggerbot-setup.0.10.0.exe">triggerbot-setup.0.10.0.exe</a> (15 MB). 
+        <p>Download Triggerbot Setup 0.10.1 (beta): <a href="triggerbot-setup.0.10.1.exe">triggerbot-setup.0.10.1.exe</a> (16 MB). 
           Once installed, you'll be prompted to upgrade when an update is available.</p>
 		<p>Join the Triggerless Discord server! Click here: <a href="https://discord.gg/<?php include 'invite-code.txt' ?>" target="_blank">https://discord.gg/<?php include 'invite-code.txt' ?></a></p>
         <p>Instructional Video. View in fullscreen mode at 1080p HD for the most realistic experience.</p>
         <p><iframe style="z-index: 10;" width="750" height="422" src="https://www.youtube.com/embed/3p5k97eRWE4" title="YouTube video player" frameborder="0" 
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
+        <p><iframe style="z-index: 10;" width="750" height="422" src="https://www.youtube.com/embed/6IPIWJSf5VM" title="YouTube video player" frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
     </div>
     <div class="center-div">
-      <div class="topic">What's new in Version 0.10.0 (beta)</div>
+      <div class="topic">What's new in Version 0.10.1 (beta) 2025-04-18</div>
+      <ul>
+        <li>Lyric Sheet support. Nuff said.</li>
+      </ul>
+    </div>
+    <div class="center-div">
+      <div class="topic">What's new in Version 0.10.0 (beta) 2025-04-13</div>
       <ul>
         <li>Fixed Rescan All Bug</li>
       </ul>
     </div>
     <div class="center-div">
-      <div class="topic">What's new in Version 0.9.5 (beta)</div>
+      <div class="topic">What's new in Version 0.9.5 (beta) 2025-04-11</div>
       <ul>
         <li>Improved initial download, Scan New is no longer required.</li>
         <li>Tech Support Tool</li>
@@ -58,7 +66,7 @@
       </ul>
     </div>
     <div class="center-div">
-      <div class="topic">What's new in Version 0.9.0 (beta)</div>
+      <div class="topic">What's new in Version 0.9.0 (beta) 2024-12-06</div>
       <ul>
         <li>Double-click trigger grid row to start over in the middle (for when you mess up a trigger)</li>
         <li>Deep Scan Tool, for scanning any products in inventory, not just Accessories</li>
@@ -66,7 +74,7 @@
       </ul>
     </div>
     <div class="center-div">
-      <div class="topic">What's new in Version 0.8.8 (beta)</div>
+      <div class="topic">What's new in Version 0.8.8 (beta) 2023-10-15</div>
       <ul>
         <li>First-run Database Bug Fixed</li>
         <li>MoveToDeck is async now (to allow continued song play)</li>
@@ -74,7 +82,7 @@
       </ul>
     </div>
     <div class="center-div">
-      <div class="topic">What's new in Version 0.8.6 (beta)</div>
+      <div class="topic">What's new in Version 0.8.6 (beta) 2023</div>
       <ul>
         <li>Saves Lag Factor and other settings</li>
         <li>Save additional triggers to songs</li>
@@ -82,7 +90,7 @@
       </ul>
     </div>
     <div class="center-div">
-      <div class="topic">What's new in Version 0.8.4 (beta)</div>
+      <div class="topic">What's new in Version 0.8.4 (beta) 2023</div>
       <ul>
         <li>New Tab Page Interface</li>
         <li>SendInput reduces lag by 80%</li>
@@ -93,7 +101,7 @@
       </ul>
     </div>
     <div class="center-div">
-      <div class="topic">What's new in Version 0.8.0 (beta)</div>
+      <div class="topic">What's new in Version 0.8.0 (beta) 2023</div>
       <ul>
         <li>Invisible Triggers option</li>
         <li>Icon click brings up Product Page</li>
@@ -104,7 +112,7 @@
       </ul>
     </div>
     <div class="center-div">
-      <div class="topic">What's new in Version 0.4.0 (beta)</div>
+      <div class="topic">What's new in Version 0.4.0 (beta) 2023</div>
       <ul>
         <li>Much smaller OGG file sizes, most songs can fit in a single CHKN file, without sacrificing sound quality</li>
         <li>Volume adjustment</li>

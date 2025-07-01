@@ -1,12 +1,13 @@
-﻿using System;
-using System.IO;
+﻿using Microsoft.Win32;
+using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.Win32;
-using NAudio.Wave.SampleProviders;
-using NAudio.Wave;
-using System.ComponentModel;
 
 namespace Triggerless.TriggerBot
 {
@@ -38,6 +39,127 @@ namespace Triggerless.TriggerBot
 
             // Close the registry key
             envKey.Close();
+        }
+
+
+        public int SegmentBySmartCut(string inputFilePath, string outputDir, string filenamePrefix)
+        {
+            if (!File.Exists(inputFilePath))
+                throw new FileNotFoundException("Input MP3 file not found.", inputFilePath);
+
+            Directory.CreateDirectory(outputDir);
+
+            List<float> envelope = new List<float>();
+            int sampleRate;
+            TimeSpan totalDuration;
+
+            // Step 1: Analyze amplitude
+            using (var reader = new AudioFileReader(inputFilePath))
+            {
+                sampleRate = reader.WaveFormat.SampleRate;
+                totalDuration = reader.TotalTime;
+                int frameSize = sampleRate / 100; // 10ms per frame
+                float[] buffer = new float[frameSize];
+
+                int samplesRead;
+                while ((samplesRead = reader.Read(buffer, 0, frameSize)) > 0)
+                {
+                    float sumSq = 0;
+                    for (int i = 0; i < samplesRead; i++)
+                        sumSq += buffer[i] * buffer[i];
+
+                    float rms = (float)Math.Sqrt(sumSq / samplesRead);
+                    envelope.Add(rms);
+                }
+            }
+
+            // Step 2: Identify cut points
+            List<double> cutTimes = new List<double> { 0.0 };
+            int minFrames = 15 * 100;
+            int maxFrames = 20 * 100;
+            int startFrame = 0;
+
+            while (startFrame + minFrames < envelope.Count)
+            {
+                int searchEnd = Math.Min(envelope.Count, startFrame + maxFrames);
+                float bestAvg = float.MaxValue;
+                int bestCenter = -1;
+
+                for (int i = startFrame + minFrames; i < searchEnd; i++)
+                {
+                    int windowRadius = 10;
+                    int winStart = Math.Max(i - windowRadius, 0);
+                    int winEnd = Math.Min(i + windowRadius, envelope.Count);
+                    float avg = envelope.Skip(winStart).Take(winEnd - winStart).Average();
+
+                    if (avg < bestAvg)
+                    {
+                        bestAvg = avg;
+                        bestCenter = i;
+                    }
+                }
+
+                if (bestCenter != -1)
+                {
+                    double cutTime = bestCenter * 0.01;
+                    cutTimes.Add(cutTime);
+                    startFrame = bestCenter;
+                }
+                else
+                {
+                    double fallbackCut = (startFrame + maxFrames) * 0.01;
+                    cutTimes.Add(fallbackCut);
+                    startFrame += maxFrames;
+                }
+            }
+
+            cutTimes.Add(totalDuration.TotalSeconds);
+
+            // Step 3: Export segments
+            int successfulExports = 0;
+
+            for (int i = 0; i < cutTimes.Count - 1; i++)
+            {
+                double start = cutTimes[i];
+                double duration = cutTimes[i + 1] - start;
+
+                // Skip if duration is less than 0.5 seconds
+                if (duration < 0.5)
+                    continue;
+
+                string outputFile = Path.Combine(outputDir, string.Format("{0}{1}.wav", filenamePrefix, successfulExports + 1));
+
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "ffmpeg",
+                    Arguments = string.Format("-y -i \"{0}\" -ss {1:F3} -t {2:F3} -ac 2 -ar 44100 \"{3}\"",
+                        inputFilePath, start, duration, outputFile),
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    RedirectStandardError = true
+                };
+
+                using (var process = Process.Start(psi))
+                {
+                    if (process != null)
+                    {
+                        string err = process.StandardError.ReadToEnd();
+                        process.WaitForExit();
+
+                        if (process.ExitCode == 0)
+                        {
+                            successfulExports++;
+                        }
+                        else
+                        {
+                            Console.WriteLine("FFmpeg error on segment {0}: {1}", i + 1, err);
+                        }
+                    }
+                }
+            }
+
+            return successfulExports;
         }
 
         public void SegmentAudio(string inputFilePath, string outputDirectory, TimeSpan segmentDuration, string outputFileNamePrefix)

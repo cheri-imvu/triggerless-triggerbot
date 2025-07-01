@@ -116,7 +116,7 @@ namespace Triggerless.TriggerBot
         {
             if (Directory.Exists(_outputPath))
             {
-                string arguments = $"/select, \"{_outputPath}\"";
+                string arguments = $"/select, \"{_outputPath}\\{txtPrefix.Text.Trim()}.chkn\"";
                 Process.Start("explorer.exe", arguments);
             }
             else
@@ -175,12 +175,23 @@ namespace Triggerless.TriggerBot
 
             try
             {
-                _audioSegmenter.SegmentAudio(
-                    txtFilename.Text,
-                    _outputPath,
-                    TimeSpan.FromSeconds(double.Parse(cboAudioLength.SelectedItem.ToString())),
-                    triggerPrefix
-                );
+                if (rdoMinima.Checked)
+                {
+                    _audioSegmenter.SegmentBySmartCut(
+                        txtFilename.Text,
+                        _outputPath,
+                        triggerPrefix
+                    );
+                }
+                else
+                {
+                    _audioSegmenter.SegmentAudio(
+                        txtFilename.Text,
+                        _outputPath,
+                        TimeSpan.FromSeconds(double.Parse(cboAudioLength.SelectedItem.ToString())),
+                        triggerPrefix
+                    );
+                }
 
             }
             catch (Exception ex)
@@ -224,6 +235,18 @@ namespace Triggerless.TriggerBot
             {
                 File.Delete(filename);
             }
+
+            foreach (var filename in Directory.GetFiles(_outputPath, "*.wav"))
+            {
+                File.Delete(filename);
+            }
+
+            foreach (var filename in Directory.GetFiles(_outputPath, "*.ogg"))
+            {
+                if (new FileInfo(filename).Length <= 4096) File.Delete(filename);
+            }
+
+
             #endregion
 
             #region Create CHKN
@@ -421,8 +444,6 @@ namespace Triggerless.TriggerBot
             }
         }
 
-
-
         public void CreateChkn(string folder, string outputFilename, Template template, IEnumerable<string> filenames)
         {
             var indexFilename = Path.Combine(folder, "index.xml");
@@ -436,6 +457,7 @@ namespace Triggerless.TriggerBot
             var chkn = Path.Combine(folder, $"{outputFilename}");
             if (File.Exists(chkn)) File.Delete(chkn);
             var fz = new FastZip();
+            fz.CompressionLevel = ICSharpCode.SharpZipLib.Zip.Compression.Deflater.CompressionLevel.BEST_COMPRESSION;
 
             if (filenames == null)
             {
@@ -587,6 +609,11 @@ namespace Triggerless.TriggerBot
         }
 
         private void txtFilename_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void rdoMinima_CheckedChanged(object sender, EventArgs e)
         {
 
         }

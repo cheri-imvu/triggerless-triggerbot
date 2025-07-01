@@ -22,6 +22,7 @@ namespace Triggerless.TriggerBot
             '[106, 40, 153, 2952]',
             '[106, 40, 153, 2956]',
             '[106, 40, 153, 3094]',
+            '[106, 40, 3092]',
             '[106, 41, 71, 148]',
             '[106, 41, 71, 165]',
             '[106, 41, 71, 334]',
@@ -35,7 +36,8 @@ namespace Triggerless.TriggerBot
             '[106, 41, 71, 1739]',
             '[106, 41, 71, 1927]',
             '[106, 41, 71, 2501]',
-            '[106, 41, 71, 3095]'
+            '[106, 41, 71, 3095]',
+            '[106, 41, 3093]'
             ) ";
 
         /* 
@@ -50,6 +52,8 @@ namespace Triggerless.TriggerBot
         106_40_153_2952 // F Triggerless Music
         106_40_153_2956 // F !!Music!!
         106_40_153_3094 // F Miscellaneous
+        106_40_3092 // F Miscellaneous (not accessory)
+
         106_41_71_148 // M Glasses Kings
         106_41_71_165 // M New Accessories
         106_41_71_334 // M Headphones
@@ -64,6 +68,7 @@ namespace Triggerless.TriggerBot
         106_41_71_1927 // M Frameless Glasses
         106_41_71_2501 // M Music Items
         106_41_71_3095 // M Miscellaneous
+        106_41_3093 // M Miscellaneous (not accessory)
          */
 
 
@@ -80,6 +85,34 @@ namespace Triggerless.TriggerBot
         public void DeleteAppCache()
         {
             if (!File.Exists(Shared.AppCacheFile)) File.Delete(Shared.AppCacheFile);
+        }
+
+        private class ColumnInfo
+        {
+            public string name { get; set; }
+        }
+
+
+        private void UpdateProductSchema()
+        {
+            using (var cxnAlter = new SQLiteConnection(Shared.AppCacheConnectionString))
+            {
+                cxnAlter.Open();
+
+                var columns = cxnAlter.Query<ColumnInfo>("PRAGMA table_info(products);")
+                    .Select(row => row.name)
+                    .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+                if (!columns.Contains("last_played"))
+                {
+                    cxnAlter.Execute("ALTER TABLE products ADD COLUMN last_played DATETIME;");
+                }
+
+                if (!columns.Contains("times_played"))
+                {
+                    cxnAlter.Execute("ALTER TABLE products ADD COLUMN times_played INTEGER DEFAULT 0;");
+                }
+            }
         }
 
         public SQLiteConnection GetAppCacheCxn() 
@@ -138,6 +171,7 @@ namespace Triggerless.TriggerBot
                 }
             }
 
+            UpdateProductSchema();
 
             return new SQLiteConnection(Shared.AppCacheConnectionString);
         }

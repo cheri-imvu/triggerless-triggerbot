@@ -48,6 +48,7 @@ namespace Triggerless.TriggerBot
                 newControl.Width = _flowProducts.Width - 20;
                 newControl.ProductItemSelected += ProductSelected;
                 newControl.ItemDoubleClicked += ItemDoubleClicked;
+                if (product.HasLyrics) newControl.BackColor = Color.LightSkyBlue;
                 _flowProducts.Controls.Add(newControl);
             }
             _flowProducts.ResumeLayout(true);

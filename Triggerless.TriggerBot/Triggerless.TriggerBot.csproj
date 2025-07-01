@@ -74,15 +74,6 @@
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.2.1.66\lib\net461\Dapper.dll</HintPath>
     </Reference>
-    <Reference Include="DSharpPlus, Version=4.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DSharpPlus.4.5.0\lib\netstandard2.0\DSharpPlus.dll</HintPath>
-    </Reference>
-    <Reference Include="DSharpPlus.CommandsNext, Version=4.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DSharpPlus.CommandsNext.4.5.0\lib\netstandard2.0\DSharpPlus.CommandsNext.dll</HintPath>
-    </Reference>
-    <Reference Include="DSharpPlus.Interactivity, Version=4.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DSharpPlus.Interactivity.4.5.0\lib\netstandard2.0\DSharpPlus.Interactivity.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -247,11 +238,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\DirtyControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\DirtyControl.Designer.cs">
+      <DependentUpon>DirtyControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\LyricsCtrl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Components\LyricsCtrl.Designer.cs">
       <DependentUpon>LyricsCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\LyricsCursorPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\LyricsCursorPanel.Designer.cs">
+      <DependentUpon>LyricsCursorPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Components\ProductOpenDialog.cs">
       <SubType>Form</SubType>
@@ -321,6 +324,7 @@
       <DependentUpon>Collector.cs</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Models\ProgressableStreamContent.cs" />
     <Compile Include="Models\Shared.cs" />
     <Compile Include="Models\SingleProgramInstance.cs" />
     <Compile Include="Components\Triangle.cs">
@@ -366,6 +370,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Components\DirtyControl.resx">
+      <DependentUpon>DirtyControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\LyricsCtrl.resx">
       <DependentUpon>LyricsCtrl.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -464,6 +471,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\discord.png" />
+    <None Include="Assets\good24.png" />
+    <Content Include="Assets\lips.png" />
     <Content Include="Assets\nirvana.png" />
     <Content Include="Assets\pause.png" />
     <Content Include="Assets\under-construction.png" />

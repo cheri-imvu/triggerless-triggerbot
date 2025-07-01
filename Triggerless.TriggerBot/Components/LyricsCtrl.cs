@@ -13,26 +13,35 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Triggerless.TriggerBot.Forms;
 using Triggerless.TriggerBot.Models;
 
 namespace Triggerless.TriggerBot.Components
 {
-
+    /// <summary>
+    /// A UserControl that is placed on a tab page on the main form
+    /// that is used to create lyric sheets in Triggerbot.
+    /// </summary>
 
     public partial class LyricsCtrl : UserControl
     {
 
-        private Mp3FileReader _mp3FileReader;
-        private Image _waveform;
-        private IWavePlayer _wavePlayer;
-        private int _clickedRowIndex = -1;
-        private PictureBox picOverlay;
-        private Pen _penYellow = new Pen(Color.Yellow, 1);
-        private Pen _penBlack = new Pen(Color.Black, 1);
+        private Mp3FileReader _mp3FileReader; // NAudio MP3 file reader
+        private Image _waveform;                // Waveform image
+        private IWavePlayer _wavePlayer;        // Audio playback
+        private int _clickedRowIndex = -1;      // Used for context menu
+        private LyricsCursorPanel _cursorOverlay;          // This implements the scrolling bar during playback
+        private const string TIMESPAN_FORMAT = @"mm\:ss\.fff"; // Common format we use for TimeSpan
 
-        private ProductDisplayInfo _product;
+        private ProductDisplayInfo _product;    // Currently select product
+
+        /// <summary>
+        /// Constructor, also sets up overlay by placing a PictureBox
+        /// within another PictureBox (thanks ChatGPT)
+        /// </summary>
+        /// 
         public LyricsCtrl()
         {
             InitializeComponent();
@@ -40,20 +49,38 @@ namespace Triggerless.TriggerBot.Components
             this.TabStop = true;
 
             // Make the overlay PictureBox a child of the waveform PictureBox
-            picOverlay = new PictureBox();
-            picOverlay.Parent = picWave;
-            picOverlay.Location = new Point(0, 0);
+            _cursorOverlay = new LyricsCursorPanel
+            {
+                Parent = picWave,
+                Size = picWave.Size,
+                Location = new Point(0, 0),
+                BackColor = Color.Green,
+            };
+            _cursorOverlay.MouseDown += WaveClicked;
+            _cursorOverlay.BringToFront();
             
-            // Set the overlay's background to transparent so the underlying waveform shows through.
-            picOverlay.BackColor = Color.Transparent;
+            picWave.MouseDown += WaveMouseDown;
+            Disposed += OnDisposed;
+        }
 
-            // Optionally, you can enable double-buffering on the overlay to reduce flicker.
-            picOverlay.DoubleBuffered(true);
-            picWave.MouseDown += WaveClicked;
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            _waveform?.Dispose();
+            _mp3FileReader?.Dispose();
+            _wavePlayer?.Dispose();
+            picWave.Image?.Dispose();
 
         }
 
-
+        /// <summary>
+        /// This is to capture the Ctrl-B key combination anywhere in
+        /// this control to get the time of play and format it into a
+        /// TimeSpan.
+        /// </summary>
+        /// <param name="msg">Windows message</param>
+        /// <param name="keyData">What got key pressed</param>
+        /// <returns>true, if we caught Ctrl-B</returns>
+        /// 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (keyData == (Keys.Control | Keys.B))
@@ -65,11 +92,27 @@ namespace Triggerless.TriggerBot.Components
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
+        /// <summary>
+        /// Just resize _cursorOverlay after this control is loaded
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// 
         private void LyricsCtrl_Load(object sender, EventArgs e)
         {
-            picOverlay.Size = picWave.Size;
+            _cursorOverlay.Size = picWave.Size;
+            ctlNeedsSave.Dirty = false;
         }
 
+        /// <summary>
+        /// This brings up the ProductOpenDialog for user to choose a product. If the user
+        /// chose one, we reset everything and start over with a new _product. We did run into
+        /// a problem with animated GIF causing an Application crash, but found a way around
+        /// it by only grabbing the first frame of the GIF and using that for the product image.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// 
         private void btnSelectProduct_Click(object sender, EventArgs e)
         {
             var parentTopMost = ParentForm.TopMost;
@@ -100,9 +143,17 @@ namespace Triggerless.TriggerBot.Components
                 tempMS.Dispose();
 
                 InitProduct();
+                ctlNeedsSave.Dirty = false;
+
             }
         }
 
+        /// <summary>
+        /// This was the solution ChatGPT came up with to extract the first
+        /// frame of the animated GIF. It works.
+        /// </summary>
+        /// <param name="imageBytes">the binary image data from the database</param>
+        /// <returns>the first frame as a bitmap Image</returns>
         private Image ExtractFirstFrame(byte[] imageBytes)
         {
             using (var ms = new MemoryStream(imageBytes))
@@ -124,6 +175,13 @@ namespace Triggerless.TriggerBot.Components
             }
         }
 
+        /// <summary>
+        /// This method creates an MP3 file for playback by downloading all the OGG
+        /// files from the IMVU content server, then uses FFmpeg to construct them
+        /// back into a single MP3 file for playback. If the MP3 file already exists,
+        /// we just use that one.
+        /// </summary>
+        /// <returns>The path to the MP3 file</returns>
         private string GetOrCreateMP3()
         {
             // Ensure we have a LyricSheets directory
@@ -184,21 +242,12 @@ namespace Triggerless.TriggerBot.Components
                 foreach (var oggFile in oggFiles) File.Delete(oggFile);
             } //!File.Exists...
             return mp3Path;
-
-            // and reassemble them to create a temporary MP3 file using ffmpeg
-
-            // Initialize the audio player control
-
-            // Initialize the lyrics grid 
-
-            // Save a copy of the grid state, in case this doesn't get saved
-
-            // Place lyric markers from the grid data on the audio player
-
-            // Clear the Undo stack
-
         }
 
+        /// <summary>
+        /// This is just a list of things we have to do when a new product
+        /// is selected by the user.
+        /// </summary>
         private void InitProduct()
         {
             if (_product == null) return;
@@ -208,7 +257,14 @@ namespace Triggerless.TriggerBot.Components
 
         }
 
-        private void WaveformCreate(string filename)
+        /// <summary>
+        /// This creates the waveform image using NAudio.WaveFormRenderer.
+        /// It's a little slow and clunky, but gets the job done. This method
+        /// also initializes the state of the _wavePlayer for MP3 playback. If 
+        /// we already have the .WAVE.PNG file we just use that one.
+        /// </summary>
+        /// <param name="mp3FileName">Full path to the MP3 file</param>
+        private void WaveformCreate(string mp3FileName)
         {
             lblTimer.Text = "00:00.000";
             if (_wavePlayer != null)
@@ -229,7 +285,8 @@ namespace Triggerless.TriggerBot.Components
             _waveform = null;
 
             _mp3FileReader?.Dispose();
-            _mp3FileReader = new Mp3FileReader(filename);
+            _mp3FileReader = new Mp3FileReader(mp3FileName);
+            lblCreatorName.Text = $"by {_product.Creator} ({_mp3FileReader.TotalTime.ToString(TIMESPAN_FORMAT)})";
 
             var wavePath = Path.Combine(Shared.LyricSheetsPath, $"{_product.Id}.wave.png");
             if (File.Exists(wavePath))
@@ -247,7 +304,7 @@ namespace Triggerless.TriggerBot.Components
                     Width = picWave.Width,
                     TopHeight = picWave.Height / 2,
                     BottomHeight = picWave.Height / 2,
-                    BackgroundColor = Color.AliceBlue,
+                    BackgroundColor = Color.Transparent,
                     TopPeakPen = Pens.Blue,
                     BottomPeakPen = Pens.Blue,
 
@@ -260,8 +317,16 @@ namespace Triggerless.TriggerBot.Components
             }
 
             picWave.Image = _waveform;
+            _cursorOverlay.Image = _waveform;
+            _cursorOverlay.Invalidate();
         }
 
+        /// <summary>
+        /// This brings up the LyricsPaste dialog, and if user selects OK,
+        /// we call ProcessLyrics to populate the lyrics grid.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnGetLyrics_Click(object sender, EventArgs e)
         {
             if (_product == null) { 
@@ -275,6 +340,11 @@ namespace Triggerless.TriggerBot.Components
             }
         }
 
+        /// <summary>
+        /// This does the actual processing of the text that's in the Clipboard.
+        /// See issue #6 for upcoming changes.
+        /// </summary>
+        /// <param name="copiedText">text that was in the Clipboard, or manually entered to LyricsPaste dialog</param>
         private void ProcessLyrics(string copiedText)
         {
             // Place an overwrite warning before proceeding.
@@ -289,12 +359,19 @@ namespace Triggerless.TriggerBot.Components
             gridLyrics.ResumeLayout();
             gridLyrics.Select();
             gridLyrics.CurrentCell = gridLyrics.Rows[0].Cells[0];
+            ctlNeedsSave.Dirty = true;
 
         }
 
+        /// <summary>
+        /// This gets the current playback time and sets the current cell value to
+        /// that time, and advances to the next cell, if there is one.
+        /// </summary>
         private void SetTimeMarker()
         {
-            gridLyrics.CurrentCell.Value = _mp3FileReader.CurrentTime.ToString(@"mm\:ss\.fff");
+            gridLyrics.CurrentCell.Value = _mp3FileReader.CurrentTime.ToString(TIMESPAN_FORMAT);
+            ctlNeedsSave.Dirty = true;
+
             var lastCell = gridLyrics.CurrentCell;
             if (gridLyrics.CurrentRow.Index < gridLyrics.RowCount - 1)
             {
@@ -303,6 +380,11 @@ namespace Triggerless.TriggerBot.Components
             }
         }
 
+        /// <summary>
+        /// Let's play a tune. This initializes the wave player for playback
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnPlay_Click(object sender, EventArgs e)
         {
             if (_product == null)
@@ -334,7 +416,7 @@ namespace Triggerless.TriggerBot.Components
                     _mp3FileReader.CurrentTime = TimeSpan.Zero;
                 }
 
-                // Start playback and the stopwatch if not already running.
+                // Start playback if not already running.
                 if (_wavePlayer.PlaybackState != PlaybackState.Playing)
                 {
                     _wavePlayer.Play();
@@ -346,16 +428,24 @@ namespace Triggerless.TriggerBot.Components
             {
                 MessageBox.Show("Error playing file: " + ex.Message);
             }
-
-
         }
 
+        /// <summary>
+        /// Event handler that is triggered when playback is stopped.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EndOfPlayback(object sender, StoppedEventArgs e)
         {
             _timer.Stop();
-            lblTimer.Text = "00:00.000";
+            lblTimer.Text = TimeSpan.Zero.ToString(TIMESPAN_FORMAT);
         }
 
+        /// <summary>
+        /// Event handler from Pause button click. This pauses or resumes playback.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnPause_Click(object sender, EventArgs e)
         {
             if (_product == null)
@@ -379,48 +469,86 @@ namespace Triggerless.TriggerBot.Components
             {
                 MessageBox.Show("Error pausing playback: " + ex.Message);
             }
-
         }
 
+        /// <summary>
+        /// This timer Tick event is used to update the time label and the
+        /// scrolling line on the waveform.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UpdateTimeLabel(object sender, EventArgs e)
         {
             if (_mp3FileReader == null) return;
 
             // Display the elapsed time in the format mm:ss.xxx
             lblTimer.Text = $"{_mp3FileReader.CurrentTime:mm\\:ss\\.fff}";
-            DrawOverlay();
+            UpdateCursor();
         }
 
+        /// <summary>
+        /// This saves the JSON file (*.lyrics) to the Shared.LyricsPath directory.
+        /// If the format of the time stamp is incorrect, we prompt for a fix.
+        /// However, we should be more forgiving, see Issue #8 
+        /// https://github.com/cheri-imvu/triggerless-triggerbot/issues/8
+        /// </summary>
         private void SaveLyrics()
         {
             List<LyricEntry> list = new List<LyricEntry>();
+            TimeSpan defaultTime = TimeSpan.FromMinutes(99);
             for (int i = 0; i < gridLyrics.Rows.Count; i++)
             {
                 var timeString = gridLyrics.Rows[i].Cells[0].Value?.ToString();
                 var lyric = gridLyrics.Rows[i].Cells[1].Value?.ToString();
-                if (string.IsNullOrWhiteSpace(lyric)) continue;
-                if (string.IsNullOrWhiteSpace(timeString)) continue;
-                bool parsed = TimeSpan.TryParseExact(timeString, @"mm\:ss\.fff", CultureInfo.InvariantCulture, out var timeSpan);
+                if (string.IsNullOrWhiteSpace(timeString))
+                {
+                    timeString = defaultTime.ToString(TIMESPAN_FORMAT);
+                    defaultTime = defaultTime.Add(TimeSpan.FromMilliseconds(1));
+                }
+                bool parsed = TimeSpan.TryParseExact(timeString, TIMESPAN_FORMAT, CultureInfo.InvariantCulture, out var timeSpan);
                 if (!parsed)
                 {
-                    gridLyrics.CurrentCell = gridLyrics.Rows[i].Cells[0];
-                    MessageBox.Show("This cell has the time in the wrong format. Please fix it.", "Wrong Format", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    // has colon instead of period
+                    Regex rxColon = new Regex(@"^\d{2}\:\d{2}\:\d{3}$", RegexOptions.None);
+                    if (rxColon.IsMatch(timeString))
+                    {
+                        timeString = timeString.Substring(0, 5) + "." + timeString.Substring(6, 3);
+                        gridLyrics.Rows[i].Cells[0].Value = timeString;
+                        timeSpan = TimeSpan.ParseExact(timeString, TIMESPAN_FORMAT, CultureInfo.InvariantCulture);
+                    } 
+                    else
+                    {
+                        gridLyrics.CurrentCell = gridLyrics.Rows[i].Cells[0];
+                        MessageBox.Show("This cell has the time in the wrong format. Please fix it.", "Wrong Format", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        gridLyrics.BeginEdit(false);
+                        return;
+                    }
                 }
                 list.Add(new LyricEntry { Time = timeSpan, Lyric = lyric });
             }
             if (list.Count == 0) return;
+            list = list.OrderBy(e => e.Time).ToList();
             var jsonText= JsonConvert.SerializeObject(list, Formatting.Indented);
             var filename = Path.Combine(Shared.LyricSheetsPath, $"{_product.Id}.lyrics");
             if (File.Exists(filename)) File.Delete(filename);
             File.WriteAllText(filename, jsonText);
+            ctlNeedsSave.Dirty = false;
         }
 
+        /// <summary>
+        /// Button click handler that kicks off SaveLyrics
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSave_Click(object sender, EventArgs e)
         {
             SaveLyrics();
         }
 
+        /// <summary>
+        /// If we already have the .lyrics file, we deserialize the JSON to 
+        /// populate the grid.
+        /// </summary>
         private void GetExistingLyrics()
         {
             if (_product == null) return;
@@ -430,20 +558,31 @@ namespace Triggerless.TriggerBot.Components
             var list = JsonConvert.DeserializeObject<List<LyricEntry>>(File.ReadAllText(filename));
             foreach ( var entry in list )
             { 
-                gridLyrics.Rows.Add(entry.Time.ToString(@"mm\:ss\.fff"), entry.Lyric);
+                gridLyrics.Rows.Add(entry.Time.ToString(TIMESPAN_FORMAT), entry.Lyric);
             }
-
+            ctlNeedsSave.Dirty = false;
         }
 
+        /// <summary>
+        /// Respond to menu click, Insert Row Above
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mnuInsertAbove_Click(object sender, EventArgs e)
         {
             if (_clickedRowIndex >= 0)
             {
                 gridLyrics.Rows.Insert(_clickedRowIndex);
                 _clickedRowIndex++; // keep context on originally clicked row
+                ctlNeedsSave.Dirty = true;
             }
         }
 
+        /// <summary>
+        /// Respond to context menu opening, and gray out unavailable options
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ctxMenu_Opening(object sender, CancelEventArgs e)
         {
             // Only allow the menu to open if a row header was right-clicked.
@@ -457,15 +596,29 @@ namespace Triggerless.TriggerBot.Components
             mnuInsertBelow.Enabled = _clickedRowIndex < gridLyrics.Rows.Count - 1;
         }
 
+
+        /// <summary>
+        /// Responding to deleting a row
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mnuDelete_Click(object sender, EventArgs e)
         {
             if (_clickedRowIndex >= 0 && _clickedRowIndex < gridLyrics.Rows.Count)
             {
                 gridLyrics.Rows.RemoveAt(_clickedRowIndex);
                 _clickedRowIndex = -1;
+                ctlNeedsSave.Dirty = true;
             }
         }
 
+        /// <summary>
+        /// Event handler detects where mouse was clicked, and if the right
+        /// click was in the left margin, allow this click to trigger the context
+        /// menu, otherwise just discard the message and move on.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void gridLyrics_MouseDown(object sender, MouseEventArgs e)
         {
             // Process only right clicks.
@@ -492,37 +645,30 @@ namespace Triggerless.TriggerBot.Components
 
         }
 
+        /// <summary>
+        /// Respond to menu click Insert Row Below
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mnuInsertBelow_Click(object sender, EventArgs e)
         {
             if (_clickedRowIndex >= 0)
             {
                 gridLyrics.Rows.Insert(_clickedRowIndex + 1);
+                ctlNeedsSave.Dirty = true;
             }
         }
 
-        private void DrawOverlay()
+        /// <summary>
+        /// This draws the overlay, that is, the line that scrolls across the waveform.
+        /// </summary>
+        private void UpdateCursor()
         {
             var totalTime = _mp3FileReader.TotalTime.TotalMilliseconds;
             if (totalTime == 0) return;
             var currentTime = _mp3FileReader.CurrentTime.TotalMilliseconds;
-            int x = Convert.ToInt32(picOverlay.Width * currentTime / totalTime);
-
-            // Create a new bitmap with alpha channel
-            Bitmap bmp = new Bitmap(picOverlay.Width, picOverlay.Height, PixelFormat.Format32bppArgb);
-            using (Graphics g = Graphics.FromImage(bmp))
-            {
-                // Clear the bitmap to transparent
-                g.Clear(Color.Transparent);
-                g.DrawLine(_penBlack, x, 0, x, picOverlay.Height);
-                g.DrawLine(_penYellow, x+1, 0, x+1, picOverlay.Height);
-            }
-            // Dispose the old image if it exists to avoid memory leaks.
-            if (picOverlay.Image != null)
-            {
-                picOverlay.Image.Dispose();
-            }
-            // Set the newly drawn bitmap as the overlay image.
-            picOverlay.Image = bmp;
+            _cursorOverlay.CursorX = Convert.ToInt32(_cursorOverlay.Width * currentTime / totalTime);
+            _cursorOverlay.Invalidate();
         }
 
         private void WaveClicked(object sender, MouseEventArgs e)
@@ -532,23 +678,11 @@ namespace Triggerless.TriggerBot.Components
             {
                 btnPause_Click(sender, new EventArgs());
             }
-            double fraction = e.X / picOverlay.Width;
+            double fraction = e.X / _cursorOverlay.Width;
             TimeSpan newTime = TimeSpan.FromMilliseconds(fraction * _mp3FileReader.TotalTime.TotalMilliseconds);
-            DrawOverlay();
-            lblTimer.Text = newTime.ToString(@"mm\:ss\.fff");
             _mp3FileReader.CurrentTime = newTime;
-        }
-
-
-        private void LyricsCtrl_ControlRemoved(object sender, ControlEventArgs e)
-        {
-            _penBlack?.Dispose();
-            _penYellow?.Dispose();
-            _waveform?.Dispose();
-            _mp3FileReader?.Dispose();
-            _wavePlayer?.Dispose();
-            picOverlay.Image?.Dispose();
-            picWave.Image?.Dispose();
+            UpdateCursor();
+            lblTimer.Text = newTime.ToString(TIMESPAN_FORMAT);
         }
 
         private void btnTimeIt_Click(object sender, EventArgs e)
@@ -565,8 +699,81 @@ namespace Triggerless.TriggerBot.Components
                 _wavePlayer.Stop();
                 _mp3FileReader.CurrentTime = TimeSpan.Zero;
                 lblTimer.Text = "00:00.000";
-                DrawOverlay();
+                UpdateCursor();
             }
+        }
+
+        private void AdjustTimes(int ms)
+        {
+            DataGridViewRowCollection rows;
+            if (gridLyrics.SelectedRows.Count == 0)
+            {
+                rows = gridLyrics.Rows;
+            }
+            else
+            {
+                rows = new DataGridViewRowCollection(gridLyrics);
+
+                foreach (DataGridViewRow row in gridLyrics.Rows)
+                {
+                    if (row.State == DataGridViewElementStates.Selected)
+                        rows.Add(gridLyrics.Rows[row.Index]);
+                }
+            }
+                
+            foreach (DataGridViewRow row in rows)
+            {
+                object value = row.Cells[0].Value;
+                if (value == null) continue;
+
+                string s = value.ToString();
+                if (string.IsNullOrWhiteSpace(s)) continue;
+
+                TimeSpan ts = TimeSpan.Zero;
+                bool parsed = TimeSpan.TryParseExact(s, TIMESPAN_FORMAT, CultureInfo.InvariantCulture, out ts);
+                if (!parsed) continue;
+
+                TimeSpan newTS = ts.Add(TimeSpan.FromMilliseconds(ms));
+
+                row.Cells[0].Value = newTS.ToString(TIMESPAN_FORMAT);
+            }
+            ctlNeedsSave.Dirty = true;
+        }
+
+        private void btnMsPlus_Click(object sender, EventArgs e)
+        {
+            int ms = 0;
+            bool parsed = int.TryParse(txtMS.Text, out ms);
+            if (!parsed) return;
+            AdjustTimes(ms);
+        }
+
+        private void btnMsMinus_Click(object sender, EventArgs e)
+        {
+            int ms = 0;
+            bool parsed = int.TryParse(txtMS.Text, out ms);
+            if (!parsed) return;
+            AdjustTimes(-ms);
+        }
+        private void gridLyrics_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            ctlNeedsSave.Dirty = true;
+        }
+
+        private void btnDeleteLyrics_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("You sure?", "Delete Lyrics", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+            if (result == DialogResult.OK)
+            {
+                File.Delete(Path.Combine(Shared.LyricSheetsPath, $"{_product.Id}.lyrics"));
+                gridLyrics.Rows.Clear();
+                ctlNeedsSave.Dirty = false;
+            }
+        }
+
+        private void WaveMouseDown(object sender, MouseEventArgs e)
+        {
+            Debug.WriteLine($"Button:{e.Button} X:{e.X} Y:{e.Y} Delta:{e.Delta} Clicks:{e.Clicks}");
         }
     }
 }

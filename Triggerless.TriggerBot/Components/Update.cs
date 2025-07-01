@@ -31,9 +31,17 @@ namespace Triggerless.TriggerBot
         {
             // First download the JSON from the web
             string jsonText = null;
-            using (WebClient client = new WebClient())
+            try
             {
-                jsonText = client.DownloadString(JsonUrl);
+                using (WebClient client = new WebClient())
+                {
+                    jsonText = client.DownloadString(JsonUrl);
+                }
+
+            }
+            catch (Exception)
+            {
+                return;
             }
             JObject jsonObject = JObject.Parse(jsonText);
             _setup = jsonObject["setup"].ToString();
