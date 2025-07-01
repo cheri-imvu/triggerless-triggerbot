@@ -264,8 +264,21 @@ namespace Triggerless.TriggerBot
             long cumulativeSize = 0;
             const long maxSize = 2 * 1024 * 1024 - 20000;
 
-            foreach (var filename in Directory.GetFiles(_outputPath, "*.ogg"))
+            Func<string, int> sortNumerically = s =>
             {
+                string filename = Path.GetFileNameWithoutExtension(s);
+                string digits = new string(filename.SkipWhile(c => !char.IsDigit(c)).ToArray());
+                return int.TryParse(digits, out int number) ? number : int.MaxValue;
+            };
+
+            // Create a list of OGG files in numerical order
+            var sortedFileList = Directory.GetFiles(_outputPath, "*.ogg")
+                .OrderBy(s => sortNumerically(s)).ToList();
+
+            foreach (var filename in sortedFileList)
+            {
+                if (sortNumerically(filename) == int.MaxValue) continue;
+
                 var template = templates[templateIndex];
                 var currentList = listsOfFiles[templateIndex];
 
