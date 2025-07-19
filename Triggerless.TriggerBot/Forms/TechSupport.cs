@@ -3,6 +3,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Triggerless.TriggerBot.Models;
 
@@ -15,18 +17,20 @@ namespace Triggerless.TriggerBot.Forms
             InitializeComponent();
         }
 
-        private void CleanUpFTP(string folderName)
+        private void CleanUpLocalFiles(string folderName)
         {
             Directory.Delete(folderName, true);
         }
-        private void _btnUpload_Click(object sender, EventArgs e)
+        private async void _btnUpload_Click(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(_txtAviName.Text)) {
                 MessageBox.Show($"Avatar Name is required", "User Input Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+            pnlUploading.Visible = true;
+            var appData = Shared.AppData;
             var targetFolder = Path.Combine(appData, "Triggerless", "Transfer", "Files");
             if (!Directory.Exists(targetFolder)) Directory.CreateDirectory(targetFolder);
             var parentFolder = Directory.GetParent(targetFolder).FullName;
@@ -43,7 +47,8 @@ namespace Triggerless.TriggerBot.Forms
             } catch(Exception exc) { 
                 MessageBox.Show($"Unable to copy one of the database files: {exc.Message}", "File System Error", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-                CleanUpFTP(parentFolder);
+                CleanUpLocalFiles(parentFolder);
+                pnlUploading.Visible = false;
                 return;
             }
 
@@ -51,7 +56,8 @@ namespace Triggerless.TriggerBot.Forms
             {
                 MessageBox.Show($"Unable to copy one of the database files: Files could not be copied", "File System Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-                CleanUpFTP(parentFolder);
+                CleanUpLocalFiles(parentFolder);
+                pnlUploading.Visible = false;
                 return ;
 
             }
@@ -67,24 +73,78 @@ namespace Triggerless.TriggerBot.Forms
                 zipName2 += (invalidChars.Contains(c) ? '_' : c);
             }
             fz.CreateZip(zipName2, targetFolder, false, null);
-
-            Uri remoteUri = new Uri("ftp://triggerless.com/");
-            using (var wc = new WebClient())
+            /* OLD FTP Code
+                        Uri remoteUri = new Uri("ftp://triggerless.com/");
+                        using (var wc = new WebClient())
+                        {
+                            try
+                            {
+                                wc.Credentials = new NetworkCredential("triggerbot", "$tr1gg3rb0t$");
+                                var remotePath = remoteUri.ToString() + Path.GetFileName(zipName2);
+                                wc.UploadFile(remotePath, "STOR", zipName2);
+                                CleanUpLocalFiles(parentFolder);
+                                _ = Discord.SendMessage("New Tech Support Upload", $"Tech Support: Upload for {_txtAviName.Text} succeeded.").Result;
+                                Close();
+                            } catch (Exception exc) {
+                                _ = Discord.SendMessage("Upload Failed", $"Tech Support: Upload for {_txtAviName.Text}  failed.").Result;
+                                MessageBox.Show($"Unable to upload file: {exc.Message}");
+                            }
+                        }
+            */
+            try
             {
-                try
-                {
-                    wc.Credentials = new NetworkCredential("triggerbot", "$tr1gg3rb0t$");
-                    var remotePath = remoteUri.ToString() + Path.GetFileName(zipName2);
-                    wc.UploadFile(remotePath, "STOR", zipName2);
-                    CleanUpFTP(parentFolder);
-                    _ = Discord.SendMessage("New Tech Support Upload", $"Tech Support: Upload for {_txtAviName.Text} succeeded.").Result;
-                    Close();
-                } catch (Exception exc) {
-                    _ = Discord.SendMessage("Upload Failed", $"Tech Support: Upload for {_txtAviName.Text}  failed.").Result;
-                    MessageBox.Show($"Unable to upload file: {exc.Message}");
-                }
+                await UploadZipAsync(zipName2);
+            } 
+            catch (Exception ex)
+            {
+                await Discord.SendMessage("Upload Failed (Debug)", ex.ToString());
             }
 
         }
+
+        private async Task UploadZipAsync(string zipFilePath)
+        {
+            var fileName = Path.GetFileName(zipFilePath);
+            var uri = "https://www.triggerless.com/api/upload/techsupport";
+
+            using (var client = new HttpClient())
+            using (var content = new MultipartFormDataContent())
+            using (var fs = File.OpenRead(zipFilePath))
+            {
+                int lastPercent = 0;
+                var streamContent = new ProgressableStreamContent(fs, 4096, (sent, total) =>
+                {
+                    var percent = (int)(sent * 100 / total);
+                    if (percent != lastPercent)
+                    {
+                        progPercent.Invoke((Action)(() => progPercent.Value = percent));
+                        lblPercent.Invoke((Action)(() => lblPercent.Text = $"{percent}%"));
+                        lastPercent = percent;
+                    }
+                });
+
+                content.Add(streamContent, "file", fileName);
+
+                try
+                {
+                    var response = await client.PostAsync(uri, content);
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        await Discord.SendMessage("Debug Upload Failed.", response.Headers.ToString() +Environment.NewLine + response.Content.ToString());
+                        return;
+                    }
+
+                    CleanUpLocalFiles(Path.GetDirectoryName(zipFilePath));
+                    await Discord.SendMessage("New Tech Support Upload", $"Tech Support: Upload for {_txtAviName.Text} succeeded.");
+                    Invoke((Action)(() => Close()));
+                }
+                catch (Exception ex)
+                {
+                    await Discord.SendMessage("Upload Failed", $"Tech Support: Upload for {_txtAviName.Text} failed.");
+                    MessageBox.Show($"Upload failed: {ex}");
+                }
+            }
+        }
+
     }
 }

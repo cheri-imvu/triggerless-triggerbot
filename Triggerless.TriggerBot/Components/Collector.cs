@@ -45,7 +45,7 @@ namespace Triggerless.TriggerBot
         {
             var result = false;
 
-            using (var conn = new SQLiteDataAccess().GetAppCacheCxn())
+            using (var conn = SQLiteDataAccess.GetAppCacheCxn())
             {
                 try
                 {
@@ -69,8 +69,7 @@ namespace Triggerless.TriggerBot
         public bool ExcludeSong(long productId)
         {
             bool result = false;
-            var sda = new SQLiteDataAccess();
-            using (var conn = sda.GetAppCacheCxn())
+            using (var conn = SQLiteDataAccess.GetAppCacheCxn())
             {
                 try
                 {
@@ -104,10 +103,9 @@ namespace Triggerless.TriggerBot
         public List<ProductSearchEntry> DeepScanList(string searchTerm)
         {
             List<ProductSearchEntry> result = new List<ProductSearchEntry>();
-            var sda = new SQLiteDataAccess();
 
             IEnumerable<long> productIdsWithTriggers;
-            using (var appConnection = sda.GetAppCacheCxn())
+            using (var appConnection = SQLiteDataAccess.GetAppCacheCxn())
             { 
                 appConnection.Open();
                 var sql = $@"
@@ -116,7 +114,7 @@ namespace Triggerless.TriggerBot
                 productIdsWithTriggers = appConnection.Query<long>(sql);
             }
 
-            using (var imvuConnection = sda.GetProductCacheCxn())
+            using (var imvuConnection = SQLiteDataAccess.GetProductCacheCxn())
             {
                 imvuConnection.Open();
                 var builder = new StringBuilder();
@@ -159,8 +157,7 @@ namespace Triggerless.TriggerBot
             builder.Append(")");
             string whereClause = builder.ToString();
 
-            var sda = new SQLiteDataAccess();
-            using (var appConnection = sda.GetAppCacheCxn())
+            using (var appConnection = SQLiteDataAccess.GetAppCacheCxn())
             {
                 appConnection.Open();
                 var sql = $"DELETE FROM product_triggers {whereClause}";
@@ -175,11 +172,10 @@ namespace Triggerless.TriggerBot
         //public Task ScanDatabasesSync(string whereClause = null)
         public  void ScanDatabasesSync(string whereClause = null)
         {
-            var sda = new SQLiteDataAccess();
             var productList = new List<ProductSearchInfo>();
             var existingProductIDs = new HashSet<long>();
 
-            using (var connProduct = sda.GetProductCacheCxn())
+            using (var connProduct = SQLiteDataAccess.GetProductCacheCxn())
             {
                 connProduct.Open();
                 var sql = "SELECT id as ProductId, products_name as ProductName, manufacturers_name as CreatorName, products_image as ProductImage FROM products ";
@@ -190,7 +186,7 @@ namespace Triggerless.TriggerBot
                 productList.AddRange(products);
             }
 
-            using (var connAppCache = sda.GetAppCacheCxn())
+            using (var connAppCache = SQLiteDataAccess.GetAppCacheCxn())
             {
                 connAppCache.Open();
                 
@@ -228,7 +224,7 @@ namespace Triggerless.TriggerBot
             string longestName = "No Product";
             ScanResultType longestResultType = ScanResultType.Pending;
 
-            using (var cxnAppCache = sda.GetAppCacheCxn())
+            using (var cxnAppCache = SQLiteDataAccess.GetAppCacheCxn())
             {
 
                 foreach (var product in workingProducts)

@@ -72,7 +72,7 @@ namespace Triggerless.TriggerBot
          */
 
 
-        public SQLiteConnection GetProductCacheCxn()
+        public static SQLiteConnection GetProductCacheCxn()
         {            
             if (!File.Exists(Shared.ProductCacheFile))
             {
@@ -93,7 +93,7 @@ namespace Triggerless.TriggerBot
         }
 
 
-        private void UpdateProductSchema()
+        private static void UpdateProductSchema()
         {
             using (var cxnAlter = new SQLiteConnection(Shared.AppCacheConnectionString))
             {
@@ -115,7 +115,7 @@ namespace Triggerless.TriggerBot
             }
         }
 
-        public SQLiteConnection GetAppCacheCxn() 
+        public static SQLiteConnection GetAppCacheCxn() 
         {
             if (!Directory.Exists(Shared.AppCachePath)) { Directory.CreateDirectory(Shared.AppCachePath); }
 
@@ -183,7 +183,6 @@ namespace Triggerless.TriggerBot
             List<dynamic> queryList = null;
             var infoList = new List<ProductDisplayInfo>();
 
-            var sda = new SQLiteDataAccess();
             string andClause = string.Empty;
             string limitClause = string.Empty;
 
@@ -218,7 +217,7 @@ namespace Triggerless.TriggerBot
                         {limitClause}
                         ;";
 
-            using (var cxnAppCache = sda.GetAppCacheCxn())
+            using (var cxnAppCache = SQLiteDataAccess.GetAppCacheCxn())
             {
                 queryList = cxnAppCache.Query(sql).ToList();
             }

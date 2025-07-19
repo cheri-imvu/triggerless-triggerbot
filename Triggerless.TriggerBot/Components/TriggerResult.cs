@@ -15,8 +15,7 @@ namespace Triggerless.TriggerBot
         public async Task<bool> Verify(ProductDisplayInfo productDisplayInfo)
         {
             if (!productDisplayInfo.Triggers.Any(t => t.LengthMS == 0)) return true;
-            var sda = new SQLiteDataAccess();
-            using (var conn = sda.GetAppCacheCxn())
+            using (var conn = SQLiteDataAccess.GetAppCacheCxn())
             {
                 conn.Open();
                 string sql = "";

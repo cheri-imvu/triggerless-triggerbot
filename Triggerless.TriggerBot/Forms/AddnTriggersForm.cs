@@ -64,8 +64,7 @@ namespace Triggerless.TriggerBot
 
         private void SaveChanges()
         {
-            var sda = new SQLiteDataAccess();
-            using (var conn = sda.GetAppCacheCxn())
+            using (var conn = SQLiteDataAccess.GetAppCacheCxn())
             {
                 conn.Open();
                 for (int iRow = 0; iRow < gridTriggers.Rows.Count; iRow++)

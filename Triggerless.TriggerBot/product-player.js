@@ -21,7 +21,6 @@
             }
             .player-container #triggerDisplay {
                 font-weight: bold;
-				font-size: 1.3em;
                 min-width: 160px;
             }
             .player-container button {
