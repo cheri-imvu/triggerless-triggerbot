@@ -131,7 +131,7 @@ namespace Triggerless.TriggerBot
 
                 var psi = new ProcessStartInfo
                 {
-                    FileName = "ffmpeg",
+                    FileName = Path.Combine(Shared.FFmpegLocation, "ffmpeg.exe"),
                     Arguments = string.Format("-y -i \"{0}\" -ss {1:F3} -t {2:F3} -ac 2 -ar 44100 \"{3}\"",
                         inputFilePath, start, duration, outputFile),
                     UseShellExecute = false,

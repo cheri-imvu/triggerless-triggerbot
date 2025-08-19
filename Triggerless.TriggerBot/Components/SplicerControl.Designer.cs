@@ -28,7 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.rdoFixed = new System.Windows.Forms.RadioButton();
+            this.rdoMinima = new System.Windows.Forms.RadioButton();
             this.btnDebug = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.lblVolume = new System.Windows.Forms.Label();
@@ -70,14 +74,12 @@
             this.label1 = new System.Windows.Forms.Label();
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
             this._audioSegmenter = new Triggerless.TriggerBot.AudioSegmenter();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.rdoMinima = new System.Windows.Forms.RadioButton();
-            this.rdoFixed = new System.Windows.Forms.RadioButton();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picWaveform)).BeginInit();
-            this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -117,6 +119,38 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(851, 476);
             this.panel1.TabIndex = 0;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.rdoFixed);
+            this.panel4.Controls.Add(this.rdoMinima);
+            this.panel4.Location = new System.Drawing.Point(17, 116);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(238, 36);
+            this.panel4.TabIndex = 64;
+            // 
+            // rdoFixed
+            // 
+            this.rdoFixed.AutoSize = true;
+            this.rdoFixed.Location = new System.Drawing.Point(130, 5);
+            this.rdoFixed.Name = "rdoFixed";
+            this.rdoFixed.Size = new System.Drawing.Size(98, 22);
+            this.rdoFixed.TabIndex = 1;
+            this.rdoFixed.Text = "Fixed Cut";
+            this.rdoFixed.UseVisualStyleBackColor = true;
+            // 
+            // rdoMinima
+            // 
+            this.rdoMinima.AutoSize = true;
+            this.rdoMinima.Checked = true;
+            this.rdoMinima.Location = new System.Drawing.Point(17, 4);
+            this.rdoMinima.Name = "rdoMinima";
+            this.rdoMinima.Size = new System.Drawing.Size(99, 22);
+            this.rdoMinima.TabIndex = 0;
+            this.rdoMinima.TabStop = true;
+            this.rdoMinima.Text = "Smart Cut";
+            this.rdoMinima.UseVisualStyleBackColor = true;
+            this.rdoMinima.CheckedChanged += new System.EventHandler(this.rdoMinima_CheckedChanged);
             // 
             // btnDebug
             // 
@@ -528,36 +562,10 @@
             // 
             this.dlgOpenFile.Filter = "MP3 files|*.mp3|All Files|*.*";
             // 
-            // panel4
+            // timer1
             // 
-            this.panel4.Controls.Add(this.rdoFixed);
-            this.panel4.Controls.Add(this.rdoMinima);
-            this.panel4.Location = new System.Drawing.Point(17, 116);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(238, 36);
-            this.panel4.TabIndex = 64;
-            // 
-            // rdoMinima
-            // 
-            this.rdoMinima.AutoSize = true;
-            this.rdoMinima.Checked = true;
-            this.rdoMinima.Location = new System.Drawing.Point(17, 4);
-            this.rdoMinima.Name = "rdoMinima";
-            this.rdoMinima.Size = new System.Drawing.Size(99, 22);
-            this.rdoMinima.TabIndex = 0;
-            this.rdoMinima.Text = "Smart Cut";
-            this.rdoMinima.UseVisualStyleBackColor = true;
-            this.rdoMinima.CheckedChanged += new System.EventHandler(this.rdoMinima_CheckedChanged);
-            // 
-            // rdoFixed
-            // 
-            this.rdoFixed.AutoSize = true;
-            this.rdoFixed.Location = new System.Drawing.Point(130, 5);
-            this.rdoFixed.Name = "rdoFixed";
-            this.rdoFixed.Size = new System.Drawing.Size(98, 22);
-            this.rdoFixed.TabIndex = 1;
-            this.rdoFixed.Text = "Fixed Cut";
-            this.rdoFixed.UseVisualStyleBackColor = true;
+            this.timer1.Interval = 200;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // SplicerControl
             // 
@@ -572,13 +580,13 @@
             this.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.SplicerControl_ControlRemoved);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picWaveform)).EndInit();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -630,5 +638,6 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.RadioButton rdoFixed;
         private System.Windows.Forms.RadioButton rdoMinima;
+        private System.Windows.Forms.Timer timer1;
     }
 }

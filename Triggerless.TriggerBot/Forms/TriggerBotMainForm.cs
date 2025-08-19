@@ -105,6 +105,7 @@ namespace Triggerless.TriggerBot
             pnlCollector.SendToBack();
             DoSearch(null, null);
             CheckForImvu(false);
+            SettingsLoad();
         }
 
         // Inventory Update
@@ -212,10 +213,9 @@ namespace Triggerless.TriggerBot
             lblCopyright.Text = Shared.Copyright;
             Shared.CheckIfPaid();
             _updater.CheckForUpdate();
-            LoadSettings();
         }
 
-        private void LoadSettings()
+        private void SettingsLoad()
         {
             var sets = Properties.Settings.Default;
             txtSearch.Text = sets.LastSearch;
@@ -227,9 +227,30 @@ namespace Triggerless.TriggerBot
             _lagMS = sets.InitialLagMS;
             trackBarLag.Value = LagMsToTrackBarValue();
             _splicer.AudioLength = sets.DefaultTriggerLength;
+            switch (sets.LastTab)
+            {
+                case "Playback":
+                    tabAppContainer.SelectedTab = tabPlayback;
+                    break;
+                case "Tools":
+                    tabAppContainer.SelectedTab = tabTools;
+                    break;
+                case "Splice":
+                    tabAppContainer.SelectedTab = tabConvertChkn;
+                    break;
+                case "Lyrics":
+                    tabAppContainer.SelectedTab = tabLyrics;
+                    break;
+                case "About":
+                    tabAppContainer.SelectedTab = tabAbout;
+                    break;
+                default:
+                    tabAppContainer.SelectedTab = tabPlayback;
+                    break;
+            }
         }
 
-        private void TriggerBotMainForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void SettingsSave()
         {
             var sets = Properties.Settings.Default;
             sets.KeepOnTop = chkKeepOnTop.Checked;
@@ -239,7 +260,20 @@ namespace Triggerless.TriggerBot
             sets.InitialLagMS = _lagMS;
             sets.LastSearch = txtSearch.Text;
             sets.DefaultTriggerLength = _splicer.AudioLength;
+            switch (tabAppContainer.SelectedTab?.Name)
+            {
+                case nameof(tabPlayback): sets.LastTab = "Playback"; break;
+                case nameof(tabTools): sets.LastTab = "Tools"; break;
+                case nameof(tabConvertChkn): sets.LastTab = "Splice"; break;
+                case nameof(tabLyrics): sets.LastTab = "Lyrics"; break;
+                case nameof(tabAbout): sets.LastTab = "About"; break;
+                default: sets.LastTab = "Playback"; break;
+            }
             sets.Save();
+        }
+
+        private void TriggerBotMainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
 
             if (_isPlaying)
             {
@@ -252,6 +286,7 @@ namespace Triggerless.TriggerBot
                 }
                 CleanupAfterPlay();
             }
+            SettingsSave();
 
             var reasons = new CloseReason[] {
                 CloseReason.WindowsShutDown,

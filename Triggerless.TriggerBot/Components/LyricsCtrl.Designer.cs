@@ -40,6 +40,7 @@
             this.btnPlay = new System.Windows.Forms.Button();
             this.picProductImage = new System.Windows.Forms.PictureBox();
             this.pnlWave = new System.Windows.Forms.Panel();
+            this.picWait = new System.Windows.Forms.PictureBox();
             this.picWave = new System.Windows.Forms.PictureBox();
             this.pnlGrid = new System.Windows.Forms.Panel();
             this.gridLyrics = new System.Windows.Forms.DataGridView();
@@ -62,9 +63,11 @@
             this._timer = new System.Windows.Forms.Timer(this.components);
             this.splitter = new System.Windows.Forms.SplitContainer();
             this.ctlNeedsSave = new Triggerless.TriggerBot.Components.DirtyControl();
+            this.triangle1 = new Triggerless.TriggerBot.Triangle();
             this.pnlTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).BeginInit();
             this.pnlWave.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picWait)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picWave)).BeginInit();
             this.pnlGrid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridLyrics)).BeginInit();
@@ -91,7 +94,7 @@
             this.lblProductName.AutoSize = true;
             this.lblProductName.Location = new System.Drawing.Point(301, 8);
             this.lblProductName.Name = "lblProductName";
-            this.lblProductName.Size = new System.Drawing.Size(199, 17);
+            this.lblProductName.Size = new System.Drawing.Size(257, 22);
             this.lblProductName.TabIndex = 3;
             this.lblProductName.Text = "Non-existent Trigger Tune";
             // 
@@ -100,7 +103,7 @@
             this.lblCreatorName.AutoSize = true;
             this.lblCreatorName.Location = new System.Drawing.Point(301, 31);
             this.lblCreatorName.Name = "lblCreatorName";
-            this.lblCreatorName.Size = new System.Drawing.Size(105, 17);
+            this.lblCreatorName.Size = new System.Drawing.Size(135, 22);
             this.lblCreatorName.TabIndex = 4;
             this.lblCreatorName.Text = "by NoCreator";
             // 
@@ -119,7 +122,6 @@
             this.pnlTop.Name = "pnlTop";
             this.pnlTop.Size = new System.Drawing.Size(1053, 93);
             this.pnlTop.TabIndex = 6;
-            this.pnlTop.MouseDown += new System.Windows.Forms.MouseEventHandler(this.WaveMouseDown);
             // 
             // btnStop
             // 
@@ -174,21 +176,38 @@
             // 
             // pnlWave
             // 
+            this.pnlWave.Controls.Add(this.triangle1);
             this.pnlWave.Controls.Add(this.picWave);
+            this.pnlWave.Controls.Add(this.picWait);
             this.pnlWave.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlWave.Location = new System.Drawing.Point(0, 93);
             this.pnlWave.Name = "pnlWave";
             this.pnlWave.Size = new System.Drawing.Size(1053, 38);
             this.pnlWave.TabIndex = 7;
             // 
+            // picWait
+            // 
+            this.picWait.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picWait.Image = ((System.Drawing.Image)(resources.GetObject("picWait.Image")));
+            this.picWait.Location = new System.Drawing.Point(0, 0);
+            this.picWait.Name = "picWait";
+            this.picWait.Size = new System.Drawing.Size(1053, 38);
+            this.picWait.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picWait.TabIndex = 9;
+            this.picWait.TabStop = false;
+            // 
             // picWave
             // 
+            this.picWave.BackColor = System.Drawing.SystemColors.Control;
             this.picWave.Dock = System.Windows.Forms.DockStyle.Fill;
             this.picWave.Location = new System.Drawing.Point(0, 0);
             this.picWave.Name = "picWave";
             this.picWave.Size = new System.Drawing.Size(1053, 38);
+            this.picWave.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picWave.TabIndex = 5;
             this.picWave.TabStop = false;
+            this.picWave.Visible = false;
+            this.picWave.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picWave_MouseDown);
             // 
             // pnlGrid
             // 
@@ -213,6 +232,7 @@
             this.gridLyrics.Location = new System.Drawing.Point(0, 0);
             this.gridLyrics.Margin = new System.Windows.Forms.Padding(12);
             this.gridLyrics.Name = "gridLyrics";
+            this.gridLyrics.RowHeadersWidth = 51;
             this.gridLyrics.RowTemplate.Height = 26;
             this.gridLyrics.Size = new System.Drawing.Size(850, 530);
             this.gridLyrics.TabIndex = 0;
@@ -223,6 +243,7 @@
             // 
             this.Column1.FillWeight = 20F;
             this.Column1.HeaderText = "Time";
+            this.Column1.MinimumWidth = 6;
             this.Column1.Name = "Column1";
             this.Column1.Width = 130;
             // 
@@ -237,32 +258,33 @@
             // 
             // ctxMenu
             // 
+            this.ctxMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.ctxMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuInsertAbove,
             this.mnuDelete,
             this.mnuInsertBelow});
             this.ctxMenu.Name = "ctxMenu";
-            this.ctxMenu.Size = new System.Drawing.Size(167, 70);
+            this.ctxMenu.Size = new System.Drawing.Size(195, 76);
             this.ctxMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ctxMenu_Opening);
             // 
             // mnuInsertAbove
             // 
             this.mnuInsertAbove.Name = "mnuInsertAbove";
-            this.mnuInsertAbove.Size = new System.Drawing.Size(166, 22);
+            this.mnuInsertAbove.Size = new System.Drawing.Size(194, 24);
             this.mnuInsertAbove.Text = "Insert Row Above";
             this.mnuInsertAbove.Click += new System.EventHandler(this.mnuInsertAbove_Click);
             // 
             // mnuDelete
             // 
             this.mnuDelete.Name = "mnuDelete";
-            this.mnuDelete.Size = new System.Drawing.Size(166, 22);
+            this.mnuDelete.Size = new System.Drawing.Size(194, 24);
             this.mnuDelete.Text = "Delete Row";
             this.mnuDelete.Click += new System.EventHandler(this.mnuDelete_Click);
             // 
             // mnuInsertBelow
             // 
             this.mnuInsertBelow.Name = "mnuInsertBelow";
-            this.mnuInsertBelow.Size = new System.Drawing.Size(166, 22);
+            this.mnuInsertBelow.Size = new System.Drawing.Size(194, 24);
             this.mnuInsertBelow.Text = "Insert Row Below";
             this.mnuInsertBelow.Click += new System.EventHandler(this.mnuInsertBelow_Click);
             // 
@@ -299,7 +321,7 @@
             this.lblNudge.AutoSize = true;
             this.lblNudge.Location = new System.Drawing.Point(12, 173);
             this.lblNudge.Name = "lblNudge";
-            this.lblNudge.Size = new System.Drawing.Size(60, 17);
+            this.lblNudge.Size = new System.Drawing.Size(77, 22);
             this.lblNudge.TabIndex = 8;
             this.lblNudge.Text = "Nudge:";
             // 
@@ -328,7 +350,7 @@
             this.lblMS.AutoSize = true;
             this.lblMS.Location = new System.Drawing.Point(72, 199);
             this.lblMS.Name = "lblMS";
-            this.lblMS.Size = new System.Drawing.Size(28, 17);
+            this.lblMS.Size = new System.Drawing.Size(38, 22);
             this.lblMS.TabIndex = 4;
             this.lblMS.Text = "ms";
             // 
@@ -336,7 +358,7 @@
             // 
             this.txtMS.Location = new System.Drawing.Point(14, 196);
             this.txtMS.Name = "txtMS";
-            this.txtMS.Size = new System.Drawing.Size(52, 25);
+            this.txtMS.Size = new System.Drawing.Size(52, 29);
             this.txtMS.TabIndex = 3;
             this.txtMS.Text = "100";
             this.txtMS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -373,7 +395,7 @@
             // 
             // _timer
             // 
-            this._timer.Tick += new System.EventHandler(this.UpdateTimeLabel);
+            this._timer.Tick += new System.EventHandler(this._timer_Tick);
             // 
             // splitter
             // 
@@ -403,9 +425,24 @@
             this.ctlNeedsSave.Size = new System.Drawing.Size(24, 24);
             this.ctlNeedsSave.TabIndex = 7;
             // 
+            // triangle1
+            // 
+            this.triangle1.BackColor = System.Drawing.Color.Transparent;
+            this.triangle1.BorderColor = System.Drawing.Color.Maroon;
+            this.triangle1.BorderThickness = 2;
+            this.triangle1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.triangle1.Direction = Triggerless.TriggerBot.Triangle.Orientation.Down;
+            this.triangle1.ForeColor = System.Drawing.Color.Yellow;
+            this.triangle1.Location = new System.Drawing.Point(-11, 0);
+            this.triangle1.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
+            this.triangle1.Name = "triangle1";
+            this.triangle1.Position = -4;
+            this.triangle1.Size = new System.Drawing.Size(15, 20);
+            this.triangle1.TabIndex = 10;
+            // 
             // LyricsCtrl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MediumAquamarine;
             this.Controls.Add(this.splitter);
@@ -420,6 +457,7 @@
             this.pnlTop.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).EndInit();
             this.pnlWave.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picWait)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picWave)).EndInit();
             this.pnlGrid.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridLyrics)).EndInit();
@@ -467,5 +505,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colLyric;
         private System.Windows.Forms.Label lblNudge;
         private System.Windows.Forms.Button btnDeleteLyrics;
+        private Triangle triangle1;
+        private System.Windows.Forms.PictureBox picWait;
     }
 }

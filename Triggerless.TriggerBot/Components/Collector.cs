@@ -78,7 +78,7 @@ namespace Triggerless.TriggerBot
                     conn.Execute(sql);
                     result = true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //return false;
                 }
@@ -638,7 +638,7 @@ namespace Triggerless.TriggerBot
                             }
                         }
                     }
-                    catch (HttpRequestException exc)
+                    catch (HttpRequestException)
                     { 
                         var msg = $"  **TRIGGER GET failed on last try {product.ProductName} {trigger.TriggerName} {trigger.OggName}";
                         LogLine(msg);

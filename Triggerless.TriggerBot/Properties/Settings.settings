@@ -23,5 +23,8 @@
     <Setting Name="InstallationType" Type="System.String" Scope="User">
       <Value Profile="(Default)">local</Value>
     </Setting>
+    <Setting Name="LastTab" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Playback</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

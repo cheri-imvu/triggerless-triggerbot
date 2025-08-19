@@ -11,6 +11,7 @@ namespace Triggerless.TriggerBot
 {
     internal class Shared
     {
+        public static bool HasTriggerlessConnection = true;
         public static bool Paid { get; set; }
         public static void CheckIfPaid()
         {

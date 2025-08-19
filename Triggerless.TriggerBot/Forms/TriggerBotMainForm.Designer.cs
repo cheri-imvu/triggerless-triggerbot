@@ -32,8 +32,8 @@ namespace Triggerless.TriggerBot
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TriggerBotMainForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabAppContainer = new System.Windows.Forms.TabControl();
             this.tabPlayback = new System.Windows.Forms.TabPage();
             this.splitter = new System.Windows.Forms.SplitContainer();
@@ -112,6 +112,7 @@ namespace Triggerless.TriggerBot
             this._splicer = new Triggerless.TriggerBot.SplicerControl();
             this.tabLyrics = new System.Windows.Forms.TabPage();
             this.lyricsCtrl1 = new Triggerless.TriggerBot.Components.LyricsCtrl();
+            this.underConstructionCtrl1 = new Triggerless.TriggerBot.Components.UnderConstructionCtrl();
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.pnlAbout = new System.Windows.Forms.Panel();
             this.linkDiscord = new System.Windows.Forms.LinkLabel();
@@ -130,7 +131,6 @@ namespace Triggerless.TriggerBot
             this._progressTimer = new System.Windows.Forms.Timer(this.components);
             this._lyricTimer = new System.Windows.Forms.Timer(this.components);
             this._collector = new Triggerless.TriggerBot.Collector();
-            this.underConstructionCtrl1 = new Triggerless.TriggerBot.Components.UnderConstructionCtrl();
             this.tabAppContainer.SuspendLayout();
             this.tabPlayback.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
@@ -661,14 +661,14 @@ namespace Triggerless.TriggerBot
             | System.Windows.Forms.AnchorStyles.Left)));
             this.gridTriggers.BackgroundColor = System.Drawing.SystemColors.Control;
             this.gridTriggers.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridTriggers.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridTriggers.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.gridTriggers.ColumnHeadersHeight = 25;
             this.gridTriggers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.gridTriggers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -680,14 +680,14 @@ namespace Triggerless.TriggerBot
             this.gridTriggers.MultiSelect = false;
             this.gridTriggers.Name = "gridTriggers";
             this.gridTriggers.ReadOnly = true;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.gridTriggers.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.gridTriggers.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.gridTriggers.RowHeadersWidth = 5;
             this.gridTriggers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.gridTriggers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -1114,8 +1114,8 @@ namespace Triggerless.TriggerBot
             // 
             // tabLyrics
             // 
-            this.tabLyrics.Controls.Add(this.underConstructionCtrl1);
             this.tabLyrics.Controls.Add(this.lyricsCtrl1);
+            this.tabLyrics.Controls.Add(this.underConstructionCtrl1);
             this.tabLyrics.Location = new System.Drawing.Point(4, 27);
             this.tabLyrics.Name = "tabLyrics";
             this.tabLyrics.Size = new System.Drawing.Size(1169, 668);
@@ -1126,14 +1126,22 @@ namespace Triggerless.TriggerBot
             // lyricsCtrl1
             // 
             this.lyricsCtrl1.BackColor = System.Drawing.Color.MediumAquamarine;
-            this.lyricsCtrl1.Enabled = false;
+            this.lyricsCtrl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lyricsCtrl1.Font = new System.Drawing.Font("Lucida Sans", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lyricsCtrl1.Location = new System.Drawing.Point(93, 42);
+            this.lyricsCtrl1.Location = new System.Drawing.Point(0, 0);
             this.lyricsCtrl1.Margin = new System.Windows.Forms.Padding(4);
             this.lyricsCtrl1.Name = "lyricsCtrl1";
-            this.lyricsCtrl1.Size = new System.Drawing.Size(916, 555);
+            this.lyricsCtrl1.Size = new System.Drawing.Size(1169, 668);
             this.lyricsCtrl1.TabIndex = 0;
-            this.lyricsCtrl1.Visible = false;
+            // 
+            // underConstructionCtrl1
+            // 
+            this.underConstructionCtrl1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("underConstructionCtrl1.BackgroundImage")));
+            this.underConstructionCtrl1.Location = new System.Drawing.Point(0, 0);
+            this.underConstructionCtrl1.Margin = new System.Windows.Forms.Padding(4);
+            this.underConstructionCtrl1.Name = "underConstructionCtrl1";
+            this.underConstructionCtrl1.Size = new System.Drawing.Size(100, 100);
+            this.underConstructionCtrl1.TabIndex = 1;
             // 
             // tabAbout
             // 
@@ -1318,16 +1326,6 @@ namespace Triggerless.TriggerBot
             // _collector
             // 
             this._collector.CollectorEvent += new Triggerless.TriggerBot.Collector.CollectorEventHandler(this.OnCollectorEvent);
-            // 
-            // underConstructionCtrl1
-            // 
-            this.underConstructionCtrl1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("underConstructionCtrl1.BackgroundImage")));
-            this.underConstructionCtrl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.underConstructionCtrl1.Location = new System.Drawing.Point(0, 0);
-            this.underConstructionCtrl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.underConstructionCtrl1.Name = "underConstructionCtrl1";
-            this.underConstructionCtrl1.Size = new System.Drawing.Size(1169, 668);
-            this.underConstructionCtrl1.TabIndex = 1;
             // 
             // TriggerBotMainForm
             // 

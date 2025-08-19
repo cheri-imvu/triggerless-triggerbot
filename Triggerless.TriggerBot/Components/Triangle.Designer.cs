@@ -32,15 +32,13 @@
             // 
             // Triangle
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            //this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            //this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ForeColor = System.Drawing.Color.Transparent;
             this.Name = "Triangle";
             this.Size = new System.Drawing.Size(20, 20);
-            this.Click += new System.EventHandler(this.Triangle_Click);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Triangle_Paint);
             this.ResumeLayout(false);
 
         }

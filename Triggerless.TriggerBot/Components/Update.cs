@@ -30,6 +30,10 @@ namespace Triggerless.TriggerBot
         public void CheckForUpdate()
         {
             // First download the JSON from the web
+            if (!Shared.HasTriggerlessConnection)
+            {
+                return; // No internet connection, skip update check
+            }
             string jsonText = null;
             try
             {
@@ -41,6 +45,7 @@ namespace Triggerless.TriggerBot
             }
             catch (Exception)
             {
+                Shared.HasTriggerlessConnection = false;
                 return;
             }
             JObject jsonObject = JObject.Parse(jsonText);

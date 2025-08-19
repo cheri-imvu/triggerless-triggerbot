@@ -35,14 +35,33 @@
           <a href="audio-splice.png" target="_blank"><img src="audio-splice.png" /></a>
         </p>
         <div class="topic">Download Triggerbot</div>
-        <p>Download Triggerbot Setup 0.10.1 (beta): <a href="triggerbot-setup.0.10.1.exe">triggerbot-setup.0.10.1.exe</a> (16 MB). 
+        <p>Download Triggerbot Setup 0.11.6 (beta): <a href="triggerbot-setup.0.11.6.zip">triggerbot-setup.0.11.6.zip</a> (46 MB). 
           Once installed, you'll be prompted to upgrade when an update is available.</p>
 		<p>Join the Triggerless Discord server! Click here: <a href="https://discord.gg/<?php include 'invite-code.txt' ?>" target="_blank">https://discord.gg/<?php include 'invite-code.txt' ?></a></p>
-        <p>Instructional Video. View in fullscreen mode at 1080p HD for the most realistic experience.</p>
+        <div class="topic">Videos</div>
+        <p>Instructional Videos. View in fullscreen mode at 1080p HD for the most realistic experience.</p>
         <p><iframe style="z-index: 10;" width="750" height="422" src="https://www.youtube.com/embed/3p5k97eRWE4" title="YouTube video player" frameborder="0" 
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
         <p><iframe style="z-index: 10;" width="750" height="422" src="https://www.youtube.com/embed/6IPIWJSf5VM" title="YouTube video player" frameborder="0" 
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
+    </div>
+    <div class="center-div">
+      <div class="topic">What's new in Version 0.11.6 (beta) 2025-08-16</div>
+      <ul>
+        <li>Lyric Sheets editing is back</li>
+		<li>Lyrics MP3 player Start/Resume anywhere</li>
+		<li>Stay on Top only applies during Playback</li>
+      </ul>
+    </div>
+    <div class="center-div">
+      <div class="topic">What's new in Version 0.11.1 (beta) 2025-07-19</div>
+      <ul>
+        <li>Smart vs. Fixed Cut options</li>
+		<li>FFmpeg updated</li>
+		<li>Network bugs fixed</li>
+		<li>Discord functions moved online</li>
+		<li>Lyric Sheet editing is suspended until next release (Sorry)</li>
+      </ul>
     </div>
     <div class="center-div">
       <div class="topic">What's new in Version 0.10.1 (beta) 2025-04-18</div>

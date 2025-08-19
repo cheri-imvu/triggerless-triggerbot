@@ -16,6 +16,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <ForceDesignerDPIUnaware>false</ForceDesignerDPIUnaware>
     <PublishUrl>D:\DEV\CS\triggerless-triggerbot-publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -26,12 +27,11 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationRevision>3</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <ForceDesignerDPIUnaware>false</ForceDesignerDPIUnaware>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -244,6 +244,7 @@
     <Compile Include="Components\DirtyControl.Designer.cs">
       <DependentUpon>DirtyControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\FastWaveform.cs" />
     <Compile Include="Components\LyricsCtrl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -335,7 +336,7 @@
     <Compile Include="Models\Shared.cs" />
     <Compile Include="Models\SingleProgramInstance.cs" />
     <Compile Include="Components\Triangle.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Components\Triangle.Designer.cs">
       <DependentUpon>Triangle.cs</DependentUpon>

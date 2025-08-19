@@ -12,19 +12,27 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Triggerless.TriggerBot.Models;
 using Triggerless.XAFLib;
 
 namespace Triggerless.TriggerBot
 {
     public partial class SplicerControl : UserControl
     {
+        private enum CutStage
+        {
+            Idle, SliceAudio, CreateOGG, CreateCHKN, ShowMe
+        }
+
         private string _outputPath;
         private TimeSpan _duration = TimeSpan.Zero;
         private System.Drawing.Image _waveform;
         private const double INIT_VOLUME = 100;
         private double _volume = INIT_VOLUME;
         private Mp3FileReader _mp3FileReader;
+        private CutStage _stage = CutStage.Idle;
 
         public new void Dispose()
         {
@@ -114,32 +122,44 @@ namespace Triggerless.TriggerBot
 
         private void ShowMeTheFile(object sender, EventArgs e)
         {
+            _stage = CutStage.Idle;
             if (Directory.Exists(_outputPath))
             {
-                string arguments = $"/select, \"{_outputPath}\\{txtPrefix.Text.Trim()}.chkn\"";
-                Process.Start("explorer.exe", arguments);
-            }
-            else
-            {
+                var chknName = $"{_outputPath}\\{txtPrefix.Text.Trim()}.chkn";
+                Func<string> args = () => $"/select, \"{chknName}\"";
 
+                if (File.Exists(chknName))
+                {
+                    Process.Start("explorer.exe", args());
+                    return;
+                } 
+                else
+                {
+                    chknName = $"{_outputPath}\\{txtPrefix.Text.Trim()}-1.chkn";
+                    if (File.Exists(chknName))
+                    {
+                        Process.Start("explorer.exe", args());
+                        return;
+                    }
+                }
             }
+            MessageBox.Show($"The CHKN file does not exist yet. Please slice the audio first.", "Unable to Open", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
-        private void StartConversion(object sender, EventArgs e)
+        private bool FormIsValid()
         {
-            #region Form Validation
             if (string.IsNullOrWhiteSpace(txtFilename.Text))
             {
                 MessageBox.Show("Please select a file to slice", "Unable to Continue", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 btnSelectFile.Focus();
-                return;
+                return false;
             }
 
             if (!File.Exists(txtFilename.Text))
             {
                 MessageBox.Show($"The file '{txtFilename.Text}' doesn't exist", "Unable to Continue", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 btnSelectFile.Focus();
-                return;
+                return false;
             }
 
             if (string.IsNullOrWhiteSpace(txtPrefix.Text))
@@ -147,7 +167,7 @@ namespace Triggerless.TriggerBot
                 MessageBox.Show("A prefix must be specified", "Unable to Continue", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtPrefix.Focus();
                 txtPrefix.SelectAll();
-                return;
+                return false;
             }
 
             if (Regex.Match(txtPrefix.Text.Trim(), @"[\s,0-9<>:""/\\|?*]", RegexOptions.None).Success)
@@ -155,12 +175,13 @@ namespace Triggerless.TriggerBot
                 MessageBox.Show("The chosen prefix does not conform to the rules.", "Unable to Continue", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtPrefix.SelectAll();
                 txtPrefix.Focus();
-                return;
+                return false;
             }
-            #endregion
+            return true;
+        }
 
-            #region Audio Slicing
-            var triggerPrefix = txtPrefix.Text.Trim();
+        private async Task SliceAudio(string triggerPrefix)
+        {
             var increment = 1;
             _outputPath = Path.Combine(Shared.TriggerbotDocsPath, triggerPrefix);
             while (Directory.Exists(_outputPath))
@@ -172,6 +193,8 @@ namespace Triggerless.TriggerBot
 
             lblAction.Text = "Slicing Audio File";
             lblAction.Update();
+            _stage = CutStage.SliceAudio;
+            timer1.Start();
 
             try
             {
@@ -198,14 +221,17 @@ namespace Triggerless.TriggerBot
             {
                 MessageBox.Show($"Unable to slice file for the following reason:\n{ex.Message}. Make sure you're not playing the file while trying to slice it.",
                     "Unable to Slice", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                await Discord.SendMessage("Unable to slice audio file", ex.Message + Environment.NewLine + ex.StackTrace);
                 lblAction.Text = "Aborted Audio Slice";
                 return;
             }
-            #endregion
+        }
 
-            #region OGG Conversion
+        private void ConvertWAVtoOGG()
+        {
             lblAction.Text = "Creating OGG files";
             lblAction.Update();
+            _stage = CutStage.CreateOGG;
 
             try
             {
@@ -220,13 +246,13 @@ namespace Triggerless.TriggerBot
                         rdoHQS.Checked ? 3 : 1;
                     _audioSegmenter.RunFFmpeg(ffmpegLocation, inputFile, outputFile, option, _volume / 100);
                 }
-
             }
             catch (Exception exc)
             {
                 MessageBox.Show($"Unable to convert to OGG for the following reason: {exc.Message}",
                     "Conversion Interrupted", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 lblAction.Text = "Aborted OGG conversion";
+                _stage = CutStage.Idle;
                 return;
             }
 
@@ -245,13 +271,13 @@ namespace Triggerless.TriggerBot
             {
                 if (new FileInfo(filename).Length <= 4096) File.Delete(filename);
             }
+        }
 
-
-            #endregion
-
-            #region Create CHKN
+        private List<List<string>> PackageCHKN(string triggerPrefix)
+        {
             lblAction.Text = "Packaging CHKN file";
             lblAction.Update();
+            _stage = CutStage.CreateCHKN;
             var templates = new List<Template>();
             var listsOfFiles = new List<List<string>>();
             var parentId = chkCheap.Checked ?
@@ -342,43 +368,58 @@ namespace Triggerless.TriggerBot
                     File.Delete(filename);
                 }
             }
+            return listsOfFiles;
+        }
 
-            #endregion
-
-            #region Create PNG
-            if (checkIcons.Checked)
+        private void CreatePNG(string triggerPrefix, List<List<string>> listsOfFiles)
+        {
+            if (!checkIcons.Checked) return;
+            lblAction.Text = "Creating Icons";
+            lblAction.Update();
+            var chknIndex = 0;
+            foreach (var filename in Directory.GetFiles(_outputPath, "*.chkn"))
             {
-                lblAction.Text = "Creating Icons";
-                lblAction.Update();
-                var chknIndex = 0;
-                foreach (var filename in Directory.GetFiles(_outputPath, "*.chkn"))
+                var pngFile = filename.Replace(".chkn", ".png");
+                string text1 = string.Empty;
+                string text2 = string.Empty;
+                var currentList = listsOfFiles[chknIndex];
+                if (listsOfFiles.Count > 1)
                 {
-                    var pngFile = filename.Replace(".chkn", ".png");
-                    string text1 = string.Empty;
-                    string text2 = string.Empty;
-                    var currentList = listsOfFiles[chknIndex];
-                    if (listsOfFiles.Count > 1)
-                    {
-                        text1 = $"Pt. {chknIndex + 1} / {listsOfFiles.Count}";
-                    }
-                    else
-                    {
-                        text1 = "Full song";
-                    }
-
-                    var firstName = Path.GetFileNameWithoutExtension(currentList.First());
-                    var lastName = Path.GetFileNameWithoutExtension(currentList.Last());
-                    var firstNumber = int.Parse(firstName.Replace(triggerPrefix, String.Empty));
-                    var lastNumber = int.Parse(lastName.Replace(triggerPrefix, String.Empty));
-                    text2 = $"{triggerPrefix}{firstNumber} - {lastNumber}";
-                    chknIndex++;
-
-                    CreateTextImage(text1, text2, pngFile);
+                    text1 = $"Pt. {chknIndex + 1} / {listsOfFiles.Count}";
                 }
+                else
+                {
+                    text1 = "Full song";
+                }
+
+                var firstName = Path.GetFileNameWithoutExtension(currentList.First());
+                var lastName = Path.GetFileNameWithoutExtension(currentList.Last());
+                var firstNumber = int.Parse(firstName.Replace(triggerPrefix, String.Empty));
+                var lastNumber = int.Parse(lastName.Replace(triggerPrefix, String.Empty));
+                text2 = $"{triggerPrefix}{firstNumber} - {lastNumber}";
+                chknIndex++;
+
+                CreateTextImage(text1, text2, pngFile);
             }
 
             lblAction.Text = "Complete";
-            #endregion
+            lblAction.Update();
+            _stage = CutStage.ShowMe;
+        }
+
+        private async void StartConversion(object sender, EventArgs e)
+        {
+            if (!FormIsValid()) return;
+
+            var triggerPrefix = txtPrefix.Text.Trim();
+
+            await SliceAudio(triggerPrefix);
+
+            ConvertWAVtoOGG();
+
+            var listsOfFiles = PackageCHKN(triggerPrefix);
+
+            CreatePNG(triggerPrefix, listsOfFiles);
         }
 
         private void WaveformCreate(string filename)
@@ -480,9 +521,6 @@ namespace Triggerless.TriggerBot
             var ff = new FilenameFilter(filenames);
             fz.CreateZip(chkn, folder, false, ff, null);
         }
-
-
-        private string _botPath;
 
         private void SplicerControl_Load(object sender, EventArgs e)
         {
@@ -629,6 +667,43 @@ namespace Triggerless.TriggerBot
         private void rdoMinima_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            Color defaultColor = Color.FromKnownColor(KnownColor.Control);
+            Color backcolor = defaultColor;
+            Label target = lblAction;
+
+            switch (_stage)
+            {
+                case CutStage.Idle:
+                    backcolor = defaultColor;
+                    break;
+                case CutStage.SliceAudio:
+                    backcolor = Color.PeachPuff;
+                    break;
+                case CutStage.CreateOGG:
+                    backcolor = Color.LightYellow;
+                    break;
+                case CutStage.CreateCHKN:
+                    backcolor = Color.LightGreen;
+                    break;
+                case CutStage.ShowMe:
+                    backcolor = defaultColor;
+                    break;
+            }
+
+            if (target.BackColor == defaultColor) 
+            {
+                target.BackColor = backcolor;
+            }
+            else
+            {
+                target.BackColor = defaultColor;
+            }
+            
+            target.Update();
         }
     }
 

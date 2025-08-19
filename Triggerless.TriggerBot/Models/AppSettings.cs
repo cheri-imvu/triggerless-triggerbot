@@ -16,6 +16,8 @@
         public bool GenerateIcons { get; set; }
         public bool CleanUpOggFiles { get; set; }
         public int LagMS { get; set; }
+
+        public string LastTab { get; set; } = "Playback";
     }
 
 }

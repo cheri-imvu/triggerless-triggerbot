@@ -1,6 +1,6 @@
 {
-	"version": "0.10.1",
-	"setup": "triggerbot-setup.0.10.1.exe",
-	"md5": "1c4e4bbb8926a0cdd9b8c37e62fa0b02",
-"whatsNew": "New in Version 0.10.1|* Lyric Sheets feature is released|* First run will initiate a Rescan All"
+	"version": "0.11.6",
+	"setup": "triggerbot-setup.0.11.6.exe",
+	"md5": "7ea93961f43730a67c296882a70ed1bc",
+	"whatsNew": "New in Version 0.11.6|* Lyrics Sheets are back|* Lyrics MP3 player Start/Resume from any point in song|* Stay on Top only applies during Playback"
 }

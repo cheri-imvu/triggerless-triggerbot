@@ -10,17 +10,31 @@ namespace Triggerless.TriggerBot.Models
         public static async Task<string> GetInviteLink()
         {
             string result = string.Empty;
-            using (var client = new HttpClient())
+            string code = "mVjsqJZenQ";
+            try
             {
-                var code = await client.GetStringAsync("https://triggerless.com/triggerbot/invite-code.txt").ConfigureAwait(false);
-                result = $"https://discord.gg/{code}";
+                if (Shared.HasTriggerlessConnection)
+                using (var client = new HttpClient())
+                {
+                    code = await client.GetStringAsync("https://triggerless.com/triggerbot/invite-code.txt").ConfigureAwait(false);
+                }
             }
+            catch (Exception) 
+            { 
+                Shared.HasTriggerlessConnection = false;
+            }
+
+            result = $"https://discord.gg/{code}";
             return result;
         }
 
         private static async Task<int> SendMessageToBotAsync(string apiUrl, string title, string body)
         {
             var result = -1;
+            if (!Shared.HasTriggerlessConnection)
+            {
+                return result;
+            }
             var payload = new
             {
                 title = title,

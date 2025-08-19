@@ -1,0 +1,6 @@
+{
+	"version": "0.11.1",
+	"setup": "triggerbot-setup.0.11.1.exe",
+	"md5": "bbf6b81ad1bf5c3c4bb843c1a07e8217",
+	"whatsNew": "New in Version 0.11.1|* Smart Cut or Fixed Cut options|* Network bugs fixed|* Discord functions moved online|* FFmpeg updated|* Lyric Sheets unavailable temporarily"
+}

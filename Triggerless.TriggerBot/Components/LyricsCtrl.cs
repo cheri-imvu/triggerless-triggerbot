@@ -14,6 +14,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Triggerless.TriggerBot.Forms;
 using Triggerless.TriggerBot.Models;
@@ -32,7 +33,7 @@ namespace Triggerless.TriggerBot.Components
         private Image _waveform;                // Waveform image
         private IWavePlayer _wavePlayer;        // Audio playback
         private int _clickedRowIndex = -1;      // Used for context menu
-        private LyricsCursorPanel _cursorOverlay;          // This implements the scrolling bar during playback
+        //private LyricsCursorPanel _cursorOverlay;          // This implements the scrolling bar during playback
         private const string TIMESPAN_FORMAT = @"mm\:ss\.fff"; // Common format we use for TimeSpan
 
         private ProductDisplayInfo _product;    // Currently select product
@@ -49,6 +50,7 @@ namespace Triggerless.TriggerBot.Components
             this.TabStop = true;
 
             // Make the overlay PictureBox a child of the waveform PictureBox
+            /*
             _cursorOverlay = new LyricsCursorPanel
             {
                 Parent = picWave,
@@ -56,10 +58,10 @@ namespace Triggerless.TriggerBot.Components
                 Location = new Point(0, 0),
                 BackColor = Color.Green,
             };
-            _cursorOverlay.MouseDown += WaveClicked;
+            _cursorOverlay.MouseDown += picWave_MouseDown;
             _cursorOverlay.BringToFront();
-            
-            picWave.MouseDown += WaveMouseDown;
+            */
+            //picWave.MouseDown += picWave_MouseDown;
             Disposed += OnDisposed;
         }
 
@@ -100,7 +102,10 @@ namespace Triggerless.TriggerBot.Components
         /// 
         private void LyricsCtrl_Load(object sender, EventArgs e)
         {
-            _cursorOverlay.Size = picWave.Size;
+            //_cursorOverlay.Size = picWave.Size;
+            triangle1.Position = 0;
+            triangle1.BringToFront();
+
             ctlNeedsSave.Dirty = false;
         }
 
@@ -250,11 +255,79 @@ namespace Triggerless.TriggerBot.Components
         /// </summary>
         private void InitProduct()
         {
-            if (_product == null) return;
-            var mp3Path = GetOrCreateMP3();
-            WaveformCreate(mp3Path);
-            GetExistingLyrics();
+            if (_product == null)
+            {
+                MessageBox.Show("Choose a Trigger Tune first."); 
+                return;
+            }
+            try
+            {
+                picWave.Visible = false;
+                CleanupPrevious();
+                var mp3Path = GetOrCreateMP3();
+                if (!InitReaderAndPlayer()) return;
+                WaveformCreate(mp3Path);
+                GetExistingLyrics();
+                picWave.Visible = true;
+            }
+            catch (Exception ex)
+            {
+                Application.Exit();
+            }
 
+        }
+
+        private bool InitReaderAndPlayer()
+        {
+            var mp3FileName = Path.Combine(Shared.LyricSheetsPath, $"{_product.Id}.mp3");
+            if (!File.Exists(mp3FileName))
+            {
+                MessageBox.Show($"Could not open {mp3FileName}", 
+                    "File Read Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            if (_mp3FileReader == null) // should be true at this point
+            {
+                _mp3FileReader = new Mp3FileReader(mp3FileName);
+            }
+            lblCreatorName.Text = 
+                $"by {_product.Creator} ({_mp3FileReader.TotalTime.ToString(TIMESPAN_FORMAT)})";
+
+            if (_wavePlayer == null)
+            {
+                _wavePlayer = new WaveOutEvent();
+                _wavePlayer.PlaybackStopped += EndOfPlayback;
+                _wavePlayer.Init(_mp3FileReader);
+                triangle1.Position = 0;
+                _mp3FileReader.CurrentTime = TimeSpan.Zero;
+            }
+            lblTimer.Text = _mp3FileReader.CurrentTime.ToString(TIMESPAN_FORMAT);
+            return true;
+        }
+
+        private void CleanupPrevious()
+        {
+            lblTimer.Text = TimeSpan.Zero.ToString(TIMESPAN_FORMAT);
+            if (_wavePlayer != null)
+            {
+                if (_wavePlayer.PlaybackState != PlaybackState.Stopped)
+                {
+                    _wavePlayer.Stop();
+                }
+                _wavePlayer.Dispose();
+                _wavePlayer = null;
+            }
+            _timer.Stop();
+
+            picWave.Image?.Dispose();
+            _waveform?.Dispose();
+            picWave.Image = null;
+            picWave.Update();
+            _waveform = null;
+
+            _mp3FileReader?.Dispose();
+            _mp3FileReader = null;
+            triangle1.Position = 0;
         }
 
         /// <summary>
@@ -266,35 +339,11 @@ namespace Triggerless.TriggerBot.Components
         /// <param name="mp3FileName">Full path to the MP3 file</param>
         private void WaveformCreate(string mp3FileName)
         {
-            lblTimer.Text = "00:00.000";
-            if (_wavePlayer != null)
-            {
-                if (_wavePlayer.PlaybackState != PlaybackState.Stopped) 
-                {
-                    _wavePlayer.Stop();
-                }
-                _wavePlayer.Dispose();
-                _wavePlayer = null;
-            }            
-            _timer.Stop();
-
-            picWave.Image?.Dispose();
-            _waveform?.Dispose();
-            picWave.Image = null;
-            picWave.Update();
-            _waveform = null;
-
-            _mp3FileReader?.Dispose();
-            _mp3FileReader = new Mp3FileReader(mp3FileName);
-            lblCreatorName.Text = $"by {_product.Creator} ({_mp3FileReader.TotalTime.ToString(TIMESPAN_FORMAT)})";
 
             var wavePath = Path.Combine(Shared.LyricSheetsPath, $"{_product.Id}.wave.png");
-            if (File.Exists(wavePath))
+            if (!File.Exists(wavePath))
             {
-                _waveform = Image.FromFile(wavePath);
-            } 
-            else
-            {
+                /*
                 var maxPeakProvider = new MaxPeakProvider();
                 var rmsPeakProvider = new RmsPeakProvider(200);
                 var samplingPeakProvider = new SamplingPeakProvider(200);
@@ -313,12 +362,15 @@ namespace Triggerless.TriggerBot.Components
                 Cursor = Cursors.WaitCursor;
                 _waveform = renderer.Render(_mp3FileReader, averagePeakProvider, renderSettings);
                 _waveform.Save(wavePath);
-                Cursor = Cursors.Default;
-            }
+                Cursor = Cursors.Default; */
 
+                FastWaveform.SavePngFromFile(mp3FileName, 
+                    wavePath, picWave.Width, picWave.Height, 5000, Color.Blue);
+            }
+            _waveform = Image.FromFile(wavePath);
             picWave.Image = _waveform;
-            _cursorOverlay.Image = _waveform;
-            _cursorOverlay.Invalidate();
+            triangle1.Position = 0;
+            triangle1.BringToFront();
         }
 
         /// <summary>
@@ -387,42 +439,27 @@ namespace Triggerless.TriggerBot.Components
         /// <param name="e"></param>
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            if (_product == null)
-            {
-                MessageBox.Show("Choose a Trigger Tune first."); return;
-            }
             try
             {
-                // Initialize output device if it's not already set.
-                if (_wavePlayer == null)
+                switch (_wavePlayer.PlaybackState)
                 {
-                    _wavePlayer = new WaveOutEvent();
-                    _wavePlayer.PlaybackStopped += EndOfPlayback;
-                    if (_mp3FileReader != null)
-                    {
-                        _wavePlayer.Init(_mp3FileReader);
-                    }
+                    case PlaybackState.Stopped:
+                        _mp3FileReader.CurrentTime = GetCurrentTime();
+                        _wavePlayer.Play();
+                        break;
+                    case PlaybackState.Playing:
+                        _wavePlayer.Pause();
+                        _mp3FileReader.CurrentTime = GetCurrentTime();
+                        _wavePlayer.Play();
+                        break;
+                    case PlaybackState.Paused:
+                        _mp3FileReader.CurrentTime = GetCurrentTime();
+                        _wavePlayer.Play();
+                        break;
+                    default:
+                        break;
                 }
-
-                // Initialize MP3 reader if necessary.
-                if (_mp3FileReader == null)
-                {
-                    _mp3FileReader = new Mp3FileReader($"{Shared.LyricSheetsPath}\\{_product.Id}.mp3");
-                    _wavePlayer.Init(_mp3FileReader);
-                }
-                else if (_mp3FileReader.Position == _mp3FileReader.Length)
-                {
-                    // If end-of-file is reached, rewind.
-                    _mp3FileReader.CurrentTime = TimeSpan.Zero;
-                }
-
-                // Start playback if not already running.
-                if (_wavePlayer.PlaybackState != PlaybackState.Playing)
-                {
-                    _wavePlayer.Play();
-                    _timer.Start();
-                    
-                }
+                _timer.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -439,6 +476,8 @@ namespace Triggerless.TriggerBot.Components
         {
             _timer.Stop();
             lblTimer.Text = TimeSpan.Zero.ToString(TIMESPAN_FORMAT);
+            triangle1.Position = 0;
+            if (_mp3FileReader != null) _mp3FileReader.CurrentTime = new TimeSpan(0L);
         }
 
         /// <summary>
@@ -448,19 +487,20 @@ namespace Triggerless.TriggerBot.Components
         /// <param name="e"></param>
         private void btnPause_Click(object sender, EventArgs e)
         {
-            if (_product == null)
+            if (_product == null || _wavePlayer == null)
             {
                 MessageBox.Show("Choose a Trigger Tune first."); return;
             }
             try
             {
-                if (_wavePlayer != null && _wavePlayer.PlaybackState == PlaybackState.Playing)
+                if (_wavePlayer.PlaybackState == PlaybackState.Playing)
                 {
                     _wavePlayer.Pause();
                     _timer.Stop();
                 }
-                else if (_wavePlayer != null && _wavePlayer.PlaybackState == PlaybackState.Paused)
+                else if (_wavePlayer.PlaybackState == PlaybackState.Paused)
                 {
+                    _mp3FileReader.CurrentTime = GetCurrentTime();
                     _wavePlayer.Play();
                     _timer.Start();
                 }
@@ -477,12 +517,12 @@ namespace Triggerless.TriggerBot.Components
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void UpdateTimeLabel(object sender, EventArgs e)
+        private void _timer_Tick(object sender, EventArgs e)
         {
             if (_mp3FileReader == null) return;
 
             // Display the elapsed time in the format mm:ss.xxx
-            lblTimer.Text = $"{_mp3FileReader.CurrentTime:mm\\:ss\\.fff}";
+            lblTimer.Text = _mp3FileReader.CurrentTime.ToString(TIMESPAN_FORMAT);
             UpdateCursor();
         }
 
@@ -660,25 +700,22 @@ namespace Triggerless.TriggerBot.Components
         }
 
         /// <summary>
-        /// This draws the overlay, that is, the line that scrolls across the waveform.
+        /// This moves the triangle.
         /// </summary>
         private void UpdateCursor()
         {
             var totalTime = _mp3FileReader.TotalTime.TotalMilliseconds;
             if (totalTime == 0) return;
             var currentTime = _mp3FileReader.CurrentTime.TotalMilliseconds;
-            _cursorOverlay.CursorX = Convert.ToInt32(_cursorOverlay.Width * currentTime / totalTime);
-            _cursorOverlay.Invalidate();
+            triangle1.Position = Convert.ToInt32(picWave.Width * currentTime / totalTime);
         }
 
-        private void WaveClicked(object sender, MouseEventArgs e)
+        private void picWave_MouseDown(object sender, MouseEventArgs e)
         {
-            if (_wavePlayer != null || _mp3FileReader == null) return;
-            if (_wavePlayer.PlaybackState == PlaybackState.Playing)
-            {
-                btnPause_Click(sender, new EventArgs());
-            }
-            double fraction = e.X / _cursorOverlay.Width;
+            if (_waveform == null || _wavePlayer == null) return;
+
+            double fraction = (double)e.X / (double)picWave.Width;
+            triangle1.Position = e.X;
             TimeSpan newTime = TimeSpan.FromMilliseconds(fraction * _mp3FileReader.TotalTime.TotalMilliseconds);
             _mp3FileReader.CurrentTime = newTime;
             UpdateCursor();
@@ -697,13 +734,14 @@ namespace Triggerless.TriggerBot.Components
             if ((_wavePlayer.PlaybackState == PlaybackState.Playing) || _wavePlayer.PlaybackState == PlaybackState.Paused) 
             {
                 _wavePlayer.Stop();
+                _timer.Stop();
                 _mp3FileReader.CurrentTime = TimeSpan.Zero;
-                lblTimer.Text = "00:00.000";
+                lblTimer.Text = TimeSpan.Zero.ToString(TIMESPAN_FORMAT);
                 UpdateCursor();
             }
         }
 
-        private void AdjustTimes(int ms)
+        private void AdjustTimeMarkers(int ms)
         {
             DataGridViewRowCollection rows;
             if (gridLyrics.SelectedRows.Count == 0)
@@ -745,7 +783,7 @@ namespace Triggerless.TriggerBot.Components
             int ms = 0;
             bool parsed = int.TryParse(txtMS.Text, out ms);
             if (!parsed) return;
-            AdjustTimes(ms);
+            AdjustTimeMarkers(ms);
         }
 
         private void btnMsMinus_Click(object sender, EventArgs e)
@@ -753,8 +791,9 @@ namespace Triggerless.TriggerBot.Components
             int ms = 0;
             bool parsed = int.TryParse(txtMS.Text, out ms);
             if (!parsed) return;
-            AdjustTimes(-ms);
+            AdjustTimeMarkers(-ms);
         }
+
         private void gridLyrics_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             ctlNeedsSave.Dirty = true;
@@ -771,9 +810,15 @@ namespace Triggerless.TriggerBot.Components
             }
         }
 
-        private void WaveMouseDown(object sender, MouseEventArgs e)
+        private TimeSpan GetCurrentTime()
         {
-            Debug.WriteLine($"Button:{e.Button} X:{e.X} Y:{e.Y} Delta:{e.Delta} Clicks:{e.Clicks}");
+            if (_mp3FileReader == null) return TimeSpan.Zero;
+
+            long totalTicks = _mp3FileReader.TotalTime.Ticks;
+            double fraction = (double)triangle1.Position / (double)picWave.Width;
+            long currentTicks = Convert.ToInt64(fraction * totalTicks);
+            return new TimeSpan(currentTicks);
         }
+
     }
 }
