@@ -62,10 +62,10 @@
             // lblName
             // 
             this.lblName.AutoSize = true;
-            this.lblName.Font = new System.Drawing.Font("Lucida Sans Unicode", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblName.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblName.Location = new System.Drawing.Point(113, 3);
             this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(215, 16);
+            this.lblName.Size = new System.Drawing.Size(192, 17);
             this.lblName.TabIndex = 1;
             this.lblName.Text = "012345678 012345678 0123";
             this.lblName.Click += new System.EventHandler(this.lblName_Click);
@@ -73,25 +73,27 @@
             // lblCreator
             // 
             this.lblCreator.AutoSize = true;
+            this.lblCreator.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCreator.Location = new System.Drawing.Point(113, 25);
             this.lblCreator.Name = "lblCreator";
-            this.lblCreator.Size = new System.Drawing.Size(209, 18);
+            this.lblCreator.Size = new System.Drawing.Size(185, 17);
             this.lblCreator.TabIndex = 2;
             this.lblCreator.Text = "by CrazyMusicTriggerFiend";
             // 
             // lblTriggers
             // 
             this.lblTriggers.AutoSize = true;
+            this.lblTriggers.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTriggers.Location = new System.Drawing.Point(113, 44);
             this.lblTriggers.Name = "lblTriggers";
-            this.lblTriggers.Size = new System.Drawing.Size(180, 18);
+            this.lblTriggers.Size = new System.Drawing.Size(150, 17);
             this.lblTriggers.TabIndex = 3;
             this.lblTriggers.Text = "Triggers: xyz1 - xyz24";
             // 
             // linkOnDeck
             // 
-            this.linkOnDeck.Font = new System.Drawing.Font("Lucida Sans Unicode", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkOnDeck.Location = new System.Drawing.Point(237, 62);
+            this.linkOnDeck.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkOnDeck.Location = new System.Drawing.Point(237, 64);
             this.linkOnDeck.Name = "linkOnDeck";
             this.linkOnDeck.Size = new System.Drawing.Size(128, 18);
             this.linkOnDeck.TabIndex = 4;
@@ -104,8 +106,8 @@
             // 
             // linkWearItem
             // 
-            this.linkWearItem.Font = new System.Drawing.Font("Lucida Sans Unicode", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkWearItem.Location = new System.Drawing.Point(113, 62);
+            this.linkWearItem.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkWearItem.Location = new System.Drawing.Point(113, 64);
             this.linkWearItem.Name = "linkWearItem";
             this.linkWearItem.Size = new System.Drawing.Size(106, 18);
             this.linkWearItem.TabIndex = 5;

@@ -47,7 +47,7 @@
             // 
             // txtSearch
             // 
-            this.txtSearch.Font = new System.Drawing.Font("Lucida Sans", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSearch.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtSearch.Location = new System.Drawing.Point(96, 15);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(236, 25);
@@ -68,10 +68,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Lucida Sans", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 17);
+            this.label1.Size = new System.Drawing.Size(59, 17);
             this.label1.TabIndex = 2;
             this.label1.Text = "Search:";
             this.label1.Click += new System.EventHandler(this.label1_Click);
@@ -83,6 +83,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this._flowProducts.AutoScroll = true;
             this._flowProducts.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this._flowProducts.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._flowProducts.Location = new System.Drawing.Point(12, 6);
             this._flowProducts.Name = "_flowProducts";
             this._flowProducts.Size = new System.Drawing.Size(660, 506);

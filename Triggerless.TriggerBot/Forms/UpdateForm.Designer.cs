@@ -39,17 +39,17 @@
             // lblVersion
             // 
             this.lblVersion.BackColor = System.Drawing.Color.Transparent;
-            this.lblVersion.Location = new System.Drawing.Point(140, 20);
+            this.lblVersion.Location = new System.Drawing.Point(124, 19);
             this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(408, 47);
+            this.lblVersion.Size = new System.Drawing.Size(363, 44);
             this.lblVersion.TabIndex = 0;
             this.lblVersion.Text = "A new version of Triggerbot {version} is available. What would you like to do?";
             // 
             // btnUpdateImmediately
             // 
-            this.btnUpdateImmediately.Location = new System.Drawing.Point(84, 194);
+            this.btnUpdateImmediately.Location = new System.Drawing.Point(75, 183);
             this.btnUpdateImmediately.Name = "btnUpdateImmediately";
-            this.btnUpdateImmediately.Size = new System.Drawing.Size(170, 34);
+            this.btnUpdateImmediately.Size = new System.Drawing.Size(151, 32);
             this.btnUpdateImmediately.TabIndex = 1;
             this.btnUpdateImmediately.Text = "Update Now";
             this.btnUpdateImmediately.UseVisualStyleBackColor = true;
@@ -57,9 +57,9 @@
             // 
             // btnUpdateOnExit
             // 
-            this.btnUpdateOnExit.Location = new System.Drawing.Point(260, 194);
+            this.btnUpdateOnExit.Location = new System.Drawing.Point(231, 183);
             this.btnUpdateOnExit.Name = "btnUpdateOnExit";
-            this.btnUpdateOnExit.Size = new System.Drawing.Size(170, 34);
+            this.btnUpdateOnExit.Size = new System.Drawing.Size(151, 32);
             this.btnUpdateOnExit.TabIndex = 2;
             this.btnUpdateOnExit.Text = "Update Later";
             this.btnUpdateOnExit.UseVisualStyleBackColor = true;
@@ -67,9 +67,9 @@
             // 
             // btnIgnore
             // 
-            this.btnIgnore.Location = new System.Drawing.Point(436, 194);
+            this.btnIgnore.Location = new System.Drawing.Point(388, 183);
             this.btnIgnore.Name = "btnIgnore";
-            this.btnIgnore.Size = new System.Drawing.Size(170, 34);
+            this.btnIgnore.Size = new System.Drawing.Size(151, 32);
             this.btnIgnore.TabIndex = 3;
             this.btnIgnore.Text = "Ignore for now";
             this.btnIgnore.UseVisualStyleBackColor = true;
@@ -77,23 +77,23 @@
             // 
             // txtWhatsNew
             // 
-            this.txtWhatsNew.Location = new System.Drawing.Point(90, 70);
+            this.txtWhatsNew.Location = new System.Drawing.Point(80, 66);
             this.txtWhatsNew.Multiline = true;
             this.txtWhatsNew.Name = "txtWhatsNew";
-            this.txtWhatsNew.Size = new System.Drawing.Size(516, 95);
+            this.txtWhatsNew.Size = new System.Drawing.Size(459, 90);
             this.txtWhatsNew.TabIndex = 4;
             // 
             // UpdateForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(692, 240);
+            this.ClientSize = new System.Drawing.Size(615, 227);
             this.Controls.Add(this.txtWhatsNew);
             this.Controls.Add(this.btnIgnore);
             this.Controls.Add(this.btnUpdateOnExit);
             this.Controls.Add(this.btnUpdateImmediately);
             this.Controls.Add(this.lblVersion);
-            this.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F);
+            this.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;

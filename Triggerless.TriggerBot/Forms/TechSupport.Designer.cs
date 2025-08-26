@@ -48,16 +48,16 @@
             this.pictureBox1.Image = global::Triggerless.TriggerBot.Properties.Resources.digital;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(652, 86);
+            this.pictureBox1.Size = new System.Drawing.Size(570, 81);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(12, 94);
+            this.label1.Location = new System.Drawing.Point(10, 88);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(617, 84);
+            this.label1.Size = new System.Drawing.Size(540, 79);
             this.label1.TabIndex = 1;
             this.label1.Text = "This tool will upload your IMVU inventory and Triggerless databases to @Triggers." +
     " Your IMVU Avatar name is required, otherwise, we have no way to figure out who\'" +
@@ -66,25 +66,25 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(95, 190);
+            this.label2.Location = new System.Drawing.Point(83, 178);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(137, 17);
+            this.label2.Size = new System.Drawing.Size(118, 15);
             this.label2.TabIndex = 2;
             this.label2.Text = "IMVU Avatar name:";
             // 
             // _txtAviName
             // 
-            this._txtAviName.Location = new System.Drawing.Point(271, 184);
+            this._txtAviName.Location = new System.Drawing.Point(237, 172);
             this._txtAviName.Name = "_txtAviName";
-            this._txtAviName.Size = new System.Drawing.Size(239, 28);
+            this._txtAviName.Size = new System.Drawing.Size(210, 22);
             this._txtAviName.TabIndex = 0;
             // 
             // _btnUpload
             // 
             this._btnUpload.Enabled = false;
-            this._btnUpload.Location = new System.Drawing.Point(247, 231);
+            this._btnUpload.Location = new System.Drawing.Point(216, 217);
             this._btnUpload.Name = "_btnUpload";
-            this._btnUpload.Size = new System.Drawing.Size(156, 34);
+            this._btnUpload.Size = new System.Drawing.Size(136, 32);
             this._btnUpload.TabIndex = 1;
             this._btnUpload.Text = "Upload";
             this._btnUpload.UseVisualStyleBackColor = true;
@@ -95,9 +95,9 @@
             this.pnlUploading.Controls.Add(this.lblUploading);
             this.pnlUploading.Controls.Add(this.progPercent);
             this.pnlUploading.Controls.Add(this.lblPercent);
-            this.pnlUploading.Location = new System.Drawing.Point(99, 291);
+            this.pnlUploading.Location = new System.Drawing.Point(87, 273);
             this.pnlUploading.Name = "pnlUploading";
-            this.pnlUploading.Size = new System.Drawing.Size(483, 44);
+            this.pnlUploading.Size = new System.Drawing.Size(423, 41);
             this.pnlUploading.TabIndex = 3;
             this.pnlUploading.Visible = false;
             // 
@@ -106,40 +106,40 @@
             this.lblUploading.AutoSize = true;
             this.lblUploading.Location = new System.Drawing.Point(3, 0);
             this.lblUploading.Name = "lblUploading";
-            this.lblUploading.Size = new System.Drawing.Size(91, 17);
+            this.lblUploading.Size = new System.Drawing.Size(76, 15);
             this.lblUploading.TabIndex = 0;
             this.lblUploading.Text = "Uploading...";
             // 
             // progPercent
             // 
-            this.progPercent.Location = new System.Drawing.Point(100, 3);
+            this.progPercent.Location = new System.Drawing.Point(85, 3);
             this.progPercent.Name = "progPercent";
-            this.progPercent.Size = new System.Drawing.Size(265, 23);
+            this.progPercent.Size = new System.Drawing.Size(232, 22);
             this.progPercent.TabIndex = 1;
             // 
             // lblPercent
             // 
             this.lblPercent.AutoSize = true;
-            this.lblPercent.Location = new System.Drawing.Point(371, 0);
+            this.lblPercent.Location = new System.Drawing.Point(323, 0);
             this.lblPercent.Name = "lblPercent";
-            this.lblPercent.Size = new System.Drawing.Size(26, 17);
+            this.lblPercent.Size = new System.Drawing.Size(26, 15);
             this.lblPercent.TabIndex = 2;
             this.lblPercent.Text = "0%";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(409, 240);
+            this.label3.Location = new System.Drawing.Point(358, 225);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(158, 17);
+            this.label3.Size = new System.Drawing.Size(131, 15);
             this.label3.TabIndex = 4;
             this.label3.Text = "Temporarily Disabled.";
             // 
             // TechSupport
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(652, 334);
+            this.ClientSize = new System.Drawing.Size(570, 313);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.pnlUploading);
             this.Controls.Add(this._btnUpload);
@@ -147,7 +147,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
-            this.Font = new System.Drawing.Font("Lucida Sans Unicode", 10F);
+            this.Font = new System.Drawing.Font("Liberation Sans", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "TechSupport";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

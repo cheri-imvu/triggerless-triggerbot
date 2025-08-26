@@ -45,15 +45,15 @@
             // 
             // ProductOpenDialogItem
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this._productName);
-            this.Font = new System.Drawing.Font("Lucida Sans", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(1);
             this.Name = "ProductOpenDialogItem";
-            this.Size = new System.Drawing.Size(666, 26);
+            this.Size = new System.Drawing.Size(666, 28);
             this.Click += new System.EventHandler(this.HandleClick);
             this.DoubleClick += new System.EventHandler(this.HandleDoubleClick);
             this.ResumeLayout(false);

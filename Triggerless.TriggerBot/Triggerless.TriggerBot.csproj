@@ -238,6 +238,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\ColorTabControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Components\DirtyControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -427,7 +430,7 @@
       <DependentUpon>ProductCtrl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -441,6 +444,8 @@
     <AdditionalFiles Include="Assets\appCache.sqlite">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AdditionalFiles>
+    <None Include="Assets\LiberationSans_Bold.ttf" />
+    <None Include="Assets\LiberationSans_Regular.ttf" />
     <None Include="Assets\triggerbot.pdn" />
     <None Include="Assets\current-version.json" />
     <None Include="packages.config" />

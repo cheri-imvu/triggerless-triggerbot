@@ -820,5 +820,9 @@ namespace Triggerless.TriggerBot.Components
             return new TimeSpan(currentTicks);
         }
 
+        private void gridLyrics_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

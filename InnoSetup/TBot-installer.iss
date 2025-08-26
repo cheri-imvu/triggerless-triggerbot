@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Triggerless Triggerbot"
-#define MyAppVersion "0.11.6"
+#define MyAppVersion "0.11.7"
 #define MyAppPublisher "triggerless.com"
 #define MyAppURL "https://triggerless.com//triggerbot/"
 #define MyAppExeName "TriggerBot.exe"
@@ -112,6 +112,10 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\note.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\LiberationSans_Regular.ttf"; DestDir: "{fonts}"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\LiberationSans_Bold.ttf"; DestDir: "{fonts}"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\LiberationSans_Italic.ttf"; DestDir: "{fonts}"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\LiberationSans_BoldItalic.ttf"; DestDir: "{fonts}"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\ffmpeg.exe"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\libbz2-1.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\libgcc_s_seh-1.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion

@@ -705,6 +705,11 @@ namespace Triggerless.TriggerBot
             
             target.Update();
         }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 
 }

@@ -41,7 +41,7 @@ namespace Triggerless.TriggerBot
                 var newControl = new ProductOpenDialogItem();
                 newControl.Product = product;
                 newControl.BorderStyle = BorderStyle.FixedSingle;
-                newControl.Font = new Font("Lucida Sans Unicode", 11F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
+                newControl.Font = new Font("Liberation Sans", 11F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
                 newControl.Location = new Point(5, 194);
                 newControl.Margin = new Padding(1,1,1,1);
                 newControl.Name = $"productCtrl_{product.Id}";
