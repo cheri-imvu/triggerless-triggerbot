@@ -143,7 +143,6 @@ namespace Triggerless.TriggerBot
             ((System.ComponentModel.ISupportInitialize)(this.trackBarLag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridTriggers)).BeginInit();
             this.pnlBanner.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picBanner)).BeginInit();
             this.pnlOnDeck.SuspendLayout();
             this.pnlCollector.SuspendLayout();
             this.tabTools.SuspendLayout();
