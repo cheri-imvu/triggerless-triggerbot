@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -11,6 +12,9 @@ namespace Triggerless.TriggerBot
 {
     internal class Shared
     {
+        public static Color ThemeBackcolor = Color.FromArgb(0x1E1A1A);
+        public static Color ThemeForeColor = Color.FromArgb(0xF0F0F0);
+
         public static bool HasTriggerlessConnection = true;
         public static bool Paid { get; set; }
         public static void CheckIfPaid()

@@ -84,13 +84,15 @@
             // 
             // btnSelectProduct
             // 
+            this.btnSelectProduct.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnSelectProduct.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSelectProduct.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnSelectProduct.Location = new System.Drawing.Point(7, 18);
             this.btnSelectProduct.Name = "btnSelectProduct";
             this.btnSelectProduct.Size = new System.Drawing.Size(175, 39);
             this.btnSelectProduct.TabIndex = 1;
             this.btnSelectProduct.Text = "Select Trigger Tune";
-            this.btnSelectProduct.UseVisualStyleBackColor = true;
+            this.btnSelectProduct.UseVisualStyleBackColor = false;
             this.btnSelectProduct.Click += new System.EventHandler(this.btnSelectProduct_Click);
             // 
             // lblProductName
@@ -115,6 +117,7 @@
             // 
             // pnlTop
             // 
+            this.pnlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.pnlTop.Controls.Add(this.btnStop);
             this.pnlTop.Controls.Add(this.lblTimer);
             this.pnlTop.Controls.Add(this.btnPause);
@@ -199,10 +202,10 @@
             this.triangle1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.triangle1.Direction = Triggerless.TriggerBot.Triangle.Orientation.Down;
             this.triangle1.ForeColor = System.Drawing.Color.Yellow;
-            this.triangle1.Location = new System.Drawing.Point(-14, 0);
+            this.triangle1.Location = new System.Drawing.Point(-15, 0);
             this.triangle1.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.triangle1.Name = "triangle1";
-            this.triangle1.Position = -7;
+            this.triangle1.Position = -8;
             this.triangle1.Size = new System.Drawing.Size(15, 20);
             this.triangle1.TabIndex = 10;
             // 
@@ -243,16 +246,16 @@
             // gridLyrics
             // 
             this.gridLyrics.AllowUserToResizeRows = false;
-            this.gridLyrics.BackgroundColor = System.Drawing.Color.LightSeaGreen;
+            this.gridLyrics.BackgroundColor = System.Drawing.Color.Gray;
             this.gridLyrics.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridLyrics.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
             this.colLyric});
             this.gridLyrics.ContextMenuStrip = this.ctxMenu;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.Gray;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Lucida Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
@@ -340,33 +343,39 @@
             // 
             // btnExportLyrics
             // 
+            this.btnExportLyrics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnExportLyrics.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExportLyrics.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnExportLyrics.Location = new System.Drawing.Point(14, 107);
             this.btnExportLyrics.Name = "btnExportLyrics";
             this.btnExportLyrics.Size = new System.Drawing.Size(156, 33);
             this.btnExportLyrics.TabIndex = 11;
             this.btnExportLyrics.Text = "Export Lyrics";
-            this.btnExportLyrics.UseVisualStyleBackColor = true;
+            this.btnExportLyrics.UseVisualStyleBackColor = false;
             // 
             // btnImportLyrics
             // 
+            this.btnImportLyrics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnImportLyrics.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnImportLyrics.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnImportLyrics.Location = new System.Drawing.Point(14, 147);
             this.btnImportLyrics.Name = "btnImportLyrics";
             this.btnImportLyrics.Size = new System.Drawing.Size(156, 33);
             this.btnImportLyrics.TabIndex = 10;
             this.btnImportLyrics.Text = "Import Lyrics";
-            this.btnImportLyrics.UseVisualStyleBackColor = true;
+            this.btnImportLyrics.UseVisualStyleBackColor = false;
             // 
             // btnDeleteLyrics
             // 
+            this.btnDeleteLyrics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnDeleteLyrics.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDeleteLyrics.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnDeleteLyrics.Location = new System.Drawing.Point(14, 291);
             this.btnDeleteLyrics.Name = "btnDeleteLyrics";
             this.btnDeleteLyrics.Size = new System.Drawing.Size(156, 33);
             this.btnDeleteLyrics.TabIndex = 9;
             this.btnDeleteLyrics.Text = "Delete Lyrics";
-            this.btnDeleteLyrics.UseVisualStyleBackColor = true;
+            this.btnDeleteLyrics.UseVisualStyleBackColor = false;
             this.btnDeleteLyrics.Click += new System.EventHandler(this.btnDeleteLyrics_Click);
             // 
             // lblNudge
@@ -391,22 +400,26 @@
             // 
             // btnMsMinus
             // 
+            this.btnMsMinus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnMsMinus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnMsMinus.Location = new System.Drawing.Point(146, 253);
             this.btnMsMinus.Name = "btnMsMinus";
             this.btnMsMinus.Size = new System.Drawing.Size(29, 26);
             this.btnMsMinus.TabIndex = 6;
             this.btnMsMinus.Text = "-";
-            this.btnMsMinus.UseVisualStyleBackColor = true;
+            this.btnMsMinus.UseVisualStyleBackColor = false;
             this.btnMsMinus.Click += new System.EventHandler(this.btnMsMinus_Click);
             // 
             // btnMsPlus
             // 
+            this.btnMsPlus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnMsPlus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnMsPlus.Location = new System.Drawing.Point(113, 253);
             this.btnMsPlus.Name = "btnMsPlus";
             this.btnMsPlus.Size = new System.Drawing.Size(29, 26);
             this.btnMsPlus.TabIndex = 5;
             this.btnMsPlus.Text = "+";
-            this.btnMsPlus.UseVisualStyleBackColor = true;
+            this.btnMsPlus.UseVisualStyleBackColor = false;
             this.btnMsPlus.Click += new System.EventHandler(this.btnMsPlus_Click);
             // 
             // lblMS
@@ -431,35 +444,41 @@
             // 
             // btnTimeIt
             // 
+            this.btnTimeIt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnTimeIt.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTimeIt.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnTimeIt.Location = new System.Drawing.Point(14, 331);
             this.btnTimeIt.Name = "btnTimeIt";
             this.btnTimeIt.Size = new System.Drawing.Size(156, 33);
             this.btnTimeIt.TabIndex = 2;
             this.btnTimeIt.Text = "Export TimeIt";
-            this.btnTimeIt.UseVisualStyleBackColor = true;
+            this.btnTimeIt.UseVisualStyleBackColor = false;
             this.btnTimeIt.Click += new System.EventHandler(this.btnTimeIt_Click);
             // 
             // btnSave
             // 
+            this.btnSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnSave.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSave.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnSave.Location = new System.Drawing.Point(14, 67);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(156, 33);
             this.btnSave.TabIndex = 1;
             this.btnSave.Text = "Save Lyrics";
-            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnPasteLyrics
             // 
+            this.btnPasteLyrics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnPasteLyrics.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPasteLyrics.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnPasteLyrics.Location = new System.Drawing.Point(14, 12);
             this.btnPasteLyrics.Name = "btnPasteLyrics";
             this.btnPasteLyrics.Size = new System.Drawing.Size(156, 33);
             this.btnPasteLyrics.TabIndex = 0;
             this.btnPasteLyrics.Text = "Paste Lyrics";
-            this.btnPasteLyrics.UseVisualStyleBackColor = true;
+            this.btnPasteLyrics.UseVisualStyleBackColor = false;
             this.btnPasteLyrics.Click += new System.EventHandler(this.btnGetLyrics_Click);
             // 
             // _timer
@@ -488,11 +507,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.MediumAquamarine;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.Controls.Add(this.splitter);
             this.Controls.Add(this.pnlWave);
             this.Controls.Add(this.pnlTop);
-            this.Font = new System.Drawing.Font("Lucida Sans", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Lucida Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "LyricsCtrl";
             this.Size = new System.Drawing.Size(1053, 661);

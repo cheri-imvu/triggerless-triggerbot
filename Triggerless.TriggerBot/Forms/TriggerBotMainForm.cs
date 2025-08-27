@@ -206,9 +206,11 @@ namespace Triggerless.TriggerBot
         #endregion
 
         #region GUI 
+
         private void LoadForm(object sender, EventArgs e)
         {
             Text = $"Triggerless Triggerbot {Shared.VersionNumber}";
+            pnlBanner_Resize(this, null);
             lblVersion.Text = $"Version {Shared.VersionNumber}";
             lblCopyright.Text = Shared.Copyright;
             Shared.CheckIfPaid();
@@ -793,6 +795,11 @@ namespace Triggerless.TriggerBot
         private void tabAppContainer_Selected(object sender, TabControlEventArgs e)
         {
             this.TopMost = (e.TabPage == tabPlayback) && chkKeepOnTop.Checked;
+        }
+
+        private void pnlBanner_Resize(object sender, EventArgs e)
+        {
+            picBanner.Left = (pnlBanner.Width - picBanner.Width) / 2;
         }
     }
 }

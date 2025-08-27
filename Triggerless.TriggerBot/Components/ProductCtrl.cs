@@ -160,7 +160,7 @@ namespace Triggerless.TriggerBot
         {
             var link = sender as LinkLabel;
             if (link == null) return;
-            link.BackColor = Color.FromArgb(216, 216, 255);
+            link.BackColor = Color.Black;
             link.ForeColor = Color.LimeGreen;
             link.VisitedLinkColor = link.ForeColor;
         }
@@ -169,8 +169,8 @@ namespace Triggerless.TriggerBot
         {
             var link = sender as LinkLabel;
             if (link == null) return;
-            link.BackColor = Color.FromArgb(255, 255, 248);
-            link.ForeColor = Color.Blue;
+            link.BackColor = Color.Transparent;
+            link.ForeColor = Color.Aqua;
             link.VisitedLinkColor = link.ForeColor;
         }
 

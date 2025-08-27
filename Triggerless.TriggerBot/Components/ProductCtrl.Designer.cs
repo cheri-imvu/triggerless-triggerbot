@@ -63,6 +63,7 @@
             // 
             this.lblName.AutoSize = true;
             this.lblName.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblName.ForeColor = System.Drawing.Color.White;
             this.lblName.Location = new System.Drawing.Point(113, 3);
             this.lblName.Name = "lblName";
             this.lblName.Size = new System.Drawing.Size(192, 17);
@@ -92,28 +93,32 @@
             // 
             // linkOnDeck
             // 
+            this.linkOnDeck.BackColor = System.Drawing.Color.Transparent;
             this.linkOnDeck.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkOnDeck.LinkColor = System.Drawing.Color.Aqua;
             this.linkOnDeck.Location = new System.Drawing.Point(237, 64);
             this.linkOnDeck.Name = "linkOnDeck";
             this.linkOnDeck.Size = new System.Drawing.Size(128, 18);
             this.linkOnDeck.TabIndex = 4;
             this.linkOnDeck.TabStop = true;
             this.linkOnDeck.Text = "ON DECK >>";
-            this.linkOnDeck.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.linkOnDeck.VisitedLinkColor = System.Drawing.Color.Aqua;
             this.linkOnDeck.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOnDeck_LinkClicked);
             this.linkOnDeck.MouseEnter += new System.EventHandler(this.LinkEnter);
             this.linkOnDeck.MouseLeave += new System.EventHandler(this.LinkLeave);
             // 
             // linkWearItem
             // 
+            this.linkWearItem.BackColor = System.Drawing.Color.Transparent;
             this.linkWearItem.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkWearItem.LinkColor = System.Drawing.Color.Aqua;
             this.linkWearItem.Location = new System.Drawing.Point(113, 64);
             this.linkWearItem.Name = "linkWearItem";
             this.linkWearItem.Size = new System.Drawing.Size(106, 18);
             this.linkWearItem.TabIndex = 5;
             this.linkWearItem.TabStop = true;
             this.linkWearItem.Text = "Wear Item";
-            this.linkWearItem.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.linkWearItem.VisitedLinkColor = System.Drawing.Color.Aqua;
             this.linkWearItem.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WearItem);
             this.linkWearItem.MouseEnter += new System.EventHandler(this.LinkEnter);
             this.linkWearItem.MouseLeave += new System.EventHandler(this.LinkLeave);
@@ -143,7 +148,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(248)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.picLips);
             this.Controls.Add(this.picDeleteItem);
@@ -154,6 +159,7 @@
             this.Controls.Add(this.lblName);
             this.Controls.Add(this.picProductImage);
             this.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.Name = "ProductCtrl";
             this.Size = new System.Drawing.Size(376, 87);
