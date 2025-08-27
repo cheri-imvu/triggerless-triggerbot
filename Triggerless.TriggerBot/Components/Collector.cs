@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Newtonsoft.Json;
+using NVorbis;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -609,20 +610,14 @@ namespace Triggerless.TriggerBot
                                 try
                                 {
                                     await Task.Delay(50).ConfigureAwait(false);
-                                    // No need for a triggerClient, using the existing client shaves 20% off the time.
-                                    using (var stream = await client.GetStreamAsync(musicUrl).ConfigureAwait(false))
-                                    using (var ms = new MemoryStream())
-                                    {
-                                        await stream.CopyToAsync(ms).ConfigureAwait(false);
-                                        trigger.LengthMS = NVorbis.VorbisReader.GetOggLengthMS(ms);
-                                    }
+                                    trigger.LengthMS = await GetOggLengthMsAsync(client, musicUrl).ConfigureAwait(false);
+
                                     LogLine($"    TRIGGER OK: {trigger.OggName} ({(DateTime.Now - start).TotalMilliseconds} ms) {product.ProductName}");
                                     bSuccess = true;
                                     break;
                                 }
                                 catch (Exception exc)
                                 {
-
                                     tryCount++;
                                     LogLine($"  **TRIGGER GET failed Try {tryCount}: {product.ProductName} {trigger.OggName} {trigger.TriggerName}");
                                     LogLine($"  **>> {exc.Message}");
@@ -692,5 +687,24 @@ namespace Triggerless.TriggerBot
 
             }
         }
+
+        public static async Task<double> GetOggLengthMsAsync(HttpClient client, string url)
+        {
+            // let caller handle any exceptions
+            using (var net = await client.GetStreamAsync(url).ConfigureAwait(false))
+            using (var ms = new MemoryStream())
+            {
+                await net.CopyToAsync(ms).ConfigureAwait(false);
+                ms.Position = 0; // rewind before reading
+
+                using (var vorb = new VorbisReader(ms, false)) // don't close ms automatically
+                {
+                    return vorb.TotalTime.TotalMilliseconds;
+                }
+            }
+        }
+
+
+
     }
 }

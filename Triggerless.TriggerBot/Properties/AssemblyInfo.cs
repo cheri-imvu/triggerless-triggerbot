@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Triggerless.TriggerBot")]
-[assembly: AssemblyDescription("Sends Music Triggers to IMVU automatically")]
+[assembly: AssemblyDescription("Sends Music Triggers to IMVU automatically, and more")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("triggerless.com")]
 [assembly: AssemblyProduct("Triggerless.TriggerBot")]
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.11.7")]
-[assembly: AssemblyFileVersion("0.11.7")]
+[assembly: AssemblyVersion("0.11.8")]
+[assembly: AssemblyFileVersion("0.11.8")]

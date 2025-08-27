@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NVorbis", "NVorbis\NVorbis.csproj", "{D79462D7-03C1-41A8-9CD4-5827155DEDFB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triggerless.TriggerBot", "Triggerless.TriggerBot\Triggerless.TriggerBot.csproj", "{CA83BAED-E6B8-434A-A483-6F81A9A22748}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedWinapi", "ManagedWinapi\ManagedWinapi.csproj", "{FBD3EC1E-47E2-4D2D-81C9-D6506125A09A}"
@@ -21,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D79462D7-03C1-41A8-9CD4-5827155DEDFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D79462D7-03C1-41A8-9CD4-5827155DEDFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D79462D7-03C1-41A8-9CD4-5827155DEDFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D79462D7-03C1-41A8-9CD4-5827155DEDFB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CA83BAED-E6B8-434A-A483-6F81A9A22748}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CA83BAED-E6B8-434A-A483-6F81A9A22748}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA83BAED-E6B8-434A-A483-6F81A9A22748}.Release|Any CPU.ActiveCfg = Release|Any CPU

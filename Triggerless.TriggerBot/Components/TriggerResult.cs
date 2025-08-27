@@ -27,12 +27,7 @@ namespace Triggerless.TriggerBot
                         var musicUrl = GetUrl(trigger.ProductId, trigger.Location);
                         try
                         {
-                            using (var ms = new MemoryStream())
-                            using (var stream = await triggerClient.GetStreamAsync(musicUrl).ConfigureAwait(false))
-                            {
-                                stream.CopyTo(ms);
-                                trigger.LengthMS = NVorbis.VorbisReader.GetOggLengthMS(ms);
-                            }
+                            trigger.LengthMS = await GetOggLengthMsAsync(triggerClient, musicUrl);
                         }
                         catch (Exception)
                         {
