@@ -92,11 +92,7 @@ namespace Triggerless.TriggerBot
                     txtFilename.Text = dlgOpenFile.FileName;
                     lblDuration.Text = $"Duration: {_duration.Minutes:00}:{_duration.Seconds:00}";
 
-                    if (_duration.TotalSeconds > new TimeSpan(0, 6, 26).TotalSeconds)
-                    {
-                        rdoAMS.Checked = true;
-                    }
-                    else if (_duration.TotalSeconds > new TimeSpan(0, 3, 36).TotalSeconds)
+                    if (_duration.TotalSeconds > new TimeSpan(0, 3, 36).TotalSeconds)
                     {
                         rdoFMS.Checked = true;
                     }
@@ -191,8 +187,8 @@ namespace Triggerless.TriggerBot
             }
             Directory.CreateDirectory(_outputPath);
 
-            lblAction.Text = "Slicing Audio File";
-            lblAction.Update();
+            lblCutStageIdle.Text = "Slicing Audio File";
+            lblCutStageIdle.Update();
             _stage = CutStage.SliceAudio;
             timer1.Start();
 
@@ -222,15 +218,15 @@ namespace Triggerless.TriggerBot
                 MessageBox.Show($"Unable to slice file for the following reason:\n{ex.Message}. Make sure you're not playing the file while trying to slice it.",
                     "Unable to Slice", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 await Discord.SendMessage("Unable to slice audio file", ex.Message + Environment.NewLine + ex.StackTrace);
-                lblAction.Text = "Aborted Audio Slice";
+                lblCutStageIdle.Text = "Aborted Audio Slice";
                 return;
             }
         }
 
         private void ConvertWAVtoOGG()
         {
-            lblAction.Text = "Creating OGG files";
-            lblAction.Update();
+            lblCutStageIdle.Text = "Creating OGG files";
+            lblCutStageIdle.Update();
             _stage = CutStage.CreateOGG;
 
             try
@@ -240,8 +236,7 @@ namespace Triggerless.TriggerBot
                     var inputFile = filename;
                     var outputFile = filename.Replace(".wav", ".ogg");
                     var ffmpegLocation = Shared.FFmpegLocation;
-                    int option = rdoAMS.Checked ? 0 :
-                        rdoFMS.Checked ? 1 :
+                    int option = rdoFMS.Checked ? 1 :
                         rdoHQM.Checked ? 2 :
                         rdoHQS.Checked ? 3 : 1;
                     _audioSegmenter.RunFFmpeg(ffmpegLocation, inputFile, outputFile, option, _volume / 100);
@@ -251,12 +246,12 @@ namespace Triggerless.TriggerBot
             {
                 MessageBox.Show($"Unable to convert to OGG for the following reason: {exc.Message}",
                     "Conversion Interrupted", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                lblAction.Text = "Aborted OGG conversion";
+                lblCutStageIdle.Text = "Aborted OGG conversion";
                 _stage = CutStage.Idle;
                 return;
             }
 
-            lblAction.Text = "Removing temp files";
+            lblCutStageIdle.Text = "Removing temp files";
             foreach (var filename in Directory.GetFiles(_outputPath, "*.wav"))
             {
                 File.Delete(filename);
@@ -275,8 +270,8 @@ namespace Triggerless.TriggerBot
 
         private List<List<string>> PackageCHKN(string triggerPrefix)
         {
-            lblAction.Text = "Packaging CHKN file";
-            lblAction.Update();
+            lblCutStageIdle.Text = "Packaging CHKN file";
+            lblCutStageIdle.Update();
             _stage = CutStage.CreateCHKN;
             var templates = new List<Template>();
             var listsOfFiles = new List<List<string>>();
@@ -374,8 +369,8 @@ namespace Triggerless.TriggerBot
         private void CreatePNG(string triggerPrefix, List<List<string>> listsOfFiles)
         {
             if (!checkIcons.Checked) return;
-            lblAction.Text = "Creating Icons";
-            lblAction.Update();
+            lblCutStageIdle.Text = "Creating Icons";
+            lblCutStageIdle.Update();
             var chknIndex = 0;
             foreach (var filename in Directory.GetFiles(_outputPath, "*.chkn"))
             {
@@ -402,8 +397,8 @@ namespace Triggerless.TriggerBot
                 CreateTextImage(text1, text2, pngFile);
             }
 
-            lblAction.Text = "Complete";
-            lblAction.Update();
+            lblCutStageIdle.Text = "Complete";
+            lblCutStageIdle.Update();
             _stage = CutStage.ShowMe;
         }
 
@@ -673,7 +668,7 @@ namespace Triggerless.TriggerBot
         {
             Color defaultColor = Color.FromKnownColor(KnownColor.Control);
             Color backcolor = defaultColor;
-            Label target = lblAction;
+            Label target = lblCutStageIdle;
 
             switch (_stage)
             {

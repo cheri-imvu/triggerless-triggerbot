@@ -31,9 +31,6 @@
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.rdoAMS = new System.Windows.Forms.RadioButton();
-            this.label7 = new System.Windows.Forms.Label();
-            this.rdoFMS = new System.Windows.Forms.RadioButton();
             this.label6 = new System.Windows.Forms.Label();
             this.rdoHQM = new System.Windows.Forms.RadioButton();
             this.label8 = new System.Windows.Forms.Label();
@@ -57,7 +54,7 @@
             this.btnIncreaseVolume = new System.Windows.Forms.Button();
             this.chkCheap = new System.Windows.Forms.CheckBox();
             this.label15 = new System.Windows.Forms.Label();
-            this.lblAction = new System.Windows.Forms.Label();
+            this.lblCutStageIdle = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.btnStart = new System.Windows.Forms.Button();
             this.checkOGGFiles = new System.Windows.Forms.CheckBox();
@@ -75,6 +72,7 @@
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
             this._audioSegmenter = new Triggerless.TriggerBot.AudioSegmenter();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.rdoFMS = new System.Windows.Forms.RadioButton();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -98,7 +96,7 @@
             this.panel1.Controls.Add(this.btnIncreaseVolume);
             this.panel1.Controls.Add(this.chkCheap);
             this.panel1.Controls.Add(this.label15);
-            this.panel1.Controls.Add(this.lblAction);
+            this.panel1.Controls.Add(this.lblCutStageIdle);
             this.panel1.Controls.Add(this.label12);
             this.panel1.Controls.Add(this.btnStart);
             this.panel1.Controls.Add(this.checkOGGFiles);
@@ -129,8 +127,6 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 18F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 18F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 18F));
-            this.tableLayoutPanel1.Controls.Add(this.rdoAMS, 4, 0);
-            this.tableLayoutPanel1.Controls.Add(this.label7, 4, 1);
             this.tableLayoutPanel1.Controls.Add(this.rdoFMS, 3, 0);
             this.tableLayoutPanel1.Controls.Add(this.label6, 3, 1);
             this.tableLayoutPanel1.Controls.Add(this.rdoHQM, 2, 0);
@@ -146,37 +142,6 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(679, 54);
             this.tableLayoutPanel1.TabIndex = 65;
-            // 
-            // rdoAMS
-            // 
-            this.rdoAMS.AutoSize = true;
-            this.rdoAMS.Location = new System.Drawing.Point(559, 3);
-            this.rdoAMS.Name = "rdoAMS";
-            this.rdoAMS.Size = new System.Drawing.Size(93, 21);
-            this.rdoAMS.TabIndex = 3;
-            this.rdoAMS.Text = "AM Stereo";
-            this.rdoAMS.UseVisualStyleBackColor = true;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(559, 27);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(89, 17);
-            this.label7.TabIndex = 6;
-            this.label7.Text = "7:51 / CHKN";
-            // 
-            // rdoFMS
-            // 
-            this.rdoFMS.AutoSize = true;
-            this.rdoFMS.Checked = true;
-            this.rdoFMS.Location = new System.Drawing.Point(437, 3);
-            this.rdoFMS.Name = "rdoFMS";
-            this.rdoFMS.Size = new System.Drawing.Size(93, 21);
-            this.rdoFMS.TabIndex = 2;
-            this.rdoFMS.TabStop = true;
-            this.rdoFMS.Text = "FM Stereo";
-            this.rdoFMS.UseVisualStyleBackColor = true;
             // 
             // label6
             // 
@@ -422,18 +387,17 @@
             this.label15.TabIndex = 51;
             this.label15.Text = "Your CHKN file will always be in the Documents\\Triggerbot folder.";
             // 
-            // lblAction
+            // lblCutStageIdle
             // 
-            this.lblAction.AutoSize = true;
-            this.lblAction.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.lblAction.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblAction.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAction.ForeColor = System.Drawing.Color.Black;
-            this.lblAction.Location = new System.Drawing.Point(244, 324);
-            this.lblAction.Name = "lblAction";
-            this.lblAction.Size = new System.Drawing.Size(32, 19);
-            this.lblAction.TabIndex = 49;
-            this.lblAction.Text = "Idle";
+            this.lblCutStageIdle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.lblCutStageIdle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblCutStageIdle.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCutStageIdle.ForeColor = System.Drawing.Color.Black;
+            this.lblCutStageIdle.Location = new System.Drawing.Point(244, 323);
+            this.lblCutStageIdle.Name = "lblCutStageIdle";
+            this.lblCutStageIdle.Size = new System.Drawing.Size(136, 19);
+            this.lblCutStageIdle.TabIndex = 49;
+            this.lblCutStageIdle.Text = "Idle";
             // 
             // label12
             // 
@@ -614,6 +578,18 @@
             this.timer1.Interval = 200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // rdoFMS
+            // 
+            this.rdoFMS.AutoSize = true;
+            this.rdoFMS.Checked = true;
+            this.rdoFMS.Location = new System.Drawing.Point(437, 3);
+            this.rdoFMS.Name = "rdoFMS";
+            this.rdoFMS.Size = new System.Drawing.Size(93, 21);
+            this.rdoFMS.TabIndex = 2;
+            this.rdoFMS.TabStop = true;
+            this.rdoFMS.Text = "FM Stereo";
+            this.rdoFMS.UseVisualStyleBackColor = true;
+            // 
             // SplicerControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -653,7 +629,7 @@
         private System.Windows.Forms.Button btnIncreaseVolume;
         private System.Windows.Forms.CheckBox chkCheap;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label lblAction;
+        private System.Windows.Forms.Label lblCutStageIdle;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.CheckBox checkOGGFiles;
@@ -672,9 +648,6 @@
         private System.Windows.Forms.OpenFileDialog dlgOpenFile;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.RadioButton rdoAMS;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.RadioButton rdoFMS;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.RadioButton rdoHQM;
         private System.Windows.Forms.Label label8;
@@ -686,5 +659,6 @@
         private System.Windows.Forms.RadioButton rdoMinima;
         private System.Windows.Forms.Button btnDebug;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.RadioButton rdoFMS;
     }
 }
