@@ -95,12 +95,12 @@ namespace Triggerless.TriggerBot
 
         #region Inventory Update
         // Inventory Update
-        private void ScanInventory(object sender, EventArgs e)
+        private async void ScanInventory(object sender, EventArgs e)
         {
             tabAppContainer.SelectedTab = tabPlayback;
             pnlCollector.BringToFront();
             btnSearch.Enabled = false;
-            _collector.ScanDatabasesSync();
+            await _collector.ScanDatabasesAsync();
             btnSearch.Enabled = true;
             pnlCollector.SendToBack();
             DoSearch(null, null);
@@ -704,7 +704,7 @@ namespace Triggerless.TriggerBot
             StartPlaying(row);
         }
 
-        private void btnDeepScan_Click(object sender, EventArgs e)
+        private async void btnDeepScan_Click(object sender, EventArgs e)
         {
             using (var f = new DeepScanForm())
             {
@@ -712,7 +712,7 @@ namespace Triggerless.TriggerBot
                 var dlgResult = f.ShowDialog(this);
                 if (dlgResult == DialogResult.OK)
                 {
-                    _collector.DeepScanThese(f.SelectedProductIds);
+                    await _collector.DeepScanThese(f.SelectedProductIds);
                 }
             }
         }

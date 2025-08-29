@@ -143,7 +143,7 @@ namespace Triggerless.TriggerBot
             return result;
         }
 
-        public void DeepScanThese(List<long> selectedProductIds)
+        public async Task DeepScanThese(List<long> selectedProductIds)
         {
             if (selectedProductIds.Count == 0) return;
 
@@ -167,11 +167,11 @@ namespace Triggerless.TriggerBot
                 appConnection.Execute(sql);
             }
 
-            ScanDatabasesSync(whereClause.Replace("product_id", "id"));
+            await ScanDatabasesAsync(whereClause.Replace("product_id", "id"));
         }
 
-        //public Task ScanDatabasesSync(string whereClause = null)
-        public  void ScanDatabasesSync(string whereClause = null)
+        //public Task ScanDatabasesAsync(string whereClause = null)
+        public async Task ScanDatabasesAsync(string whereClause = null)
         {
             var productList = new List<ProductSearchInfo>();
             var existingProductIDs = new HashSet<long>();
@@ -241,7 +241,7 @@ namespace Triggerless.TriggerBot
                     //var result = await ScanOne(_product, cxnAppCache);
                     try 
                     {
-                        var result = ScanProductAsync(product, cxnAppCache).Result;
+                        var result = await ScanProductAsync(product, cxnAppCache);
                         stats[result.Result]++;
                         var elapsed = (DateTime.Now - start).TotalMilliseconds;
                         if (elapsed > longest) 
