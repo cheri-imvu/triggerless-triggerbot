@@ -101,7 +101,7 @@
             this.lblProductName.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblProductName.Location = new System.Drawing.Point(301, 8);
             this.lblProductName.Name = "lblProductName";
-            this.lblProductName.Size = new System.Drawing.Size(174, 17);
+            this.lblProductName.Size = new System.Drawing.Size(227, 21);
             this.lblProductName.TabIndex = 3;
             this.lblProductName.Text = "Non-existent Trigger Tune";
             // 
@@ -111,13 +111,13 @@
             this.lblCreatorName.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCreatorName.Location = new System.Drawing.Point(301, 31);
             this.lblCreatorName.Name = "lblCreatorName";
-            this.lblCreatorName.Size = new System.Drawing.Size(94, 17);
+            this.lblCreatorName.Size = new System.Drawing.Size(122, 21);
             this.lblCreatorName.TabIndex = 4;
             this.lblCreatorName.Text = "by NoCreator";
             // 
             // pnlTop
             // 
-            this.pnlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.pnlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
             this.pnlTop.Controls.Add(this.btnStop);
             this.pnlTop.Controls.Add(this.lblTimer);
             this.pnlTop.Controls.Add(this.btnPause);
@@ -202,10 +202,10 @@
             this.triangle1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.triangle1.Direction = Triggerless.TriggerBot.Triangle.Orientation.Down;
             this.triangle1.ForeColor = System.Drawing.Color.Yellow;
-            this.triangle1.Location = new System.Drawing.Point(-15, 0);
+            this.triangle1.Location = new System.Drawing.Point(-16, 0);
             this.triangle1.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.triangle1.Name = "triangle1";
-            this.triangle1.Position = -8;
+            this.triangle1.Position = -9;
             this.triangle1.Size = new System.Drawing.Size(15, 20);
             this.triangle1.TabIndex = 10;
             // 
@@ -297,32 +297,33 @@
             this.mnuDelete,
             this.mnuInsertBelow});
             this.ctxMenu.Name = "ctxMenu";
-            this.ctxMenu.Size = new System.Drawing.Size(167, 70);
+            this.ctxMenu.Size = new System.Drawing.Size(195, 76);
             this.ctxMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ctxMenu_Opening);
             // 
             // mnuInsertAbove
             // 
             this.mnuInsertAbove.Name = "mnuInsertAbove";
-            this.mnuInsertAbove.Size = new System.Drawing.Size(166, 22);
+            this.mnuInsertAbove.Size = new System.Drawing.Size(194, 24);
             this.mnuInsertAbove.Text = "Insert Row Above";
             this.mnuInsertAbove.Click += new System.EventHandler(this.mnuInsertAbove_Click);
             // 
             // mnuDelete
             // 
             this.mnuDelete.Name = "mnuDelete";
-            this.mnuDelete.Size = new System.Drawing.Size(166, 22);
+            this.mnuDelete.Size = new System.Drawing.Size(194, 24);
             this.mnuDelete.Text = "Delete Row";
             this.mnuDelete.Click += new System.EventHandler(this.mnuDelete_Click);
             // 
             // mnuInsertBelow
             // 
             this.mnuInsertBelow.Name = "mnuInsertBelow";
-            this.mnuInsertBelow.Size = new System.Drawing.Size(166, 22);
+            this.mnuInsertBelow.Size = new System.Drawing.Size(194, 24);
             this.mnuInsertBelow.Text = "Insert Row Below";
             this.mnuInsertBelow.Click += new System.EventHandler(this.mnuInsertBelow_Click);
             // 
             // pnlControls
             // 
+            this.pnlControls.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
             this.pnlControls.Controls.Add(this.btnExportLyrics);
             this.pnlControls.Controls.Add(this.btnImportLyrics);
             this.pnlControls.Controls.Add(this.btnDeleteLyrics);
@@ -384,7 +385,7 @@
             this.lblNudge.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblNudge.Location = new System.Drawing.Point(12, 232);
             this.lblNudge.Name = "lblNudge";
-            this.lblNudge.Size = new System.Drawing.Size(54, 17);
+            this.lblNudge.Size = new System.Drawing.Size(71, 21);
             this.lblNudge.TabIndex = 8;
             this.lblNudge.Text = "Nudge:";
             // 
@@ -428,7 +429,7 @@
             this.lblMS.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMS.Location = new System.Drawing.Point(72, 258);
             this.lblMS.Name = "lblMS";
-            this.lblMS.Size = new System.Drawing.Size(29, 17);
+            this.lblMS.Size = new System.Drawing.Size(36, 21);
             this.lblMS.TabIndex = 4;
             this.lblMS.Text = "ms";
             // 
@@ -437,7 +438,7 @@
             this.txtMS.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtMS.Location = new System.Drawing.Point(14, 255);
             this.txtMS.Name = "txtMS";
-            this.txtMS.Size = new System.Drawing.Size(52, 25);
+            this.txtMS.Size = new System.Drawing.Size(52, 29);
             this.txtMS.TabIndex = 3;
             this.txtMS.Text = "100";
             this.txtMS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -505,7 +506,7 @@
             // 
             // LyricsCtrl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.Controls.Add(this.splitter);

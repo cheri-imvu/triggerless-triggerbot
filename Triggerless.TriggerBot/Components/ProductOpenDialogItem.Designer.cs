@@ -37,7 +37,7 @@
             this._productName.Font = new System.Drawing.Font("Lucida Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._productName.Location = new System.Drawing.Point(4, 1);
             this._productName.Name = "_productName";
-            this._productName.Size = new System.Drawing.Size(397, 17);
+            this._productName.Size = new System.Drawing.Size(502, 22);
             this._productName.TabIndex = 1;
             this._productName.Text = "AbccdefghijAbcdefghijAbcd by AbcdefghijAbcdefghij";
             this._productName.Click += new System.EventHandler(this.HandleClick);
@@ -45,12 +45,13 @@
             // 
             // ProductOpenDialogItem
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.Control;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this._productName);
             this.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Margin = new System.Windows.Forms.Padding(1);
             this.Name = "ProductOpenDialogItem";
             this.Size = new System.Drawing.Size(666, 28);

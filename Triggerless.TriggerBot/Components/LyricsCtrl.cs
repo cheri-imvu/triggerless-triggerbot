@@ -360,7 +360,7 @@ namespace Triggerless.TriggerBot.Components
                 };
                 var renderer = new WaveFormRenderer();
                 Cursor = Cursors.WaitCursor;
-                _waveform = renderer.Render(_mp3FileReader, averagePeakProvider, renderSettings);
+                _waveform = renderer.Render(_waveReader, averagePeakProvider, renderSettings);
                 _waveform.Save(wavePath);
                 Cursor = Cursors.Default; */
 

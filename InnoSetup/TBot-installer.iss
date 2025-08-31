@@ -2,11 +2,12 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Triggerless Triggerbot"
-#define MyAppVersion "0.11.7"
+#define MyAppVersion "0.11.8"
 #define MyAppPublisher "triggerless.com"
 #define MyAppURL "https://triggerless.com//triggerbot/"
 #define MyAppExeName "TriggerBot.exe"
 #define MyAppIcoName "note.ico"
+#define ReleaseBin "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\x64\Release"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -112,78 +113,78 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\note.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\LiberationSans_Regular.ttf"; DestDir: "{fonts}"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\LiberationSans_Bold.ttf"; DestDir: "{fonts}"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\LiberationSans_Italic.ttf"; DestDir: "{fonts}"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\LiberationSans_BoldItalic.ttf"; DestDir: "{fonts}"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\ffmpeg.exe"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\libbz2-1.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\libgcc_s_seh-1.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\libgomp-1.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\libiconv-2.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\liblzma-5.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\libssp-0.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\libwinpthread-1.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\xvidcore.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\avcodec-61.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\avdevice-61.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\avfilter-10.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\avformat-61.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\avutil-59.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\ffplay.exe"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\ffprobe.exe"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\postproc-58.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\swresample-5.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ffmpeg\swscale-8.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\LiberationSans_Regular.ttf"; DestDir: "{commonfonts}"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\LiberationSans_Bold.ttf"; DestDir: "{commonfonts}"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\LiberationSans_Italic.ttf"; DestDir: "{commonfonts}"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\LiberationSans_BoldItalic.ttf"; DestDir: "{commonfonts}"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "{#ReleaseBin}\ffmpeg\ffmpeg.exe"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\libbz2-1.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\libgcc_s_seh-1.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\libgomp-1.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\libiconv-2.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\liblzma-5.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\libssp-0.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\libwinpthread-1.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\xvidcore.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\avcodec-61.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\avdevice-61.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\avfilter-10.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\avformat-61.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\avutil-59.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\ffplay.exe"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\ffprobe.exe"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\postproc-58.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\swresample-5.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ffmpeg\swscale-8.dll"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
 
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\x64\SQLite.Interop.dll"; DestDir: "{app}\x64"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\x86\SQLite.Interop.dll"; DestDir: "{app}\x86"; Flags: ignoreversion
-//Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\appCache.sqlite"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ConcurrentCollections.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Dapper.dll"; DestDir: "{app}"; Flags: ignoreversion
-//#Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\DSharpPlus.CommandsNext.dll"; DestDir: "{app}"; Flags: ignoreversion
-//#Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\DSharpPlus.dll"; DestDir: "{app}"; Flags: ignoreversion
-//#Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\DSharpPlus.Interactivity.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\EntityFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\EntityFramework.SqlServer.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ICSharpCode.SharpZipLib.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ManagedWinapi.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\ManagedWinapiNativeHelper.dll"; DestDir: "{app}"; Flags: ignoreversion 
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Microsoft.Bcl.AsyncInterfaces.dll"; DestDir: "{app}"; Flags: ignoreversion 
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Microsoft.Extensions.DependencyInjection.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion 
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Microsoft.Extensions.DependencyInjection.dll"; DestDir: "{app}"; Flags: ignoreversion 
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Microsoft.Extensions.Logging.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion 
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Microsoft.Win32.Registry.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Microsoft.WindowsAPICodePack.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Microsoft.WindowsAPICodePack.Shell.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NAudio.Asio.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NAudio.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NAudio.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NAudio.Midi.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NAudio.Wasapi.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NAudio.WaveFormRenderer.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NAudio.WinForms.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NAudio.WinMM.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\NVorbis.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Buffers.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Collections.Immutable.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Data.SQLite.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Data.SQLite.EF6.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Data.SQLite.Linq.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Diagnostics.DiagnosticSource.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Drawing.Common.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Memory.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Numerics.Vectors.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Security.AccessControl.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Security.Principal.Windows.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Threading.Channels.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\System.Threading.Tasks.Extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\Triggerless.XAFLib.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\WindowsInput.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\Release\TriggerBot.exe.config"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\x64\SQLite.Interop.dll"; DestDir: "{app}\x64"; Flags: ignoreversion
+Source: "{#ReleaseBin}\x86\SQLite.Interop.dll"; DestDir: "{app}\x86"; Flags: ignoreversion
+//Source: "{#ReleaseBin}\appCache.sqlite"; DestDir: "{app}"; Flags: ignoreversion
+//Source: "{#ReleaseBin}\ConcurrentCollections.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\Dapper.dll"; DestDir: "{app}"; Flags: ignoreversion
+//#Source: "{#ReleaseBin}\DSharpPlus.CommandsNext.dll"; DestDir: "{app}"; Flags: ignoreversion
+//#Source: "{#ReleaseBin}\DSharpPlus.dll"; DestDir: "{app}"; Flags: ignoreversion
+//#Source: "{#ReleaseBin}\DSharpPlus.Interactivity.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\EntityFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\EntityFramework.SqlServer.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ICSharpCode.SharpZipLib.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ManagedWinapi.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\ManagedWinapiNativeHelper.dll"; DestDir: "{app}"; Flags: ignoreversion 
+Source: "{#ReleaseBin}\Microsoft.Bcl.AsyncInterfaces.dll"; DestDir: "{app}"; Flags: ignoreversion 
+Source: "{#ReleaseBin}\Microsoft.Extensions.DependencyInjection.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion 
+Source: "{#ReleaseBin}\Microsoft.Extensions.DependencyInjection.dll"; DestDir: "{app}"; Flags: ignoreversion 
+Source: "{#ReleaseBin}\Microsoft.Extensions.Logging.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion 
+Source: "{#ReleaseBin}\Microsoft.Win32.Registry.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\Microsoft.WindowsAPICodePack.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\Microsoft.WindowsAPICodePack.Shell.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\NAudio.Asio.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\NAudio.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\NAudio.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\NAudio.Midi.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\NAudio.Wasapi.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\NAudio.WaveFormRenderer.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\NAudio.WinForms.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\NAudio.WinMM.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\NVorbis.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\System.Buffers.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\System.Collections.Immutable.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\System.Data.SQLite.dll"; DestDir: "{app}"; Flags: ignoreversion
+//Source: "{#ReleaseBin}\System.Data.SQLite.EF6.dll"; DestDir: "{app}"; Flags: ignoreversion
+//Source: "{#ReleaseBin}\System.Data.SQLite.Linq.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\System.Diagnostics.DiagnosticSource.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\System.Drawing.Common.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\System.Memory.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\System.Numerics.Vectors.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\System.Security.AccessControl.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\System.Security.Principal.Windows.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\System.Threading.Channels.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\System.Threading.Tasks.Extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\Triggerless.XAFLib.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\WindowsInput.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\TriggerBot.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

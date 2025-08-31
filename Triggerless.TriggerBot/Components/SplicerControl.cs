@@ -31,14 +31,14 @@ namespace Triggerless.TriggerBot
         private System.Drawing.Image _waveform;
         private const double INIT_VOLUME = 100;
         private double _volume = INIT_VOLUME;
-        private Mp3FileReader _mp3FileReader;
+        private WaveStream _waveReader;
         private CutStage _stage = CutStage.Idle;
 
         public new void Dispose()
         {
             (this as Component).Dispose();
-            _mp3FileReader?.Dispose();
-            _mp3FileReader = null;
+            _waveReader?.Dispose();
+            _waveReader = null;
         }
 
         public SplicerControl()
@@ -73,8 +73,8 @@ namespace Triggerless.TriggerBot
 
         private void SelectFile(object sender, EventArgs e)
         {
-            _mp3FileReader?.Dispose();
-            _mp3FileReader = null;
+            _waveReader?.Dispose();
+            _waveReader = null;
 
             if (string.IsNullOrWhiteSpace(dlgOpenFile.InitialDirectory))
             {
@@ -87,8 +87,8 @@ namespace Triggerless.TriggerBot
                 dlgOpenFile.InitialDirectory = Path.GetDirectoryName(dlgOpenFile.FileName);
                 try
                 {
-                    _mp3FileReader = new Mp3FileReader(dlgOpenFile.FileName);
-                    _duration = _mp3FileReader.TotalTime;
+                    _waveReader = UniversalAudioReader.Open(dlgOpenFile.FileName);
+                    _duration = _waveReader.TotalTime;
                     txtFilename.Text = dlgOpenFile.FileName;
                     lblDuration.Text = $"Duration: {_duration.Minutes:00}:{_duration.Seconds:00}";
 
@@ -105,8 +105,8 @@ namespace Triggerless.TriggerBot
                 }
                 catch (Exception)
                 {
-                    _mp3FileReader?.Dispose();
-                    _mp3FileReader = null;
+                    _waveReader?.Dispose();
+                    _waveReader = null;
                     _duration = TimeSpan.Zero;
                     txtFilename.Text = string.Empty;
                     MessageBox.Show("Unable to read MP3 file. Skipping this file", "Invalid MP3", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -190,7 +190,7 @@ namespace Triggerless.TriggerBot
             lblCutStageIdle.Text = "Slicing Audio File";
             lblCutStageIdle.Update();
             _stage = CutStage.SliceAudio;
-            timer1.Start();
+            //timer1.Start();
 
             try
             {
@@ -435,8 +435,8 @@ namespace Triggerless.TriggerBot
             };
             var renderer = new WaveFormRenderer();
             Cursor = Cursors.WaitCursor;
-            if (_mp3FileReader is null) _mp3FileReader = new Mp3FileReader(filename);
-            _waveform = renderer.Render(_mp3FileReader, averagePeakProvider, renderSettings);
+            if (_waveReader is null) _waveReader = UniversalAudioReader.Open(filename);
+            _waveform = renderer.Render(_waveReader, averagePeakProvider, renderSettings);
             picWaveform.Image = _waveform;
             _volume = 100;
             Cursor = Cursors.Default;
@@ -624,44 +624,13 @@ namespace Triggerless.TriggerBot
 
         private void SplicerControl_ControlRemoved(object sender, ControlEventArgs e)
         {
-            _mp3FileReader?.Dispose();
-            _mp3FileReader = null;
-        }
-
-        private void DebugRun(object sender, EventArgs e)
-        {
-            var playbackForm = new PlaybackForm();
-            playbackForm.Mp3FileReader = _mp3FileReader;
-            playbackForm.Owner = this.ParentForm;
-            playbackForm.StartPosition = FormStartPosition.CenterParent;
-            playbackForm.ShowDialog(this);
-            playbackForm.Dispose();
-
+            _waveReader?.Dispose();
+            _waveReader = null;
         }
 
         internal void ShowCheap()
         {
             chkCheap.Visible = true;
-        }
-
-        private void chkCheap_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtFilename_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void rdoMinima_CheckedChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void timer1_Tick(object sender, EventArgs e)

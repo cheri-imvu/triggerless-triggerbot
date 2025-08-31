@@ -47,6 +47,7 @@
             // 
             // btnUpdateImmediately
             // 
+            this.btnUpdateImmediately.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnUpdateImmediately.Location = new System.Drawing.Point(75, 183);
             this.btnUpdateImmediately.Name = "btnUpdateImmediately";
             this.btnUpdateImmediately.Size = new System.Drawing.Size(151, 32);
@@ -57,6 +58,7 @@
             // 
             // btnUpdateOnExit
             // 
+            this.btnUpdateOnExit.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnUpdateOnExit.Location = new System.Drawing.Point(231, 183);
             this.btnUpdateOnExit.Name = "btnUpdateOnExit";
             this.btnUpdateOnExit.Size = new System.Drawing.Size(151, 32);
@@ -67,6 +69,7 @@
             // 
             // btnIgnore
             // 
+            this.btnIgnore.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnIgnore.Location = new System.Drawing.Point(388, 183);
             this.btnIgnore.Name = "btnIgnore";
             this.btnIgnore.Size = new System.Drawing.Size(151, 32);
@@ -77,6 +80,8 @@
             // 
             // txtWhatsNew
             // 
+            this.txtWhatsNew.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
+            this.txtWhatsNew.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.txtWhatsNew.Location = new System.Drawing.Point(80, 66);
             this.txtWhatsNew.Multiline = true;
             this.txtWhatsNew.Name = "txtWhatsNew";
@@ -85,8 +90,9 @@
             // 
             // UpdateForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
             this.ClientSize = new System.Drawing.Size(615, 227);
             this.Controls.Add(this.txtWhatsNew);
             this.Controls.Add(this.btnIgnore);
@@ -94,6 +100,7 @@
             this.Controls.Add(this.btnUpdateImmediately);
             this.Controls.Add(this.lblVersion);
             this.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;

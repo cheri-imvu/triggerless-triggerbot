@@ -50,7 +50,7 @@
             this.txtSearch.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtSearch.Location = new System.Drawing.Point(96, 15);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(236, 25);
+            this.txtSearch.Size = new System.Drawing.Size(236, 29);
             this.txtSearch.TabIndex = 0;
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
             this.txtSearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSearch_KeyPress);
@@ -71,7 +71,7 @@
             this.label1.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 17);
+            this.label1.Size = new System.Drawing.Size(75, 21);
             this.label1.TabIndex = 2;
             this.label1.Text = "Search:";
             this.label1.Click += new System.EventHandler(this.label1_Click);
@@ -82,6 +82,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this._flowProducts.AutoScroll = true;
+            this._flowProducts.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
             this._flowProducts.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this._flowProducts.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._flowProducts.Location = new System.Drawing.Point(12, 6);
@@ -119,7 +120,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(13, 7);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(68, 16);
+            this.label2.Size = new System.Drawing.Size(83, 19);
             this.label2.TabIndex = 6;
             this.label2.Text = "Selected:";
             // 
@@ -128,14 +129,14 @@
             this.lblProductName.AutoSize = true;
             this.lblProductName.Location = new System.Drawing.Point(94, 7);
             this.lblProductName.Name = "lblProductName";
-            this.lblProductName.Size = new System.Drawing.Size(50, 16);
+            this.lblProductName.Size = new System.Drawing.Size(63, 19);
             this.lblProductName.TabIndex = 7;
             this.lblProductName.Text = "(none)";
             // 
             // pnlBottom
             // 
             this.pnlBottom.AutoScroll = true;
-            this.pnlBottom.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.pnlBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
             this.pnlBottom.Controls.Add(this.lblProductName);
             this.pnlBottom.Controls.Add(this.label2);
             this.pnlBottom.Controls.Add(this.btnOK);
@@ -149,7 +150,7 @@
             // 
             // pnlTop
             // 
-            this.pnlTop.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.pnlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
             this.pnlTop.Controls.Add(this.label1);
             this.pnlTop.Controls.Add(this.txtSearch);
             this.pnlTop.Controls.Add(this.btnSearch);
@@ -173,14 +174,16 @@
             // 
             // ProductOpenDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(684, 661);
             this.Controls.Add(this.pnlMiddle);
             this.Controls.Add(this.pnlTop);
             this.Controls.Add(this.pnlBottom);
             this.Font = new System.Drawing.Font("Lucida Sans", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;

@@ -66,7 +66,7 @@
             this.lblName.ForeColor = System.Drawing.Color.White;
             this.lblName.Location = new System.Drawing.Point(113, 3);
             this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(192, 17);
+            this.lblName.Size = new System.Drawing.Size(262, 21);
             this.lblName.TabIndex = 1;
             this.lblName.Text = "012345678 012345678 0123";
             this.lblName.Click += new System.EventHandler(this.lblName_Click);
@@ -77,7 +77,7 @@
             this.lblCreator.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCreator.Location = new System.Drawing.Point(113, 25);
             this.lblCreator.Name = "lblCreator";
-            this.lblCreator.Size = new System.Drawing.Size(185, 17);
+            this.lblCreator.Size = new System.Drawing.Size(240, 21);
             this.lblCreator.TabIndex = 2;
             this.lblCreator.Text = "by CrazyMusicTriggerFiend";
             // 
@@ -87,7 +87,7 @@
             this.lblTriggers.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTriggers.Location = new System.Drawing.Point(113, 44);
             this.lblTriggers.Name = "lblTriggers";
-            this.lblTriggers.Size = new System.Drawing.Size(150, 17);
+            this.lblTriggers.Size = new System.Drawing.Size(193, 21);
             this.lblTriggers.TabIndex = 3;
             this.lblTriggers.Text = "Triggers: xyz1 - xyz24";
             // 
@@ -146,9 +146,9 @@
             // 
             // ProductCtrl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.picLips);
             this.Controls.Add(this.picDeleteItem);
