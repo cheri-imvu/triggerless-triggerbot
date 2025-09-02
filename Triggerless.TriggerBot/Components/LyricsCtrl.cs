@@ -257,7 +257,7 @@ namespace Triggerless.TriggerBot.Components
         {
             if (_product == null)
             {
-                MessageBox.Show("Choose a Trigger Tune first."); 
+                StyledMessageBox.Show(this, "Choose a Trigger Tune first."); 
                 return;
             }
             try
@@ -282,7 +282,7 @@ namespace Triggerless.TriggerBot.Components
             var mp3FileName = Path.Combine(Shared.LyricSheetsPath, $"{_product.Id}.mp3");
             if (!File.Exists(mp3FileName))
             {
-                MessageBox.Show($"Could not open {mp3FileName}", 
+                StyledMessageBox.Show(this, $"Could not open {mp3FileName}", 
                     "File Read Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
@@ -382,7 +382,7 @@ namespace Triggerless.TriggerBot.Components
         private void btnGetLyrics_Click(object sender, EventArgs e)
         {
             if (_product == null) { 
-                MessageBox.Show("Choose a Trigger Tune first."); return;
+                StyledMessageBox.Show(this, "Choose a Trigger Tune first."); return;
             }
             var f = new LyricsPaste();
             var result = f.ShowDialog();
@@ -463,7 +463,7 @@ namespace Triggerless.TriggerBot.Components
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error playing file: " + ex.Message);
+                StyledMessageBox.Show(this, "Error playing file: " + ex.Message);
             }
         }
 
@@ -489,7 +489,7 @@ namespace Triggerless.TriggerBot.Components
         {
             if (_product == null || _wavePlayer == null)
             {
-                MessageBox.Show("Choose a Trigger Tune first."); return;
+                StyledMessageBox.Show(this, "Choose a Trigger Tune first."); return;
             }
             try
             {
@@ -507,7 +507,7 @@ namespace Triggerless.TriggerBot.Components
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error pausing playback: " + ex.Message);
+                StyledMessageBox.Show(this, "Error pausing playback: " + ex.Message);
             }
         }
 
@@ -534,6 +534,11 @@ namespace Triggerless.TriggerBot.Components
         /// </summary>
         private void SaveLyrics()
         {
+            if (_product == null)
+            {
+                StyledMessageBox.Show(this.ParentForm, "Please select a trigger tune first.");
+                return;
+            }
             List<LyricEntry> list = new List<LyricEntry>();
             TimeSpan defaultTime = TimeSpan.FromMinutes(99);
             for (int i = 0; i < gridLyrics.Rows.Count; i++)
@@ -559,7 +564,7 @@ namespace Triggerless.TriggerBot.Components
                     else
                     {
                         gridLyrics.CurrentCell = gridLyrics.Rows[i].Cells[0];
-                        MessageBox.Show("This cell has the time in the wrong format. Please fix it.", "Wrong Format", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        StyledMessageBox.Show(this, "This cell has the time in the wrong format. Please fix it.", "Wrong Format", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         gridLyrics.BeginEdit(false);
                         return;
                     }
@@ -801,7 +806,7 @@ namespace Triggerless.TriggerBot.Components
 
         private void btnDeleteLyrics_Click(object sender, EventArgs e)
         {
-            var result = MessageBox.Show("You sure?", "Delete Lyrics", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+            var result = StyledMessageBox.Show(this, "You sure?", "Delete Lyrics", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
             if (result == DialogResult.OK)
             {
                 File.Delete(Path.Combine(Shared.LyricSheetsPath, $"{_product.Id}.lyrics"));

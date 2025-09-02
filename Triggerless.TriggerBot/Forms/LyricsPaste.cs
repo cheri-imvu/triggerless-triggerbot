@@ -51,7 +51,7 @@ namespace Triggerless.TriggerBot.Forms
             }
             else
             {
-                 MessageBox.Show("No text in the Clipboard", "Text Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                 StyledMessageBox.Show(this, "No text in the Clipboard", "Text Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

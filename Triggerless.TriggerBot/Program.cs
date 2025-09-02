@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,12 +16,20 @@ namespace Triggerless.TriggerBot
         private static void Main()
         {
             bool ranSuccessfully = false;
-            using (SingleProgramInstance spi = new SingleProgramInstance("Triggerless.Triggerbot.0.9.5"))
+            using (SingleProgramInstance spi = new SingleProgramInstance("Triggerless.Triggerbot.1"))
             {
                 if (spi.IsSingleInstance)
                 {
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
+                    StyledMessageBox.ConfigureTheme(
+                        back: Color.FromArgb(0, 29, 51),
+                        fore: Color.FromArgb(224,224,224),
+                        font: new Font("Liberation Sans", 11f),
+                        followSystemDarkTitleBar: true
+                    );
+
+
                     //_= Discord.CleanupChannel().Result;
                     int tryCount = 0;
                     int tryMax = 10;
@@ -65,7 +74,7 @@ namespace Triggerless.TriggerBot
                         Discord.SendMessage(caption, msg).Wait(10000);
                         
                         IWin32Window win = null;
-                        MessageBox.Show(win, msg, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        StyledMessageBox.Show(win, msg, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         Application.Exit();
 
                     }

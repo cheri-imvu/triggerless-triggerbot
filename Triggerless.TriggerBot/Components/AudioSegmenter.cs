@@ -54,7 +54,7 @@ namespace Triggerless.TriggerBot
             TimeSpan totalDuration;
 
             // Step 1: Analyze amplitude
-            using (var reader = new AudioFileReader(inputFilePath))
+            /* using (var reader = new AudioFileReader(inputFilePath))
             {
                 sampleRate = reader.WaveFormat.SampleRate;
                 totalDuration = reader.TotalTime;
@@ -69,6 +69,35 @@ namespace Triggerless.TriggerBot
                         sumSq += buffer[i] * buffer[i];
 
                     float rms = (float)Math.Sqrt(sumSq / samplesRead);
+                    envelope.Add(rms);
+                }
+            } */
+
+            // Step 1: Analyze amplitude (method 2 — keep channels, compute RMS over all samples)
+            using (WaveStream ws = UniversalAudioReader.Open(inputFilePath)) // your WaveStream source
+            {
+                // Convert byte-oriented WaveStream -> float samples
+                ISampleProvider sp = ws.ToSampleProvider();
+
+                int channels = sp.WaveFormat.Channels;
+                sampleRate = sp.WaveFormat.SampleRate;
+                totalDuration = ws.TotalTime;
+
+                // 10 ms window per the original logic
+                int frameSamplesPerChannel = sampleRate / 100;            // samples per channel in 10 ms
+                int bufferLen = frameSamplesPerChannel * channels;        // total interleaved samples in 10 ms
+                float[] buffer = new float[bufferLen];
+
+                int samplesRead;
+                while ((samplesRead = sp.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    // If we got a partial frame at the end, still compute RMS over what we have
+                    double sumSq = 0.0;
+                    for (int i = 0; i < samplesRead; i++)
+                        sumSq += buffer[i] * buffer[i];
+
+                    // Average over *all* samples (all channels)
+                    float rms = (float)Math.Sqrt(sumSq / Math.Max(1, samplesRead));
                     envelope.Add(rms);
                 }
             }

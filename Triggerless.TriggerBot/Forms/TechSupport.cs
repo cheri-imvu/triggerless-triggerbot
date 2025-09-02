@@ -24,7 +24,7 @@ namespace Triggerless.TriggerBot.Forms
         private async void _btnUpload_Click(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(_txtAviName.Text)) {
-                MessageBox.Show($"Avatar Name is required", "User Input Error",
+                StyledMessageBox.Show(this, $"Avatar Name is required", "User Input Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -45,7 +45,7 @@ namespace Triggerless.TriggerBot.Forms
                 File.Copy(imvuDB, Path.Combine(targetFolder, imvuFile), true);
                 File.Copy(tbDB, Path.Combine(targetFolder, tbFile), true);
             } catch(Exception exc) { 
-                MessageBox.Show($"Unable to copy one of the database files: {exc.Message}", "File System Error", 
+                StyledMessageBox.Show(this, $"Unable to copy one of the database files: {exc.Message}", "File System Error", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 CleanUpLocalFiles(parentFolder);
                 pnlUploading.Visible = false;
@@ -54,7 +54,7 @@ namespace Triggerless.TriggerBot.Forms
 
             if (!File.Exists(imvuDB) || !File.Exists(tbDB))
             {
-                MessageBox.Show($"Unable to copy one of the database files: Files could not be copied", "File System Error",
+                StyledMessageBox.Show(this, $"Unable to copy one of the database files: Files could not be copied", "File System Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 CleanUpLocalFiles(parentFolder);
                 pnlUploading.Visible = false;
@@ -87,7 +87,7 @@ namespace Triggerless.TriggerBot.Forms
                                 Close();
                             } catch (Exception exc) {
                                 _ = Discord.SendMessage("Upload Failed", $"Tech Support: Upload for {_txtAviName.Text}  failed.").Result;
-                                MessageBox.Show($"Unable to upload file: {exc.Message}");
+                                StyledMessageBox.Show($"Unable to upload file: {exc.Message}");
                             }
                         }
             */
@@ -141,7 +141,7 @@ namespace Triggerless.TriggerBot.Forms
                 catch (Exception ex)
                 {
                     await Discord.SendMessage("Upload Failed", $"Tech Support: Upload for {_txtAviName.Text} failed.");
-                    MessageBox.Show($"Upload failed: {ex}");
+                    StyledMessageBox.Show(this, $"Upload failed: {ex}");
                 }
             }
         }

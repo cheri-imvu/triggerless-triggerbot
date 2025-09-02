@@ -20,7 +20,7 @@ namespace Triggerless.TriggerBot.Forms
             var search = txtSearch.Text;
             if (string.IsNullOrWhiteSpace(search) )
             {
-                MessageBox.Show("Please enter a search term", "Search Term Required");
+                StyledMessageBox.Show(this, "Please enter a search term", "Search Term Required");
                 txtSearch.Focus();
             }
 

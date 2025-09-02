@@ -31,7 +31,7 @@ namespace Triggerless.TriggerBot
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show("Unable to retrieve OGG length from server", "HTTP Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            StyledMessageBox.Show(Program.MainForm, "Unable to retrieve OGG length from server", "HTTP Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return false;
                         }
 

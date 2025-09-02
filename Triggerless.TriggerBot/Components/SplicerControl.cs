@@ -109,7 +109,7 @@ namespace Triggerless.TriggerBot
                     _waveReader = null;
                     _duration = TimeSpan.Zero;
                     txtFilename.Text = string.Empty;
-                    MessageBox.Show("Unable to read MP3 file. Skipping this file", "Invalid MP3", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    StyledMessageBox.Show(this.ParentForm, "Unable to read MP3 file. Skipping this file", "Invalid MP3", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
             }
@@ -139,28 +139,28 @@ namespace Triggerless.TriggerBot
                     }
                 }
             }
-            MessageBox.Show($"The CHKN file does not exist yet. Please slice the audio first.", "Unable to Open", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            StyledMessageBox.Show(this.ParentForm, $"The CHKN file does not exist yet. Please slice the audio first.", "Unable to Open", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         private bool FormIsValid()
         {
             if (string.IsNullOrWhiteSpace(txtFilename.Text))
             {
-                MessageBox.Show("Please select a file to slice", "Unable to Continue", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                StyledMessageBox.Show(this.ParentForm, "Please select a file to slice", "Unable to Continue", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 btnSelectFile.Focus();
                 return false;
             }
 
             if (!File.Exists(txtFilename.Text))
             {
-                MessageBox.Show($"The file '{txtFilename.Text}' doesn't exist", "Unable to Continue", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                StyledMessageBox.Show(this.ParentForm, $"The file '{txtFilename.Text}' doesn't exist", "Unable to Continue", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 btnSelectFile.Focus();
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(txtPrefix.Text))
             {
-                MessageBox.Show("A prefix must be specified", "Unable to Continue", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                StyledMessageBox.Show(this.ParentForm, "A prefix must be specified", "Unable to Continue", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtPrefix.Focus();
                 txtPrefix.SelectAll();
                 return false;
@@ -168,7 +168,7 @@ namespace Triggerless.TriggerBot
 
             if (Regex.Match(txtPrefix.Text.Trim(), @"[\s,0-9<>:""/\\|?*]", RegexOptions.None).Success)
             {
-                MessageBox.Show("The chosen prefix does not conform to the rules.", "Unable to Continue", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                StyledMessageBox.Show(this.ParentForm, "The chosen prefix does not conform to the rules.", "Unable to Continue", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtPrefix.SelectAll();
                 txtPrefix.Focus();
                 return false;
@@ -215,7 +215,7 @@ namespace Triggerless.TriggerBot
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Unable to slice file for the following reason:\n{ex.Message}. Make sure you're not playing the file while trying to slice it.",
+                StyledMessageBox.Show(this.ParentForm,$"Unable to slice file for the following reason:\n{ex.Message}. Make sure you're not playing the file while trying to slice it.",
                     "Unable to Slice", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 await Discord.SendMessage("Unable to slice audio file", ex.Message + Environment.NewLine + ex.StackTrace);
                 lblCutStageIdle.Text = "Aborted Audio Slice";
@@ -244,7 +244,7 @@ namespace Triggerless.TriggerBot
             }
             catch (Exception exc)
             {
-                MessageBox.Show($"Unable to convert to OGG for the following reason: {exc.Message}",
+                StyledMessageBox.Show(this.ParentForm, $"Unable to convert to OGG for the following reason: {exc.Message}",
                     "Conversion Interrupted", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 lblCutStageIdle.Text = "Aborted OGG conversion";
                 _stage = CutStage.Idle;

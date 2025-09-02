@@ -119,7 +119,7 @@ namespace Triggerless.TriggerBot
 
             if (imvuProc == null)
             {
-                if (force) MessageBox.Show("TriggerBot can't play the triggers if IMVU isn't running. LOL",
+                if (force) StyledMessageBox.Show(this, "TriggerBot can't play the triggers if IMVU isn't running. LOL",
                     "IMVU isn't running", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
@@ -138,7 +138,7 @@ namespace Triggerless.TriggerBot
 
             if (_imvuChatWindow == IntPtr.Zero)
             {
-                MessageBox.Show("TriggerBot won't work if you're not in a chat room",
+                StyledMessageBox.Show(this, "TriggerBot won't work if you're not in a chat room",
                     "IMVU isn't running", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
@@ -236,7 +236,7 @@ namespace Triggerless.TriggerBot
         private void ExcludeSong(object sender, ExcludeSongEventArgs e)
         {
             var msg = $"Are you sure you want to remove {e.Title} from searchTerm? Nothing will be deleted from your IMVU inventory.";
-            var result = MessageBox.Show(msg, "Remove Tune?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            var result = StyledMessageBox.Show(this, msg, "Remove Tune?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (result == DialogResult.No) return;
 
             if (_collector.ExcludeSong(e.ProductId))
@@ -244,7 +244,7 @@ namespace Triggerless.TriggerBot
                 flowSearchResults.Controls.RemoveByKey($"productCtrl_{e.ProductId}");
             } else
             {
-                MessageBox.Show($"Unable to remove {e.Title} at this time", "Database Glitch", MessageBoxButtons.OK);
+                StyledMessageBox.Show(this, $"Unable to remove {e.Title} at this time", "Database Glitch", MessageBoxButtons.OK);
             }
             //throw new NotImplementedException();
         }
@@ -340,7 +340,7 @@ namespace Triggerless.TriggerBot
 
             if (_isPlaying)
             {
-                var result = MessageBox.Show("You're playing a tune, are you sure?",
+                var result = StyledMessageBox.Show(this, "You're playing a tune, are you sure?",
                     "Exit Program?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.No)
                 {
@@ -433,7 +433,7 @@ namespace Triggerless.TriggerBot
             var coll = new Collector();
             if (!await coll.Verify(args.ProductDisplayInfo))
             {
-                MessageBox.Show("The data for this _product cannot be verified.", "Bad Product Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                StyledMessageBox.Show(this, "The data for this _product cannot be verified.", "Bad Product Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             productOnDeck.ProductInfo = args.ProductDisplayInfo;
@@ -546,7 +546,7 @@ namespace Triggerless.TriggerBot
         {
             if (_currProductInfo == null) // sanity check
             {
-                MessageBox.Show("Playback Error, no trigger _product selected");
+                StyledMessageBox.Show(this, "Playback Error, no trigger _product selected");
                 return;
             }
             _isPlaying = true;
@@ -616,7 +616,7 @@ namespace Triggerless.TriggerBot
 
         private void AbortPlaying(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to abort?", "Abort Trigger Play?",
+            if (StyledMessageBox.Show(this, "Are you sure you want to abort?", "Abort Trigger Play?",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 chkAutoCue.Checked = false;
@@ -734,7 +734,7 @@ namespace Triggerless.TriggerBot
         private void RescanAll(object sender, EventArgs e)
         {
             var msg = "Are you sure you want to rescan? This will delete all Triggerbot data and scan the inventory and web all over again, and could take some time./n/nAre you certain?";
-            var dlgResult = MessageBox.Show(msg, "Rescan All Data?",
+            var dlgResult = StyledMessageBox.Show(this, msg, "Rescan All Data?",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
             if (dlgResult == DialogResult.No) { return; }
 
