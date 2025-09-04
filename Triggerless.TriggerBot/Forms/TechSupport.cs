@@ -105,7 +105,7 @@ namespace Triggerless.TriggerBot.Forms
         private async Task UploadZipAsync(string zipFilePath)
         {
             var fileName = Path.GetFileName(zipFilePath);
-            var uri = "https://www.triggerless.com/api/upload/techsupport";
+            var uri = $"{Shared.TriggerlessDomain}/api/upload/techsupport";
 
             using (var client = new HttpClient())
             using (var content = new MultipartFormDataContent())

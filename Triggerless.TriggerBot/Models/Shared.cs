@@ -83,6 +83,8 @@ namespace Triggerless.TriggerBot
             } 
         }
 
+        public static string TriggerlessDomain = "https://www.triggerless.com";
+
         public static void EnsurePath(string directory)
         {
             if (!Directory.Exists(directory)) Directory.CreateDirectory (directory);

@@ -7,6 +7,18 @@ namespace Triggerless.TriggerBot.Models
 {
     public class Discord
     {
+        public enum ResultStatus
+        {
+            NotSet = -1, Success = 0, NoNetwork = 1, Failed = 2, FailedToConnect = 3,
+        }
+
+        public class Result
+        {
+            public ResultStatus Status { get; set; } = ResultStatus.NotSet;
+            public string Message { get; set; } = string.Empty;
+            public Exception Exception { get; set; }
+        }
+
         public static async Task<string> GetInviteLink()
         {
             string result = string.Empty;
@@ -16,7 +28,7 @@ namespace Triggerless.TriggerBot.Models
                 if (Shared.HasTriggerlessConnection)
                 using (var client = new HttpClient())
                 {
-                    code = await client.GetStringAsync("https://triggerless.com/triggerbot/invite-code.txt").ConfigureAwait(false);
+                    code = await client.GetStringAsync($"{Shared.TriggerlessDomain}/triggerbot/invite-code.txt").ConfigureAwait(false);
                 }
             }
             catch (Exception) 
@@ -28,11 +40,13 @@ namespace Triggerless.TriggerBot.Models
             return result;
         }
 
-        private static async Task<int> SendMessageToBotAsync(string apiUrl, string title, string body)
+        private static async Task<Result> SendMessageToBotAsync(string apiUrl, string title, string body)
         {
-            var result = -1;
+            var result = new Result();
             if (!Shared.HasTriggerlessConnection)
             {
+                result.Status = ResultStatus.NoNetwork;
+                result.Message = "Unable to Connect";
                 return result;
             }
             var payload = new
@@ -51,32 +65,31 @@ namespace Triggerless.TriggerBot.Models
                     var response = await client.PostAsync(apiUrl, content);
                     if (response.IsSuccessStatusCode)
                     {
-                        Console.WriteLine("Message sent successfully!");
-                        string responseString = await response.Content.ReadAsStringAsync();
-                        Console.WriteLine("Server says: " + responseString);
-                        result = 0;
+                        result.Status = ResultStatus.Success;
+                        result.Message = await response.Content.ReadAsStringAsync();
                     }
                     else
                     {
-                        Console.WriteLine("Error: " + response.StatusCode);
+                        result.Status = ResultStatus.Failed;
                         string error = await response.Content.ReadAsStringAsync();
-                        Console.WriteLine("Details: " + error);
+                        result.Message = $"{response.StatusCode}: {error}";
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Exception occurred:");
-                    Console.WriteLine(ex);
+                    result.Status = ResultStatus.Failed;
+                    result.Message = ex.Message;
+                    result.Exception = ex;
                 }
             }
 
             return result;
         }
 
-        public static async Task<int> SendMessage(string title, string body)
+        public static async Task<Result> SendMessage(string title, string body)
         {
             return await SendMessageToBotAsync(
-                "http://localhost:61120/api/bot/sendmessage",
+                $"{Shared.TriggerlessDomain}/api/bot/sendmessage",
                 title,
                 body
             );

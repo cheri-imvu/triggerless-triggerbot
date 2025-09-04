@@ -15,6 +15,7 @@ namespace Triggerless.TriggerBot
         [STAThread]
         private static void Main()
         {
+            GetSessionId();
             bool ranSuccessfully = false;
             using (SingleProgramInstance spi = new SingleProgramInstance("Triggerless.Triggerbot.1"))
             {
@@ -23,7 +24,7 @@ namespace Triggerless.TriggerBot
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
                     StyledMessageBox.ConfigureTheme(
-                        back: Color.FromArgb(0, 29, 51),
+                        back: Color.FromArgb(51, 29, 0),
                         fore: Color.FromArgb(224,224,224),
                         font: new Font("Liberation Sans", 11f),
                         followSystemDarkTitleBar: true
@@ -87,5 +88,11 @@ namespace Triggerless.TriggerBot
         }
 
         public static TriggerBotMainForm MainForm { get; set; }
+        public static string SessionId {  get; private set; }
+
+        private static void GetSessionId()
+        {
+            SessionId = DateTime.UtcNow.Ticks.ToBase36();
+        }
     }
 }

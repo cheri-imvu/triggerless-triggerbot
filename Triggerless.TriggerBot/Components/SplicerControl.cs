@@ -239,12 +239,12 @@ namespace Triggerless.TriggerBot
                     int option = rdoFMS.Checked ? 1 :
                         rdoHQM.Checked ? 2 :
                         rdoHQS.Checked ? 3 : 1;
-                    _audioSegmenter.RunFFmpeg(ffmpegLocation, inputFile, outputFile, option, _volume / 100);
+                    _audioSegmenter.WriteOGGSegment(ffmpegLocation, inputFile, outputFile, option, _volume / 100);
                 }
             }
             catch (Exception exc)
             {
-                StyledMessageBox.Show(this.ParentForm, $"Unable to convert to OGG for the following reason: {exc.Message}",
+                StyledMessageBox.Show(Program.MainForm, $"Unable to convert to OGG for the following reason: {exc.Message}",
                     "Conversion Interrupted", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 lblCutStageIdle.Text = "Aborted OGG conversion";
                 _stage = CutStage.Idle;

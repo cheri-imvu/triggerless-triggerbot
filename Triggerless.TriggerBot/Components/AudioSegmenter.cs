@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -52,26 +53,6 @@ namespace Triggerless.TriggerBot
             List<float> envelope = new List<float>();
             int sampleRate;
             TimeSpan totalDuration;
-
-            // Step 1: Analyze amplitude
-            /* using (var reader = new AudioFileReader(inputFilePath))
-            {
-                sampleRate = reader.WaveFormat.SampleRate;
-                totalDuration = reader.TotalTime;
-                int frameSize = sampleRate / 100; // 10ms per frame
-                float[] buffer = new float[frameSize];
-
-                int samplesRead;
-                while ((samplesRead = reader.Read(buffer, 0, frameSize)) > 0)
-                {
-                    float sumSq = 0;
-                    for (int i = 0; i < samplesRead; i++)
-                        sumSq += buffer[i] * buffer[i];
-
-                    float rms = (float)Math.Sqrt(sumSq / samplesRead);
-                    envelope.Add(rms);
-                }
-            } */
 
             // Step 1: Analyze amplitude (method 2 — keep channels, compute RMS over all samples)
             using (WaveStream ws = UniversalAudioReader.Open(inputFilePath)) // your WaveStream source
@@ -152,7 +133,7 @@ namespace Triggerless.TriggerBot
                 double start = cutTimes[i];
                 double duration = cutTimes[i + 1] - start;
 
-                // Skip if duration is less than 0.5 seconds
+                // Skip if durationSec is less than 0.5 seconds
                 if (duration < 0.5)
                     continue;
 
@@ -161,7 +142,7 @@ namespace Triggerless.TriggerBot
                 var psi = new ProcessStartInfo
                 {
                     FileName = Path.Combine(Shared.FFmpegLocation, "ffmpeg.exe"),
-                    Arguments = string.Format("-y -i \"{0}\" -ss {1:F3} -t {2:F3} -ac 2 -ar 44100 \"{3}\"",
+                    Arguments = string.Format("-y -ss {1:F3} -i \"{0}\" -t {2:F3} -ac 2 -ar 44100 \"{3}\"",
                         inputFilePath, start, duration, outputFile),
                     UseShellExecute = false,
                     CreateNoWindow = true,
@@ -222,7 +203,7 @@ namespace Triggerless.TriggerBot
                         totalSamplesRead += samplesRead;
                     }
 
-                    // Ensure the segment duration is at least 1% of the desired segment duration
+                    // Ensure the segment durationSec is at least 1% of the desired segment durationSec
                     if (totalSamplesRead < samplesToRead / 100) break;
 
                     if (totalSamplesRead > 0)
@@ -262,7 +243,7 @@ namespace Triggerless.TriggerBot
         -q:a quality        set audio quality (codec-specific)      
          */
 
-        public void RunFFmpeg(string ffmpegLocation, string inputFile, string outputFile, int option, double volume = 1.0)
+        public void WriteOGGSegment(string ffmpegLocation, string inputFile, string outputFile, int option, double volume = 1.0)
         {
 
             string[] options = { 
@@ -278,8 +259,9 @@ namespace Triggerless.TriggerBot
             };
 
             var volumeOption = volume == 1.0 ? "" : $" -filter:a \"volume={volume}\"";
+            var fadeOptions = GetFadeOptions(inputFile);
 
-            string arguments = $"-i \"{inputFile}\" -c:a libvorbis {options[option]}{volumeOption} \"{outputFile}\"";
+            string arguments = $"-i \"{inputFile}\"{fadeOptions} -c:a libvorbis {options[option]}{volumeOption} \"{outputFile}\"";
 
             // Create a ProcessStartInfo object
             ProcessStartInfo startInfo = new ProcessStartInfo
@@ -331,6 +313,44 @@ namespace Triggerless.TriggerBot
                 // Wait for the process to exit
                 process.WaitForExit();
             }
+        }
+
+        public string GetFadeOptions(string inputPath)
+        {
+            var result = String.Empty;
+            double durationSec = GetDurationSeconds(inputPath);
+            if (durationSec > 0)
+            {
+                // 12 samples at 48000 Hz = 0.00025 seconds
+                string fadeDuration = "0.00030";
+                double fadeOutStart = durationSec - 0.00030;
+                string fadeOutStartStr = fadeOutStart.ToString("F6", CultureInfo.InvariantCulture);
+                result = $" -af \"afade=t=in:st=0:d={fadeDuration},afade=t=out:st={fadeOutStartStr}:d={fadeDuration}\"";
+            }
+            return result;
+        }
+
+        public double GetDurationSeconds(string inputPath)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = Path.Combine(Shared.FFmpegLocation, "ffprobe.exe"),
+                Arguments = $"-v error -show_entries format=durationSec -of default=noprint_wrappers=1:nokey=1 \"{inputPath}\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using (var process = Process.Start(psi))
+            {
+                string output = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
+
+                if (double.TryParse(output.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double duration))
+                    return duration;
+            }
+
+            return -1;
         }
 
         public static void OpenFileExplorerAndHighlight(string fileName)

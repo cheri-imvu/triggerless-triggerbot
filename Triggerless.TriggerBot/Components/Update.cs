@@ -21,7 +21,7 @@ namespace Triggerless.TriggerBot
             _runSetupOnExit = false;
         }
 
-        private string BaseUrl => "http://triggerless.com/triggerbot/";
+        private string BaseUrl => $"{Shared.TriggerlessDomain}/triggerbot/";
         public static Version CurrentVersion => Assembly.GetEntryAssembly()?.GetName().Version;
         private string JsonUrl => $"{BaseUrl}/current-version.json";
         private string _setup = string.Empty;

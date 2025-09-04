@@ -43,12 +43,16 @@ namespace Triggerless.TriggerBot
                 newControl.BorderStyle = BorderStyle.FixedSingle;
                 newControl.Font = new Font("Liberation Sans", 11F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
                 newControl.Location = new Point(5, 194);
-                newControl.Margin = new Padding(1,1,1,1);
+                newControl.Margin = new Padding(3,3,3,3);
                 newControl.Name = $"productCtrl_{product.Id}";
                 newControl.Width = _flowProducts.Width - 20;
                 newControl.ProductItemSelected += ProductSelected;
                 newControl.ItemDoubleClicked += ItemDoubleClicked;
-                if (product.HasLyrics) newControl.BackColor = Color.LightSkyBlue;
+                if (product.HasLyrics) 
+                {
+                    newControl.BackColor = Color.LightSkyBlue;
+                    newControl.ForeColor = Color.FromArgb(0, 29, 51);
+                } 
                 _flowProducts.Controls.Add(newControl);
             }
             _flowProducts.ResumeLayout(true);

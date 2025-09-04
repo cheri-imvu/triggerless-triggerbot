@@ -274,7 +274,6 @@ namespace Triggerless.TriggerBot.Components
             {
                 Application.Exit();
             }
-
         }
 
         private bool InitReaderAndPlayer()
@@ -343,27 +342,6 @@ namespace Triggerless.TriggerBot.Components
             var wavePath = Path.Combine(Shared.LyricSheetsPath, $"{_product.Id}.wave.png");
             if (!File.Exists(wavePath))
             {
-                /*
-                var maxPeakProvider = new MaxPeakProvider();
-                var rmsPeakProvider = new RmsPeakProvider(200);
-                var samplingPeakProvider = new SamplingPeakProvider(200);
-                var averagePeakProvider = new AveragePeakProvider(4);
-                var renderSettings = new StandardWaveFormRendererSettings
-                {
-                    Width = picWave.Width,
-                    TopHeight = picWave.Height / 2,
-                    BottomHeight = picWave.Height / 2,
-                    BackgroundColor = Color.Transparent,
-                    TopPeakPen = Pens.Blue,
-                    BottomPeakPen = Pens.Blue,
-
-                };
-                var renderer = new WaveFormRenderer();
-                Cursor = Cursors.WaitCursor;
-                _waveform = renderer.Render(_waveReader, averagePeakProvider, renderSettings);
-                _waveform.Save(wavePath);
-                Cursor = Cursors.Default; */
-
                 FastWaveform.SavePngFromFile(mp3FileName, 
                     wavePath, picWave.Width, picWave.Height, 5000, Color.Blue);
             }
@@ -544,6 +522,10 @@ namespace Triggerless.TriggerBot.Components
             for (int i = 0; i < gridLyrics.Rows.Count; i++)
             {
                 var timeString = gridLyrics.Rows[i].Cells[0].Value?.ToString();
+                if (string.IsNullOrEmpty(timeString) && i == gridLyrics.Rows.Count - 1) 
+                { 
+                    continue; 
+                }
                 var lyric = gridLyrics.Rows[i].Cells[1].Value?.ToString();
                 if (string.IsNullOrWhiteSpace(timeString))
                 {

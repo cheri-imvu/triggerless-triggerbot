@@ -115,6 +115,59 @@ namespace Triggerless.TriggerBot
             }
         }
 
+        private static void UpdateTagSchema()
+        {
+            using (var cxnAlter = new SQLiteConnection(Shared.AppCacheConnectionString))
+            {
+                using (var tx = cxnAlter.BeginTransaction())
+                using (var cmd = cxnAlter.CreateCommand())
+                {
+                    cmd.Transaction = tx;
+
+                    // Enforce FKs for this session (good practice even if none yet)
+                    cmd.CommandText = "PRAGMA foreign_keys = ON;";
+                    cmd.ExecuteNonQuery();
+
+                    // --- tags ---
+                    // tag_id: auto-numbered from 1, PRIMARY KEY
+                    // tag_name: TEXT, unique (case-insensitive via COLLATE NOCASE index)
+                    // modified_date: defaults to CURRENT_TIMESTAMP (UTC)
+                    cmd.CommandText = @"
+                        CREATE TABLE IF NOT EXISTS tags (
+                            tag_id        INTEGER PRIMARY KEY AUTOINCREMENT,
+                            tag_name      TEXT NOT NULL,
+                            modified_date DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP)
+                        );";
+                    cmd.ExecuteNonQuery();
+
+                    // Case-insensitive unique index on tag_name
+                    cmd.CommandText = @"
+                        CREATE UNIQUE INDEX IF NOT EXISTS 
+                        UX_tags_tag_name_nocase ON tags(tag_name COLLATE NOCASE);";
+                    cmd.ExecuteNonQuery();
+
+                    // --- product_tags ---
+                    // pt_id: auto-numbered from 1, PRIMARY KEY
+                    // unique(product_id, tag_id)
+                    // modified_date: defaults to CURRENT_TIMESTAMP (UTC)
+                    cmd.CommandText = @"
+CREATE TABLE IF NOT EXISTS product_tags (
+    pt_id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    product_id    INTEGER NOT NULL,
+    tag_id        INTEGER NOT NULL,
+    modified_date DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP)
+);";
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = @"CREATE UNIQUE INDEX IF NOT EXISTS UX_product_tags_product_tag ON product_tags(product_id, tag_id);";
+                    cmd.ExecuteNonQuery();
+
+                    tx.Commit();
+                }
+            }
+
+        }
+
         public static SQLiteConnection GetAppCacheCxn() 
         {
             if (!Directory.Exists(Shared.AppCachePath)) { Directory.CreateDirectory(Shared.AppCachePath); }
