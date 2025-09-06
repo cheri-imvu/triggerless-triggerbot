@@ -33,7 +33,7 @@ namespace Triggerless.TriggerBot
             set
             {
                 _selected = value;
-                this.BackColor = _selected ? SystemColors.MenuHighlight : SystemColors.Control;
+                this.BackColor = _selected ? SystemColors.MenuHighlight : Color.FromArgb(0,29,51);
                 if (_selected)
                 {
                     var parent = this.Parent;

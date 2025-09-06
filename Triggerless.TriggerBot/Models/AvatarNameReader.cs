@@ -31,17 +31,17 @@ namespace Triggerless.TriggerBot
         Vivaldi
     }
 
-    public static class CookieReader
+    public static class AvatarNameReader
     {
         // --- Public convenience for your case ---
-        public static bool TryGetImvuCookie(out string cookie)
-            => TryGetCookieAny("_imvu_avnm", "imvu.com", out cookie);
+        public static bool TryGetAvatarName(out string cookie)
+            => TryRead("_imvu_avnm", "imvu.com", out cookie);
 
         /// <summary>
         /// Tries default browser first (if supported), then other browsers (Chrome, Edge, Firefox, Opera, Brave).
         /// Scans all profiles until it finds cookieName for a host ending with domainSuffix.
         /// </summary>
-        public static bool TryGetCookieAny(string cookieName, string domainSuffix, out string value)
+        public static bool TryRead(string cookieName, string domainSuffix, out string value)
         {
             value = null;
 

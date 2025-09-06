@@ -352,8 +352,10 @@
       <DependentUpon>Collector.cs</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Models\CookieReader.cs" />
+    <Compile Include="Models\AvatarNameReader.cs" />
     <Compile Include="Models\ProgressableStreamContent.cs" />
+    <Compile Include="Models\PseudonymousId.cs" />
+    <Compile Include="Models\ReportPayload.cs" />
     <Compile Include="Models\Shared.cs" />
     <Compile Include="Models\SingleProgramInstance.cs" />
     <Compile Include="Components\Triangle.cs">
@@ -369,6 +371,7 @@
       <DependentUpon>TriggerBotMainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductDisplayInfo.cs" />
+    <Compile Include="Models\TriggerbotLinker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\SQLiteDataAccess.cs" />

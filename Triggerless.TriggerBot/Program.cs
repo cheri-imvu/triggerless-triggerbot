@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,6 +16,12 @@ namespace Triggerless.TriggerBot
         [STAThread]
         private static void Main()
         {
+            bool junctionWorked = TriggerbotLinker.EnsureTriggerbotJunction(); // creates a shortcut at the top of IMVU Projects
+            string name;
+            if (AvatarNameReader.TryGetAvatarName(out name))
+            {
+                AvatarName = name;  
+            }
             GetSessionId();
             bool ranSuccessfully = false;
             using (SingleProgramInstance spi = new SingleProgramInstance("Triggerless.Triggerbot.1"))
@@ -89,6 +96,7 @@ namespace Triggerless.TriggerBot
 
         public static TriggerBotMainForm MainForm { get; set; }
         public static string SessionId {  get; private set; }
+        public static string AvatarName { get; private set; } = "Unknown";
 
         private static void GetSessionId()
         {
