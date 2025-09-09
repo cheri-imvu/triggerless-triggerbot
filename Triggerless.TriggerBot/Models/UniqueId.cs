@@ -6,7 +6,7 @@ using Microsoft.Win32;
 
 namespace Triggerless.TriggerBot
 {
-    public static class PseudonymousId
+    public static class UniqueId
     {
         // Store a per-app secret (32 bytes). In production, load from config / protected storage.
         // Example here is Base64 for convenience. Generate your own random key!
@@ -17,7 +17,7 @@ namespace Triggerless.TriggerBot
         /// <summary>
         /// Returns a pseudonymous ID like "A1B2C3D4E5" (default 10 hex, uppercase) based on current user+machine.
         /// </summary>
-        public static string ForCurrentUserMachine(int hexLen = 10, string ns = "Triggerless.TriggerBot")
+        public static string ForCurrentUserMachine(int hexLen = 16, string ns = "Triggerless.TriggerBot")
         {
             if (hexLen <= 0 || (hexLen % 2) != 0)
                 throw new ArgumentOutOfRangeException(nameof(hexLen), "Use an even hex length, e.g., 10, 12, 16.");

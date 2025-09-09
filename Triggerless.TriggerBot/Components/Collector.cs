@@ -21,8 +21,8 @@ namespace Triggerless.TriggerBot
 {
     public partial class Collector : Component
     {
-        private object _dbLock = new object();
-        private object _logLock = new object();
+        private readonly object _dbLock = new object();
+        private readonly object _logLock = new object();
         private string _log = string.Empty;
         private StringBuilder _logBuffer = new StringBuilder();
 

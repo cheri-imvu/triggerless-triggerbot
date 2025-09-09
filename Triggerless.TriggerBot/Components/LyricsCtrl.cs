@@ -272,7 +272,9 @@ namespace Triggerless.TriggerBot.Components
             }
             catch (Exception ex)
             {
-                Application.Exit();
+                StyledMessageBox.Show(Program.MainForm, $"Problem opening product: {ex}",
+                    "Product failed to open.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                _product = null;
             }
         }
 

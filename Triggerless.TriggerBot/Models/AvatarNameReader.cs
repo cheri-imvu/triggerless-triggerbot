@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Win32;
+using System.Diagnostics;
+
 
 #if NET8_0_OR_GREATER
 using System.Text.Json;
@@ -51,8 +52,10 @@ namespace Triggerless.TriggerBot
             // 2) Try each in order
             foreach (var b in ordered)
             {
+                Debug.WriteLine($"Testing {b}");
                 if (TryGetCookieFromBrowser(cookieName, domainSuffix, b, out value))
                     return true;
+                Debug.WriteLine($"Browser {b} didn't work.");
             }
 
             // Optional: try niche Chromium browsers if present
@@ -191,8 +194,19 @@ namespace Triggerless.TriggerBot
                     }
                 }
             }
-            catch { return false; }
-            finally { try { File.Delete(tempCopy); } catch { } }
+            catch (Exception ex) 
+            { 
+                Debug.WriteLine(ex.ToString());
+                return false; 
+            }
+            finally 
+            { 
+                try 
+                { 
+                    File.Delete(tempCopy); 
+                } 
+                catch { } 
+            }
         }
 
         private static (string userDataRoot, List<string> profileDirs) GetChromiumUserDataAndProfiles(BrowserKind b)

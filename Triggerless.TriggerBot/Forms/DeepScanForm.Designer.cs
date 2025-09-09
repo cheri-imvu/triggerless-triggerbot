@@ -53,7 +53,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Liberation Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Liberation Sans", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -67,8 +67,8 @@
             this.colName});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Liberation Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Liberation Sans", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
@@ -76,6 +76,7 @@
             this.gridProduct.Location = new System.Drawing.Point(12, 51);
             this.gridProduct.Margin = new System.Windows.Forms.Padding(4);
             this.gridProduct.Name = "gridProduct";
+            this.gridProduct.RowHeadersWidth = 51;
             dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Liberation Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
@@ -89,18 +90,23 @@
             // colProductId
             // 
             this.colProductId.HeaderText = "ProductId";
+            this.colProductId.MinimumWidth = 6;
             this.colProductId.Name = "colProductId";
             this.colProductId.ReadOnly = true;
             this.colProductId.Visible = false;
+            this.colProductId.Width = 125;
             // 
             // colItemCheck
             // 
             this.colItemCheck.HeaderText = "Include?";
+            this.colItemCheck.MinimumWidth = 6;
             this.colItemCheck.Name = "colItemCheck";
+            this.colItemCheck.Width = 125;
             // 
             // colCreatorName
             // 
             this.colCreatorName.HeaderText = "Creator";
+            this.colCreatorName.MinimumWidth = 6;
             this.colCreatorName.Name = "colCreatorName";
             this.colCreatorName.ReadOnly = true;
             this.colCreatorName.Width = 250;
@@ -108,6 +114,7 @@
             // colName
             // 
             this.colName.HeaderText = "Product Name";
+            this.colName.MinimumWidth = 6;
             this.colName.Name = "colName";
             this.colName.ReadOnly = true;
             this.colName.Width = 300;
@@ -121,7 +128,7 @@
             this.txtSearch.Location = new System.Drawing.Point(12, 16);
             this.txtSearch.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(345, 25);
+            this.txtSearch.Size = new System.Drawing.Size(345, 29);
             this.txtSearch.TabIndex = 5;
             this.txtSearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSearch_KeyPress);
             // 
@@ -166,13 +173,13 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(18, 404);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(235, 15);
+            this.label1.Size = new System.Drawing.Size(293, 19);
             this.label1.TabIndex = 9;
             this.label1.Text = "Check the products to manually import.";
             // 
             // DeepScanForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
             this.ClientSize = new System.Drawing.Size(663, 462);

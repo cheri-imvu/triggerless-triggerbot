@@ -16,13 +16,17 @@ namespace Triggerless.TriggerBot
         [STAThread]
         private static void Main()
         {
-            bool junctionWorked = TriggerbotLinker.EnsureTriggerbotJunction(); // creates a shortcut at the top of IMVU Projects
-            string name;
-            if (AvatarNameReader.TryGetAvatarName(out name))
-            {
-                AvatarName = name;  
-            }
-            GetSessionId();
+            bool junctionWorked = TriggerbotLinker.EnsureTriggerbotJunction(); 
+            // creates a shortcut at the top of IMVU Projects
+            /*
+                        string name;
+                        if (AvatarNameReader.TryGetAvatarName(out name))
+                        {
+                            AvatarName = name;  
+                        }
+            */
+            SessionId = DateTime.UtcNow.Ticks.ToBase36();
+            UniqueId = TriggerBot.UniqueId.ForCurrentUserMachine();
             bool ranSuccessfully = false;
             using (SingleProgramInstance spi = new SingleProgramInstance("Triggerless.Triggerbot.1"))
             {
@@ -36,8 +40,6 @@ namespace Triggerless.TriggerBot
                         font: new Font("Liberation Sans", 11f),
                         followSystemDarkTitleBar: true
                     );
-
-
                     //_= Discord.CleanupChannel().Result;
                     int tryCount = 0;
                     int tryMax = 10;
@@ -97,10 +99,6 @@ namespace Triggerless.TriggerBot
         public static TriggerBotMainForm MainForm { get; set; }
         public static string SessionId {  get; private set; }
         public static string AvatarName { get; private set; } = "Unknown";
-
-        private static void GetSessionId()
-        {
-            SessionId = DateTime.UtcNow.Ticks.ToBase36();
-        }
+        public static string UniqueId { get; private set; }
     }
 }

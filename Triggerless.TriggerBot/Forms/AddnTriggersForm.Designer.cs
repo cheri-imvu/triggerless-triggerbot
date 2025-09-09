@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddnTriggersForm));
             this.gridTriggers = new System.Windows.Forms.DataGridView();
             this.colPrefix = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSequence = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -50,7 +51,7 @@
             this.colTrigger,
             this.colAddnTriggers});
             this.gridTriggers.Location = new System.Drawing.Point(22, 45);
-            this.gridTriggers.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gridTriggers.Margin = new System.Windows.Forms.Padding(4);
             this.gridTriggers.Name = "gridTriggers";
             this.gridTriggers.RowHeadersWidth = 51;
             this.gridTriggers.Size = new System.Drawing.Size(709, 405);
@@ -95,7 +96,7 @@
             this.lblTitle.AutoSize = true;
             this.lblTitle.Location = new System.Drawing.Point(19, 9);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(255, 23);
+            this.lblTitle.Size = new System.Drawing.Size(204, 18);
             this.lblTitle.TabIndex = 1;
             this.lblTitle.Text = "Song Title Name by Avatar";
             // 
@@ -129,7 +130,8 @@
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.gridTriggers);
             this.Font = new System.Drawing.Font("Lucida Sans Unicode", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "AddnTriggersForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Additional Triggers";
