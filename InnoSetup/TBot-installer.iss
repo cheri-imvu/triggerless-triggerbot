@@ -6,7 +6,7 @@
 #define MyAppPublisher "triggerless.com"
 #define MyAppURL "https://triggerless.com//triggerbot/"
 #define MyAppExeName "TriggerBot.exe"
-#define MyAppIcoName "note.ico"
+#define MyAppIcoName "note10.ico"
 #define ProjectPath "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot"
 #define ReleaseBin "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\x64\Release"
 
@@ -30,10 +30,24 @@ OutputBaseFilename=mysetup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
-SetupIconFile=D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\note.ico
+SetupIconFile=D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\note10.ico
 
 
 [Code]
+
+function PerUserFontDir: string;
+begin
+  Result := ExpandConstant('{localappdata}\Microsoft\Windows\Fonts');
+end;
+
+function ShouldInstallFont(const FileName, FaceName: string): Boolean;
+begin
+  Result :=
+    (not FontExists(FaceName)) and
+    (not FileExists(PerUserFontDir + '\' + FileName));
+end;
+
+
 function IsAppInstalled(): Boolean;
 var
   UninstallKey: string;
@@ -113,11 +127,11 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}";
 
 [Files]
-Source: "{#ProjectPath}\assets\note.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#ProjectPath}\assets\LiberationSans_Regular.ttf"; DestDir: "{commonfonts}"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall
-Source: "{#ProjectPath}\assets\LiberationSans_Bold.ttf"; DestDir: "{commonfonts}"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall
-Source: "{#ProjectPath}\assets\LiberationSans_Italic.ttf"; DestDir: "{commonfonts}"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall
-Source: "{#ProjectPath}\assets\LiberationSans_BoldItalic.ttf"; DestDir: "{commonfonts}"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "{#ProjectPath}\assets\note10.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ProjectPath}\assets\LiberationSans_Regular.ttf"; DestDir: "{localappdata}\Microsoft\Windows\Fonts"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall; Check: ShouldInstallFont('LiberationSans_Regular.ttf', 'Liberation Sans')
+Source: "{#ProjectPath}\assets\LiberationSans_Bold.ttf"; DestDir: "{localappdata}\Microsoft\Windows\Fonts"; FontInstall: "Liberation Sans Bold"; Flags: onlyifdoesntexist uninsneveruninstall; Check: ShouldInstallFont('LiberationSans_Bold.ttf', 'Liberation Sans Bold')
+Source: "{#ProjectPath}\assets\LiberationSans_Italic.ttf"; DestDir: "{localappdata}\Microsoft\Windows\Fonts"; FontInstall: "Liberation Sans Italic"; Flags: onlyifdoesntexist uninsneveruninstall; Check: ShouldInstallFont('LiberationSans_Italic.ttf', 'Liberation Sans Italic')
+Source: "{#ProjectPath}\assets\LiberationSans_BoldItalic.ttf"; DestDir: "{localappdata}\Microsoft\Windows\Fonts"; FontInstall: "Liberation Sans Bold Italic"; Flags: onlyifdoesntexist uninsneveruninstall; Check: ShouldInstallFont('LiberationSans_BoldItalic.ttf', 'Liberation Sans Bold Italic')
 Source: "{#ReleaseBin}\ffmpeg\ffmpeg.exe"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
 Source: "{#ReleaseBin}\ffmpeg\ffprobe.exe"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
 

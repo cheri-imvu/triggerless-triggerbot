@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="Triggerless Triggerbot" />
-	<meta name="og:title" content="Triggerless Triggerbot" />
+	  <meta name="og:title" content="Triggerless Triggerbot" />
     <meta name="og:description" content="App for IMVU Trigger DJs to play songs accurately and create new song products" />
     <meta name="og:url" content="https://triggerless.com/triggerbot/" />
     <meta name="og:site_name" content="Triggerless Triggerbot" />
@@ -19,7 +19,14 @@
     
   </head>
   <body>
-    <div style="text-align: center;"><img src="triggerbot.png"></div>
+    <div class="top">
+    <div class="top-left">  
+      <img src="triggerbot.png" style="vertical-align: middle" alt="Triggerbot Logo" />
+    </div>
+    <div class="top-right">        
+        <div>Download v1.0</div>
+        <div><a class="top-link" href="triggerbot-setup.1.0.0.zip">🠋</a></div>
+    </div>
     <div class="center-div">
       <div class="topic">Introduction</div>
         <p>Triggerbot is a Windows app that can help you send song triggers accurately to IMVU. It's currently a work in progress. If you're
