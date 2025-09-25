@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Triggerless.TriggerBot
@@ -128,6 +129,39 @@ namespace Triggerless.TriggerBot
                 File.WriteAllText(filepath, sb.ToString());
 
                 Process.Start(filepath);
+            }
+        }
+
+        private static readonly Guid FOLDERID_Downloads = Guid.Parse("374DE290-123F-4565-9164-39C4925E467B");
+
+        [DllImport("shell32.dll")]
+        private static extern int SHGetKnownFolderPath(
+            [MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr ppszPath);
+
+        private static string _downloadsPath = string.Empty;
+        public static string DownloadsPath
+        {
+            get
+            {
+                if (_downloadsPath == string.Empty)
+                {
+                    IntPtr p;
+                    var hr = SHGetKnownFolderPath(FOLDERID_Downloads, 0, IntPtr.Zero, out p);
+                    if (hr != 0) Marshal.ThrowExceptionForHR(hr);
+
+                    try
+                    {
+                        var s = Marshal.PtrToStringUni(p);
+                        if (s == null)
+                            throw new InvalidOperationException("Failed to retrieve Downloads path.");
+                        _downloadsPath = s;
+                    }
+                    finally
+                    {
+                        Marshal.FreeCoTaskMem(p);
+                    }
+                }
+                return _downloadsPath;
             }
         }
     }

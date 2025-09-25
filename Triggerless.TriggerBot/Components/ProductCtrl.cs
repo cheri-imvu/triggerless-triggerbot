@@ -16,6 +16,7 @@ namespace Triggerless.TriggerBot
     {
         public event LinkClickedEventHandler OnDeckLinkClicked;
         public delegate void LinkClickedEventHandler(object sender, LinkClickedEventArgs e);
+
         public class LinkClickedEventArgs : EventArgs
         {
             public LinkClickedEventArgs(ProductDisplayInfo pdi) 

@@ -293,6 +293,7 @@
     <Compile Include="Components\ProductOpenDialogItem.Designer.cs">
       <DependentUpon>ProductOpenDialogItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\TriggerlessApiClient.cs" />
     <Compile Include="Components\UnderConstructionCtrl.cs">
       <SubType>UserControl</SubType>
     </Compile>

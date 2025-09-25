@@ -42,6 +42,7 @@
             this.btnPlay = new System.Windows.Forms.Button();
             this.picProductImage = new System.Windows.Forms.PictureBox();
             this.pnlWave = new System.Windows.Forms.Panel();
+            this.triangle1 = new Triggerless.TriggerBot.Triangle();
             this.picWave = new System.Windows.Forms.PictureBox();
             this.picWait = new System.Windows.Forms.PictureBox();
             this.pnlGrid = new System.Windows.Forms.Panel();
@@ -53,10 +54,12 @@
             this.mnuDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuInsertBelow = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlControls = new System.Windows.Forms.Panel();
+            this.btnDownloadLyrics = new System.Windows.Forms.Button();
             this.btnExportLyrics = new System.Windows.Forms.Button();
             this.btnImportLyrics = new System.Windows.Forms.Button();
             this.btnDeleteLyrics = new System.Windows.Forms.Button();
             this.lblNudge = new System.Windows.Forms.Label();
+            this.ctlNeedsSave = new Triggerless.TriggerBot.Components.DirtyControl();
             this.btnMsMinus = new System.Windows.Forms.Button();
             this.btnMsPlus = new System.Windows.Forms.Button();
             this.lblMS = new System.Windows.Forms.Label();
@@ -66,8 +69,7 @@
             this.btnPasteLyrics = new System.Windows.Forms.Button();
             this._timer = new System.Windows.Forms.Timer(this.components);
             this.splitter = new System.Windows.Forms.SplitContainer();
-            this.ctlNeedsSave = new Triggerless.TriggerBot.Components.DirtyControl();
-            this.triangle1 = new Triggerless.TriggerBot.Triangle();
+            this._fileOpenDlg = new System.Windows.Forms.OpenFileDialog();
             this.pnlTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).BeginInit();
             this.pnlWave.SuspendLayout();
@@ -195,6 +197,21 @@
             this.pnlWave.Size = new System.Drawing.Size(1053, 38);
             this.pnlWave.TabIndex = 7;
             // 
+            // triangle1
+            // 
+            this.triangle1.BackColor = System.Drawing.Color.Transparent;
+            this.triangle1.BorderColor = System.Drawing.Color.Maroon;
+            this.triangle1.BorderThickness = 2;
+            this.triangle1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.triangle1.Direction = Triggerless.TriggerBot.Triangle.Orientation.Down;
+            this.triangle1.ForeColor = System.Drawing.Color.Yellow;
+            this.triangle1.Location = new System.Drawing.Point(-23, 0);
+            this.triangle1.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
+            this.triangle1.Name = "triangle1";
+            this.triangle1.Position = -16;
+            this.triangle1.Size = new System.Drawing.Size(15, 20);
+            this.triangle1.TabIndex = 10;
+            // 
             // picWave
             // 
             this.picWave.BackColor = System.Drawing.SystemColors.Control;
@@ -267,7 +284,6 @@
             this.gridLyrics.RowTemplate.Height = 26;
             this.gridLyrics.Size = new System.Drawing.Size(850, 530);
             this.gridLyrics.TabIndex = 0;
-            this.gridLyrics.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridLyrics_CellContentClick);
             this.gridLyrics.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridLyrics_CellValueChanged);
             this.gridLyrics.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gridLyrics_MouseDown);
             // 
@@ -323,6 +339,7 @@
             // pnlControls
             // 
             this.pnlControls.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
+            this.pnlControls.Controls.Add(this.btnDownloadLyrics);
             this.pnlControls.Controls.Add(this.btnExportLyrics);
             this.pnlControls.Controls.Add(this.btnImportLyrics);
             this.pnlControls.Controls.Add(this.btnDeleteLyrics);
@@ -341,6 +358,19 @@
             this.pnlControls.Size = new System.Drawing.Size(199, 530);
             this.pnlControls.TabIndex = 9;
             // 
+            // btnDownloadLyrics
+            // 
+            this.btnDownloadLyrics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnDownloadLyrics.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDownloadLyrics.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
+            this.btnDownloadLyrics.Location = new System.Drawing.Point(14, 146);
+            this.btnDownloadLyrics.Name = "btnDownloadLyrics";
+            this.btnDownloadLyrics.Size = new System.Drawing.Size(156, 33);
+            this.btnDownloadLyrics.TabIndex = 12;
+            this.btnDownloadLyrics.Text = "Download Lyrics";
+            this.btnDownloadLyrics.UseVisualStyleBackColor = false;
+            this.btnDownloadLyrics.Click += new System.EventHandler(this.btnDownloadLyrics_Click);
+            // 
             // btnExportLyrics
             // 
             this.btnExportLyrics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -352,25 +382,27 @@
             this.btnExportLyrics.TabIndex = 11;
             this.btnExportLyrics.Text = "Export Lyrics";
             this.btnExportLyrics.UseVisualStyleBackColor = false;
+            this.btnExportLyrics.Click += new System.EventHandler(this.btnExportLyrics_Click);
             // 
             // btnImportLyrics
             // 
             this.btnImportLyrics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnImportLyrics.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnImportLyrics.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
-            this.btnImportLyrics.Location = new System.Drawing.Point(14, 147);
+            this.btnImportLyrics.Location = new System.Drawing.Point(15, 185);
             this.btnImportLyrics.Name = "btnImportLyrics";
             this.btnImportLyrics.Size = new System.Drawing.Size(156, 33);
             this.btnImportLyrics.TabIndex = 10;
             this.btnImportLyrics.Text = "Import Lyrics";
             this.btnImportLyrics.UseVisualStyleBackColor = false;
+            this.btnImportLyrics.Click += new System.EventHandler(this.btnImportLyrics_Click);
             // 
             // btnDeleteLyrics
             // 
             this.btnDeleteLyrics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnDeleteLyrics.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDeleteLyrics.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
-            this.btnDeleteLyrics.Location = new System.Drawing.Point(14, 291);
+            this.btnDeleteLyrics.Location = new System.Drawing.Point(14, 355);
             this.btnDeleteLyrics.Name = "btnDeleteLyrics";
             this.btnDeleteLyrics.Size = new System.Drawing.Size(156, 33);
             this.btnDeleteLyrics.TabIndex = 9;
@@ -382,18 +414,28 @@
             // 
             this.lblNudge.AutoSize = true;
             this.lblNudge.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNudge.Location = new System.Drawing.Point(12, 232);
+            this.lblNudge.Location = new System.Drawing.Point(12, 296);
             this.lblNudge.Name = "lblNudge";
             this.lblNudge.Size = new System.Drawing.Size(54, 17);
             this.lblNudge.TabIndex = 8;
             this.lblNudge.Text = "Nudge:";
+            // 
+            // ctlNeedsSave
+            // 
+            this.ctlNeedsSave.BackColor = System.Drawing.Color.Transparent;
+            this.ctlNeedsSave.Dirty = false;
+            this.ctlNeedsSave.Location = new System.Drawing.Point(178, 71);
+            this.ctlNeedsSave.Margin = new System.Windows.Forms.Padding(0);
+            this.ctlNeedsSave.Name = "ctlNeedsSave";
+            this.ctlNeedsSave.Size = new System.Drawing.Size(24, 24);
+            this.ctlNeedsSave.TabIndex = 7;
             // 
             // btnMsMinus
             // 
             this.btnMsMinus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnMsMinus.Font = new System.Drawing.Font("Liberation Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnMsMinus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
-            this.btnMsMinus.Location = new System.Drawing.Point(146, 253);
+            this.btnMsMinus.Location = new System.Drawing.Point(146, 317);
             this.btnMsMinus.Name = "btnMsMinus";
             this.btnMsMinus.Size = new System.Drawing.Size(29, 26);
             this.btnMsMinus.TabIndex = 6;
@@ -406,7 +448,7 @@
             this.btnMsPlus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnMsPlus.Font = new System.Drawing.Font("Liberation Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnMsPlus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
-            this.btnMsPlus.Location = new System.Drawing.Point(113, 253);
+            this.btnMsPlus.Location = new System.Drawing.Point(113, 317);
             this.btnMsPlus.Name = "btnMsPlus";
             this.btnMsPlus.Size = new System.Drawing.Size(29, 26);
             this.btnMsPlus.TabIndex = 5;
@@ -418,7 +460,7 @@
             // 
             this.lblMS.AutoSize = true;
             this.lblMS.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMS.Location = new System.Drawing.Point(72, 258);
+            this.lblMS.Location = new System.Drawing.Point(72, 322);
             this.lblMS.Name = "lblMS";
             this.lblMS.Size = new System.Drawing.Size(29, 17);
             this.lblMS.TabIndex = 4;
@@ -428,7 +470,7 @@
             // 
             this.txtMS.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtMS.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
-            this.txtMS.Location = new System.Drawing.Point(14, 255);
+            this.txtMS.Location = new System.Drawing.Point(14, 319);
             this.txtMS.Name = "txtMS";
             this.txtMS.Size = new System.Drawing.Size(52, 25);
             this.txtMS.TabIndex = 3;
@@ -440,7 +482,7 @@
             this.btnTimeIt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnTimeIt.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnTimeIt.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
-            this.btnTimeIt.Location = new System.Drawing.Point(14, 331);
+            this.btnTimeIt.Location = new System.Drawing.Point(14, 395);
             this.btnTimeIt.Name = "btnTimeIt";
             this.btnTimeIt.Size = new System.Drawing.Size(156, 33);
             this.btnTimeIt.TabIndex = 2;
@@ -495,31 +537,6 @@
             this.splitter.Size = new System.Drawing.Size(1053, 530);
             this.splitter.SplitterDistance = 850;
             this.splitter.TabIndex = 10;
-            // 
-            // ctlNeedsSave
-            // 
-            this.ctlNeedsSave.BackColor = System.Drawing.Color.Transparent;
-            this.ctlNeedsSave.Dirty = false;
-            this.ctlNeedsSave.Location = new System.Drawing.Point(178, 71);
-            this.ctlNeedsSave.Margin = new System.Windows.Forms.Padding(0);
-            this.ctlNeedsSave.Name = "ctlNeedsSave";
-            this.ctlNeedsSave.Size = new System.Drawing.Size(24, 24);
-            this.ctlNeedsSave.TabIndex = 7;
-            // 
-            // triangle1
-            // 
-            this.triangle1.BackColor = System.Drawing.Color.Transparent;
-            this.triangle1.BorderColor = System.Drawing.Color.Maroon;
-            this.triangle1.BorderThickness = 2;
-            this.triangle1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.triangle1.Direction = Triggerless.TriggerBot.Triangle.Orientation.Down;
-            this.triangle1.ForeColor = System.Drawing.Color.Yellow;
-            this.triangle1.Location = new System.Drawing.Point(-20, 0);
-            this.triangle1.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            this.triangle1.Name = "triangle1";
-            this.triangle1.Position = -13;
-            this.triangle1.Size = new System.Drawing.Size(15, 20);
-            this.triangle1.TabIndex = 10;
             // 
             // LyricsCtrl
             // 
@@ -591,5 +608,7 @@
         private System.Windows.Forms.PictureBox picWait;
         private System.Windows.Forms.Button btnExportLyrics;
         private System.Windows.Forms.Button btnImportLyrics;
+        private System.Windows.Forms.OpenFileDialog _fileOpenDlg;
+        private System.Windows.Forms.Button btnDownloadLyrics;
     }
 }

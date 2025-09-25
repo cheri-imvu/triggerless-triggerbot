@@ -65,6 +65,11 @@ namespace Triggerless.TriggerBot.Components
             Disposed += OnDisposed;
         }
 
+        public bool IsDirty
+        {
+            get => ctlNeedsSave.Dirty;
+        }
+
         private void OnDisposed(object sender, EventArgs e)
         {
             _waveform?.Dispose();
@@ -107,6 +112,40 @@ namespace Triggerless.TriggerBot.Components
             triangle1.BringToFront();
 
             ctlNeedsSave.Dirty = false;
+            PrepareFileDialog();
+        }
+
+        private void PrepareFileDialog()
+        {
+            // Deduce a sane place to start the Initial Directory.
+            // Normally Downloads, but if the user is a desktop clutterbug
+            // check there too.
+
+            string downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
+                               + @"\Downloads";
+            string userDesktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+
+            string[] acceptedExtensions = new[] { "lyrics", "json" };
+            var desktopFiles = Directory.GetFiles(userDesktop);
+            var downloadFiles = Directory.GetFiles(downloadsPath);
+
+            string initPath = downloadsPath;
+            if (!downloadFiles.Any(f => acceptedExtensions
+                .Contains(Path.GetExtension(f).ToLowerInvariant())))
+            {
+                if (desktopFiles.Any(f => acceptedExtensions
+                .Contains(Path.GetExtension(f).ToLowerInvariant())))
+                {
+                    initPath = userDesktop;
+                }
+            }
+
+            _fileOpenDlg.InitialDirectory = initPath;
+
+            _fileOpenDlg.Filter = "Triggerbot Lyrics Files (*.lyrics)|*.lyrics|JSON files (*.json)|.json|All Files (*.*)|*.*";
+            _fileOpenDlg.FilterIndex = 1;
+            _fileOpenDlg.Multiselect = false;
+            _fileOpenDlg.Title = "Import Triggerbot Lyrics File";
         }
 
         /// <summary>
@@ -392,7 +431,6 @@ namespace Triggerless.TriggerBot.Components
             gridLyrics.Select();
             gridLyrics.CurrentCell = gridLyrics.Rows[0].Cells[0];
             ctlNeedsSave.Dirty = true;
-
         }
 
         /// <summary>
@@ -809,8 +847,160 @@ namespace Triggerless.TriggerBot.Components
             return new TimeSpan(currentTicks);
         }
 
-        private void gridLyrics_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        internal void Save()
         {
+            btnSave_Click(this.ParentForm, null);
+        }
+
+        private void btnImportLyrics_Click(object sender, EventArgs e)
+        {
+            DialogResult res = _fileOpenDlg.ShowDialog();
+            if (res != DialogResult.OK) return;
+
+            var filename = _fileOpenDlg.FileName;
+
+            // initial sanity check
+            if (!File.Exists(filename) || new FileInfo(filename).Length < 10)
+            {
+                StyledMessageBox.Show(Program.MainForm, "That file no longer exists.", "File Missing", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            // Test if the file is a valid Lyrics file (JSON, correct format)
+
+            var json = File.ReadAllText(filename);
+            List<LyricEntry> list = null;
+            try
+            {
+                list = JsonConvert.DeserializeObject<List<LyricEntry>>(json);
+            }
+            catch
+            {
+                var message = "This is not a valid Triggerbot Lyrics JSON file";
+                var title = "Wrong Format";
+                StyledMessageBox.Show(Program.MainForm, message, title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+            if (list.Count == 0) return;
+
+            if (this.IsDirty) 
+            {
+                var message = "You still have unsaved changes. Do you want to replace your lyrics with these?";
+                var title = "Overwrite Unsaved Work?";
+                var dlgResult = StyledMessageBox.Show(Program.MainForm, message, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                if (dlgResult != DialogResult.No) return;
+            }
+
+            gridLyrics.Rows.Clear();
+            gridLyrics.SuspendLayout();
+            foreach (var entry in list)
+            {
+                gridLyrics.Rows.Add(entry.Time.ToString(TIMESPAN_FORMAT), entry.Lyric);
+            }
+            gridLyrics.ResumeLayout();
+            gridLyrics.Select();
+            gridLyrics.CurrentCell = gridLyrics.Rows[0].Cells[0];
+            ctlNeedsSave.Dirty = true;
+        }
+
+        private async void btnDownloadLyrics_Click(object sender, EventArgs e)
+        {
+            if (_product == null) return;
+            var invalidChars = Path.GetInvalidFileNameChars();
+            var songTitle = string.Join("_", _product.Name.Split(invalidChars, StringSplitOptions.RemoveEmptyEntries));
+            songTitle = songTitle.Replace(" ", "_");
+            TriggerlessApiClient.ApiResult result;
+
+            using (var client = new TriggerlessApiClient())
+            {
+                result = await client.GetLyrics(_product.Id);
+            }
+
+            string message = string.Empty;
+            string title = string.Empty;
+            switch (result.Status)
+            {
+                case TriggerlessApiClient.ApiResultStatus.Success:
+                    Shared.HasTriggerlessConnection = true;
+                    var dlg = new SaveFileDialog();
+                    dlg.Title = "Save Lyrics";
+                    dlg.InitialDirectory = Shared.DownloadsPath;
+                    dlg.FileName = $"{songTitle}-{_product.Id}.lyrics";
+                    if (dlg.ShowDialog() == DialogResult.OK)
+                    {
+                        File.WriteAllText(dlg.FileName, result.Message);
+                    }
+                    return;
+                case TriggerlessApiClient.ApiResultStatus.NetworkError:
+                    Shared.HasTriggerlessConnection = false;
+                    message = "Unable to contact server.";
+                    title = "Network Error";
+                    break;
+                case TriggerlessApiClient.ApiResultStatus.Empty:
+                    Shared.HasTriggerlessConnection = true;
+                    message = $"The lyrics were not found for '{_product.Name}'";
+                    title = "Lyrics Not Found";
+                    break;
+                case TriggerlessApiClient.ApiResultStatus.ServerError:
+                    Shared.HasTriggerlessConnection = true;
+                    message = "There was a problem retrieving the lyrics from triggerless.com";
+                    title = "Database Error";
+                    break;
+                case TriggerlessApiClient.ApiResultStatus.OtherError:
+                    message = "Could not retrieve lyrics due to unforeseen error.";
+                    title = "Download Lyrics failed";
+                    break;
+            }
+
+            StyledMessageBox.Show(message, title, MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+        }
+
+        private async void btnExportLyrics_Click(object sender, EventArgs e)
+        {
+            if (_product == null) return;
+            if (IsDirty)
+            {
+                StyledMessageBox.Show(Program.MainForm, "Please save your work before attempting to upload", "Unsaved Lyrics Changes", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var filename = Path.Combine(Shared.LyricSheetsPath, $"{_product.Id}.lyrics");
+            if (!File.Exists(filename))
+            {
+                StyledMessageBox.Show(Program.MainForm, "Please save your work before attempting to upload", "Unsaved Lyrics Changes", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var json = File.ReadAllText(filename);
+            TriggerlessApiClient.ApiResult result;
+            using (var client = new TriggerlessApiClient())
+            {
+                result = await client.SaveLyrics(_product.Id, json);
+            }
+
+            if (result.Status == TriggerlessApiClient.ApiResultStatus.Success)
+            {
+                StyledMessageBox.Show(Program.MainForm, $"Lyrics to '{_product.Name}' were successfully saved online, and available at https://www.triggerless.com/api/lyrics/{_product.Id}", "Lyrics Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                var message = "These lyrics could not be saved. ";
+                var title = "Export Error";
+                switch (result.Status)
+                {
+                    case TriggerlessApiClient.ApiResultStatus.NetworkError:
+                        message += "Unable to contact the server.";
+                        break;
+                    case TriggerlessApiClient.ApiResultStatus.ServerError:
+                        message += "Please contact Cheri/Triggers and let her know there was a server error.";
+                        break;
+                    default:
+                        message += "Unknown error. Please contact Triggers.";
+                        break;
+                }
+                StyledMessageBox.Show(Program.MainForm, message, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
 
         }
     }

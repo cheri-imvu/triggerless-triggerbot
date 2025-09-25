@@ -196,17 +196,34 @@ namespace Triggerless.TriggerBot
         // Product Search
         private void DoSearch(object sender, EventArgs e)
         {
+            var start = DateTime.Now;
+            Func<double> msec = () => (DateTime.Now - start).TotalMilliseconds;
+            Action<string> say = (s) => {
+                Debug.WriteLine($"{s}: {msec():0.0}");
+            };
+            say("Start of Search");
+
             var searchTerm = txtSearch.Text.Trim().Replace("'", "''");
             if (searchTerm.ToLower() == "triggerboss")
             {
                 _splicer.ShowCheap();
                 Properties.Settings.Default.InstallationType = "triggerboss";
+                tabAppContainer.SelectedTab = tabConvertChkn;
+                return;
             }
 
             flowSearchResults.Controls.Clear();
-            flowSearchResults.SuspendLayout();
+            say("FlowPanel cleared");
+            //flowSearchResults.SuspendLayout();
+            //flowSearchResults.Visible = false;          // cheapest way to suppress a bunch of paints
+            //flowSearchResults.AutoScroll = false;
+
+            // 2) (optional but nice) suspend global painting via WM_SETREDRAW
+            //flowSearchResults.SuspendDrawing();
+            say("Ready to search");
 
             List<ProductDisplayInfo> infoList = SQLiteDataAccess.GetProductSearch(searchTerm);
+            say("Search complete");
 
             if (!infoList.Any())
             {
@@ -214,11 +231,27 @@ namespace Triggerless.TriggerBot
                 return;
             }
 
+            progSearch.Parent = this;
+            progSearch.Minimum = 0;
+            progSearch.BringToFront();
+            progSearch.Top = flowSearchResults.Top + 120;
+            progSearch.Left = (flowSearchResults.Width - progSearch.Width) / 2 - 12;
+            progSearch.Value = progSearch.Minimum;
+            progSearch.Maximum = infoList.Count;
+
+
+            say("About to create controls");
+            Font fontToUse = new Font("Liberation Sans", 11F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
+            var controls = new List<ProductCtrl>();
+
+            int ct = 0;
             foreach (var info in infoList)
             {
+                say(" Creating control");
                 var newControl = new ProductCtrl();
+                say(" Control created");
                 newControl.BorderStyle = BorderStyle.FixedSingle;
-                newControl.Font = new Font("Lucida Sans Unicode", 11F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
+                newControl.Font = fontToUse;
                 newControl.Location = new Point(5, 194);
                 newControl.Margin = new Padding(5, 4, 5, 4);
                 newControl.Name = $"productCtrl_{info.Id}";
@@ -227,10 +260,34 @@ namespace Triggerless.TriggerBot
                 newControl.OnDeckLinkClicked += SendToDeck;
                 newControl.OnWearItem += WearItem;
                 newControl.OnExcludeSong += ExcludeSong;
-
-                flowSearchResults.Controls.Add(newControl);
+                controls.Add(newControl);
+                ct++;
+                if (controls.Count == 10)
+                {
+                    flowSearchResults.Controls.AddRange(controls.ToArray());
+                    controls.Clear();
+                    flowSearchResults.Update();
+                    progSearch.Visible = true;
+                    progSearch.Value = ct;
+                    progSearch.Update();
+                }
+                //Application.DoEvents();
+                say("Control added to List");                
             }
-            flowSearchResults.ResumeLayout(true);
+            flowSearchResults.Controls.AddRange(controls.ToArray());
+            controls.Clear();
+            flowSearchResults.Update();
+            progSearch.Visible = false;
+            //flowSearchResults.Controls.AddRange(controls.ToArray());
+            say("Controls added.");
+            //flowSearchResults.ResumeDrawing(invalidate: true);   // extension below
+            say("Resumed Drawing");
+            //flowSearchResults.AutoScroll = true;
+            say("Autoscroll resumed");
+            //flowSearchResults.Visible = true;
+            say("Visible now");
+            //flowSearchResults.ResumeLayout(performLayout: true); 
+            say("Layout resumed");
         }
 
         private void ExcludeSong(object sender, ExcludeSongEventArgs e)
@@ -882,6 +939,50 @@ namespace Triggerless.TriggerBot
             var title = "Discord Result";
             MessageBoxIcon icon = result.Status == Discord.ResultStatus.Success ? MessageBoxIcon.Information : MessageBoxIcon.Warning;
             StyledMessageBox.Show(this, result.Message, title, MessageBoxButtons.OK, icon);
+        }
+
+        private void tabAppContainer_Deselecting(object sender, TabControlCancelEventArgs e)
+        {
+            // e.TabPage is the page we're LEAVING
+            if (e.TabPage == tabLyrics && lyricsCtrl1.IsDirty)
+            {
+                string message = "Save changes?"
+                    + Environment.NewLine + "Yes = Save changes"
+                    + Environment.NewLine + "No = Ignore and Continue"
+                    + Environment.NewLine + "Cancel = Keep editing";
+                string title = "Unsaved lyrics changes";
+
+                var result = StyledMessageBox.Show(
+                    Program.MainForm, message, title,
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button1);
+
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        try
+                        {
+                            lyricsCtrl1.Save();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(this,
+                                "Save failed:\n\n" + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            e.Cancel = true; // stay on tab if save fails
+                        }
+                        break;
+
+                    case DialogResult.No:
+                        // ignore and allow switching
+                        break;
+
+                    case DialogResult.Cancel:
+                        e.Cancel = true; // stay on the lyrics tab
+                        break;
+                }
+            }
         }
     }
 }
