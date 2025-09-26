@@ -2,11 +2,11 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Triggerless Triggerbot"
-#define MyAppVersion "1.0.1.2509"
+#define MyAppVersion "1.0.2.2509"
 #define MyAppPublisher "triggerless.com"
 #define MyAppURL "https://triggerless.com//triggerbot/"
 #define MyAppExeName "TriggerBot.exe"
-#define MyAppIcoName "note10.ico"
+#define MyAppIcoName "note3d.ico"
 #define ProjectPath "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot"
 #define ReleaseBin "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\x64\Release"
 
@@ -34,6 +34,16 @@ SetupIconFile=D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\not
 
 
 [Code]
+
+// ---- new stuff ----
+const
+  ApiUrl = 'https://www.triggerless.com/api/bot/sendmessage';
+  AppVer = '{#SetupSetting("AppVersion")}';   // compile-time inject of the version
+
+var
+  InstallSucceeded: Boolean;
+
+// ---------------------------------
 
 function PerUserFontDir: string;
 begin
@@ -119,6 +129,68 @@ begin
   end;
 end;
 
+// Added the following to track installations 2025-09-26
+
+function PostJson(const Url, Json: string): Boolean;
+var
+  Http: Variant;
+begin
+  Result := False;
+  try
+    Http := CreateOleObject('WinHttp.WinHttpRequest.5.1');
+    // synchronous POST
+    Http.Open('POST', Url, False);
+    Http.SetRequestHeader('Content-Type', 'application/json');
+    // Optional: identify the installer (good for server logs)
+    Http.SetRequestHeader('User-Agent', 'InnoSetup/Triggerbot');
+    Http.Send(Json);
+
+    if (Http.Status >= 200) and (Http.Status < 300) then
+    begin
+      Log(Format('POST ok: %d %s', [Http.Status, Http.StatusText]));
+      Result := True;
+    end
+    else
+    begin
+      Log(Format('POST failed: %d %s %s', [Http.Status, Http.StatusText, Http.ResponseText]));
+    end;
+  except
+    Log('POST exception: ' + GetExceptionMessage);
+  end;
+end;
+
+procedure InitializeWizard;
+begin
+  InstallSucceeded := False;
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  // If we reach ssDone, setup completed successfully
+  if CurStep = ssDone then
+    InstallSucceeded := True;
+end;
+
+procedure DeinitializeSetup;
+var
+  title, body, json: string;
+begin
+  // Fires when the wizard closes in all cases (success, cancel, error)
+  title := 'Triggerbot Installation';
+  if InstallSucceeded then
+    body := Format('Version %s installation successful', [AppVer])
+  else
+    body := Format('Version %s installation failed', [AppVer]);
+
+  // Minimal JSON building (no special chars in these strings)
+  json := Format('{"title":"%s","body":"%s"}', [title, body]);
+
+  // Best-effort POST; errors are logged but do not block the installer
+  if not PostJson(ApiUrl, json) then
+    Log('Notification POST did not succeed.');
+end;
+
+
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -127,7 +199,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}";
 
 [Files]
-Source: "{#ProjectPath}\assets\note10.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ProjectPath}\assets\note3d.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ProjectPath}\assets\LiberationSans_Regular.ttf"; DestDir: "{localappdata}\Microsoft\Windows\Fonts"; FontInstall: "Liberation Sans"; Flags: onlyifdoesntexist uninsneveruninstall; Check: ShouldInstallFont('LiberationSans_Regular.ttf', 'Liberation Sans')
 Source: "{#ProjectPath}\assets\LiberationSans_Bold.ttf"; DestDir: "{localappdata}\Microsoft\Windows\Fonts"; FontInstall: "Liberation Sans Bold"; Flags: onlyifdoesntexist uninsneveruninstall; Check: ShouldInstallFont('LiberationSans_Bold.ttf', 'Liberation Sans Bold')
 Source: "{#ProjectPath}\assets\LiberationSans_Italic.ttf"; DestDir: "{localappdata}\Microsoft\Windows\Fonts"; FontInstall: "Liberation Sans Italic"; Flags: onlyifdoesntexist uninsneveruninstall; Check: ShouldInstallFont('LiberationSans_Italic.ttf', 'Liberation Sans Italic')
@@ -154,6 +226,7 @@ Source: "{#ReleaseBin}\NAudio.Asio.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\NAudio.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\NAudio.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\NAudio.Midi.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\NAudio.Vorbis.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\NAudio.Wasapi.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\NAudio.WaveFormRenderer.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\NAudio.WinForms.dll"; DestDir: "{app}"; Flags: ignoreversion

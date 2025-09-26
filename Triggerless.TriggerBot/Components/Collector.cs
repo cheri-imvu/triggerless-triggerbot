@@ -1,16 +1,14 @@
 ﻿using Dapper;
 using Newtonsoft.Json;
-using NVorbis;
+using NAudio.Vorbis;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
-using System.Data.Entity.Migrations.Sql;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -684,7 +682,6 @@ namespace Triggerless.TriggerBot
                 #endregion
 
                 return result;
-
             }
         }
 
@@ -697,7 +694,7 @@ namespace Triggerless.TriggerBot
                 await net.CopyToAsync(ms).ConfigureAwait(false);
                 ms.Position = 0; // rewind before reading
 
-                using (var vorb = new VorbisReader(ms, false)) // don't close ms automatically
+                using (var vorb = new VorbisWaveReader(ms, false)) // don't close ms automatically
                 {
                     return vorb.TotalTime.TotalMilliseconds;
                 }

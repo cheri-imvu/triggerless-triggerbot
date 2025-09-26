@@ -103,13 +103,17 @@ namespace Triggerless.TriggerBot
                     WaveformCreate(txtFilename.Text);
 
                 }
-                catch (Exception)
+                catch (Exception exc)
                 {
                     _waveReader?.Dispose();
                     _waveReader = null;
                     _duration = TimeSpan.Zero;
                     txtFilename.Text = string.Empty;
-                    StyledMessageBox.Show(this.ParentForm, "Unable to read MP3 file. Skipping this file", "Invalid MP3", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    var ext = Path.GetExtension(txtFilename.Text).ToUpperInvariant();
+
+                    StyledMessageBox.Show(this.ParentForm, 
+                        $"Unable to read {ext} file. Skipping this file", 
+                        $"Invalid {ext}", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
             }
