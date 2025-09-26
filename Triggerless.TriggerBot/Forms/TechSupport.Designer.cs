@@ -69,7 +69,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(83, 178);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(149, 19);
+            this.label2.Size = new System.Drawing.Size(118, 15);
             this.label2.TabIndex = 2;
             this.label2.Text = "IMVU Avatar name:";
             // 
@@ -77,7 +77,7 @@
             // 
             this._txtAviName.Location = new System.Drawing.Point(237, 172);
             this._txtAviName.Name = "_txtAviName";
-            this._txtAviName.Size = new System.Drawing.Size(210, 26);
+            this._txtAviName.Size = new System.Drawing.Size(210, 22);
             this._txtAviName.TabIndex = 0;
             // 
             // _btnUpload
@@ -107,13 +107,13 @@
             this.lblUploading.AutoSize = true;
             this.lblUploading.Location = new System.Drawing.Point(3, 0);
             this.lblUploading.Name = "lblUploading";
-            this.lblUploading.Size = new System.Drawing.Size(96, 19);
+            this.lblUploading.Size = new System.Drawing.Size(76, 15);
             this.lblUploading.TabIndex = 0;
             this.lblUploading.Text = "Uploading...";
             // 
             // progPercent
             // 
-            this.progPercent.Location = new System.Drawing.Point(105, 3);
+            this.progPercent.Location = new System.Drawing.Point(85, 3);
             this.progPercent.Name = "progPercent";
             this.progPercent.Size = new System.Drawing.Size(232, 22);
             this.progPercent.TabIndex = 1;
@@ -121,9 +121,9 @@
             // lblPercent
             // 
             this.lblPercent.AutoSize = true;
-            this.lblPercent.Location = new System.Drawing.Point(343, 0);
+            this.lblPercent.Location = new System.Drawing.Point(323, 0);
             this.lblPercent.Name = "lblPercent";
-            this.lblPercent.Size = new System.Drawing.Size(33, 19);
+            this.lblPercent.Size = new System.Drawing.Size(26, 15);
             this.lblPercent.TabIndex = 2;
             this.lblPercent.Text = "0%";
             // 
@@ -132,13 +132,13 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(358, 225);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(166, 19);
+            this.label3.Size = new System.Drawing.Size(131, 15);
             this.label3.TabIndex = 4;
             this.label3.Text = "Temporarily Disabled.";
             // 
             // TechSupport
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(570, 313);
             this.Controls.Add(this.label3);

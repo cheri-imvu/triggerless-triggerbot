@@ -33,7 +33,6 @@ namespace Triggerless.TriggerBot.Components
         private Image _waveform;                // Waveform image
         private IWavePlayer _wavePlayer;        // Audio playback
         private int _clickedRowIndex = -1;      // Used for context menu
-        //private LyricsCursorPanel _cursorOverlay;          // This implements the scrolling bar during playback
         private const string TIMESPAN_FORMAT = @"mm\:ss\.fff"; // Common format we use for TimeSpan
 
         private ProductDisplayInfo _product;    // Currently select product
@@ -48,20 +47,6 @@ namespace Triggerless.TriggerBot.Components
             InitializeComponent();
             this.SetStyle(ControlStyles.Selectable, true);
             this.TabStop = true;
-
-            // Make the overlay PictureBox a child of the waveform PictureBox
-            /*
-            _cursorOverlay = new LyricsCursorPanel
-            {
-                Parent = picWave,
-                Size = picWave.Size,
-                Location = new Point(0, 0),
-                BackColor = Color.Green,
-            };
-            _cursorOverlay.MouseDown += picWave_MouseDown;
-            _cursorOverlay.BringToFront();
-            */
-            //picWave.MouseDown += picWave_MouseDown;
             Disposed += OnDisposed;
         }
 

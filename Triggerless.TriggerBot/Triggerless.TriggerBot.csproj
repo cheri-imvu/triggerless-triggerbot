@@ -53,7 +53,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>note10.ico</ApplicationIcon>
+    <ApplicationIcon>note3d.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>F0737750740A6940F67BFE06775C115B05EADE3A</ManifestCertificateThumbprint>
@@ -274,12 +274,6 @@
     </Compile>
     <Compile Include="Components\LyricsCtrl.Designer.cs">
       <DependentUpon>LyricsCtrl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Components\LyricsCursorPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Components\LyricsCursorPanel.Designer.cs">
-      <DependentUpon>LyricsCursorPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Components\ProductOpenDialog.cs">
       <SubType>Form</SubType>
@@ -505,10 +499,12 @@
     <Content Include="app-imvu.png" />
     <Content Include="Assets\discord.png" />
     <Content Include="Assets\note10.ico" />
+    <Content Include="Assets\note3d.ico" />
     <Content Include="ffmpeg\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="note10.ico" />
+    <Content Include="note3d.ico" />
     <Content Include="triggerbot.png" />
     <None Include="Assets\good24.png" />
     <Content Include="Assets\lips.png" />

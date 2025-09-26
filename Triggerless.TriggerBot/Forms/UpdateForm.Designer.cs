@@ -47,8 +47,9 @@
             // 
             // btnUpdateImmediately
             // 
+            this.btnUpdateImmediately.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnUpdateImmediately.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnUpdateImmediately.Location = new System.Drawing.Point(75, 183);
+            this.btnUpdateImmediately.Location = new System.Drawing.Point(75, 233);
             this.btnUpdateImmediately.Name = "btnUpdateImmediately";
             this.btnUpdateImmediately.Size = new System.Drawing.Size(151, 32);
             this.btnUpdateImmediately.TabIndex = 1;
@@ -58,8 +59,9 @@
             // 
             // btnUpdateOnExit
             // 
+            this.btnUpdateOnExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnUpdateOnExit.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnUpdateOnExit.Location = new System.Drawing.Point(231, 183);
+            this.btnUpdateOnExit.Location = new System.Drawing.Point(231, 233);
             this.btnUpdateOnExit.Name = "btnUpdateOnExit";
             this.btnUpdateOnExit.Size = new System.Drawing.Size(151, 32);
             this.btnUpdateOnExit.TabIndex = 2;
@@ -69,8 +71,9 @@
             // 
             // btnIgnore
             // 
+            this.btnIgnore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnIgnore.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnIgnore.Location = new System.Drawing.Point(388, 183);
+            this.btnIgnore.Location = new System.Drawing.Point(388, 233);
             this.btnIgnore.Name = "btnIgnore";
             this.btnIgnore.Size = new System.Drawing.Size(151, 32);
             this.btnIgnore.TabIndex = 3;
@@ -80,20 +83,22 @@
             // 
             // txtWhatsNew
             // 
+            this.txtWhatsNew.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.txtWhatsNew.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
             this.txtWhatsNew.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.txtWhatsNew.Location = new System.Drawing.Point(80, 66);
             this.txtWhatsNew.Multiline = true;
             this.txtWhatsNew.Name = "txtWhatsNew";
-            this.txtWhatsNew.Size = new System.Drawing.Size(459, 90);
+            this.txtWhatsNew.Size = new System.Drawing.Size(459, 140);
             this.txtWhatsNew.TabIndex = 4;
             // 
             // UpdateForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 21F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
-            this.ClientSize = new System.Drawing.Size(615, 227);
+            this.ClientSize = new System.Drawing.Size(615, 277);
             this.Controls.Add(this.txtWhatsNew);
             this.Controls.Add(this.btnIgnore);
             this.Controls.Add(this.btnUpdateOnExit);

@@ -25,7 +25,7 @@
     </div>
     <div class="top-right">        
         <div>Download v1.0</div>
-        <div><a class="top-link" href="triggerbot-setup.1.0.0.zip">🠋</a></div>
+        <div><a class="top-link" href="triggerbot-setup.1.0.1.2509.zip">🠋</a></div>
     </div>
     <div class="center-div">
       <div class="topic">Introduction</div>
@@ -42,7 +42,7 @@
           <a href="audio-splice.png" target="_blank"><img src="audio-splice.png" /></a>
         </p>
         <div class="topic">Download Triggerbot</div>
-        <p>Download Triggerbot Setup 0.11.6 (beta): <a href="triggerbot-setup.0.11.6.zip">triggerbot-setup.0.11.6.zip</a> (46 MB). 
+        <p>Download Triggerbot Setup 1.0.1 (release): <a href="triggerbot-setup.1.0.1.2509.zip">triggerbot-setup.1.0.1.2509.zip</a> (46 MB). 
           Once installed, you'll be prompted to upgrade when an update is available.</p>
 		<p>Join the Triggerless Discord server! Click here: <a href="https://discord.gg/<?php include 'invite-code.txt' ?>" target="_blank">https://discord.gg/<?php include 'invite-code.txt' ?></a></p>
         <div class="topic">Videos</div>
@@ -51,6 +51,16 @@
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
         <p><iframe style="z-index: 10;" width="750" height="422" src="https://www.youtube.com/embed/6IPIWJSf5VM" title="YouTube video player" frameborder="0" 
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
+    </div>
+    <div class="center-div">
+      <div class="topic">What's new in Version 1.0.1.2905 (Release) 2025-09-25</div>
+      <ul>
+        <li>Slick new color scheme</li>
+		<li>Discord connectivity fixed</li>
+		<li>New Lyric Sheet features</li>
+		<li>Faster and better conversion to CHKN</li>
+		<li>All audio formats supported (FLAC, AAC, WMA, etc.)</li>
+      </ul>
     </div>
     <div class="center-div">
       <div class="topic">What's new in Version 0.11.6 (beta) 2025-08-16</div>

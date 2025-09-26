@@ -128,7 +128,7 @@
             this.txtSearch.Location = new System.Drawing.Point(12, 16);
             this.txtSearch.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(345, 29);
+            this.txtSearch.Size = new System.Drawing.Size(345, 25);
             this.txtSearch.TabIndex = 5;
             this.txtSearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSearch_KeyPress);
             // 
@@ -173,13 +173,13 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(18, 404);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(293, 19);
+            this.label1.Size = new System.Drawing.Size(235, 15);
             this.label1.TabIndex = 9;
             this.label1.Text = "Check the products to manually import.";
             // 
             // DeepScanForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
             this.ClientSize = new System.Drawing.Size(663, 462);

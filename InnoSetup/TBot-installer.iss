@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Triggerless Triggerbot"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.1.2509"
 #define MyAppPublisher "triggerless.com"
 #define MyAppURL "https://triggerless.com//triggerbot/"
 #define MyAppExeName "TriggerBot.exe"

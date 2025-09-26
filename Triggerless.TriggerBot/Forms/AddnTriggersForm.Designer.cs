@@ -96,7 +96,7 @@
             this.lblTitle.AutoSize = true;
             this.lblTitle.Location = new System.Drawing.Point(19, 9);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(204, 18);
+            this.lblTitle.Size = new System.Drawing.Size(160, 16);
             this.lblTitle.TabIndex = 1;
             this.lblTitle.Text = "Song Title Name by Avatar";
             // 
@@ -122,7 +122,7 @@
             // 
             // AddnTriggersForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(779, 535);
             this.Controls.Add(this.btnCancel);
