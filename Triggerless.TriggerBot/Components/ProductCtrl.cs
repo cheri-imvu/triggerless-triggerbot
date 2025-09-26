@@ -73,7 +73,8 @@ namespace Triggerless.TriggerBot
                         {
                             bmp = (Bitmap)((new ImageConverter()).ConvertFrom(value.ImageBytes));
                             picProductImage.BackgroundImage = null;
-                            picProductImage.BackgroundImage = bmp;
+                            picProductImage.Image = null;
+                            picProductImage.Image = bmp;
                         }
                             
                     }
@@ -106,7 +107,7 @@ namespace Triggerless.TriggerBot
             if (_productInfo != null)
             {
                 var uri = $"https://www.imvu.com/shop/_product.php?products_id={_productInfo.Id}";
-                var psi = new System.Diagnostics.ProcessStartInfo();
+                var psi = new ProcessStartInfo();
                 psi.UseShellExecute = true;
                 psi.FileName = uri;
                 System.Diagnostics.Process.Start(psi);

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -119,8 +120,26 @@ namespace Triggerless.TriggerBot
 
             if (imvuProc == null)
             {
-                if (force) StyledMessageBox.Show(this, "TriggerBot can't play the triggers if IMVU isn't running. LOL",
-                    "IMVU isn't running", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (force) 
+                {
+                    var message = "TriggerBot can't play the triggers if IMVU Classic isn't running. Launch it now?";
+                    var dlgResult = StyledMessageBox.Show(this, message,
+                        "IMVU isn't running", MessageBoxButtons.YesNo, 
+                        MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                    if (dlgResult == DialogResult.Yes)
+                    {
+                        var exeName = Path.Combine(Shared.ImvuLocation, "IMVUQualityAgent.exe");
+                        if (!File.Exists(exeName)) 
+                        {
+                            StyledMessageBox.Show("You have to install IMVU Classic first.", "Install IMVU Classic", MessageBoxButtons.OK);
+                            Process.Start("https://www.imvu.com/download.php");
+                        }
+                        else
+                        {
+                            Process.Start(exeName);
+                        }
+                    }
+                } 
                 return false;
             }
             _imvuMainWindow = imvuProc.MainWindowHandle;
@@ -787,7 +806,6 @@ namespace Triggerless.TriggerBot
 
         #endregion
 
-
         private void RescanAll(object sender, EventArgs e)
         {
             var msg = "Are you sure you want to rescan? This will delete all Triggerbot data and scan the inventory and web all over again, and could take some time./n/nAre you certain?";
@@ -841,11 +859,6 @@ namespace Triggerless.TriggerBot
             {
                 var dlgResult = f.ShowDialog(this);
             }
-        }
-        private void linkTimeItText_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            if (chkKeepOnTop.Checked) this.WindowState = FormWindowState.Minimized;
-            Shared.GenerateTimeItText(_currProductInfo);
         }
 
         private void btnViewLog_Click(object sender, EventArgs e)

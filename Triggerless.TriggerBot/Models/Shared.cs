@@ -53,7 +53,7 @@ namespace Triggerless.TriggerBot
         }
 
         public static string AppData => Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-
+        public static string ImvuLocation => Path.Combine(AppData, "IMVUClient");
         public static string ProductCacheFile => Path.Combine(AppData, "IMVU", "productInfoCache.db");
         public static string AppCachePath => Path.Combine(AppData, "Triggerless", "TriggerBot");
         public static string AppCacheFile => Path.Combine(AppCachePath, "appCache.sqlite");
