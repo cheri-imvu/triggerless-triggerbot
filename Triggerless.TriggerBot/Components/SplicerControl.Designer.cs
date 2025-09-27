@@ -490,24 +490,6 @@
             this.cboAudioLength.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboAudioLength.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboAudioLength.FormattingEnabled = true;
-            this.cboAudioLength.Items.AddRange(new object[] {
-            "20.0",
-            "19.9",
-            "19.5",
-            "19.0",
-            "18.5",
-            "18.0",
-            "17.5",
-            "17.0",
-            "16.5",
-            "16.0",
-            "15.0",
-            "14.0",
-            "13.0",
-            "12.0",
-            "11.0",
-            "10.0",
-            "9.0"});
             this.cboAudioLength.Location = new System.Drawing.Point(442, 119);
             this.cboAudioLength.Name = "cboAudioLength";
             this.cboAudioLength.Size = new System.Drawing.Size(115, 29);

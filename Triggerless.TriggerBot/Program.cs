@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Drawing;
-using System.Runtime.CompilerServices;
+using System.Globalization;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Triggerless.TriggerBot.Models;
 
@@ -16,6 +15,15 @@ namespace Triggerless.TriggerBot
         [STAThread]
         private static void Main()
         {
+            bool pretendFrench = false;
+            if (pretendFrench) 
+            {
+                var fr = CultureInfo.GetCultureInfo("fr-FR");
+                Thread.CurrentThread.CurrentCulture = fr;
+                Thread.CurrentThread.CurrentUICulture = fr;
+            }
+
+
             bool junctionWorked = TriggerbotLinker.EnsureTriggerbotJunction(); 
             // creates a shortcut at the top of IMVU Projects
             /*

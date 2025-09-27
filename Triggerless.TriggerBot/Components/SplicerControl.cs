@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+// ADD at the top with other usings:
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -44,6 +46,11 @@ namespace Triggerless.TriggerBot
         public SplicerControl()
         {
             InitializeComponent();
+            // Fixed for globalization
+            this.cboAudioLength.Items.Clear();
+            double[] lengths = { 20.0, 19.9, 19.5, 19.0, 18.5, 18.0, 17.5, 17.0, 16.5, 16.0, 15.0, 14.0, 13.0, 12.0, 11.0, 10.0, 9.0 };
+            foreach (var len in lengths)
+                this.cboAudioLength.Items.Add(len.ToString("0.0", CultureInfo.CurrentCulture));
         }
 
         public double AudioLength
@@ -52,9 +59,11 @@ namespace Triggerless.TriggerBot
             {
                 try
                 {
-                    return double.Parse(cboAudioLength.SelectedItem.ToString());
+                    // REPLACE AudioLength getter body (only the return line inside try):
+                    return double.Parse(cboAudioLength.SelectedItem.ToString(), 
+                        NumberStyles.Float, CultureInfo.CurrentCulture);
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     return 18;
                 }
@@ -62,7 +71,8 @@ namespace Triggerless.TriggerBot
             }
             set
             {
-                var valueString = value.ToString("0.0");
+                // REPLACE AudioLength setter line that builds valueString:
+                var valueString = value.ToString("0.0", CultureInfo.CurrentCulture);
                 var found = cboAudioLength.FindStringExact(valueString);
                 if (found != -1)
                 {
@@ -211,7 +221,10 @@ namespace Triggerless.TriggerBot
                     _audioSegmenter.SegmentAudio(
                         txtFilename.Text,
                         _outputPath,
-                        TimeSpan.FromSeconds(double.Parse(cboAudioLength.SelectedItem.ToString())),
+                        TimeSpan.FromSeconds(
+                            double.Parse(cboAudioLength.SelectedItem.ToString(), 
+                            NumberStyles.Float, CultureInfo.CurrentCulture)
+                        ),
                         triggerPrefix
                     );
                 }
