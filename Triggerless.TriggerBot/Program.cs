@@ -35,6 +35,7 @@ namespace Triggerless.TriggerBot
             */
             SessionId = DateTime.UtcNow.Ticks.ToBase36();
             UniqueId = TriggerBot.UniqueId.ForCurrentUserMachine();
+            Cid = AvatarNameReader.GetAvatarId();
             bool ranSuccessfully = false;
             using (SingleProgramInstance spi = new SingleProgramInstance("Triggerless.Triggerbot.1"))
             {
@@ -50,7 +51,7 @@ namespace Triggerless.TriggerBot
                     );
                     //_= Discord.CleanupChannel().Result;
                     int tryCount = 0;
-                    int tryMax = 10;
+                    int tryMax = 2;
                     int tryWait = 100;
                     bool bSuccess = false;
                     Exception exc = null;
@@ -66,7 +67,7 @@ namespace Triggerless.TriggerBot
                             }
                             catch (Exception ex)
                             {
-                                Discord.SendMessage("Application Crashed", $"{ex.Message}\n{ex.StackTrace}").Wait(10000);
+                                //Discord.SendMessage("Application Crashed", $"{ex.Message}\n{ex.StackTrace}").Wait(10000);
                                 throw ex;
                             }
                             bSuccess = true;
@@ -77,7 +78,7 @@ namespace Triggerless.TriggerBot
                         {
                             if (ranSuccessfully) // meaning this was running before
                             {
-                                Discord.SendMessage("Application Crashed", $"{ex.Message}\n{ex.StackTrace}").Wait(10000);
+                                //Discord.SendMessage("Application Crashed", $"{ex.Message}\n{ex.StackTrace}").Wait(10000);
                                 throw ex;
                             }
                             tryCount++;
@@ -106,7 +107,7 @@ namespace Triggerless.TriggerBot
 
         public static TriggerBotMainForm MainForm { get; set; }
         public static string SessionId {  get; private set; }
-        public static string AvatarName { get; private set; } = "Unknown";
         public static string UniqueId { get; private set; }
+        public static long Cid { get; private set; }    
     }
 }

@@ -5,71 +5,108 @@ using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Triggerless.TriggerBot.Models;
 
 namespace Triggerless.TriggerBot
 {
     public class SQLiteDataAccess
     {
-        public static string AccessoryFilter => @" cPath IN (
-            '[106, 40, 153, 144]',
-            '[106, 40, 153, 155]',
-            '[106, 40, 153, 372]',
-            '[106, 40, 153, 615]',
-            '[106, 40, 153, 1281]',
-            '[106, 40, 153, 1328]',
-            '[106, 40, 153, 2500]',
-            '[106, 40, 153, 2935]',
-            '[106, 40, 153, 2952]',
-            '[106, 40, 153, 2956]',
-            '[106, 40, 153, 3094]',
-            '[106, 40, 3092]',
-            '[106, 41, 71, 148]',
-            '[106, 41, 71, 165]',
-            '[106, 41, 71, 334]',
-            '[106, 41, 71, 416]',
-            '[106, 41, 71, 1072]',
-            '[106, 41, 71, 1250]',
-            '[106, 41, 71, 1251]',
-            '[106, 41, 71, 1268]',
-            '[106, 41, 71, 1329]',
-            '[106, 41, 71, 1437]',
-            '[106, 41, 71, 1739]',
-            '[106, 41, 71, 1927]',
-            '[106, 41, 71, 2501]',
-            '[106, 41, 71, 3095]',
-            '[106, 41, 3093]'
-            ) ";
+        public enum Gender { Female, Male }
 
-        /* 
-        106_40_153_144 // F Spice Glasses
-        106_40_153_155 // F New Accessories
-        106_40_153_372 // F King Glasses
-        106_40_153_615 // F Rings
-        106_40_153_1281 // F DJ System
-        106_40_153_1328 // F Actions
-        106_40_153_2500 // F Music Item
-        106_40_153_2935 // F Crimson Sounds
-        106_40_153_2952 // F Triggerless Music
-        106_40_153_2956 // F !!Music!!
-        106_40_153_3094 // F Miscellaneous
-        106_40_3092 // F Miscellaneous (not accessory)
+        public sealed class Filter
+        {
+            public Gender Gender { get; }
+            public string Name { get; }
+            public short[] Map { get; }
+            public Filter(Gender gender, string name, params short[] map)
+            {
+                Gender = gender;
+                Name = name ?? "";
+                Map = map ?? new short[0];
+            }
+        }
 
-        106_41_71_148 // M Glasses Kings
-        106_41_71_165 // M New Accessories
-        106_41_71_334 // M Headphones
-        106_41_71_416 // M Spice Glasses
-        106_41_71_1072 // M Boomboxes
-        106_41_71_1250 // M Guitar
-        106_41_71_1251 // M Guitars
-        106_41_71_1268 // M DJ System
-        106_41_71_1329 // M Actions
-        106_41_71_1437 // M Cow Bells
-        106_41_71_1739 // M Tools
-        106_41_71_1927 // M Frameless Glasses
-        106_41_71_2501 // M Music Items
-        106_41_71_3095 // M Miscellaneous
-        106_41_3093 // M Miscellaneous (not accessory)
-         */
+        // Build once
+        public static readonly IReadOnlyList<Filter> Filters = new[]
+        {
+            new Filter(Gender.Male,   "Glasses Kings",       71, 148),
+            new Filter(Gender.Male,   "New Accessories",     71, 165),
+            new Filter(Gender.Male,   "Headphones",          71, 334),
+            new Filter(Gender.Male,   "Spice Glasses",       71, 416),
+            new Filter(Gender.Male,   "Boomboxes",           71, 1072),
+            new Filter(Gender.Male,   "Guitar",              71, 1250),
+            new Filter(Gender.Male,   "Guitars",             71, 1251),
+            new Filter(Gender.Male,   "DJ System",           71, 1268),
+            new Filter(Gender.Male,   "Actions",             71, 1329),
+            new Filter(Gender.Male,   "Cow Bells",           71, 1437),
+            new Filter(Gender.Male,   "Frameless Glasses",   71, 1927),
+            new Filter(Gender.Male,   "Music Items",         71, 2501),
+            new Filter(Gender.Male,   "Miscellaneous",       71, 3095),
+            new Filter(Gender.Male,   "Miscellaneous",       3093),
+
+            new Filter(Gender.Female, "Spice Glasses",       153, 144),
+            new Filter(Gender.Female, "New Accessories",     153, 155),
+            new Filter(Gender.Female, "King Glasses",        153, 372),
+            new Filter(Gender.Female, "Rings",               153, 615),
+            new Filter(Gender.Female, "DJ System",           153, 1281),
+            new Filter(Gender.Female, "Actions",             153, 1328),
+            new Filter(Gender.Female, "Music Item",          153, 2500),
+            new Filter(Gender.Female, "Crimson Sounds",      153, 2935),
+            new Filter(Gender.Female, "Triggerless Music",   153, 2952),
+            new Filter(Gender.Female, "!!Music!!",           153, 2956),
+            new Filter(Gender.Female, "Miscellaneous",       153, 3094),
+            new Filter(Gender.Female, "Miscellaneous",       3092),
+        };
+
+        // static prefixes
+        private static readonly short[] MaleOld = { 106, 41 };
+        private static readonly short[] FemaleOld = { 106, 40 };
+        private static readonly short[] AccNew = { 3117 };
+        private static readonly short[] MiscNew = { 3110 };
+
+        // Built once; preserves original order: all “new” first, then “old”
+        public static readonly List<short[]> FilterCpaths = BuildFilterCpaths();
+
+        private static List<short[]> BuildFilterCpaths()
+        {
+            var resultNew = new List<short[]>();
+            var resultOld = new List<short[]>();
+
+            foreach (var f in Filters)
+            {
+                var oldBase = (f.Gender == Gender.Male) ? MaleOld : FemaleOld;
+
+                if (f.Map.Length == 1)
+                {
+                    resultNew.Add(Combine(MiscNew, f.Map));
+                    resultOld.Add(Combine(oldBase, f.Map));
+                }
+                else if (f.Map.Length == 2)
+                {
+                    resultOld.Add(Combine(oldBase, f.Map));
+                    resultNew.Add(Combine(AccNew, f.Map));
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid filters found. Fix them in code.");
+                }
+            }
+
+            resultNew.AddRange(resultOld);
+            return resultNew;
+        }
+
+        private static short[] Combine(short[] a, short[] b)
+        {
+            var r = new short[a.Length + b.Length];
+            Array.Copy(a, 0, r, 0, a.Length);
+            Array.Copy(b, 0, r, a.Length, b.Length);
+            return r;
+        }
+
+        // If you had this before, it still works:
+        public static string AccessoryFilter =>
+            " cPath IN ('" + string.Join("', '", FilterCpaths.Select(arr => arr.ToCpath())) + "')";
 
 
         public static SQLiteConnection GetProductCacheCxn()

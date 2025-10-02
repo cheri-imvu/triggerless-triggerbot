@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -44,6 +46,40 @@ namespace Triggerless.TriggerBot.Models
             } while (current != 0);
 
             return new string(buffer, i, buffer.Length - i);
+        }
+    }
+
+    public static class LinqExtensions
+    {
+        public static T FindMostPrevalentItem<T>(
+        this IEnumerable<T> source,
+        bool preferFirstOnTie = false)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+
+            if (!preferFirstOnTie)
+            {
+                return source.GroupBy(x => x)
+                             .OrderByDescending(g => g.Count())
+                             .First().Key;
+            }
+
+            // Prefer the item whose first occurrence appears earliest when counts tie
+            return source.Select((v, i) => new { v, i })
+                         .GroupBy(x => x.v)
+                         .Select(g => new { Key = g.Key, Count = g.Count(), FirstIndex = g.Min(x => x.i) })
+                         .OrderByDescending(x => x.Count)
+                         .ThenBy(x => x.FirstIndex)
+                         .First().Key;
+        }
+
+        public static string ToCpath(this short[] paths)
+        {
+            if (paths == null || !paths.Any()) return "[]";
+            string[] numbers = paths.Select(s => s.ToString()).ToArray();
+            string allNumbers = string.Join(", ", numbers);
+            string result = "[" + allNumbers + "]";
+            return result;
         }
     }
 }
