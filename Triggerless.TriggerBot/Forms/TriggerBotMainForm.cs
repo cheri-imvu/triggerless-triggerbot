@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using Triggerless.TriggerBot.Components;
 using Triggerless.TriggerBot.Forms;
 using Triggerless.TriggerBot.Models;
 using WindowsInput;
@@ -177,6 +178,16 @@ namespace Triggerless.TriggerBot
         // Inventory Update
         private async void ScanInventory(object sender, EventArgs e)
         {
+            using (var trigClient = new TriggerlessApiClient())
+            {
+                await trigClient.SendEvent(
+                    TriggerlessApiClient.EventType.AppStart, 
+                    new { 
+                        Opening = true,
+                        Version = Shared.VersionNumber.ToString(),
+                    }
+                );
+            }
             tabAppContainer.SelectedTab = tabPlayback;
             pnlCollector.BringToFront();
             btnSearch.Enabled = false;
@@ -411,7 +422,7 @@ namespace Triggerless.TriggerBot
             sets.Save();
         }
 
-        private void TriggerBotMainForm_FormClosing(object sender, FormClosingEventArgs e)
+        private async void TriggerBotMainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
 
             if (_isPlaying)
@@ -432,6 +443,10 @@ namespace Triggerless.TriggerBot
                 CloseReason.TaskManagerClosing,
                 CloseReason.ApplicationExitCall
             };
+            using (var trigClient = new TriggerlessApiClient())
+            {
+                await trigClient.SendEvent(TriggerlessApiClient.EventType.AppCleanExit, new {Closing = true });
+            }
             if (reasons.Contains(e.CloseReason)) return;
             _updater.RunSetupFileIfRequired();
         }

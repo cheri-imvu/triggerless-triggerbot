@@ -15,83 +15,101 @@ namespace Triggerless.TriggerBot
 
         public sealed class Filter
         {
-            public Gender Gender { get; }
-            public string Name { get; }
-            public short[] Map { get; }
-            public Filter(Gender gender, string name, params short[] map)
-            {
-                Gender = gender;
-                Name = name ?? "";
-                Map = map ?? new short[0];
+            public Gender Gender { get; private set; }
+            public string Name { get; private set; }
+            public short[] Map { get; private set; }
+            public bool IsAccessory { get; private set; }
+            public Filter(Gender gender, bool isAccessory, string name, params short[] map) {
+                Gender = gender; IsAccessory = isAccessory; Name = name ?? ""; Map = map ?? new short[0];
             }
+            private Filter() { }
+            public short[] OldCpath { 
+                get 
+                {
+                    if (!IsAccessory)
+                    {
+                        return Combine((Gender == Gender.Male ? MaleOld : FemaleOld), Map);
+                    }
+                    var map = Map.Length == 2 ? new short[1] { Map[1] } : Map;
+                    return Combine(
+                        Gender == Gender.Male ? 
+                        MaleOldAcc : FemaleOldAcc,
+                        map);
+                } 
+            }
+
+            public short[] NewCpath
+            {
+                get
+                {
+                    if (!IsAccessory) {
+                        return Combine(MiscNew, Map);
+                    }
+                    var genderArray = (Gender == Gender.Male) ? MaleNewAcc : FemaleNewAcc;
+                    return Combine(genderArray, Map);
+                }
+            }
+
+            public string OldCpathSql => JoinCpath(OldCpath);
+            public string NewCpathSql => JoinCpath(NewCpath);
+            private string JoinCpath(short[] numbers) => "[" + string.Join(", ", numbers) + "]";
         }
 
-        // Build once
         public static readonly IReadOnlyList<Filter> Filters = new[]
         {
-            new Filter(Gender.Male,   "Glasses Kings",       71, 148),
-            new Filter(Gender.Male,   "New Accessories",     71, 165),
-            new Filter(Gender.Male,   "Headphones",          71, 334),
-            new Filter(Gender.Male,   "Spice Glasses",       71, 416),
-            new Filter(Gender.Male,   "Boomboxes",           71, 1072),
-            new Filter(Gender.Male,   "Guitar",              71, 1250),
-            new Filter(Gender.Male,   "Guitars",             71, 1251),
-            new Filter(Gender.Male,   "DJ System",           71, 1268),
-            new Filter(Gender.Male,   "Actions",             71, 1329),
-            new Filter(Gender.Male,   "Cow Bells",           71, 1437),
-            new Filter(Gender.Male,   "Frameless Glasses",   71, 1927),
-            new Filter(Gender.Male,   "Music Items",         71, 2501),
-            new Filter(Gender.Male,   "Miscellaneous",       71, 3095),
-            new Filter(Gender.Male,   "Miscellaneous",       3093),
+            new Filter(Gender.Male, true,   "Glasses Kings",       148),
+            new Filter(Gender.Male, true,   "New Accessories",     165),
+            new Filter(Gender.Male, true,   "Headphones",          334),
+            new Filter(Gender.Male, true,   "Spice Glasses",       416),
+            new Filter(Gender.Male, true,   "Boomboxes",           3139, 1072),
+            new Filter(Gender.Male, true,   "Guitar",              1250),
+            new Filter(Gender.Male, true,   "Guitars",             1251),
+            new Filter(Gender.Male, true,   "DJ System",           3139, 1268),
+            new Filter(Gender.Male, true,   "Actions",             1329),
+            new Filter(Gender.Male, true,   "Cow Bells",           1437),
+            new Filter(Gender.Male, true,   "Frameless Glasses",   1927),
+            new Filter(Gender.Male, true,   "Music Items",         3139, 2501),
+            new Filter(Gender.Male, true,   "Miscellaneous",       3095),
+            new Filter(Gender.Male, false,   "Miscellaneous",      3093),
+            new Filter(Gender.Male, true, "Sounds & Effects (generic, new)", 3139),
 
-            new Filter(Gender.Female, "Spice Glasses",       153, 144),
-            new Filter(Gender.Female, "New Accessories",     153, 155),
-            new Filter(Gender.Female, "King Glasses",        153, 372),
-            new Filter(Gender.Female, "Rings",               153, 615),
-            new Filter(Gender.Female, "DJ System",           153, 1281),
-            new Filter(Gender.Female, "Actions",             153, 1328),
-            new Filter(Gender.Female, "Music Item",          153, 2500),
-            new Filter(Gender.Female, "Crimson Sounds",      153, 2935),
-            new Filter(Gender.Female, "Triggerless Music",   153, 2952),
-            new Filter(Gender.Female, "!!Music!!",           153, 2956),
-            new Filter(Gender.Female, "Miscellaneous",       153, 3094),
-            new Filter(Gender.Female, "Miscellaneous",       3092),
+            new Filter(Gender.Female, true, "Spice Glasses",       3122, 144),
+            new Filter(Gender.Female, true, "New Accessories",     155),
+            new Filter(Gender.Female, true, "King Glasses",        372),
+            new Filter(Gender.Female, true, "Rings",               3121, 615),
+            new Filter(Gender.Female, true, "Boomboxes",           3120, 1071),
+            new Filter(Gender.Female, true, "DJ System",           3120, 1281),
+            new Filter(Gender.Female, true, "Actions",             1328),
+            new Filter(Gender.Female, true, "Music Item",          2500),
+            new Filter(Gender.Female, true, "Crimson Sounds",      2935),
+            new Filter(Gender.Female, true, "Triggerless Music",   2952),
+            new Filter(Gender.Female, true, "!!Music!!",           3120, 2956),
+            new Filter(Gender.Female, true, "Misc./Other Acc",     3094),
+            new Filter(Gender.Female, false, "Miscellaneous",      3092),
+            new Filter(Gender.Female, true, "Sounds & Effects (generic, new)", 3120),
+            new Filter(Gender.Female, true, "Jewelry (generic, new)", 3121),
+            new Filter(Gender.Female, true, "Eyewear (generic, new)", 3122),
         };
 
-        // static prefixes
-        private static readonly short[] MaleOld = { 106, 41 };
-        private static readonly short[] FemaleOld = { 106, 40 };
-        private static readonly short[] AccNew = { 3117 };
+        private static readonly short[] MaleOldAcc = { 106, 41, 71 };
+        private static readonly short[] FemaleOldAcc = { 106, 40, 153 };
+        private static readonly short[] MaleNewAcc = { 3117, 71 };
+        private static readonly short[] FemaleNewAcc = { 3117, 153 };
         private static readonly short[] MiscNew = { 3110 };
 
+        // gender prefixes
+        private static short[] MaleOld => MaleOldAcc.Take(2).ToArray();
+        private static short[] FemaleOld = FemaleOldAcc.Take(2).ToArray();
+        private static readonly short[] AccNew = { 3117 };
+
         // Built once; preserves original order: all “new” first, then “old”
+        
         public static readonly List<short[]> FilterCpaths = BuildFilterCpaths();
 
         private static List<short[]> BuildFilterCpaths()
         {
-            var resultNew = new List<short[]>();
-            var resultOld = new List<short[]>();
-
-            foreach (var f in Filters)
-            {
-                var oldBase = (f.Gender == Gender.Male) ? MaleOld : FemaleOld;
-
-                if (f.Map.Length == 1)
-                {
-                    resultNew.Add(Combine(MiscNew, f.Map));
-                    resultOld.Add(Combine(oldBase, f.Map));
-                }
-                else if (f.Map.Length == 2)
-                {
-                    resultOld.Add(Combine(oldBase, f.Map));
-                    resultNew.Add(Combine(AccNew, f.Map));
-                }
-                else
-                {
-                    throw new ArgumentException("Invalid filters found. Fix them in code.");
-                }
-            }
-
+            var resultNew = Filters.Select(f => f.NewCpath).ToList();
+            var resultOld = Filters.Select(f => f.OldCpath);
             resultNew.AddRange(resultOld);
             return resultNew;
         }

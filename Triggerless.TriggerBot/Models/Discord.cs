@@ -62,6 +62,7 @@ namespace Triggerless.TriggerBot.Models
             {
                 try
                 {
+                    client.DefaultRequestHeaders.Add("CustomerId", Program.Cid.ToString());
                     var response = await client.PostAsync(apiUrl, content);
                     if (response.IsSuccessStatusCode)
                     {

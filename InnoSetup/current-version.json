@@ -1,6 +1,6 @@
 {
-	"version": "1.0.2.2509",
-	"setup": "triggerbot-setup.1.0.2.2509.exe",
-	"md5": "fad7fec16f1dfbe2f62eae9e4b65cc0b",
-	"whatsNew": "New in Version 1.0.2|* Improved color theme|* Faster and better splicing|* FFmpeg upgrade|* New Lyric Sheet features|* 1.0.2 hotfix"
+	"version": "1.0.4.2510",
+	"setup": "triggerbot-setup.1.0.4.2510.exe",
+	"md5": "14f68901ecf235ac9f0ffb8d188938f2",
+	"whatsNew": "New in Version 1.0.4|* More changes for IMVU product categories"
 }

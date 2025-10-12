@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
 using Triggerless.TriggerBot.Models;
+using Triggerless.TriggerBot.Properties;
 
 namespace Triggerless.TriggerBot
 {
@@ -26,16 +27,19 @@ namespace Triggerless.TriggerBot
 
             bool junctionWorked = TriggerbotLinker.EnsureTriggerbotJunction(); 
             // creates a shortcut at the top of IMVU Projects
-            /*
-                        string name;
-                        if (AvatarNameReader.TryGetAvatarName(out name))
-                        {
-                            AvatarName = name;  
-                        }
-            */
+
             SessionId = DateTime.UtcNow.Ticks.ToBase36();
             UniqueId = TriggerBot.UniqueId.ForCurrentUserMachine();
-            Cid = AvatarNameReader.GetAvatarId();
+            if (Settings.Default.Cid > 0)
+            {
+                Cid = Settings.Default.Cid;
+            }
+            else
+            {
+                Cid = AvatarNameReader.GetAvatarId();
+                Settings.Default.Cid = Cid;
+                Settings.Default.Save();
+            }
             bool ranSuccessfully = false;
             using (SingleProgramInstance spi = new SingleProgramInstance("Triggerless.Triggerbot.1"))
             {

@@ -1,21 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Newtonsoft.Json;
+using System;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Triggerless.TriggerBot.Components
 {
     public class TriggerlessApiClient : IDisposable
     {
+        public enum EventType : short
+        {
+            Empty = 0,
+            AppInstall = 1,
+            AppUninstall = 2,
+            AppStart = 3,
+            AppCrash = 4,
+            AppCleanExit = 5,
+            CutTune = 6,
+            PlayTune = 7,
+            LyricsSaved = 8,
+            DiscordSent = 9,
+        }
+
         private HttpClient _client;
 
         public TriggerlessApiClient()
         {
             _client = new HttpClient();
             _client.BaseAddress = new Uri(Shared.TriggerlessDomain + "/api/");
+            _client.DefaultRequestHeaders.Add("CustomerId", Program.Cid.ToString());
         }
 
         public class ApiResult
@@ -117,6 +130,16 @@ namespace Triggerless.TriggerBot.Components
                 result.Status = ApiResultStatus.NetworkError;
                 result.Message = ex.ToString();
             }
+            return result;
+        }
+
+        public async Task<ApiResult> SendEvent<T>(EventType eventType, T info)
+        {
+            var result = new ApiResult { Status = ApiResultStatus.Empty };
+            var jsonText = JsonConvert.SerializeObject(info);
+            short code = (short)eventType;
+            var response = await _client.PostAsync($"bot/event/{code}", new StringContent(jsonText));
+
             return result;
         }
     }

@@ -26,5 +26,8 @@
     <Setting Name="LastTab" Type="System.String" Scope="User">
       <Value Profile="(Default)">Playback</Value>
     </Setting>
+    <Setting Name="Cid" Type="System.Int64" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

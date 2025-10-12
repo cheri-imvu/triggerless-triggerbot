@@ -25,7 +25,7 @@
     </div>
     <div class="top-right">        
         <div>Download v1.0</div>
-        <div><a class="top-link" href="triggerbot-setup.1.0.2.2509.zip">🠋</a></div>
+        <div><a class="top-link" href="triggerbot-setup.1.0.4.2510.zip">🠋</a></div>
     </div>
     <div class="center-div">
       <div class="topic">Introduction</div>
@@ -42,7 +42,7 @@
           <a href="audio-splice.png" target="_blank"><img src="audio-splice.png" /></a>
         </p>
         <div class="topic">Download Triggerbot</div>
-        <p>Download Triggerbot Setup 1.0.2 (release): <a href="triggerbot-setup.1.0.2.2509.zip">triggerbot-setup.1.0.2.2509.zip</a> (55 MB). 
+        <p>Download Triggerbot Setup 1.0.4 (release): <a href="triggerbot-setup.1.0.4.2510.zip">triggerbot-setup.1.0.4.2510.zip</a> (55 MB). 
           Once installed, you'll be prompted to upgrade when an update is available.</p>
 		<p>Join the Triggerless Discord server! Click here: <a href="https://discord.gg/<?php include 'invite-code.txt' ?>" target="_blank">https://discord.gg/<?php include 'invite-code.txt' ?></a></p>
         <div class="topic">Videos</div>
@@ -53,7 +53,20 @@
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
     </div>
     <div class="center-div">
-      <div class="topic">What's new in Version 1.0.2.2905 (Release) 2025-09-25</div>
+      <div class="topic">What's new in Version 1.0.4.2510 (Hotfix) 2025-09-25</div>
+      <ul>
+		<li>Adapted more to new IMVU product categories</li>
+      </ul>
+    </div>
+    <div class="center-div">
+      <div class="topic">What's new in Version 1.0.3.2510 (Hotfix) 2025-09-25</div>
+      <ul>
+        <li>Fixed European decimal point</li>
+		<li>Adapted to new IMVU product categories</li>
+      </ul>
+    </div>
+    <div class="center-div">
+      <div class="topic">What's new in Version 1.0.2.2509 (Release) 2025-09-25</div>
       <ul>
         <li>Slick new color scheme</li>
 		<li>Discord connectivity fixed</li>
