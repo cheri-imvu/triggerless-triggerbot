@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -74,8 +75,6 @@ namespace Triggerless.ChatViewerPlugIn
                 grdChat.Rows.Add(chat.Who, chat.What);
             }
             File.WriteAllText(output, sb.ToString());
-
-
         }
 
         static string DecodeUnicodeEscapes(string input)
@@ -95,6 +94,25 @@ namespace Triggerless.ChatViewerPlugIn
             });
 
             return input;
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.Title = "Save Chat as Text File";
+            saveFileDialog1.FileName = "chat-dump.txt";
+            saveFileDialog1.InitialDirectory = PlugIn.Location.ImvuFileLocation;
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK) 
+            {
+                var sb = new StringBuilder();
+                for (int i = 0; i < grdChat.Rows.Count; i++) //row 0 is header
+                {
+                    DataGridViewRow row = grdChat.Rows[i];
+                    sb.Append(row.Cells[0].Value?.ToString() + ": ");
+                    sb.AppendLine(row.Cells[1].Value?.ToString());
+                }
+                File.WriteAllText(saveFileDialog1.FileName, sb.ToString());
+            }
+
         }
     }
 }
