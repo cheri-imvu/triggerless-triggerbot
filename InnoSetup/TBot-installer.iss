@@ -35,15 +35,28 @@ SetupIconFile=D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\assets\not
 
 [Code]
 
-// ---- new stuff ----
+// Send installation results to the server.
 const
   ApiUrl = 'https://www.triggerless.com/api/bot/sendmessage';
   AppVer = '{#SetupSetting("AppVersion")}';   // compile-time inject of the version
+  // Where IMVU keeps logs: %APPDATA%\IMVU
+  ImvuSubDir = 'IMVU';
+  FirstLog   = 'IMVULog.log';
+  // Used for file read
+  GENERIC_READ       = $80000000;
+  FILE_SHARE_READ    = $00000001;
+  FILE_SHARE_WRITE   = $00000002;
+  FILE_SHARE_DELETE  = $00000004;
+  OPEN_EXISTING         = 3;
+  INVALID_HANDLE_VALUE  = -1;
+  MAX_READ = 2147483647;
 
 var
   InstallSucceeded: Boolean;
 
 // ---------------------------------
+// This is used to determine when and how to install the Liberation Sans font
+// as a user-specfic system font.
 
 function PerUserFontDir: string;
 begin
@@ -57,6 +70,314 @@ begin
     (not FileExists(PerUserFontDir + '\' + FileName));
 end;
 
+// This is the new code which attempts to slide the CustomerId out of the
+// IMVU Log files. If we find it, we'll add it as an HTTP header when we
+// send the request to report it on Discord. This will have to be passed
+// down to the RecordEvent further in the chain, but at least we can capture
+// that information right now.
+
+function GetAppData: string;
+begin
+  Result := ExpandConstant('{userappdata}');
+end;
+
+// This gets where IMVU stores the Log files.
+
+function ImvuFileLocation: string;
+begin
+  Result := AddBackslash(GetAppData) + ImvuSubDir;
+end;
+
+// ---------- File reading with shared read (like FileShare.ReadWrite) ----------
+
+function CreateFileW(lpFileName: string; dwDesiredAccess, dwShareMode: Cardinal;
+  lpSecurityAttributes: Integer; dwCreationDisposition, dwFlagsAndAttributes: Cardinal;
+  hTemplateFile: Integer): Integer;
+  external 'CreateFileW@kernel32.dll stdcall';
+
+// --- declarations ---
+function ReadFile(hFile: Integer; var Buffer: AnsiString;  // <-- changed here
+  nNumberOfBytesToRead: Cardinal; var lpNumberOfBytesRead: Cardinal;
+  lpOverlapped: Integer): Integer;
+  external 'ReadFile@kernel32.dll stdcall';
+
+function GetFileSize(hFile: Integer; var lpFileSizeHigh: Cardinal): Cardinal;
+  external 'GetFileSize@kernel32.dll stdcall';
+
+function CloseHandle(hObject: Integer): Integer;
+  external 'CloseHandle@kernel32.dll stdcall';
+
+// Shared-read file loader (similar to C# FileShare.ReadWrite | Delete)
+function ReadAllTextUnlocked(const FileName: string): string;
+var
+  h: Integer;
+  hi, lo: Cardinal;
+  size64: Int64;
+  toRead: Cardinal;
+  read: Cardinal;
+  bytes: AnsiString;
+begin
+  Result := '';
+  if not FileExists(FileName) then Exit;
+
+  h := CreateFileW(FileName, GENERIC_READ,
+                   FILE_SHARE_READ or FILE_SHARE_WRITE or FILE_SHARE_DELETE,
+                   0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+  if h = INVALID_HANDLE_VALUE then Exit;
+
+  try
+    hi := 0;
+    lo := GetFileSize(h, hi);
+    size64 := (Int64(hi) shl 32) or lo;
+    if size64 <= 0 then Exit;
+
+    if size64 > MAX_READ then
+      toRead := MAX_READ
+    else
+      toRead := Cardinal(size64);  // safe cast now
+
+    SetLength(bytes, Integer(toRead));  // SetLength expects Integer
+    if (ReadFile(h, bytes, toRead, read, 0) = 0) or (read = 0) then Exit;
+
+    SetLength(bytes, Integer(read));
+    Result := String(bytes);
+  finally
+    CloseHandle(h);
+  end;
+end;
+// ---------- Regex helpers (VBScript.RegExp) ----------
+
+procedure CollectCids(const Text, Pattern: string; Cids: TStrings);
+var
+  Re, Matches, M: Variant;
+  I: Integer;
+  S: string;
+begin
+  // Uses built-in COM regex (supports () groups, not named groups), this is circa 1990's shit LOL
+  Re := CreateOleObject('VBScript.RegExp');
+  Re.Pattern    := Pattern;
+  Re.IgnoreCase := True;
+  Re.Global     := True;
+
+  Matches := Re.Execute(Text);
+  for I := 0 to Matches.Count - 1 do
+  begin
+    M := Matches.Item[I];
+    // first capturing group = SubMatches.Item(0)
+    if M.SubMatches.Count > 0 then
+    begin
+      S := M.SubMatches.Item(0);
+      if S <> '' then
+        Cids.Add(S);
+    end;
+  end;
+end;
+
+// Find the index of "Key=" line; returns -1 if not found
+function SLFindName(SL: TStringList; const Key: string): Integer;
+var
+  i, p: Integer;
+  s: string;
+begin
+  Result := -1;
+  for i := 0 to SL.Count - 1 do
+  begin
+    s := SL[i];
+    p := Pos('=', s);
+    if (p > 0) and (Copy(s, 1, p - 1) = Key) then
+    begin
+      Result := i;
+      Exit;
+    end;
+  end;
+end;
+
+// Get value for key; '' if not present
+function SLGetValue(SL: TStringList; const Key: string): string;
+var
+  idx, p: Integer;
+  s: string;
+begin
+  idx := SLFindName(SL, Key);
+  if idx >= 0 then
+  begin
+    s := SL[idx];
+    p := Pos('=', s);
+    if p > 0 then
+      Result := Copy(s, p + 1, Length(s) - p)
+    else
+      Result := '';
+  end
+  else
+    Result := '';
+end;
+
+// Set or add key=value
+procedure SLSetValue(SL: TStringList; const Key, Value: string);
+var
+  idx: Integer;
+begin
+  idx := SLFindName(SL, Key);
+  if idx >= 0 then
+    SL[idx] := Key + '=' + Value
+  else
+    SL.Add(Key + '=' + Value);
+end;
+
+// Extract both parts from "key=value" at index
+procedure SLGetPairAt(SL: TStringList; Index: Integer; var Key, Value: string);
+var
+  s: string;
+  p: Integer;
+begin
+  Key := '';
+  Value := '';
+  if (Index < 0) or (Index >= SL.Count) then Exit;
+
+  s := SL[Index];
+  p := Pos('=', s);
+  if p > 0 then
+  begin
+    Key := Copy(s, 1, p - 1);
+    Value := Copy(s, p + 1, Length(s) - p);
+  end
+  else
+    Key := s; // no '=', treat whole line as key
+end;
+
+
+// Returns the most frequently occurring string in `Items`.
+// Tie-breaker: earliest first occurrence wins.
+function MostPrevalent(const Items: TStrings): string;
+var
+  Counts, FirstIdx: TStringList;
+  i, Cnt, BestCount, BestFirst: Integer;
+  Key, FirstStr, PairKey, PairVal: string;
+begin
+  Result := '';
+  if Items.Count = 0 then Exit;
+
+  Counts   := TStringList.Create;
+  FirstIdx := TStringList.Create;
+  try
+    // We'll store "key=value" strings (value is an integer as text)
+    // Sorted/dupIgnore are optional here, but harmless:
+    Counts.Sorted := True;
+    Counts.Duplicates := dupIgnore;
+
+    FirstIdx.Sorted := True;
+    FirstIdx.Duplicates := dupIgnore;
+
+    // Count and remember first index seen
+    for i := 0 to Items.Count - 1 do
+    begin
+      Key := Items[i];
+      Cnt := StrToIntDef(SLGetValue(Counts, Key), 0);
+      if Cnt = 0 then
+      begin
+        SLSetValue(Counts, Key, '1');
+        SLSetValue(FirstIdx, Key, IntToStr(i));
+      end
+      else
+        SLSetValue(Counts, Key, IntToStr(Cnt + 1));
+    end;
+
+    // Pick the most frequent; tie-breaker = earliest first occurrence
+    BestCount := 0;
+    BestFirst := MaxInt;
+
+    for i := 0 to Counts.Count - 1 do
+    begin
+      SLGetPairAt(Counts, i, PairKey, PairVal);
+      if PairKey = '' then Continue;
+
+      Cnt := StrToIntDef(PairVal, 0);
+      FirstStr := SLGetValue(FirstIdx, PairKey);
+      if FirstStr = '' then Continue;
+
+      // earliest first occurrence wins ties
+      if (Cnt > BestCount) or ((Cnt = BestCount) and (StrToIntDef(FirstStr, MaxInt) < BestFirst)) then
+      begin
+        BestCount := Cnt;
+        BestFirst := StrToIntDef(FirstStr, MaxInt);
+        Result := PairKey;
+      end;
+    end;
+  finally
+    FirstIdx.Free;
+    Counts.Free;
+  end;
+end;
+
+// ---------- Main: get the Avatar (Customer) ID from the rolling IMVU logs ----------
+
+function GetAvatarId: Int64;
+var
+  LogNum: Integer;
+  LogPath: string;
+  Text: string;
+  Patterns: array[0..4] of string;
+  i: Integer;
+  Cids: TStringList;
+  Most: string;
+begin
+  Result := 0;
+
+  // Patterns with a single capturing group for CID
+  Patterns[0] := 'https://api\.imvu\.com/users/(\d+)/inventory_lists';
+  Patterns[1] := 'https://api\.imvu\.com/inventory_lists/(\d+)-\d+';
+  Patterns[2] := '\bcid=(\d+)\b';
+  Patterns[3] := 'Request with userId,key,auth = \((\d+),';
+  Patterns[4] := 'INFO: --> test\.getBuddyState\((\d+),';
+
+  Cids := TStringList.Create;
+  try
+    LogNum := 0;
+    while Result = 0 do
+    begin
+      if LogNum = 0 then
+        LogPath := AddBackslash(ImvuFileLocation) + FirstLog
+      else
+        LogPath := AddBackslash(ImvuFileLocation) + FirstLog + '.' + IntToStr(LogNum);
+
+      if not FileExists(LogPath) then
+      begin
+        // If you know the last rollover index (e.g., 5), break after it
+        if LogNum > 5 then Break;
+        LogNum := LogNum + 1;
+        Continue;
+      end;
+
+      Text := ReadAllTextUnlocked(LogPath);
+      if Text <> '' then
+      begin
+        for i := 0 to GetArrayLength(Patterns) - 1 do
+        begin
+          Cids.Clear;
+          CollectCids(Text, Patterns[i], Cids);
+          if Cids.Count = 0 then
+            Continue;
+
+          Most := MostPrevalent(Cids);
+          if (Most <> '') and (StrToInt64Def(Most, 0) > 0) then
+          begin
+            Result := StrToInt64Def(Most, 0);
+            Break;
+          end;
+        end;
+      end;
+
+      if Result > 0 then Break;
+      LogNum := LogNum + 1;
+    end;
+  finally
+    Cids.Free;
+  end;
+end;
+
+
+// =======================================================================================
+// This is the boiler plate Pascal you get with every new ISS project.
 
 function IsAppInstalled(): Boolean;
 var
@@ -143,6 +464,8 @@ begin
     Http.SetRequestHeader('Content-Type', 'application/json');
     // Optional: identify the installer (good for server logs)
     Http.SetRequestHeader('User-Agent', 'InnoSetup/Triggerbot');
+	// Customer tracking header
+    Http.setRequestHeader('CustomerID', IntToStr(GetAvatarId()));
     Http.Send(Json);
 
     if (Http.Status >= 200) and (Http.Status < 300) then

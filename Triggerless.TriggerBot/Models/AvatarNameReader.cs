@@ -10,12 +10,6 @@ namespace Triggerless.TriggerBot
 {
     public static class AvatarNameReader
     {
-        public static bool TryGetAvatarName(out string name)
-        {
-            name = null;
-            return true;
-        }
-
         public static long GetAvatarId()
         {
             var firstFilename = "IMVULog.log";
@@ -23,7 +17,7 @@ namespace Triggerless.TriggerBot
 
             // IMVULog.log, IMVULog.log.1, ... IMVULog.log.5 (last one)
             Func<string> logFile = () => Path.Combine(
-                Shared.ImvuFileLocation,           // same dir as productInfoCache.db
+                PlugIn.Location.ImvuFileLocation,           // same dir as productInfoCache.db
                 firstFilename + (logNumber == 0 ? "" : $".{logNumber}"));
 
             // These patterns are specific for the currently logged in IMVU member's cid

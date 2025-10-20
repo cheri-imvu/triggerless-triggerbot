@@ -3,6 +3,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Triggerless.TriggerBot.Models;
 
 namespace Triggerless.TriggerBot.Components
 {
@@ -27,7 +28,7 @@ namespace Triggerless.TriggerBot.Components
         public TriggerlessApiClient()
         {
             _client = new HttpClient();
-            _client.BaseAddress = new Uri(Shared.TriggerlessDomain + "/api/");
+            _client.BaseAddress = new Uri(PlugIn.Location.TriggerlessDomain + "/api/");
             _client.DefaultRequestHeaders.Add("CustomerId", Program.Cid.ToString());
         }
 
@@ -67,7 +68,7 @@ namespace Triggerless.TriggerBot.Components
                     new StringContent(lyrics)
                 );
 
-                Shared.HasTriggerlessConnection = true;
+                Common.HasTriggerlessConnection = true;
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
@@ -88,7 +89,7 @@ namespace Triggerless.TriggerBot.Components
             }
             catch (Exception ex)
             {
-                Shared.HasTriggerlessConnection = false;
+                Common.HasTriggerlessConnection = false;
                 result.Exception = ex;
                 result.Status = ApiResultStatus.NetworkError;
                 result.Message += ex.ToString();

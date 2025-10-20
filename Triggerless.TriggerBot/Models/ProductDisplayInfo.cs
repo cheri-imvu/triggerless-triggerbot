@@ -16,7 +16,7 @@ namespace Triggerless.TriggerBot
             Triggers = new List<TriggerDisplayInfo>();
         }
 
-        public string LyricsPath => Path.Combine(Shared.LyricSheetsPath, $"{Id}.lyrics");
+        public string LyricsPath => Path.Combine(PlugIn.Location.LyricSheetsPath, $"{Id}.lyrics");
         public bool HasLyrics => File.Exists(LyricsPath);
         public List<LyricEntry> Lyrics => JsonConvert.DeserializeObject<List<LyricEntry>>(File.ReadAllText(LyricsPath));
     }

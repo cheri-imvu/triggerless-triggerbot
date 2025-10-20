@@ -6,12 +6,14 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using Triggerless.TriggerBot.Components;
 using Triggerless.TriggerBot.Forms;
 using Triggerless.TriggerBot.Models;
+using Triggerless.PlugIn;
 using WindowsInput;
 using static Triggerless.TriggerBot.ProductCtrl;
 using KeyCode = WindowsInput.Native.VirtualKeyCode;
@@ -129,7 +131,7 @@ namespace Triggerless.TriggerBot
                         MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                     if (dlgResult == DialogResult.Yes)
                     {
-                        var exeName = Path.Combine(Shared.ImvuLocation, "IMVUQualityAgent.exe");
+                        var exeName = Path.Combine(PlugIn.Location.ImvuLocation, "IMVUQualityAgent.exe");
                         if (!File.Exists(exeName)) 
                         {
                             StyledMessageBox.Show("You have to install IMVU Classic first.", "Install IMVU Classic", MessageBoxButtons.OK);
@@ -184,7 +186,7 @@ namespace Triggerless.TriggerBot
                     TriggerlessApiClient.EventType.AppStart, 
                     new { 
                         Opening = true,
-                        Version = Shared.VersionNumber.ToString(),
+                        Version = PlugIn.Shared.VersionNumber.ToString(),
                     }
                 );
             }
@@ -357,12 +359,13 @@ namespace Triggerless.TriggerBot
 
         private void LoadForm(object sender, EventArgs e)
         {
-            Text = $"Triggerless Triggerbot {Shared.VersionNumber}";
+            Text = $"Triggerless Triggerbot {PlugIn.Shared.VersionNumber}";
             pnlBanner_Resize(this, null);
-            lblVersion.Text = $"Version {Shared.VersionNumber}";
-            lblCopyright.Text = Shared.Copyright;
-            Shared.CheckIfPaid();
+            lblVersion.Text = $"Version {PlugIn.Shared.VersionNumber}";
+            lblCopyright.Text = PlugIn.Shared.Copyright;
+            Common.CheckIfPaid();
             _updater.CheckForUpdate();
+            InjectPlugIns();
         }
 
         private void SettingsLoad()
@@ -1009,6 +1012,43 @@ namespace Triggerless.TriggerBot
                     case DialogResult.Cancel:
                         e.Cancel = true; // stay on the lyrics tab
                         break;
+                }
+            }
+        }
+
+        private void InjectPlugIns()
+        {
+            var thisAssy = Assembly.GetExecutingAssembly();
+            var exeLocation = thisAssy.Location;
+            var path = Path.Combine(Path.GetDirectoryName(exeLocation), "plugins");
+            var filenames = Directory.GetFiles(path, "*.dll");
+
+            foreach (var filename in filenames)
+            {
+                try
+                {
+                    var a = Assembly.LoadFrom(filename);
+                    if (a == thisAssy) continue;
+                    var plugInTypes = a.DefinedTypes.Where(t => t.ImplementedInterfaces.Contains(typeof(IPlugIn)));
+                    if (!plugInTypes.Any()) continue;
+                    foreach (Type pluginType in plugInTypes)
+                    {
+                        var context = new PlugInContext();
+                        var plugIn = PlugInFactory.CreateInstance(pluginType);
+                        if (plugIn.CanPlugIn())
+                        {
+                            TabPage newPage = new TabPage(plugIn.Title);
+                            int newIndex = tabAppContainer.TabPages.Count - 1;
+                            tabAppContainer.TabPages.Insert(newIndex, newPage);
+                            context.Parent = newPage;
+                            plugIn.OnPlugIn(context);
+                            newPage.Tag = context;
+                        }
+                    }
+                }
+                catch (Exception) 
+                {
+                    // not sure what to do but ignore it.
                 }
             }
         }

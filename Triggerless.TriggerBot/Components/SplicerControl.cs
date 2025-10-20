@@ -193,10 +193,10 @@ namespace Triggerless.TriggerBot
         private async Task SliceAudio(string triggerPrefix)
         {
             var increment = 1;
-            _outputPath = Path.Combine(Shared.TriggerbotDocsPath, triggerPrefix);
+            _outputPath = Path.Combine(PlugIn.Location.TriggerbotDocsPath, triggerPrefix);
             while (Directory.Exists(_outputPath))
             {
-                _outputPath = Path.Combine(Shared.TriggerbotDocsPath, triggerPrefix + $"({increment})");
+                _outputPath = Path.Combine(PlugIn.Location.TriggerbotDocsPath, triggerPrefix + $"({increment})");
                 increment++;
             }
             Directory.CreateDirectory(_outputPath);
@@ -252,7 +252,7 @@ namespace Triggerless.TriggerBot
                 {
                     var inputFile = filename;
                     var outputFile = filename.Replace(".wav", ".ogg");
-                    var ffmpegLocation = Shared.FFmpegLocation;
+                    var ffmpegLocation = PlugIn.Location.FFmpegLocation;
                     int option = rdoFMS.Checked ? 1 :
                         rdoHQM.Checked ? 2 :
                         rdoHQS.Checked ? 3 : 1;
@@ -537,11 +537,11 @@ namespace Triggerless.TriggerBot
         private void SplicerControl_Load(object sender, EventArgs e)
         {
             cboAudioLength.SelectedIndex = 0;
-            var docsPath = Shared.TriggerbotDocsPath;
+            var docsPath = PlugIn.Location.TriggerbotDocsPath;
             cboAudioLength.SelectedIndex = 1;
-            var amtProfit = Shared.Paid ? 0 : 220;
+            var amtProfit = Common.Paid ? 0 : 220;
             lblProfit.Text = $"Please note that @Triggers will make {amtProfit} cr profit for every CHKN you submit using this tool.";
-            chkCheap.Visible = Shared.Paid;
+            chkCheap.Visible = Common.Paid;
         }
 
         private const double CROP_STEP = 25;

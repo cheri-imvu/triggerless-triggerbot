@@ -7,6 +7,7 @@ using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Windows.Forms;
+using Triggerless.TriggerBot.Models;
 
 namespace Triggerless.TriggerBot
 {
@@ -21,7 +22,7 @@ namespace Triggerless.TriggerBot
             _runSetupOnExit = false;
         }
 
-        private string BaseUrl => $"{Shared.TriggerlessDomain}/triggerbot/";
+        private string BaseUrl => $"{PlugIn.Location.TriggerlessDomain}/triggerbot/";
         public static Version CurrentVersion => Assembly.GetEntryAssembly()?.GetName().Version;
         private string JsonUrl => $"{BaseUrl}/current-version.json";
         private string _setup = string.Empty;
@@ -30,7 +31,7 @@ namespace Triggerless.TriggerBot
         public void CheckForUpdate()
         {
             // First download the JSON from the web
-            if (!Shared.HasTriggerlessConnection)
+            if (!Common.HasTriggerlessConnection)
             {
                 return; // No internet connection, skip update check
             }
@@ -45,7 +46,7 @@ namespace Triggerless.TriggerBot
             }
             catch (Exception)
             {
-                Shared.HasTriggerlessConnection = false;
+                Common.HasTriggerlessConnection = false;
                 return;
             }
             JObject jsonObject = JObject.Parse(jsonText);

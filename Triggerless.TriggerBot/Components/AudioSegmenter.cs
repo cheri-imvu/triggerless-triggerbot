@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Triggerless.PlugIn;
 
 namespace Triggerless.TriggerBot
 {
@@ -141,7 +142,7 @@ namespace Triggerless.TriggerBot
 
                 var psi = new ProcessStartInfo
                 {
-                    FileName = Path.Combine(Shared.FFmpegLocation, "ffmpeg.exe"),
+                    FileName = Path.Combine(Location.FFmpegLocation, "ffmpeg.exe"),
                     Arguments = string.Format("-y -ss {1:F3} -i \"{0}\" -t {2:F3} -ac 2 -ar 44100 \"{3}\"",
                         inputFilePath, start, duration, outputFile),
                     UseShellExecute = false,
@@ -334,7 +335,7 @@ namespace Triggerless.TriggerBot
         {
             var psi = new ProcessStartInfo
             {
-                FileName = Path.Combine(Shared.FFmpegLocation, "ffprobe.exe"),
+                FileName = Path.Combine(Location.FFmpegLocation, "ffprobe.exe"),
                 Arguments = $"-v error -show_entries format=durationSec -of default=noprint_wrappers=1:nokey=1 \"{inputPath}\"",
                 RedirectStandardOutput = true,
                 UseShellExecute = false,

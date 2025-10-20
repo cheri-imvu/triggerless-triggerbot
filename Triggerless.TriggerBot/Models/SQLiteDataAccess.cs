@@ -129,17 +129,17 @@ namespace Triggerless.TriggerBot
 
         public static SQLiteConnection GetProductCacheCxn()
         {            
-            if (!File.Exists(Shared.ProductCacheFile))
+            if (!File.Exists(PlugIn.Location.ProductCacheFile))
             {
                 throw new ApplicationException("IMVU Classic Client is not installed");
             }
 
-            return new SQLiteConnection($"Data Source={Shared.ProductCacheFile}");
+            return new SQLiteConnection($"Data Source={PlugIn.Location.ProductCacheFile}");
         }
 
         public void DeleteAppCache()
         {
-            if (!File.Exists(Shared.AppCacheFile)) File.Delete(Shared.AppCacheFile);
+            if (!File.Exists(PlugIn.Location.AppCacheFile)) File.Delete(PlugIn.Location.AppCacheFile);
         }
 
         private class ColumnInfo
@@ -150,7 +150,7 @@ namespace Triggerless.TriggerBot
 
         private static void UpdateProductSchema()
         {
-            using (var cxnAlter = new SQLiteConnection(Shared.AppCacheConnectionString))
+            using (var cxnAlter = new SQLiteConnection(PlugIn.Location.AppCacheConnectionString))
             {
                 cxnAlter.Open();
 
@@ -172,7 +172,7 @@ namespace Triggerless.TriggerBot
 
         private static void UpdateTagSchema()
         {
-            using (var cxnAlter = new SQLiteConnection(Shared.AppCacheConnectionString))
+            using (var cxnAlter = new SQLiteConnection(PlugIn.Location.AppCacheConnectionString))
             {
                 using (var tx = cxnAlter.BeginTransaction())
                 using (var cmd = cxnAlter.CreateCommand())
@@ -225,12 +225,12 @@ CREATE TABLE IF NOT EXISTS product_tags (
 
         public static SQLiteConnection GetAppCacheCxn() 
         {
-            if (!Directory.Exists(Shared.AppCachePath)) { Directory.CreateDirectory(Shared.AppCachePath); }
+            if (!Directory.Exists(PlugIn.Location.AppCachePath)) { Directory.CreateDirectory(PlugIn.Location.AppCachePath); }
 
-            if (!File.Exists(Shared.AppCacheFile))
+            if (!File.Exists(PlugIn.Location.AppCacheFile))
             {
                 // initialize the tables
-                using (var cxnCreate = new SQLiteConnection(Shared.AppCacheConnectionString))
+                using (var cxnCreate = new SQLiteConnection(PlugIn.Location.AppCacheConnectionString))
                 {
                     try
                     {
@@ -256,7 +256,7 @@ CREATE TABLE IF NOT EXISTS product_tags (
             } 
 
             //Updates
-            using (var cxnAlter = new SQLiteConnection(Shared.AppCacheConnectionString))
+            using (var cxnAlter = new SQLiteConnection(PlugIn.Location.AppCacheConnectionString))
             {
                 cxnAlter.Open();
 
@@ -281,7 +281,7 @@ CREATE TABLE IF NOT EXISTS product_tags (
 
             UpdateProductSchema();
 
-            return new SQLiteConnection(Shared.AppCacheConnectionString);
+            return new SQLiteConnection(PlugIn.Location.AppCacheConnectionString);
         }
 
         internal static List<ProductDisplayInfo> GetProductSearch(string searchTerm)

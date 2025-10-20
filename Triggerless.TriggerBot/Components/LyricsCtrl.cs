@@ -1,5 +1,5 @@
 ﻿using NAudio.Wave;
-using NAudio.WaveFormRenderer;
+using Location = Triggerless.PlugIn.Location;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -214,7 +214,7 @@ namespace Triggerless.TriggerBot.Components
         private string GetOrCreateMP3()
         {
             // Ensure we have a LyricSheets directory
-            string targetPath = Shared.LyricSheetsPath;
+            string targetPath = PlugIn.Location.LyricSheetsPath;
 
             // See if we already have the MP3 for this product
             string mp3Name = $"{_product.Id}.mp3";
@@ -250,7 +250,7 @@ namespace Triggerless.TriggerBot.Components
                 // Create a ProcessStartInfo object
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
-                    FileName = $"{Shared.FFmpegLocation}\\ffmpeg.exe",
+                    FileName = $"{PlugIn.Location.FFmpegLocation}\\ffmpeg.exe",
                     Arguments = args,
                     UseShellExecute = false,
                     RedirectStandardOutput = false,
@@ -304,7 +304,7 @@ namespace Triggerless.TriggerBot.Components
 
         private bool InitReaderAndPlayer()
         {
-            var mp3FileName = Path.Combine(Shared.LyricSheetsPath, $"{_product.Id}.mp3");
+            var mp3FileName = Path.Combine(PlugIn.Location.LyricSheetsPath, $"{_product.Id}.mp3");
             if (!File.Exists(mp3FileName))
             {
                 StyledMessageBox.Show(this, $"Could not open {mp3FileName}", 
@@ -365,7 +365,7 @@ namespace Triggerless.TriggerBot.Components
         private void WaveformCreate(string mp3FileName)
         {
 
-            var wavePath = Path.Combine(Shared.LyricSheetsPath, $"{_product.Id}.wave.png");
+            var wavePath = Path.Combine(PlugIn.Location.LyricSheetsPath, $"{_product.Id}.wave.png");
             if (!File.Exists(wavePath))
             {
                 FastWaveform.SavePngFromFile(mp3FileName, 
@@ -581,7 +581,7 @@ namespace Triggerless.TriggerBot.Components
             if (list.Count == 0) return;
             list = list.OrderBy(e => e.Time).ToList();
             var jsonText= JsonConvert.SerializeObject(list, Formatting.Indented);
-            var filename = Path.Combine(Shared.LyricSheetsPath, $"{_product.Id}.lyrics");
+            var filename = Path.Combine(PlugIn.Location.LyricSheetsPath, $"{_product.Id}.lyrics");
             if (File.Exists(filename)) File.Delete(filename);
             File.WriteAllText(filename, jsonText);
             ctlNeedsSave.Dirty = false;
@@ -605,7 +605,7 @@ namespace Triggerless.TriggerBot.Components
         {
             if (_product == null) return;
             gridLyrics.Rows.Clear();
-            var filename = Path.Combine(Shared.LyricSheetsPath, $"{_product.Id}.lyrics");
+            var filename = Path.Combine(PlugIn.Location.LyricSheetsPath, $"{_product.Id}.lyrics");
             if (!File.Exists(filename)) return;
             var list = JsonConvert.DeserializeObject<List<LyricEntry>>(File.ReadAllText(filename));
             foreach ( var entry in list )
@@ -737,7 +737,7 @@ namespace Triggerless.TriggerBot.Components
         private void btnTimeIt_Click(object sender, EventArgs e)
         {
             if (ParentForm.TopMost) ParentForm.WindowState = FormWindowState.Minimized;
-            Shared.GenerateTimeItText(_product);
+            Common.GenerateTimeItText(_product);
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -816,7 +816,7 @@ namespace Triggerless.TriggerBot.Components
             var result = StyledMessageBox.Show(this, "You sure?", "Delete Lyrics", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
             if (result == DialogResult.OK)
             {
-                File.Delete(Path.Combine(Shared.LyricSheetsPath, $"{_product.Id}.lyrics"));
+                File.Delete(Path.Combine(PlugIn.Location.LyricSheetsPath, $"{_product.Id}.lyrics"));
                 gridLyrics.Rows.Clear();
                 ctlNeedsSave.Dirty = false;
             }
@@ -906,10 +906,10 @@ namespace Triggerless.TriggerBot.Components
             switch (result.Status)
             {
                 case TriggerlessApiClient.ApiResultStatus.Success:
-                    Shared.HasTriggerlessConnection = true;
+                    Common.HasTriggerlessConnection = true;
                     var dlg = new SaveFileDialog();
                     dlg.Title = "Save Lyrics";
-                    dlg.InitialDirectory = Shared.DownloadsPath;
+                    dlg.InitialDirectory = PlugIn.Location.DownloadsPath;
                     dlg.FileName = $"{songTitle}-{_product.Id}.lyrics";
                     if (dlg.ShowDialog() == DialogResult.OK)
                     {
@@ -917,17 +917,17 @@ namespace Triggerless.TriggerBot.Components
                     }
                     return;
                 case TriggerlessApiClient.ApiResultStatus.NetworkError:
-                    Shared.HasTriggerlessConnection = false;
+                    Common.HasTriggerlessConnection = false;
                     message = "Unable to contact server.";
                     title = "Network Error";
                     break;
                 case TriggerlessApiClient.ApiResultStatus.Empty:
-                    Shared.HasTriggerlessConnection = true;
+                    Common.HasTriggerlessConnection = true;
                     message = $"The lyrics were not found for '{_product.Name}'";
                     title = "Lyrics Not Found";
                     break;
                 case TriggerlessApiClient.ApiResultStatus.ServerError:
-                    Shared.HasTriggerlessConnection = true;
+                    Common.HasTriggerlessConnection = true;
                     message = "There was a problem retrieving the lyrics from triggerless.com";
                     title = "Database Error";
                     break;
@@ -950,7 +950,7 @@ namespace Triggerless.TriggerBot.Components
                 return;
             }
 
-            var filename = Path.Combine(Shared.LyricSheetsPath, $"{_product.Id}.lyrics");
+            var filename = Path.Combine(PlugIn.Location.LyricSheetsPath, $"{_product.Id}.lyrics");
             if (!File.Exists(filename))
             {
                 StyledMessageBox.Show(Program.MainForm, "Please save your work before attempting to upload", "Unsaved Lyrics Changes", MessageBoxButtons.OK, MessageBoxIcon.Warning);

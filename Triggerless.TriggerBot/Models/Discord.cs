@@ -25,15 +25,15 @@ namespace Triggerless.TriggerBot.Models
             string code = "mVjsqJZenQ";
             try
             {
-                if (Shared.HasTriggerlessConnection)
+                if (Common.HasTriggerlessConnection)
                 using (var client = new HttpClient())
                 {
-                    code = await client.GetStringAsync($"{Shared.TriggerlessDomain}/triggerbot/invite-code.txt").ConfigureAwait(false);
+                    code = await client.GetStringAsync($"{PlugIn.Location.TriggerlessDomain}/triggerbot/invite-code.txt").ConfigureAwait(false);
                 }
             }
             catch (Exception) 
             { 
-                Shared.HasTriggerlessConnection = false;
+                Common.HasTriggerlessConnection = false;
             }
 
             result = $"https://discord.gg/{code}";
@@ -43,7 +43,7 @@ namespace Triggerless.TriggerBot.Models
         private static async Task<Result> SendMessageToBotAsync(string apiUrl, string title, string body)
         {
             var result = new Result();
-            if (!Shared.HasTriggerlessConnection)
+            if (!Common.HasTriggerlessConnection)
             {
                 result.Status = ResultStatus.NoNetwork;
                 result.Message = "Unable to Connect";
@@ -90,7 +90,7 @@ namespace Triggerless.TriggerBot.Models
         public static async Task<Result> SendMessage(string title, string body)
         {
             return await SendMessageToBotAsync(
-                $"{Shared.TriggerlessDomain}/api/bot/sendmessage",
+                $"{PlugIn.Location.TriggerlessDomain}/api/bot/sendmessage",
                 title,
                 body
             );

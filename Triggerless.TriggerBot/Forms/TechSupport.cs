@@ -30,7 +30,7 @@ namespace Triggerless.TriggerBot.Forms
             }
 
             pnlUploading.Visible = true;
-            var appData = Shared.AppData;
+            var appData = PlugIn.Location.AppData;
             var targetFolder = Path.Combine(appData, "Triggerless", "Transfer", "Files");
             if (!Directory.Exists(targetFolder)) Directory.CreateDirectory(targetFolder);
             var parentFolder = Directory.GetParent(targetFolder).FullName;
@@ -105,7 +105,7 @@ namespace Triggerless.TriggerBot.Forms
         private async Task UploadZipAsync(string zipFilePath)
         {
             var fileName = Path.GetFileName(zipFilePath);
-            var uri = $"{Shared.TriggerlessDomain}/api/upload/techsupport";
+            var uri = $"{PlugIn.Location.TriggerlessDomain}/api/upload/techsupport";
 
             using (var client = new HttpClient())
             using (var content = new MultipartFormDataContent())
