@@ -20,10 +20,9 @@ namespace Triggerless.ChatViewerPlugIn
             PlugInEvent.Invoke(this, new PlugInEventArgs(id, result, message, exception));
         }
 
-        public bool CanPlugIn()
-        {
-            return true;
-        }
+        public bool CanPlugIn => true;
+        public bool ActivateByDefault => false;
+
 
         public void Dispose()
         {

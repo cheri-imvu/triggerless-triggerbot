@@ -128,5 +128,16 @@ namespace Triggerless.PlugIn
                 return _downloadsPath;
             }
         }
+
+        public static string PlugInsPath 
+        { 
+            get {
+                var thisAssy = Assembly.GetEntryAssembly();
+                var exeLocation = thisAssy.Location;
+                var path = Path.Combine(Path.GetDirectoryName(exeLocation), "plugins");
+                if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+                return path;                
+            } 
+        }
     }
 }

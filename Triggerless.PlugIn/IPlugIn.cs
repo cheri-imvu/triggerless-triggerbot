@@ -5,7 +5,8 @@ namespace Triggerless.PlugIn
 {
     public interface IPlugIn: IDisposable
     {
-        bool CanPlugIn();
+        bool CanPlugIn { get; }
+        bool ActivateByDefault {  get; }
         void OnPlugIn(IPlugInContext context);
         void OnUnplug();
         string Title { get; }
@@ -16,6 +17,7 @@ namespace Triggerless.PlugIn
     {
         Control Parent { get; set; }
         UserControl Control { get; set; }
+        bool SendTrigger(string trigger);
     }
 
     public class PlugInFactory
@@ -26,42 +28,5 @@ namespace Triggerless.PlugIn
             object obj = Activator.CreateInstance(type);
             return obj as IPlugIn;
         } 
-    }
-
-    public class PlugInContext: IPlugInContext
-    {
-        private UserControl _userControl;
-        public Control Parent { get; set; }
-        public UserControl Control { 
-            get => _userControl; 
-            set => _userControl = value; 
-        }
-    }
-
-    public class PlugInEventArgs: EventArgs
-    {
-        public int Id { get; private set; }
-        public PlugInEventResult Result { get; private set; }
-        public string Message { get; private set; }
-        public Exception Exception { get; private set; }
-        
-        public PlugInEventArgs(int id, PlugInEventResult result, string message, Exception exception)
-        {
-            Id = id;
-            Result = result;
-            Message = message;
-            Exception = exception;
-        }
-    }
-    public delegate void PlugInEventHandler(IPlugIn sender, PlugInEventArgs e);
-
-    public enum PlugInEventResult
-    {
-        None = 0,
-        PluggedIn,
-        Success,
-        Warning,
-        Error,
-        Unplugging,
     }
 }

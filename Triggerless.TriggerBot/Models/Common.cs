@@ -64,7 +64,7 @@ namespace Triggerless.TriggerBot.Models
                 return;
             }
 
-            if (installationType.ToLower() == "triggerboss")
+            if (installationType.ToLowerInvariant() == "triggerboss")
             {
                 Paid = true;
                 return;

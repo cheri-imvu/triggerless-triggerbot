@@ -14,6 +14,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Triggerless.TriggerBot.Models;
+using Triggerless.TriggerBot.Components;
+using System.Runtime.CompilerServices;
+using System.Globalization;
 
 namespace Triggerless.TriggerBot
 {
@@ -168,7 +171,6 @@ namespace Triggerless.TriggerBot
             await ScanDatabasesAsync(whereClause.Replace("product_id", "id"));
         }
 
-        //public Task ScanDatabasesAsync(string whereClause = null)
         public async Task ScanDatabasesAsync(string whereClause = null)
         {
             var productList = new List<ProductSearchInfo>();
@@ -235,8 +237,7 @@ namespace Triggerless.TriggerBot
                         TotalProducts = numberTotal,
                         Message = $"{product.ProductName}"
                     });
-                    // run sychronously for now
-                    //var result = await ScanOne(_product, cxnAppCache);
+
                     try 
                     {
                         var result = await ScanProductAsync(product, cxnAppCache);
@@ -282,6 +283,21 @@ namespace Triggerless.TriggerBot
 
             _log = _logBuffer.ToString();
             _logBuffer.Clear();
+
+            if (workingProducts.Count > 0)
+            {
+                dynamic payload = new
+                {
+                    Version = PlugIn.Shared.VersionNumber,
+                    ElapsedSecs = timeElapsed.TotalSeconds,
+                    ProductCount = workingProducts.Count,
+                    LongestName = longestName,
+                    LongestResultType = longestResultType,
+                    LongestMSecs = longest
+                };
+                await TriggerlessApiClient.SendEventAsync(
+                    TriggerlessApiClient.EventType.ScanComplete, payload);
+            }
         }
 
         public async Task<ScanResult> ScanProductAsync(ProductSearchInfo product, System.Data.SQLite.SQLiteConnection connAppCache)
@@ -350,7 +366,7 @@ namespace Triggerless.TriggerBot
                 #endregion
 
                 #region Any OGG Files?
-                if (!jsonContents.Any(c => c.Name.ToLower().EndsWith(".ogg"))) // no OGG files found
+                if (!jsonContents.Any(c => c.Name.ToLowerInvariant().EndsWith(".ogg"))) // no OGG files found
                 {
                     result.Message = $"No OGG files found in _product {product.ProductId}";
                     result.Result = ScanResultType.NoUsefulTriggers;
@@ -453,25 +469,46 @@ namespace Triggerless.TriggerBot
                         if (soundEl == null) continue;
 
                         var oggName = soundEl.InnerText;
-                        if (!oggName.ToLower().EndsWith(".ogg")) continue;
+                        if (!oggName.ToLowerInvariant().EndsWith(".ogg")) continue;
 
                         try
                         {
-                            var triggerEntry = new TriggerEntry
+                            string location = String.Empty;
+                            if (jsonContents.Any(j => j.Name.ToLowerInvariant() == oggName.ToLowerInvariant())) 
                             {
-                                ProductId = product.ProductId,
-                                OggName = oggName,
-                                TriggerName = nameEl.InnerText,
-                                Location = jsonContents.Where(j => j.Name.ToLower() == oggName.ToLower()).First()?.Location,
-                                Sequence = 0
-                            };
+                                location = jsonContents.First(j => j.Name.ToLowerInvariant() == oggName.ToLowerInvariant()).Location;
+                            } else // This means that the _contents.json file in IMVU has been corrupted
+                                    // and we'll try to see if we can get it by name
+                            {
+                                var oggUrl = url.Replace("_contents.json", $"{oggName}");
+                                var headRequest = new HttpRequestMessage(HttpMethod.Head, oggUrl);
+                                var headResponse = await client.SendAsync(headRequest);
+                                if (headResponse.IsSuccessStatusCode)
+                                {
+                                    if (headResponse.Content.Headers.ContentLength > 0)
+                                    {
+                                        location = oggName;
+                                    }
+                                }
+                            }
 
-                            triggerList.Add(triggerEntry);
+                            if (location != String.Empty)
+                            {
+                                var triggerEntry = new TriggerEntry
+                                {
+                                    ProductId = product.ProductId,
+                                    OggName = oggName,
+                                    TriggerName = nameEl.InnerText,
+                                    Location = location,
+                                    Sequence = 0
+                                };
+                                triggerList.Add(triggerEntry);
+                            }
                         }
                         catch (Exception)
                         {
                             result.Result = ScanResultType.JsonError;
-                            result.Message = "Malformed _product file";
+                            result.Message = $"Malformed _product file for {product.ProductId}";
                             lock (_dbLock)
                             {
                                 connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");
@@ -544,7 +581,7 @@ namespace Triggerless.TriggerBot
                     return result;
                 }
 
-                var distinctPrefixes = triggerList.Select(t => t.Prefix.ToLower()).Distinct().Count();
+                var distinctPrefixes = triggerList.Select(t => t.Prefix.ToLowerInvariant()).Distinct().Count();
                 if (distinctPrefixes != 1)
                 {
                     lock (_dbLock)

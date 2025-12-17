@@ -113,7 +113,7 @@ namespace Triggerless.TriggerBot
                     WaveformCreate(txtFilename.Text);
 
                 }
-                catch (Exception exc)
+                catch (Exception)
                 {
                     _waveReader?.Dispose();
                     _waveReader = null;
@@ -294,7 +294,7 @@ namespace Triggerless.TriggerBot
             var listsOfFiles = new List<List<string>>();
             var parentId = chkCheap.Checked ?
                 radioFemale.Checked ? 38766202 : 48704863 :
-                radioFemale.Checked ? 63535754 : 63540074;
+                radioFemale.Checked ? 73264694 : 73264654;
 
             templates.Add(new Template { ParentProductID = parentId });
             listsOfFiles.Add(new List<string>());
@@ -539,7 +539,7 @@ namespace Triggerless.TriggerBot
             cboAudioLength.SelectedIndex = 0;
             var docsPath = PlugIn.Location.TriggerbotDocsPath;
             cboAudioLength.SelectedIndex = 1;
-            var amtProfit = Common.Paid ? 0 : 220;
+            var amtProfit = Common.Paid ? 0 : 250;
             lblProfit.Text = $"Please note that @Triggers will make {amtProfit} cr profit for every CHKN you submit using this tool.";
             chkCheap.Visible = Common.Paid;
         }

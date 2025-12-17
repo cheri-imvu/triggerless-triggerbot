@@ -183,10 +183,11 @@ namespace Triggerless.TriggerBot
             // Remove any spaces, commas, numbers, or DOS-forbidden characters
             outputFileNamePrefix = Regex.Replace(outputFileNamePrefix, @"[\s,0-9<>:""/\\|?*]", "");
 
-            using (var reader = new AudioFileReader(inputFilePath))
+            using (var reader = UniversalAudioReader.Open(inputFilePath))
             {
                 int targetSampleRate = 48000;
-                var resampler = new WdlResamplingSampleProvider(reader, targetSampleRate);
+                ISampleProvider sampleProvider = reader.ToSampleProvider();
+                var resampler = new WdlResamplingSampleProvider(sampleProvider, targetSampleRate);
 
                 int segmentIndex = 1;
 

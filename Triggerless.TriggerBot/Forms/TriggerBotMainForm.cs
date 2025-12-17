@@ -17,6 +17,7 @@ using Triggerless.PlugIn;
 using WindowsInput;
 using static Triggerless.TriggerBot.ProductCtrl;
 using KeyCode = WindowsInput.Native.VirtualKeyCode;
+using System.Globalization;
 
 namespace Triggerless.TriggerBot
 {
@@ -94,6 +95,11 @@ namespace Triggerless.TriggerBot
         #endregion
 
         #region IMVU Presence and Interation
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool IsWindow(IntPtr hWnd);
+
         // IMVU presence
         private IntPtr _imvuMainWindow = IntPtr.Zero;
         private IntPtr _imvuChatWindow = IntPtr.Zero;
@@ -109,12 +115,20 @@ namespace Triggerless.TriggerBot
 
         private bool CheckForImvu(bool force)
         {
+            if (_imvuMainWindow != IntPtr.Zero && _imvuChatWindow != IntPtr.Zero) {
+                if (IsWindow(_imvuMainWindow) && IsWindow(_imvuChatWindow))
+                {
+                    return true;
+                }
+            }
+
             _imvuChatWindow = IntPtr.Zero;
             Process[] p = Process.GetProcesses();
             Process imvuProc = null;
             foreach (var proc in p)
             {
-                if (proc.ToString().ToLower().Contains("imvuclient"))
+                //Debug.WriteLine($"{proc}");
+                if (proc.ToString().ToLowerInvariant().Contains("imvuclient"))
                 {
                     imvuProc = proc;
                     break;
@@ -180,16 +194,15 @@ namespace Triggerless.TriggerBot
         // Inventory Update
         private async void ScanInventory(object sender, EventArgs e)
         {
-            using (var trigClient = new TriggerlessApiClient())
-            {
-                await trigClient.SendEvent(
-                    TriggerlessApiClient.EventType.AppStart, 
-                    new { 
-                        Opening = true,
-                        Version = PlugIn.Shared.VersionNumber.ToString(),
-                    }
-                );
-            }
+            await TriggerlessApiClient.SendEventAsync(
+                TriggerlessApiClient.EventType.AppStart,
+                new
+                {
+                    Opening = true,
+                    Version = PlugIn.Shared.VersionNumber.ToString(),
+                }
+            );
+
             tabAppContainer.SelectedTab = tabPlayback;
             pnlCollector.BringToFront();
             btnSearch.Enabled = false;
@@ -236,7 +249,7 @@ namespace Triggerless.TriggerBot
             say("Start of Search");
 
             var searchTerm = txtSearch.Text.Trim().Replace("'", "''");
-            if (searchTerm.ToLower() == "triggerboss")
+            if (searchTerm.ToLowerInvariant() == "triggerboss")
             {
                 _splicer.ShowCheap();
                 Properties.Settings.Default.InstallationType = "triggerboss";
@@ -365,7 +378,10 @@ namespace Triggerless.TriggerBot
             lblCopyright.Text = PlugIn.Shared.Copyright;
             Common.CheckIfPaid();
             _updater.CheckForUpdate();
+            /*
+             * Not using this feature yet.
             InjectPlugIns();
+            */
         }
 
         private void SettingsLoad()
@@ -550,18 +566,12 @@ namespace Triggerless.TriggerBot
 
         private object _kbdLock = new object();
 
-        private void DispatchText(string text)
+        public void DispatchText(string text)
         {
             if (_imvuChatWindow == IntPtr.Zero) return;
             BringWindowToTop(_imvuChatWindow);
             SetForegroundWindow(_imvuChatWindow);
 
-            // Old Version
-            //SendKeys.SendWait(text + "~");
-
-            // New Version
-
-            // get current clipboard text
             lock (_kbdLock)
             {
                 string currClipText = string.Empty;
@@ -1018,10 +1028,8 @@ namespace Triggerless.TriggerBot
 
         private void InjectPlugIns()
         {
+            var filenames = Directory.GetFiles(PlugIn.Location.PlugInsPath, "*.dll");
             var thisAssy = Assembly.GetExecutingAssembly();
-            var exeLocation = thisAssy.Location;
-            var path = Path.Combine(Path.GetDirectoryName(exeLocation), "plugins");
-            var filenames = Directory.GetFiles(path, "*.dll");
 
             foreach (var filename in filenames)
             {
@@ -1035,7 +1043,7 @@ namespace Triggerless.TriggerBot
                     {
                         var context = new PlugInContext();
                         var plugIn = PlugInFactory.CreateInstance(pluginType);
-                        if (plugIn.CanPlugIn())
+                        if (plugIn.CanPlugIn)
                         {
                             TabPage newPage = new TabPage(plugIn.Title);
                             int newIndex = tabAppContainer.TabPages.Count - 1;

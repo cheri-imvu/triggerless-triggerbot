@@ -21,6 +21,7 @@ namespace Triggerless.TriggerBot.Components
             PlayTune = 7,
             LyricsSaved = 8,
             DiscordSent = 9,
+            ScanComplete = 10, 
         }
 
         private HttpClient _client;
@@ -142,6 +143,15 @@ namespace Triggerless.TriggerBot.Components
             var response = await _client.PostAsync($"bot/event/{code}", new StringContent(jsonText));
 
             return result;
+        }
+
+        public static async Task<ApiResult> SendEventAsync<T>(EventType eventType, T info)
+        {
+            using (var client = new TriggerlessApiClient())
+            {
+                return await client.SendEvent(eventType, info);
+            }
+
         }
     }
 }

@@ -349,6 +349,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Models\AvatarNameReader.cs" />
+    <Compile Include="Models\PlugInContext.cs" />
     <Compile Include="Models\ProgressableStreamContent.cs" />
     <Compile Include="Models\UniqueId.cs" />
     <Compile Include="Models\ReportPayload.cs" />

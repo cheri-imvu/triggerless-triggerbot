@@ -36,7 +36,7 @@ namespace Triggerless.TriggerBot
                 return;
             }
 
-            foreach (var product in infoList.OrderBy(p => p.Name.ToLower()))
+            foreach (var product in infoList.OrderBy(p => p.Name.ToLowerInvariant()))
             {
                 var newControl = new ProductOpenDialogItem();
                 newControl.Product = product;

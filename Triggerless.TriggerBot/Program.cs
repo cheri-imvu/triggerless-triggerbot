@@ -2,7 +2,9 @@
 using System.Drawing;
 using System.Globalization;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Triggerless.TriggerBot.Components;
 using Triggerless.TriggerBot.Models;
 using Triggerless.TriggerBot.Properties;
 
@@ -16,12 +18,12 @@ namespace Triggerless.TriggerBot
         [STAThread]
         private static void Main()
         {
-            bool pretendFrench = false;
-            if (pretendFrench) 
+            bool pretendTurkish = false;
+            if (pretendTurkish) 
             {
-                var fr = CultureInfo.GetCultureInfo("fr-FR");
-                Thread.CurrentThread.CurrentCulture = fr;
-                Thread.CurrentThread.CurrentUICulture = fr;
+                var tk = CultureInfo.GetCultureInfo("tr-TR");
+                Thread.CurrentThread.CurrentCulture = tk;
+                Thread.CurrentThread.CurrentUICulture = tk;
             }
 
 
@@ -64,13 +66,14 @@ namespace Triggerless.TriggerBot
                         try
                         {
                             Thread.Sleep(tryWait);
-                            MainForm = new TriggerBotMainForm();
-                            try 
+                            try
                             {
+                                MainForm = new TriggerBotMainForm();
                                 Application.Run(MainForm);
                             }
                             catch (Exception ex)
                             {
+                                SendCrashReportAsync(ex).GetAwaiter().GetResult();
                                 //Discord.SendMessage("Application Crashed", $"{ex.Message}\n{ex.StackTrace}").Wait(10000);
                                 throw ex;
                             }
@@ -82,6 +85,7 @@ namespace Triggerless.TriggerBot
                         {
                             if (ranSuccessfully) // meaning this was running before
                             {
+                                SendCrashReportAsync(ex).GetAwaiter().GetResult();
                                 //Discord.SendMessage("Application Crashed", $"{ex.Message}\n{ex.StackTrace}").Wait(10000);
                                 throw ex;
                             }
@@ -107,6 +111,18 @@ namespace Triggerless.TriggerBot
                     spi.RaiseOtherProcess();
                 }
             }
+        }
+
+        private static async Task SendCrashReportAsync(Exception ex)
+        {
+            await TriggerlessApiClient.SendEventAsync(
+                TriggerlessApiClient.EventType.AppCrash,
+                new
+                {
+                    Version = PlugIn.Shared.VersionNumber.ToString(),
+                    Exception = ex.ToString(),
+                }
+            );
         }
 
         public static TriggerBotMainForm MainForm { get; set; }

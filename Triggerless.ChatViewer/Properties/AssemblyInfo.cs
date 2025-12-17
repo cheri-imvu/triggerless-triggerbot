@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("HP")]
 [assembly: AssemblyProduct("Triggerless.ChatViewerPlugIn")]
-[assembly: AssemblyCopyright("Copyright © HP 2025")]
+[assembly: AssemblyCopyright("Copyright ©2025 Triggerless")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
