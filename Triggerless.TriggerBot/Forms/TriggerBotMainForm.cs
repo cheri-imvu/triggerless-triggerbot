@@ -635,10 +635,7 @@ namespace Triggerless.TriggerBot
         {
             const double BASE_LAG = 25;
             var lagToUse = _lagMS + BASE_LAG;
-            if (_currTriggerIndex == 0)
-            {
-                lagToUse += BASE_LAG;
-            }
+
             _triggerTimer.Interval = _currProductInfo.Triggers[_currTriggerIndex].LengthMS - lagToUse;
             _triggerTimer.Start();
             _triggerStartTime = DateTime.Now;
