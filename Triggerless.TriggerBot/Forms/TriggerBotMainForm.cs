@@ -633,7 +633,7 @@ namespace Triggerless.TriggerBot
 
         public void PullTrigger()
         {
-            const double BASE_LAG = 25;
+            const double BASE_LAG = 30;
             var lagToUse = _lagMS + BASE_LAG;
 
             _triggerTimer.Interval = _currProductInfo.Triggers[_currTriggerIndex].LengthMS - lagToUse;
