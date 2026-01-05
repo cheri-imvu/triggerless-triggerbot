@@ -1,6 +1,6 @@
 ﻿using Dapper;
-using Newtonsoft.Json;
 using NAudio.Vorbis;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -13,10 +13,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using Triggerless.TriggerBot.Models;
 using Triggerless.TriggerBot.Components;
-using System.Runtime.CompilerServices;
-using System.Globalization;
+using Triggerless.TriggerBot.Models;
 
 namespace Triggerless.TriggerBot
 {
@@ -368,7 +366,7 @@ namespace Triggerless.TriggerBot
                 #region Any OGG Files?
                 if (!jsonContents.Any(c => c.Name.ToLowerInvariant().EndsWith(".ogg"))) // no OGG files found
                 {
-                    result.Message = $"No OGG files found in _product {product.ProductId}";
+                    result.Message = $"No OGG files found in product {product.ProductId}";
                     result.Result = ScanResultType.NoUsefulTriggers;
                     var insertPayload = new { product_id = product.ProductId, has_ogg = 0, title = product.ProductName, creator = product.CreatorName };
                     var sql = "INSERT INTO products (product_id, has_ogg, title, creator) VALUES (@product_id, @has_ogg, @title, @creator);";

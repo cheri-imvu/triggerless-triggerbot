@@ -508,8 +508,6 @@ namespace Triggerless.TriggerBot
                 chkLyrics.Enabled = hasLyrics;
                 chkLyrics.Checked = hasLyrics;
                 _lyrics = hasLyrics ? _currProductInfo.Lyrics : null;
-
-
             }
         }
 
@@ -612,10 +610,11 @@ namespace Triggerless.TriggerBot
 
         public void PullTrigger()
         {
-            var lagToUse = _lagMS;
+            const double BASE_LAG = 25;
+            var lagToUse = _lagMS + BASE_LAG;
             if (_currTriggerIndex == 0)
             {
-                lagToUse = -200;
+                lagToUse += BASE_LAG;
             }
             _triggerTimer.Interval = _currProductInfo.Triggers[_currTriggerIndex].LengthMS - lagToUse;
             _triggerTimer.Start();
@@ -661,7 +660,7 @@ namespace Triggerless.TriggerBot
             if (chkMinimizeOnPlay.Checked) WindowState = FormWindowState.Minimized;
             btnAbort.Enabled = true;
             btnPlay.Enabled = false;
-            if (chkLyrics.Checked)
+            if (chkLyrics.Checked && currentTriggerIndex == 0)
             {
                 _lyricsIndex = 0;
                 _lyricTimer.Interval = (int)_lyrics[_lyricsIndex].Time.TotalMilliseconds - _lyricsLagMS;
@@ -672,12 +671,12 @@ namespace Triggerless.TriggerBot
         private string GetTriggerLine()
         {
             var hideTriggers = chkHideTriggers.Checked;
-            var hider = "*imvu:trigger ";
+            const string HIDER = "*imvu:trigger ";
             bool hasAdditionalTriggers = !string.IsNullOrEmpty(cboAdditionalTriggers.Text);
             string result = string.Empty; // sometimes the first char gets cut off.
             if (hasAdditionalTriggers)
             {
-                result = hideTriggers ? $"  {hider}{TrimTrigger()}" : $"  /{TrimTrigger()}";
+                result = hideTriggers ? $"  {HIDER}{TrimTrigger()}" : $"  /{TrimTrigger()}";
                 string[] addnTriggers = cboAdditionalTriggers.Text.Trim()
                     .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 if (addnTriggers.Length > 0)
@@ -688,7 +687,7 @@ namespace Triggerless.TriggerBot
                         if (hideTriggers)
                         {
                             var addnTrigger = addnTriggers[i].Replace("/", "");
-                            result += $"{hider}{addnTrigger}";
+                            result += $"{HIDER}{addnTrigger}";
                         }
                         else
                         {
@@ -700,7 +699,7 @@ namespace Triggerless.TriggerBot
             }
             else
             {
-                result = hideTriggers ? $"  {hider}{TrimTrigger()}" : $"  {TrimTrigger()}";
+                result = hideTriggers ? $"  {HIDER}{TrimTrigger()}" : $"  {TrimTrigger()}";
             }
             if (result.Contains("~")) result = result.Replace("~", "{~}");
             return result;
@@ -836,7 +835,7 @@ namespace Triggerless.TriggerBot
 
         private void RescanAll(object sender, EventArgs e)
         {
-            var msg = "Are you sure you want to rescan? This will delete all Triggerbot data and scan the inventory and web all over again, and could take some time./n/nAre you certain?";
+            var msg = "Are you sure you want to rescan? This will delete all Triggerbot data and scan the inventory and web all over again, and could take some time.\n\nAre you certain?";
             var dlgResult = StyledMessageBox.Show(this, msg, "Rescan All Data?",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
             if (dlgResult == DialogResult.No) { return; }

@@ -6,23 +6,23 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     color: #b0e0e6;
-  }
+	}
 
-  .center-div {
-    width: 800px;
-    margin: 0 auto; /* This line centers the div */
-    text-align: left; /* This line aligns the text to the left */
-    border-radius: 30px; 
-    opacity: 0.8; 
-    background-color: #444444;
-    font-size: 1.2em; 
-    color: #8fa;
-    padding-bottom: 5px;
-    padding-top: 10px;
-    padding-left: 20px;
-    padding-right: 10px;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    border: solid 1px black;
+.center-div {
+	width: 800px;
+	margin: 0 auto; /* This line centers the div */
+	text-align: left; /* This line aligns the text to the left */
+	border-radius: 30px; 
+	opacity: 0.8; 
+	background-color: #444444;
+	font-size: 1.2em; 
+	color: #8fa;
+	padding-bottom: 5px;
+	padding-top: 10px;
+	padding-left: 20px;
+	padding-right: 10px;
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+	border: solid 1px black;
 }
 
 .center-div a { 

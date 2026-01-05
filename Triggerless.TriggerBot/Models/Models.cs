@@ -55,6 +55,10 @@ namespace Triggerless.TriggerBot
         public string ProductName { get; set; }
         public string CreatorName { get; set; }
         public string ProductImage { get; set; }
+        public override string ToString()
+        {
+            return $"{ProductId}/{ProductName}";
+        }
     }
 
     public class ContentsJsonItem

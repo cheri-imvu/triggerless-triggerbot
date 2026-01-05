@@ -42,7 +42,6 @@
             this.btnPlay = new System.Windows.Forms.Button();
             this.picProductImage = new System.Windows.Forms.PictureBox();
             this.pnlWave = new System.Windows.Forms.Panel();
-            this.triangle1 = new Triggerless.TriggerBot.Triangle();
             this.picWave = new System.Windows.Forms.PictureBox();
             this.picWait = new System.Windows.Forms.PictureBox();
             this.pnlGrid = new System.Windows.Forms.Panel();
@@ -59,7 +58,6 @@
             this.btnImportLyrics = new System.Windows.Forms.Button();
             this.btnDeleteLyrics = new System.Windows.Forms.Button();
             this.lblNudge = new System.Windows.Forms.Label();
-            this.ctlNeedsSave = new Triggerless.TriggerBot.Components.DirtyControl();
             this.btnMsMinus = new System.Windows.Forms.Button();
             this.btnMsPlus = new System.Windows.Forms.Button();
             this.lblMS = new System.Windows.Forms.Label();
@@ -70,6 +68,8 @@
             this._timer = new System.Windows.Forms.Timer(this.components);
             this.splitter = new System.Windows.Forms.SplitContainer();
             this._fileOpenDlg = new System.Windows.Forms.OpenFileDialog();
+            this.ctlNeedsSave = new Triggerless.TriggerBot.Components.DirtyControl();
+            this.triangle1 = new Triggerless.TriggerBot.Triangle();
             this.pnlTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).BeginInit();
             this.pnlWave.SuspendLayout();
@@ -197,21 +197,6 @@
             this.pnlWave.Size = new System.Drawing.Size(1053, 38);
             this.pnlWave.TabIndex = 7;
             // 
-            // triangle1
-            // 
-            this.triangle1.BackColor = System.Drawing.Color.Transparent;
-            this.triangle1.BorderColor = System.Drawing.Color.Maroon;
-            this.triangle1.BorderThickness = 2;
-            this.triangle1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.triangle1.Direction = Triggerless.TriggerBot.Triangle.Orientation.Down;
-            this.triangle1.ForeColor = System.Drawing.Color.Yellow;
-            this.triangle1.Location = new System.Drawing.Point(-23, 0);
-            this.triangle1.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            this.triangle1.Name = "triangle1";
-            this.triangle1.Position = -16;
-            this.triangle1.Size = new System.Drawing.Size(15, 20);
-            this.triangle1.TabIndex = 10;
-            // 
             // picWave
             // 
             this.picWave.BackColor = System.Drawing.SystemColors.Control;
@@ -285,6 +270,8 @@
             this.gridLyrics.Size = new System.Drawing.Size(850, 530);
             this.gridLyrics.TabIndex = 0;
             this.gridLyrics.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridLyrics_CellValueChanged);
+            this.gridLyrics.KeyDown += new System.Windows.Forms.KeyEventHandler(this.gridLyrics_KeyDown);
+            this.gridLyrics.KeyUp += new System.Windows.Forms.KeyEventHandler(this.gridLyrics_KeyUp);
             this.gridLyrics.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gridLyrics_MouseDown);
             // 
             // Column1
@@ -420,16 +407,6 @@
             this.lblNudge.TabIndex = 8;
             this.lblNudge.Text = "Nudge:";
             // 
-            // ctlNeedsSave
-            // 
-            this.ctlNeedsSave.BackColor = System.Drawing.Color.Transparent;
-            this.ctlNeedsSave.Dirty = false;
-            this.ctlNeedsSave.Location = new System.Drawing.Point(178, 71);
-            this.ctlNeedsSave.Margin = new System.Windows.Forms.Padding(0);
-            this.ctlNeedsSave.Name = "ctlNeedsSave";
-            this.ctlNeedsSave.Size = new System.Drawing.Size(24, 24);
-            this.ctlNeedsSave.TabIndex = 7;
-            // 
             // btnMsMinus
             // 
             this.btnMsMinus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -537,6 +514,31 @@
             this.splitter.Size = new System.Drawing.Size(1053, 530);
             this.splitter.SplitterDistance = 850;
             this.splitter.TabIndex = 10;
+            // 
+            // ctlNeedsSave
+            // 
+            this.ctlNeedsSave.BackColor = System.Drawing.Color.Transparent;
+            this.ctlNeedsSave.Dirty = false;
+            this.ctlNeedsSave.Location = new System.Drawing.Point(178, 71);
+            this.ctlNeedsSave.Margin = new System.Windows.Forms.Padding(0);
+            this.ctlNeedsSave.Name = "ctlNeedsSave";
+            this.ctlNeedsSave.Size = new System.Drawing.Size(24, 24);
+            this.ctlNeedsSave.TabIndex = 7;
+            // 
+            // triangle1
+            // 
+            this.triangle1.BackColor = System.Drawing.Color.Transparent;
+            this.triangle1.BorderColor = System.Drawing.Color.Maroon;
+            this.triangle1.BorderThickness = 2;
+            this.triangle1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.triangle1.Direction = Triggerless.TriggerBot.Triangle.Orientation.Down;
+            this.triangle1.ForeColor = System.Drawing.Color.Yellow;
+            this.triangle1.Location = new System.Drawing.Point(-26, 0);
+            this.triangle1.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
+            this.triangle1.Name = "triangle1";
+            this.triangle1.Position = -19;
+            this.triangle1.Size = new System.Drawing.Size(15, 20);
+            this.triangle1.TabIndex = 10;
             // 
             // LyricsCtrl
             // 

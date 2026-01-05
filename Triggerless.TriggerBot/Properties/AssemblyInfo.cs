@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("triggerless.com")]
 [assembly: AssemblyProduct("Triggerless.TriggerBot")]
-[assembly: AssemblyCopyright("Copyright ©2025 Triggerless.com")]
+[assembly: AssemblyCopyright("Copyright ©2026 Triggerless.com")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.5.2512")]
-[assembly: AssemblyFileVersion("1.0.5.2512")]
+[assembly: AssemblyVersion("1.0.6.2601")]
+[assembly: AssemblyFileVersion("1.0.6.2601")]

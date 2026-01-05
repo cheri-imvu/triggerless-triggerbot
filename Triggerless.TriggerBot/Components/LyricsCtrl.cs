@@ -988,5 +988,25 @@ namespace Triggerless.TriggerBot.Components
             }
 
         }
+
+        private void gridLyrics_KeyDown(object sender, KeyEventArgs e)
+        {
+            HandleKeyUpDown(e);
+        }
+
+        private void HandleKeyUpDown(KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Down)
+            { 
+            } 
+            else if (e.KeyCode == Keys.Up) 
+            { 
+            }
+        }
+
+        private void gridLyrics_KeyUp(object sender, KeyEventArgs e)
+        {
+            HandleKeyUpDown(e);
+        }
     }
 }

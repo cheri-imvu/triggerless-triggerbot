@@ -22,6 +22,10 @@ namespace Triggerless.TriggerBot
             public Filter(Gender gender, bool isAccessory, string name, params short[] map) {
                 Gender = gender; IsAccessory = isAccessory; Name = name ?? ""; Map = map ?? new short[0];
             }
+            public override string ToString()
+            {
+                return "[" + string.Join(", ", Map.Cast<string>()) + "]";
+            }
             private Filter() { }
             public short[] OldCpath { 
                 get 
