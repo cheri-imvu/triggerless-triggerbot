@@ -276,6 +276,7 @@ namespace Triggerless.TriggerBot
             {
                 Debug.WriteLine(ex);
             }
+            flowSearchResults.Controls.Clear();
 
             say("FlowPanel cleared");
             //flowSearchResults.SuspendLayout();
