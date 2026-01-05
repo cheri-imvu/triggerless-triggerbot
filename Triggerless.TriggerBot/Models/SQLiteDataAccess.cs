@@ -300,7 +300,7 @@ CREATE TABLE IF NOT EXISTS product_tags (
 
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
-                limitClause = "LIMIT 1000";
+                limitClause = "LIMIT 3000";
             }
             else
             {

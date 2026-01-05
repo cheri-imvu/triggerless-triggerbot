@@ -18,6 +18,7 @@ namespace Triggerless.TriggerBot
         [STAThread]
         private static void Main()
         {
+            //HandleMonitor.LogHandles("void Main()");
             bool pretendTurkish = false;
             if (pretendTurkish) 
             {
@@ -68,7 +69,9 @@ namespace Triggerless.TriggerBot
                             Thread.Sleep(tryWait);
                             try
                             {
+                                //HandleMonitor.LogHandles("before MainForm created");
                                 MainForm = new TriggerBotMainForm();
+                                //HandleMonitor.LogHandles("before Applcation.Run");
                                 Application.Run(MainForm);
                             }
                             catch (Exception ex)

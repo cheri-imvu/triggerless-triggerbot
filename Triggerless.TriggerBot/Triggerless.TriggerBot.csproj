@@ -334,6 +334,7 @@
     <Compile Include="Models\Common.cs" />
     <Compile Include="Models\Discord.cs" />
     <Compile Include="Models\Extensions.cs" />
+    <Compile Include="Models\HandleMonitor.cs" />
     <Compile Include="Models\Models.cs" />
     <Compile Include="Components\SplicerControl.cs">
       <SubType>UserControl</SubType>

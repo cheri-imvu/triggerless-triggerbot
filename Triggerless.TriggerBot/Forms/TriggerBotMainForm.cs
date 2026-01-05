@@ -29,6 +29,8 @@ namespace Triggerless.TriggerBot
         public TriggerBotMainForm()
         {
             InitializeComponent();
+            //HandleMonitor.LogHandles("after InitializeComponent");
+
             this.FormBorderStyle = FormBorderStyle.Sizable;
             _updater = new Update();
             linkDiscord.Text = Discord.GetInviteLink().Result;
@@ -257,7 +259,24 @@ namespace Triggerless.TriggerBot
                 return;
             }
 
-            flowSearchResults.Controls.Clear();
+            var pcList = new List<ProductCtrl>();
+            try
+            {
+                for (int j = flowSearchResults.Controls.Count - 1; j >= 0; j--)
+                {
+                    var existingCtrl = flowSearchResults.Controls[j] as ProductCtrl;
+                    if (existingCtrl != null)
+                    {
+                        pcList.Add(existingCtrl);
+                    }
+                }
+                foreach (ProductCtrl pc in pcList) pc.Dispose();
+            }
+            catch (Exception ex) 
+            {
+                Debug.WriteLine(ex);
+            }
+
             say("FlowPanel cleared");
             //flowSearchResults.SuspendLayout();
             //flowSearchResults.Visible = false;          // cheapest way to suppress a bunch of paints
@@ -267,7 +286,8 @@ namespace Triggerless.TriggerBot
             //flowSearchResults.SuspendDrawing();
             say("Ready to search");
 
-            List<ProductDisplayInfo> infoList = SQLiteDataAccess.GetProductSearch(searchTerm);
+            // We can only reasonably render 600 products before running out of resources.
+            List<ProductDisplayInfo> infoList = SQLiteDataAccess.GetProductSearch(searchTerm).Take(600).ToList();
             say("Search complete");
 
             if (!infoList.Any())
@@ -309,6 +329,7 @@ namespace Triggerless.TriggerBot
                 ct++;
                 if (controls.Count == 10)
                 {
+                    //HandleMonitor.LogHandles("adding 10 ProductCtrl's");
                     flowSearchResults.Controls.AddRange(controls.ToArray());
                     controls.Clear();
                     flowSearchResults.Update();
@@ -317,9 +338,10 @@ namespace Triggerless.TriggerBot
                     progSearch.Update();
                 }
                 //Application.DoEvents();
-                say("Control added to List");                
+                say("Control added to List");
             }
             flowSearchResults.Controls.AddRange(controls.ToArray());
+            //HandleMonitor.LogHandles($"{flowSearchResults.Controls.Count} product Ctrls created");
             controls.Clear();
             flowSearchResults.Update();
             progSearch.Visible = false;
