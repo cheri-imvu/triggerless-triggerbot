@@ -365,3 +365,6 @@ FodyWeavers.xsd
 /Videos
 /InnoSetup/Output
 /Video
+/InnoSetup/current-version.json
+/InnoSetup/current-version.1.0.6.2601.json
+/InnoSetup/current-version.json

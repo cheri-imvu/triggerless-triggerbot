@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
-	$thisVersionShort = '1.0.5';
-	$thisVersion = $thisVersionShort.'.2512';
+	$thisVersionShort = '1.0.6';
+	$thisVersion = $thisVersionShort.'.2601';
 ?>
 <html lang="en">
   <head>
@@ -57,6 +57,13 @@
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
     </div>
     <div class="center-div">
+      <div class="topic">What's new in Version 1.0.6.2601 (Hotfix) 2026-01-05</div>
+      <ul>
+		<li>Fixed App Crash during Product Search</li>
+		<li>Smoother Playback</li>
+      </ul>
+    </div>
+    <div class="center-div">
       <div class="topic">What's new in Version 1.0.5.2512 (Hotfix) 2025-12-18</div>
       <ul>
 		<li>Turkish language fix</li>
@@ -67,13 +74,13 @@
       </ul>
     </div>
     <div class="center-div">
-      <div class="topic">What's new in Version 1.0.4.2510 (Hotfix) 2025-09-25</div>
+      <div class="topic">What's new in Version 1.0.4.2510 (Hotfix) 2025-10-12</div>
       <ul>
 		<li>Adapted more to new IMVU product categories</li>
       </ul>
     </div>
     <div class="center-div">
-      <div class="topic">What's new in Version 1.0.3.2510 (Hotfix) 2025-09-25</div>
+      <div class="topic">What's new in Version 1.0.3.2510 (Hotfix) 2025-10-02</div>
       <ul>
         <li>Fixed European decimal point</li>
 		<li>Adapted to new IMVU product categories</li>
