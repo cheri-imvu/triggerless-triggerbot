@@ -491,7 +491,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Triggerless\XAFLib\Triggerless.XAFLib.csproj">
+    <ProjectReference Include="..\..\..\Triggerless\XAFLib\Triggerless.XAFLib.csproj">
       <Project>{a1312551-9229-4c9c-b2eb-5b5bf4d5adae}</Project>
       <Name>Triggerless.XAFLib</Name>
     </ProjectReference>
