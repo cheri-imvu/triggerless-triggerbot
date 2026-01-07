@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Drawing;
+using System.Threading;
 using TabControl = Triggerless.TriggerBot.Components.ColorTabControl;
 
 namespace Triggerless.TriggerBot
@@ -40,8 +41,7 @@ namespace Triggerless.TriggerBot
             this.tabAppContainer = new System.Windows.Forms.TabControl();
             this.tabPlayback = new System.Windows.Forms.TabPage();
             this.splitter = new System.Windows.Forms.SplitContainer();
-            this.flowSearchResults = new System.Windows.Forms.FlowLayoutPanel();
-            this.progSearch = new System.Windows.Forms.ProgressBar();
+            this.pnlSearchResults = new Triggerless.TriggerBot.Components.VirtualScrollPanel();
             this.pnlSearch = new System.Windows.Forms.Panel();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
@@ -91,13 +91,17 @@ namespace Triggerless.TriggerBot
             this.btnEjectFromDeck = new System.Windows.Forms.Button();
             this.btnLoadToPlaying = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.productOnDeck = new Triggerless.TriggerBot.ProductCtrl();
             this.pnlCollector = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.progScan = new System.Windows.Forms.ProgressBar();
             this.lblProgress = new System.Windows.Forms.Label();
             this.lblProduct = new System.Windows.Forms.Label();
             this.tabConvertChkn = new System.Windows.Forms.TabPage();
+            this._splicer = new Triggerless.TriggerBot.SplicerControl();
             this.tabLyrics = new System.Windows.Forms.TabPage();
+            this.lyricsCtrl1 = new Triggerless.TriggerBot.Components.LyricsCtrl();
+            this.underConstructionCtrl1 = new Triggerless.TriggerBot.Components.UnderConstructionCtrl();
             this.tabTools = new System.Windows.Forms.TabPage();
             this.pnlDiscord = new System.Windows.Forms.Panel();
             this.btnDiscordSend = new System.Windows.Forms.Button();
@@ -139,18 +143,14 @@ namespace Triggerless.TriggerBot
             this._triggerTimer = new System.Timers.Timer();
             this._progressTimer = new System.Windows.Forms.Timer(this.components);
             this._lyricTimer = new System.Windows.Forms.Timer(this.components);
-            this.productOnDeck = new Triggerless.TriggerBot.ProductCtrl();
-            this._splicer = new Triggerless.TriggerBot.SplicerControl();
-            this.lyricsCtrl1 = new Triggerless.TriggerBot.Components.LyricsCtrl();
-            this.underConstructionCtrl1 = new Triggerless.TriggerBot.Components.UnderConstructionCtrl();
             this._collector = new Triggerless.TriggerBot.Collector();
+            this.lblNoResults = new System.Windows.Forms.Label();
             this.tabAppContainer.SuspendLayout();
             this.tabPlayback.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
             this.splitter.Panel1.SuspendLayout();
             this.splitter.Panel2.SuspendLayout();
             this.splitter.SuspendLayout();
-            this.flowSearchResults.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlRight.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -212,7 +212,7 @@ namespace Triggerless.TriggerBot
             // 
             // splitter.Panel1
             // 
-            this.splitter.Panel1.Controls.Add(this.flowSearchResults);
+            this.splitter.Panel1.Controls.Add(this.pnlSearchResults);
             this.splitter.Panel1.Controls.Add(this.pnlSearch);
             this.splitter.Panel1MinSize = 396;
             // 
@@ -224,24 +224,14 @@ namespace Triggerless.TriggerBot
             this.splitter.SplitterDistance = 396;
             this.splitter.TabIndex = 3;
             // 
-            // flowSearchResults
+            // pnlSearchResults
             // 
-            this.flowSearchResults.AutoScroll = true;
-            this.flowSearchResults.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
-            this.flowSearchResults.Controls.Add(this.progSearch);
-            this.flowSearchResults.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowSearchResults.Location = new System.Drawing.Point(0, 45);
-            this.flowSearchResults.Name = "flowSearchResults";
-            this.flowSearchResults.Size = new System.Drawing.Size(396, 579);
-            this.flowSearchResults.TabIndex = 4;
-            // 
-            // progSearch
-            // 
-            this.progSearch.Location = new System.Drawing.Point(3, 3);
-            this.progSearch.Name = "progSearch";
-            this.progSearch.Size = new System.Drawing.Size(120, 22);
-            this.progSearch.TabIndex = 0;
-            this.progSearch.Visible = false;
+            this.pnlSearchResults.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlSearchResults.Location = new System.Drawing.Point(0, 45);
+            this.pnlSearchResults.Name = "pnlSearchResults";
+            this.pnlSearchResults.Size = new System.Drawing.Size(396, 579);
+            this.pnlSearchResults.TabIndex = 5;
+            this.pnlSearchResults.Resize += new System.EventHandler(this.pnlSearchResults_Resize);
             // 
             // pnlSearch
             // 
@@ -878,6 +868,22 @@ namespace Triggerless.TriggerBot
             this.label2.TabIndex = 1;
             this.label2.Text = "ON DECK";
             // 
+            // productOnDeck
+            // 
+            this.productOnDeck.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
+            this.productOnDeck.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.productOnDeck.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productOnDeck.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.productOnDeck.HideOnDeck = true;
+            this.productOnDeck.Location = new System.Drawing.Point(4, 36);
+            this.productOnDeck.Margin = new System.Windows.Forms.Padding(4);
+            this.productOnDeck.Name = "productOnDeck";
+            this.productOnDeck.ProductInfo = null;
+            this.productOnDeck.Size = new System.Drawing.Size(324, 85);
+            this.productOnDeck.TabIndex = 2;
+            this._toolTip.SetToolTip(this.productOnDeck, "Trigger Product On Deck");
+            this.productOnDeck.Visible = false;
+            // 
             // pnlCollector
             // 
             this.pnlCollector.Controls.Add(this.label1);
@@ -937,6 +943,18 @@ namespace Triggerless.TriggerBot
             this.tabConvertChkn.TabIndex = 1;
             this.tabConvertChkn.Text = " Audio ▷ CHKN ";
             // 
+            // _splicer
+            // 
+            this._splicer.AudioLength = 19.9D;
+            this._splicer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
+            this._splicer.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._splicer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this._splicer.Location = new System.Drawing.Point(34, 28);
+            this._splicer.Margin = new System.Windows.Forms.Padding(4);
+            this._splicer.Name = "_splicer";
+            this._splicer.Size = new System.Drawing.Size(961, 512);
+            this._splicer.TabIndex = 0;
+            // 
             // tabLyrics
             // 
             this.tabLyrics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
@@ -947,6 +965,27 @@ namespace Triggerless.TriggerBot
             this.tabLyrics.Size = new System.Drawing.Size(1050, 630);
             this.tabLyrics.TabIndex = 4;
             this.tabLyrics.Text = "Lyric Sheets ✏️ ";
+            // 
+            // lyricsCtrl1
+            // 
+            this.lyricsCtrl1.BackColor = System.Drawing.Color.MediumAquamarine;
+            this.lyricsCtrl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lyricsCtrl1.Font = new System.Drawing.Font("Lucida Sans", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lyricsCtrl1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.lyricsCtrl1.Location = new System.Drawing.Point(0, 0);
+            this.lyricsCtrl1.Margin = new System.Windows.Forms.Padding(4);
+            this.lyricsCtrl1.Name = "lyricsCtrl1";
+            this.lyricsCtrl1.Size = new System.Drawing.Size(1050, 630);
+            this.lyricsCtrl1.TabIndex = 0;
+            // 
+            // underConstructionCtrl1
+            // 
+            this.underConstructionCtrl1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("underConstructionCtrl1.BackgroundImage")));
+            this.underConstructionCtrl1.Location = new System.Drawing.Point(0, 0);
+            this.underConstructionCtrl1.Margin = new System.Windows.Forms.Padding(4);
+            this.underConstructionCtrl1.Name = "underConstructionCtrl1";
+            this.underConstructionCtrl1.Size = new System.Drawing.Size(89, 94);
+            this.underConstructionCtrl1.TabIndex = 1;
             // 
             // tabTools
             // 
@@ -1423,58 +1462,19 @@ namespace Triggerless.TriggerBot
             // 
             this._lyricTimer.Tick += new System.EventHandler(this._lyricTimer_Tick);
             // 
-            // productOnDeck
-            // 
-            this.productOnDeck.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
-            this.productOnDeck.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.productOnDeck.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.productOnDeck.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.productOnDeck.HideOnDeck = true;
-            this.productOnDeck.Location = new System.Drawing.Point(4, 36);
-            this.productOnDeck.Margin = new System.Windows.Forms.Padding(4);
-            this.productOnDeck.Name = "productOnDeck";
-            this.productOnDeck.ProductInfo = null;
-            this.productOnDeck.Size = new System.Drawing.Size(324, 85);
-            this.productOnDeck.TabIndex = 2;
-            this._toolTip.SetToolTip(this.productOnDeck, "Trigger Product On Deck");
-            this.productOnDeck.Visible = false;
-            // 
-            // _splicer
-            // 
-            this._splicer.AudioLength = 19.9D;
-            this._splicer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
-            this._splicer.Font = new System.Drawing.Font("Lucida Sans Unicode", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._splicer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this._splicer.Location = new System.Drawing.Point(34, 28);
-            this._splicer.Margin = new System.Windows.Forms.Padding(4);
-            this._splicer.Name = "_splicer";
-            this._splicer.Size = new System.Drawing.Size(961, 512);
-            this._splicer.TabIndex = 0;
-            // 
-            // lyricsCtrl1
-            // 
-            this.lyricsCtrl1.BackColor = System.Drawing.Color.MediumAquamarine;
-            this.lyricsCtrl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lyricsCtrl1.Font = new System.Drawing.Font("Lucida Sans", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lyricsCtrl1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.lyricsCtrl1.Location = new System.Drawing.Point(0, 0);
-            this.lyricsCtrl1.Margin = new System.Windows.Forms.Padding(4);
-            this.lyricsCtrl1.Name = "lyricsCtrl1";
-            this.lyricsCtrl1.Size = new System.Drawing.Size(1050, 634);
-            this.lyricsCtrl1.TabIndex = 0;
-            // 
-            // underConstructionCtrl1
-            // 
-            this.underConstructionCtrl1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("underConstructionCtrl1.BackgroundImage")));
-            this.underConstructionCtrl1.Location = new System.Drawing.Point(0, 0);
-            this.underConstructionCtrl1.Margin = new System.Windows.Forms.Padding(4);
-            this.underConstructionCtrl1.Name = "underConstructionCtrl1";
-            this.underConstructionCtrl1.Size = new System.Drawing.Size(89, 94);
-            this.underConstructionCtrl1.TabIndex = 1;
-            // 
             // _collector
             // 
             this._collector.CollectorEvent += new Triggerless.TriggerBot.Collector.CollectorEventHandler(this.OnCollectorEvent);
+            // 
+            // lblNoResults
+            // 
+            this.lblNoResults.AutoSize = true;
+            this.lblNoResults.Font = new System.Drawing.Font("Liberation Sans", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblNoResults.Location = new System.Drawing.Point(94, 120);
+            this.lblNoResults.Name = "lblNoResults";
+            this.lblNoResults.Size = new System.Drawing.Size(241, 21);
+            this.lblNoResults.TabIndex = 0;
+            this.lblNoResults.Text = "No Search Results to Show";
             // 
             // TriggerBotMainForm
             // 
@@ -1482,6 +1482,7 @@ namespace Triggerless.TriggerBot
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
             this.ClientSize = new System.Drawing.Size(1058, 660);
+            this.Controls.Add(this.lblNoResults);
             this.Controls.Add(this.tabAppContainer);
             this.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -1499,7 +1500,6 @@ namespace Triggerless.TriggerBot
             this.splitter.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).EndInit();
             this.splitter.ResumeLayout(false);
-            this.flowSearchResults.ResumeLayout(false);
             this.pnlSearch.ResumeLayout(false);
             this.pnlSearch.PerformLayout();
             this.pnlRight.ResumeLayout(false);
@@ -1533,6 +1533,7 @@ namespace Triggerless.TriggerBot
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._triggerTimer)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -1541,7 +1542,6 @@ namespace Triggerless.TriggerBot
         private System.Windows.Forms.TabControl tabAppContainer;
         private System.Windows.Forms.TabPage tabPlayback;
         private System.Windows.Forms.SplitContainer splitter;
-        private System.Windows.Forms.FlowLayoutPanel flowSearchResults;
         private System.Windows.Forms.Panel pnlSearch;
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.ToolTip _toolTip;
@@ -1644,7 +1644,8 @@ namespace Triggerless.TriggerBot
         private System.Windows.Forms.TextBox txtDiscordSubject;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Button btnDiscordSend;
-        private System.Windows.Forms.ProgressBar progSearch;
+        private Components.VirtualScrollPanel pnlSearchResults;
+        private System.Windows.Forms.Label lblNoResults;
     }
 }
 

@@ -18,6 +18,7 @@ using WindowsInput;
 using static Triggerless.TriggerBot.ProductCtrl;
 using KeyCode = WindowsInput.Native.VirtualKeyCode;
 using System.Globalization;
+using Triggerless.TriggerBot.Properties;
 
 namespace Triggerless.TriggerBot
 {
@@ -211,9 +212,11 @@ namespace Triggerless.TriggerBot
             await _collector.ScanDatabasesAsync();
             btnSearch.Enabled = true;
             pnlCollector.SendToBack();
-            DoSearch(null, null);
+
             CheckForImvu(false);
             SettingsLoad();
+            DoSearch(null, null);
+
         }
 
         // Inventory Update
@@ -240,18 +243,83 @@ namespace Triggerless.TriggerBot
         #endregion
 
         #region Product Search
+
+        private readonly List<ProductCtrl> _productPool = new List<ProductCtrl>();
+        private List<ProductDisplayInfo> _searchResults = new List<ProductDisplayInfo>();
+        private const int ItemHeight = 100; // 87 + margins
+        private const int PoolSize = 16;    // 10 visible + buffer
+
+        private void InitializeSearchResultsPanel()
+        {
+            pnlSearchResults.AutoScroll = true;
+            pnlSearchResults.DoubleBuffered(true);
+
+            pnlSearchResults.Resize += (_, __) => RenderVisibleProducts();
+
+            // Capture scroll + wheel reliably
+            pnlSearchResults.MouseWheel += (_, __) => RenderVisibleProducts();
+            pnlSearchResults.Scroll += (_, __) => RenderVisibleProducts();
+
+            _productPool.Clear();
+            pnlSearchResults.Controls.Clear();
+
+            for (int i = 0; i < PoolSize; i++)
+            {
+                var pc = new ProductCtrl
+                {
+                    Width = 364,
+                    Height = 87,
+                    Visible = false
+                };
+
+                pc.OnDeckLinkClicked += SendToDeck;
+                pc.OnWearItem += WearItem;
+                pc.OnExcludeSong += ExcludeSong;
+
+                pnlSearchResults.Controls.Add(pc);
+                _productPool.Add(pc);
+            }
+        }
+
+        private void RenderVisibleProducts()
+        {
+            if (_searchResults == null || _searchResults.Count == 0)
+            {
+                foreach (var pc in _productPool)
+                    pc.Visible = false;
+                return;
+            }
+
+            int scrollY = pnlSearchResults.VerticalScroll.Value;
+            int firstIndex = Math.Max(0, scrollY / ItemHeight);
+
+            for (int i = 0; i < _productPool.Count; i++)
+            {
+                int dataIndex = firstIndex + i;
+                var pc = _productPool[i];
+
+                if (dataIndex >= _searchResults.Count)
+                {
+                    pc.Visible = false;
+                    continue;
+                }
+
+                pc.Visible = true;
+                pc.ProductInfo = _searchResults[dataIndex];
+                pc.Top = dataIndex * ItemHeight - scrollY;
+                pc.Left = 5;
+            }
+
+            lblNoResults.Visible = (_searchResults.Count == 0);
+        }
+
+
         // Product Search
         private void DoSearch(object sender, EventArgs e)
         {
-            var start = DateTime.Now;
-            Func<double> msec = () => (DateTime.Now - start).TotalMilliseconds;
-            Action<string> say = (s) => {
-                Debug.WriteLine($"{s}: {msec():0.0}");
-            };
-            say("Start of Search");
-
             var searchTerm = txtSearch.Text.Trim().Replace("'", "''");
-            if (searchTerm.ToLowerInvariant() == "triggerboss")
+
+            if (searchTerm.Equals("triggerboss", StringComparison.OrdinalIgnoreCase))
             {
                 _splicer.ShowCheap();
                 Properties.Settings.Default.InstallationType = "triggerboss";
@@ -259,103 +327,31 @@ namespace Triggerless.TriggerBot
                 return;
             }
 
-            var pcList = new List<ProductCtrl>();
-            try
+            SettingsSave();
+
+            _searchResults = SQLiteDataAccess
+                .GetProductSearch(searchTerm)
+                .Take(600)
+                .ToList();
+
+            lblNoResults.Visible = (_searchResults.Count == 0);
+
+            pnlSearchResults.SuspendLayout();
+
+            if (_searchResults.Count == 0)
             {
-                for (int j = flowSearchResults.Controls.Count - 1; j >= 0; j--)
-                {
-                    var existingCtrl = flowSearchResults.Controls[j] as ProductCtrl;
-                    if (existingCtrl != null)
-                    {
-                        pcList.Add(existingCtrl);
-                    }
-                }
-                foreach (ProductCtrl pc in pcList) pc.Dispose();
+                pnlSearchResults.AutoScrollMinSize = Size.Empty;
+                pnlSearchResults.VerticalScroll.Value = 0;
             }
-            catch (Exception ex) 
+            else
             {
-                Debug.WriteLine(ex);
-            }
-            flowSearchResults.Controls.Clear();
-
-            say("FlowPanel cleared");
-            //flowSearchResults.SuspendLayout();
-            //flowSearchResults.Visible = false;          // cheapest way to suppress a bunch of paints
-            //flowSearchResults.AutoScroll = false;
-
-            // 2) (optional but nice) suspend global painting via WM_SETREDRAW
-            //flowSearchResults.SuspendDrawing();
-            say("Ready to search");
-
-            // We can only reasonably render 600 products before running out of resources.
-            List<ProductDisplayInfo> infoList = SQLiteDataAccess.GetProductSearch(searchTerm).Take(600).ToList();
-            say("Search complete");
-
-            if (!infoList.Any())
-            {
-                flowSearchResults.ResumeLayout(true);
-                return;
+                pnlSearchResults.AutoScrollMinSize =
+                    new Size(0, _searchResults.Count * ItemHeight);
+                pnlSearchResults.VerticalScroll.Value = 0;
             }
 
-            progSearch.Parent = this;
-            progSearch.Minimum = 0;
-            progSearch.BringToFront();
-            progSearch.Top = flowSearchResults.Top + 120;
-            progSearch.Left = (flowSearchResults.Width - progSearch.Width) / 2 - 12;
-            progSearch.Value = progSearch.Minimum;
-            progSearch.Maximum = infoList.Count;
-
-
-            say("About to create controls");
-            Font fontToUse = new Font("Liberation Sans", 11F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
-            var controls = new List<ProductCtrl>();
-
-            int ct = 0;
-            foreach (var info in infoList)
-            {
-                say(" Creating control");
-                var newControl = new ProductCtrl();
-                say(" Control created");
-                newControl.BorderStyle = BorderStyle.FixedSingle;
-                newControl.Font = fontToUse;
-                newControl.Location = new Point(5, 194);
-                newControl.Margin = new Padding(5, 4, 5, 4);
-                newControl.Name = $"productCtrl_{info.Id}";
-                newControl.ProductInfo = info;
-                newControl.Size = new Size(364, 87);
-                newControl.OnDeckLinkClicked += SendToDeck;
-                newControl.OnWearItem += WearItem;
-                newControl.OnExcludeSong += ExcludeSong;
-                controls.Add(newControl);
-                ct++;
-                if (controls.Count == 10)
-                {
-                    //HandleMonitor.LogHandles("adding 10 ProductCtrl's");
-                    flowSearchResults.Controls.AddRange(controls.ToArray());
-                    controls.Clear();
-                    flowSearchResults.Update();
-                    progSearch.Visible = true;
-                    progSearch.Value = ct;
-                    progSearch.Update();
-                }
-                //Application.DoEvents();
-                say("Control added to List");
-            }
-            flowSearchResults.Controls.AddRange(controls.ToArray());
-            //HandleMonitor.LogHandles($"{flowSearchResults.Controls.Count} product Ctrls created");
-            controls.Clear();
-            flowSearchResults.Update();
-            progSearch.Visible = false;
-            //flowSearchResults.Controls.AddRange(controls.ToArray());
-            say("Controls added.");
-            //flowSearchResults.ResumeDrawing(invalidate: true);   // extension below
-            say("Resumed Drawing");
-            //flowSearchResults.AutoScroll = true;
-            say("Autoscroll resumed");
-            //flowSearchResults.Visible = true;
-            say("Visible now");
-            //flowSearchResults.ResumeLayout(performLayout: true); 
-            say("Layout resumed");
+            pnlSearchResults.ResumeLayout();
+            RenderVisibleProducts();
         }
 
         private void ExcludeSong(object sender, ExcludeSongEventArgs e)
@@ -366,7 +362,12 @@ namespace Triggerless.TriggerBot
 
             if (_collector.ExcludeSong(e.ProductId))
             {
-                flowSearchResults.Controls.RemoveByKey($"productCtrl_{e.ProductId}");
+                var pdi = _searchResults.First(r => r.Id == e.ProductId);
+                if (pdi != null) {
+                    _searchResults.Remove(pdi);
+                    RenderVisibleProducts();
+                }
+                //flowSearchResults.Controls.RemoveByKey($"productCtrl_{e.ProductId}");
             } else
             {
                 StyledMessageBox.Show(this, $"Unable to remove {e.Title} at this time", "Database Glitch", MessageBoxButtons.OK);
@@ -401,6 +402,11 @@ namespace Triggerless.TriggerBot
             lblCopyright.Text = PlugIn.Shared.Copyright;
             Common.CheckIfPaid();
             _updater.CheckForUpdate();
+            txtSearch.Text = Settings.Default.LastSearch;
+
+            // Initialize Product Control apparatus
+
+            InitializeSearchResultsPanel();
             /*
              * Not using this feature yet.
             InjectPlugIns();
@@ -411,7 +417,6 @@ namespace Triggerless.TriggerBot
         {
             var sets = Properties.Settings.Default;
             txtSearch.Text = sets.LastSearch;
-            DoSearch(null, null);
 
             chkHideTriggers.Checked = sets.HideTriggers;
             chkMinimizeOnPlay.Checked = sets.MinimizeOnPlay;
@@ -1078,6 +1083,13 @@ namespace Triggerless.TriggerBot
                     // not sure what to do but ignore it.
                 }
             }
+        }
+
+        private void pnlSearchResults_Resize(object sender, EventArgs e)
+        {
+            //lblNoResults.Top = pnlSearchResults.Top + 20;
+            lblNoResults.Left = (pnlSearchResults.Width - lblNoResults.Width) / 2 ;
+            lblNoResults.BringToFront();
         }
     }
 }

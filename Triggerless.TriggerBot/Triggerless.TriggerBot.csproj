@@ -87,6 +87,12 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>Custom</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto, Version=1.9.0.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
       <HintPath>..\packages\Portable.BouncyCastle.1.9.0\lib\net40\BouncyCastle.Crypto.dll</HintPath>
@@ -295,6 +301,9 @@
       <DependentUpon>UnderConstructionCtrl.cs</DependentUpon>
     </Compile>
     <Compile Include="Components\UniversalAudioReader.cs" />
+    <Compile Include="Components\VirtualScrollPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\AddnTriggersForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -465,6 +474,7 @@
     <None Include="Assets\triggerbot.pdn" />
     <None Include="Assets\current-version.json" />
     <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -481,7 +491,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Triggerless\XAFLib\Triggerless.XAFLib.csproj">
+    <ProjectReference Include="..\..\..\..\Triggerless\XAFLib\Triggerless.XAFLib.csproj">
       <Project>{a1312551-9229-4c9c-b2eb-5b5bf4d5adae}</Project>
       <Name>Triggerless.XAFLib</Name>
     </ProjectReference>

@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedWinapi", "ManagedWin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaveFormRendererLib", "WaveFormRendererLib\WaveFormRendererLib.csproj", "{9FAD7231-3B62-4A14-AC50-1747F49DB84C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triggerless.XAFLib", "..\..\Triggerless\XAFLib\Triggerless.XAFLib.csproj", "{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsInput", "WindowsInput\WindowsInput.csproj", "{3549CD6F-80F8-450F-B99E-CF0A736B1F2A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triggerless.Tests", "Triggerless.Tests\Triggerless.Tests.csproj", "{42B38657-D317-4212-8202-081E31D9C0DD}"
@@ -18,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triggerless.PlugIn", "Triggerless.PlugIn\Triggerless.PlugIn.csproj", "{5EE3A999-B966-40BD-8B5C-D920DD035D8E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triggerless.ChatViewerPlugIn", "Triggerless.ChatViewer\Triggerless.ChatViewerPlugIn.csproj", "{A6A0E86A-F8C3-4C24-930E-20077E0F79E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Triggerless.XAFLib", "..\..\..\Triggerless\XAFLib\Triggerless.XAFLib.csproj", "{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,18 +65,6 @@ Global
 		{9FAD7231-3B62-4A14-AC50-1747F49DB84C}.Release|x64.Build.0 = Release|x64
 		{9FAD7231-3B62-4A14-AC50-1747F49DB84C}.Release|x86.ActiveCfg = Release|Any CPU
 		{9FAD7231-3B62-4A14-AC50-1747F49DB84C}.Release|x86.Build.0 = Release|Any CPU
-		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|x64.ActiveCfg = Debug|x64
-		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|x64.Build.0 = Debug|x64
-		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|x86.Build.0 = Debug|Any CPU
-		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|x64.ActiveCfg = Release|x64
-		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|x64.Build.0 = Release|x64
-		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|x86.ActiveCfg = Release|Any CPU
-		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|x86.Build.0 = Release|Any CPU
 		{3549CD6F-80F8-450F-B99E-CF0A736B1F2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3549CD6F-80F8-450F-B99E-CF0A736B1F2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3549CD6F-80F8-450F-B99E-CF0A736B1F2A}.Debug|x64.ActiveCfg = Debug|x64
@@ -125,6 +113,18 @@ Global
 		{A6A0E86A-F8C3-4C24-930E-20077E0F79E6}.Release|x64.Build.0 = Release|Any CPU
 		{A6A0E86A-F8C3-4C24-930E-20077E0F79E6}.Release|x86.ActiveCfg = Release|x86
 		{A6A0E86A-F8C3-4C24-930E-20077E0F79E6}.Release|x86.Build.0 = Release|x86
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|x64.ActiveCfg = Debug|x64
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|x64.Build.0 = Debug|x64
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Debug|x86.Build.0 = Debug|Any CPU
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|x64.ActiveCfg = Release|x64
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|x64.Build.0 = Release|x64
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|x86.ActiveCfg = Release|Any CPU
+		{A1312551-9229-4C9C-B2EB-5B5BF4D5ADAE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
