@@ -985,26 +985,6 @@ namespace Triggerless.TriggerBot
             picBanner.Left = (pnlBanner.Width - picBanner.Width) / 2;
         }
 
-        private async void btnDiscordSend_Click(object sender, EventArgs e)
-        {
-            // validate form {{
-            if (String.IsNullOrWhiteSpace(txtDiscordSubject.Text))
-            {
-                StyledMessageBox.Show(Program.MainForm, "Please provide a Subject", "Discord Message", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtDiscordSubject.Focus();
-                return;
-            }
-            if (String.IsNullOrWhiteSpace(txtDiscordMessage.Text))
-            {
-                StyledMessageBox.Show(Program.MainForm, "Please provide a Message", "Discord Message", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtDiscordMessage.Focus();
-                return;
-            }
-            var result = await Discord.SendMessage(txtDiscordSubject.Text, txtDiscordMessage.Text);
-            var title = "Discord Result";
-            MessageBoxIcon icon = result.Status == Discord.ResultStatus.Success ? MessageBoxIcon.Information : MessageBoxIcon.Warning;
-            StyledMessageBox.Show(this, result.Message, title, MessageBoxButtons.OK, icon);
-        }
 
         private void tabAppContainer_Deselecting(object sender, TabControlCancelEventArgs e)
         {
