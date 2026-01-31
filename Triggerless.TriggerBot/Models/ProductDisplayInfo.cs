@@ -11,9 +11,11 @@ namespace Triggerless.TriggerBot
         public string Creator { get; set; }
         public byte[] ImageBytes { get; set; }
         public List<TriggerDisplayInfo> Triggers { get; set; }
+        public List<ProductTag> Tags { get; set; }
         
         public ProductDisplayInfo() { 
             Triggers = new List<TriggerDisplayInfo>();
+            Tags = new List<ProductTag>();
         }
 
         public string LyricsPath => Path.Combine(PlugIn.Location.LyricSheetsPath, $"{Id}.lyrics");
@@ -31,5 +33,11 @@ namespace Triggerless.TriggerBot
         public string Location { get; set; }
         public string AddnTriggers { get; set; }
 
+    }
+    
+    public class ProductTag
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

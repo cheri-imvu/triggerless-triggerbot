@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -140,7 +141,15 @@ namespace Triggerless.TriggerBot.Components
             var result = new ApiResult { Status = ApiResultStatus.Empty };
             var jsonText = JsonConvert.SerializeObject(info);
             short code = (short)eventType;
-            var response = await _client.PostAsync($"bot/event/{code}", new StringContent(jsonText));
+            try
+            {
+                var response = await _client.PostAsync($"bot/event/{code}", new StringContent(jsonText));
+            }
+            catch (Exception ex)
+            {
+                Debug.Write(ex);
+            }
+            
 
             return result;
         }

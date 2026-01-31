@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Triggerless Triggerbot"
-#define MyAppVersion "1.0.6.2601"
+#define MyAppVersion "1.0.7.2601"
 #define MyAppPublisher "triggerless.com"
 #define MyAppURL "https://www.triggerless.com/triggerbot/"
 #define MyAppExeName "TriggerBot.exe"
@@ -199,7 +199,7 @@ var
   UninstallExePath: string;
   ResultCode: Integer;
 begin
-  CID := ReadCidFromUserConfig('triggerless.com', 'TriggerBot.exe', '1.0.5.2512');
+  CID := ReadCidFromUserConfig('triggerless.com', 'TriggerBot.exe', '1.0.6.2601');
   Log('Initial CID read: ' + IntToStr(CID));
   // Check if the application is already installed
   if IsAppInstalled() then

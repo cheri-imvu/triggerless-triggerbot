@@ -1,6 +1,6 @@
 {
-	"version": "1.0.5.2512",
-	"setup": "triggerbot-setup.1.0.5.2512.exe",
-	"md5": "c651e41033c925d420afd5e113242014",
-	"whatsNew": "New in Version 1.0.5|* Turkish language fix|* IMVU Crash fix|* FLAC/OGG fixed cut fix|* Empty DRVs match new IMVU categories"
+	"version": "1.0.7.2601",
+	"setup": "triggerbot-setup.1.0.7.2601.exe",
+	"md5": "a16282970094b9d5fe70fb896650d303",
+	"whatsNew": "New in Version 1.0.7|* Super Fast Product Search"
 }

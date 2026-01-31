@@ -30,34 +30,20 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductCtrl));
-            this.picProductImage = new System.Windows.Forms.PictureBox();
             this.lblName = new System.Windows.Forms.Label();
             this.lblCreator = new System.Windows.Forms.Label();
             this.lblTriggers = new System.Windows.Forms.Label();
             this.linkOnDeck = new System.Windows.Forms.LinkLabel();
             this.linkWearItem = new System.Windows.Forms.LinkLabel();
-            this.picDeleteItem = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.linkLabelTag = new System.Windows.Forms.LinkLabel();
             this.picLips = new System.Windows.Forms.PictureBox();
+            this.picProductImage = new System.Windows.Forms.PictureBox();
+            this.picDeleteItem = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.picLips)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picDeleteItem)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picLips)).BeginInit();
             this.SuspendLayout();
-            // 
-            // picProductImage
-            // 
-            this.picProductImage.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picProductImage.BackgroundImage")));
-            this.picProductImage.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.picProductImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("picProductImage.InitialImage")));
-            this.picProductImage.Location = new System.Drawing.Point(5, 4);
-            this.picProductImage.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.picProductImage.Name = "picProductImage";
-            this.picProductImage.Size = new System.Drawing.Size(100, 80);
-            this.picProductImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picProductImage.TabIndex = 0;
-            this.picProductImage.TabStop = false;
-            this.toolTip1.SetToolTip(this.picProductImage, "Browse Product Page");
-            this.picProductImage.Click += new System.EventHandler(this.ProductImageClicked);
             // 
             // lblName
             // 
@@ -125,6 +111,49 @@
             this.linkWearItem.MouseEnter += new System.EventHandler(this.LinkEnter);
             this.linkWearItem.MouseLeave += new System.EventHandler(this.LinkLeave);
             // 
+            // linkLabelTag
+            // 
+            this.linkLabelTag.BackColor = System.Drawing.Color.Transparent;
+            this.linkLabelTag.Font = new System.Drawing.Font("Liberation Sans", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkLabelTag.LinkColor = System.Drawing.Color.Aqua;
+            this.linkLabelTag.Location = new System.Drawing.Point(315, -2);
+            this.linkLabelTag.Name = "linkLabelTag";
+            this.linkLabelTag.Size = new System.Drawing.Size(29, 33);
+            this.linkLabelTag.TabIndex = 8;
+            this.linkLabelTag.TabStop = true;
+            this.linkLabelTag.Text = "#";
+            this.toolTip1.SetToolTip(this.linkLabelTag, "Edit Tags");
+            this.linkLabelTag.VisitedLinkColor = System.Drawing.Color.Aqua;
+            this.linkLabelTag.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelTag_LinkClicked);
+            this.linkLabelTag.MouseEnter += new System.EventHandler(this.LinkEnter);
+            this.linkLabelTag.MouseLeave += new System.EventHandler(this.LinkLeave);
+            // 
+            // picLips
+            // 
+            this.picLips.Image = ((System.Drawing.Image)(resources.GetObject("picLips.Image")));
+            this.picLips.Location = new System.Drawing.Point(327, 35);
+            this.picLips.Name = "picLips";
+            this.picLips.Size = new System.Drawing.Size(24, 23);
+            this.picLips.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.picLips.TabIndex = 7;
+            this.picLips.TabStop = false;
+            this.toolTip1.SetToolTip(this.picLips, "This song has lyrics.");
+            // 
+            // picProductImage
+            // 
+            this.picProductImage.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picProductImage.BackgroundImage")));
+            this.picProductImage.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picProductImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("picProductImage.InitialImage")));
+            this.picProductImage.Location = new System.Drawing.Point(5, 4);
+            this.picProductImage.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.picProductImage.Name = "picProductImage";
+            this.picProductImage.Size = new System.Drawing.Size(100, 80);
+            this.picProductImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picProductImage.TabIndex = 0;
+            this.picProductImage.TabStop = false;
+            this.toolTip1.SetToolTip(this.picProductImage, "Browse Product Page");
+            this.picProductImage.Click += new System.EventHandler(this.ProductImageClicked);
+            // 
             // picDeleteItem
             // 
             this.picDeleteItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -136,23 +165,13 @@
             this.picDeleteItem.TabStop = false;
             this.picDeleteItem.Click += new System.EventHandler(this.ExcludeSong);
             // 
-            // picLips
-            // 
-            this.picLips.Image = ((System.Drawing.Image)(resources.GetObject("picLips.Image")));
-            this.picLips.Location = new System.Drawing.Point(334, 35);
-            this.picLips.Name = "picLips";
-            this.picLips.Size = new System.Drawing.Size(24, 23);
-            this.picLips.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.picLips.TabIndex = 7;
-            this.picLips.TabStop = false;
-            this.toolTip1.SetToolTip(this.picLips, "This song has lyrics.");
-            // 
             // ProductCtrl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.linkLabelTag);
             this.Controls.Add(this.picLips);
             this.Controls.Add(this.picDeleteItem);
             this.Controls.Add(this.linkWearItem);
@@ -166,9 +185,9 @@
             this.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.Name = "ProductCtrl";
             this.Size = new System.Drawing.Size(376, 87);
+            ((System.ComponentModel.ISupportInitialize)(this.picLips)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picDeleteItem)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picLips)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -185,5 +204,6 @@
         private System.Windows.Forms.PictureBox picDeleteItem;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.PictureBox picLips;
+        private System.Windows.Forms.LinkLabel linkLabelTag;
     }
 }

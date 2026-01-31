@@ -275,10 +275,40 @@ namespace Triggerless.TriggerBot
                 pc.OnDeckLinkClicked += SendToDeck;
                 pc.OnWearItem += WearItem;
                 pc.OnExcludeSong += ExcludeSong;
+                pc.OnTagLinkClicked += EditProductTags;
 
                 pnlSearchResults.Controls.Add(pc);
                 _productPool.Add(pc);
             }
+        }
+
+        private List<ProductTag> _searchTags = new List<ProductTag>();
+
+        private void EditProductTags(object sender, ProductCtrl.LinkClickedEventArgs e)
+        {
+            var f = new EditProductTagsForm();
+            f.ProductDiscplayInfo = e.ProductDisplayInfo;
+            f.StartPosition = FormStartPosition.CenterParent;
+            f.ProductTagAdded += OnProductTagAdded;
+            f.ProductTagDeleted += OnProductTagDeleted;
+            f.ShowDialog(this);
+            f.ProductTagAdded -= OnProductTagAdded;
+            f.ProductTagDeleted -= OnProductTagDeleted;
+
+        }
+
+        private void OnProductTagDeleted(object sender, ProductTagEventArgs e)
+        {
+            var tag = _searchTags.First(t => t.Id == e.Tag.Id);
+            if (tag != null) 
+            { 
+                _searchTags.Remove(tag);
+            }
+        }
+
+        private void OnProductTagAdded(object sender, ProductTagEventArgs e)
+        {
+            _searchTags.Add(e.Tag);
         }
 
         private void RenderVisibleProducts()
@@ -445,6 +475,21 @@ namespace Triggerless.TriggerBot
                     tabAppContainer.SelectedTab = tabPlayback;
                     break;
             }
+
+            _searchTags = new List<ProductTag>();
+            if (!string.IsNullOrWhiteSpace(sets.SearchTags))
+            {
+                string[] tagIds = sets.SearchTags.Split(',');
+                foreach (string tagIdStr in tagIds) 
+                {
+                    int tagId;
+                    if (int.TryParse(tagIdStr, out tagId))
+                    {
+                        var tag = SQLiteDataAccess.TagGetById(tagId);
+                        if (tag != null) { _searchTags.Add(tag); }
+                    }
+                }
+            }
         }
 
         private void SettingsSave()
@@ -457,6 +502,16 @@ namespace Triggerless.TriggerBot
             sets.InitialLagMS = _lagMS;
             sets.LastSearch = txtSearch.Text;
             sets.DefaultTriggerLength = _splicer.AudioLength;
+
+
+            if (_searchTags == null || _searchTags.Count == 0)
+            {
+                sets.SearchTags = string.Empty;
+            }
+            else
+            {
+                sets.SearchTags = string.Join(",", _searchTags.Select(t => t.Id.ToString()));
+            }
             switch (tabAppContainer.SelectedTab?.Name)
             {
                 case nameof(tabPlayback): sets.LastTab = "Playback"; break;
@@ -663,6 +718,10 @@ namespace Triggerless.TriggerBot
                 cboAdditionalTriggers.Items.AddRange(_usedAdditionals.ToArray());
             }
             cboAdditionalTriggers.Text = string.Empty;
+            if (_currTriggerIndex == 0) 
+            {
+                SQLiteDataAccess.UpdateProductPlay(_currProductInfo.Id);
+            }
         }
 
         private void StartPlayingClicked(object sender, EventArgs e)
@@ -978,6 +1037,10 @@ namespace Triggerless.TriggerBot
         private void tabAppContainer_Selected(object sender, TabControlEventArgs e)
         {
             this.TopMost = (e.TabPage == tabPlayback) && chkKeepOnTop.Checked;
+            if (e.TabPage != tabPlayback)
+            {
+                lblNoResults.Visible = false;
+            }
         }
 
         private void pnlBanner_Resize(object sender, EventArgs e)
@@ -1070,6 +1133,27 @@ namespace Triggerless.TriggerBot
             //lblNoResults.Top = pnlSearchResults.Top + 20;
             lblNoResults.Left = (pnlSearchResults.Width - lblNoResults.Width) / 2 ;
             lblNoResults.BringToFront();
+        }
+
+        private void btnSearchTags_Click(object sender, EventArgs e)
+        {
+            var f = new SearchTagsForm();
+            f.Tags = _searchTags;
+            f.StartPosition = FormStartPosition.CenterParent;
+            f.FormBorderStyle = FormBorderStyle.FixedSingle;
+            f.SearchTagAdded += (s, args) => 
+            {
+                _searchTags.Add(args.Tag);
+            };
+            f.SearchTagDeleted += (s, args) =>
+            {
+                var tag = _searchTags.First(st => st.Id == args.Tag.Id);
+                if (tag != null) 
+                {
+                    _searchTags.Remove(tag);
+                }
+            };
+            f.ShowDialog(this);            
         }
     }
 }

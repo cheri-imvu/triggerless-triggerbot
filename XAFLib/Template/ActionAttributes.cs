@@ -8,6 +8,7 @@ namespace Triggerless.XAFLib
 
     public class ActionAttributes : IndexXmlGenerator {
         public ActionEnsemblePicking ActionEnsemblePicking { get; set; }
+        public int? ActionTerminationIterations { get; set; }
         public override void AddXml(XmlElement parent, int? index = null) {
             XmlElement el = parent.OwnerDocument.CreateElement("ActionEnsemblePicking");
             el.InnerText = ActionEnsemblePicking.ToString();

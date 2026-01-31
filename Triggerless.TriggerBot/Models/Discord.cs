@@ -28,6 +28,7 @@ namespace Triggerless.TriggerBot.Models
                 if (Common.HasTriggerlessConnection)
                 using (var client = new HttpClient())
                 {
+                    client.Timeout = new TimeSpan(0, 0, 3);
                     code = await client.GetStringAsync($"{PlugIn.Location.TriggerlessDomain}/triggerbot/invite-code.txt").ConfigureAwait(false);
                 }
             }

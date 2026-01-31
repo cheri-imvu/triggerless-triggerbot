@@ -5,12 +5,16 @@ using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using Triggerless.TriggerBot.Models;
+using static Triggerless.TriggerBot.Models.Discord;
 
 namespace Triggerless.TriggerBot
 {
     public class SQLiteDataAccess
     {
+        #region Accessory Filters
+
         public enum Gender { Female, Male }
 
         public sealed class Filter
@@ -26,6 +30,7 @@ namespace Triggerless.TriggerBot
             {
                 return "[" + string.Join(", ", Map.Cast<string>()) + "]";
             }
+
             private Filter() { }
             public short[] OldCpath { 
                 get 
@@ -130,6 +135,7 @@ namespace Triggerless.TriggerBot
         public static string AccessoryFilter =>
             " cPath IN ('" + string.Join("', '", FilterCpaths.Select(arr => arr.ToCpath())) + "')";
 
+        #endregion
 
         public static SQLiteConnection GetProductCacheCxn()
         {            
@@ -145,6 +151,8 @@ namespace Triggerless.TriggerBot
         {
             if (!File.Exists(PlugIn.Location.AppCacheFile)) File.Delete(PlugIn.Location.AppCacheFile);
         }
+
+        #region DDL Updates
 
         private class ColumnInfo
         {
@@ -171,6 +179,29 @@ namespace Triggerless.TriggerBot
                 {
                     cxnAlter.Execute("ALTER TABLE products ADD COLUMN times_played INTEGER DEFAULT 0;");
                 }
+
+                // added 1.1
+                if (!columns.Contains("date_imported"))
+                {
+                    var sqls = new[]
+                    {
+                        "ALTER TABLE products ADD COLUMN date_imported DATETIME;",
+                        "UPDATE products SET date_imported = datetime('2026-01-01');",
+                        @"CREATE TRIGGER set_date_imported
+                        AFTER INSERT ON products
+                        FOR EACH ROW
+                        WHEN NEW.date_imported IS NULL
+                        BEGIN
+                            UPDATE products
+                            SET date_imported = CURRENT_TIMESTAMP
+                            WHERE rowid = NEW.rowid;
+                        END;"
+                    };
+                    foreach (var sql in sqls) 
+                    {
+                        cxnAlter.Execute(sql);
+                    }
+                }
             }
         }
 
@@ -178,58 +209,85 @@ namespace Triggerless.TriggerBot
         {
             using (var cxnAlter = new SQLiteConnection(PlugIn.Location.AppCacheConnectionString))
             {
-                using (var tx = cxnAlter.BeginTransaction())
-                using (var cmd = cxnAlter.CreateCommand())
+                cxnAlter.Open();
+                var columns = cxnAlter.Query<ColumnInfo>("PRAGMA table_info(tags);")
+                    .Select(row => row.name)
+                    .ToHashSet(StringComparer.OrdinalIgnoreCase);
+                if (!columns.Any())
                 {
-                    cmd.Transaction = tx;
+                    using (var tx = cxnAlter.BeginTransaction())
+                    using (var cmd = cxnAlter.CreateCommand())
+                    {
 
-                    // Enforce FKs for this session (good practice even if none yet)
-                    cmd.CommandText = "PRAGMA foreign_keys = ON;";
-                    cmd.ExecuteNonQuery();
+                        cmd.Transaction = tx;
 
-                    // --- tags ---
-                    // tag_id: auto-numbered from 1, PRIMARY KEY
-                    // tag_name: TEXT, unique (case-insensitive via COLLATE NOCASE index)
-                    // modified_date: defaults to CURRENT_TIMESTAMP (UTC)
-                    cmd.CommandText = @"
+                        // Enforce FKs for this session (good practice even if none yet)
+                        cmd.CommandText = "PRAGMA foreign_keys = ON;";
+                        cmd.ExecuteNonQuery();
+
+                        // --- tags ---
+                        // tag_id: auto-numbered from 1, PRIMARY KEY
+                        // tag_name: TEXT, unique (case-insensitive via COLLATE NOCASE index)
+                        // modified_date: defaults to CURRENT_TIMESTAMP (UTC)
+                        cmd.CommandText = @"
                         CREATE TABLE IF NOT EXISTS tags (
                             tag_id        INTEGER PRIMARY KEY AUTOINCREMENT,
                             tag_name      TEXT NOT NULL,
                             modified_date DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP)
                         );";
-                    cmd.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery();
 
-                    // Case-insensitive unique index on tag_name
-                    cmd.CommandText = @"
+                        // Case-insensitive unique index on tag_name
+                        cmd.CommandText = @"
                         CREATE UNIQUE INDEX IF NOT EXISTS 
                         UX_tags_tag_name_nocase ON tags(tag_name COLLATE NOCASE);";
-                    cmd.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery();
 
-                    // --- product_tags ---
-                    // pt_id: auto-numbered from 1, PRIMARY KEY
-                    // unique(product_id, tag_id)
-                    // modified_date: defaults to CURRENT_TIMESTAMP (UTC)
-                    cmd.CommandText = @"
-CREATE TABLE IF NOT EXISTS product_tags (
-    pt_id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    product_id    INTEGER NOT NULL,
-    tag_id        INTEGER NOT NULL,
-    modified_date DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP)
-);";
-                    cmd.ExecuteNonQuery();
+                        // --- product_tags ---
+                        // pt_id: auto-numbered from 1, PRIMARY KEY
+                        // unique(product_id, tag_id)
+                        // modified_date: defaults to CURRENT_TIMESTAMP (UTC)
+                        cmd.CommandText = @"
+                        CREATE TABLE IF NOT EXISTS product_tags (
+                            pt_id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                            product_id    INTEGER NOT NULL,
+                            tag_id        INTEGER NOT NULL,
+                            modified_date DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP)
+                        );";
+                        cmd.ExecuteNonQuery();
 
-                    cmd.CommandText = @"CREATE UNIQUE INDEX IF NOT EXISTS UX_product_tags_product_tag ON product_tags(product_id, tag_id);";
-                    cmd.ExecuteNonQuery();
+                        cmd.CommandText = @"CREATE UNIQUE INDEX IF NOT EXISTS UX_product_tags_product_tag ON product_tags(product_id, tag_id);";
+                        cmd.ExecuteNonQuery();
 
-                    tx.Commit();
+                        tx.Commit();
+
+                        // Add a few example tags
+                        var startTags = new[] { "Country", "Hip-Hop", "Holiday", "Metal", "House" };
+                        foreach (var tag in startTags)
+                        {
+                            cxnAlter.Execute($"INSERT INTO tags (tag_name) VALUES ('{tag}')");
+                        }
+                    }
+
+                    // use for later modifications
+                    /*
+                    if (!columns.Contains("new_col"))
+                    {
+                        cxnAlter.Execute("ALTER TABLE tags ADD COLUMN new_col TEXT;");
+                    }
+                    */
                 }
             }
 
         }
 
+        #endregion DDL Updates
+
         public static SQLiteConnection GetAppCacheCxn() 
         {
-            if (!Directory.Exists(PlugIn.Location.AppCachePath)) { Directory.CreateDirectory(PlugIn.Location.AppCachePath); }
+            if (!Directory.Exists(PlugIn.Location.AppCachePath)) { 
+                Directory.CreateDirectory(PlugIn.Location.AppCachePath); 
+            }
 
             if (!File.Exists(PlugIn.Location.AppCacheFile))
             {
@@ -284,9 +342,34 @@ CREATE TABLE IF NOT EXISTS product_tags (
             }
 
             UpdateProductSchema();
+            try
+            {
+                UpdateTagSchema();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            
 
             return new SQLiteConnection(PlugIn.Location.AppCacheConnectionString);
         }
+
+        internal static void UpdateProductPlay(long productId)
+        {
+            var sql = $@"
+                UPDATE products SET
+                last_played = CURRENT_TIMESTAMP,
+                times_played = times_played + 1
+                WHERE product_id = {productId}
+                ";
+            using (var cxnAppCache = GetAppCacheCxn()) 
+            { 
+                cxnAppCache.Open();
+                cxnAppCache.Execute(sql);
+            }
+        }
+
 
         internal static List<ProductDisplayInfo> GetProductSearch(string searchTerm)
         {
@@ -329,7 +412,7 @@ CREATE TABLE IF NOT EXISTS product_tags (
                         {limitClause}
                         ;";
 
-            using (var cxnAppCache = SQLiteDataAccess.GetAppCacheCxn())
+            using (var cxnAppCache = GetAppCacheCxn())
             {
                 queryList = cxnAppCache.Query(sql).ToList();
             }
@@ -340,6 +423,7 @@ CREATE TABLE IF NOT EXISTS product_tags (
                 {
                     if (currentInfo != null)
                     {
+                        currentInfo.Tags = TagsGetForProduct(currentInfo.Id);
                         infoList.Add(currentInfo);
                     }
                     currentProductId = query.ProductId;
@@ -359,8 +443,157 @@ CREATE TABLE IF NOT EXISTS product_tags (
                 triggerInfo.AddnTriggers = query.AddnTriggers;
                 currentInfo.Triggers.Add(triggerInfo);
             }
-            if (currentInfo != null && !string.IsNullOrEmpty(andClause)) infoList.Add(currentInfo);
+            if (currentInfo != null && !string.IsNullOrEmpty(andClause))
+            {
+                currentInfo.Tags = TagsGetForProduct(currentInfo.Id);
+                infoList.Add(currentInfo);
+            }
             return infoList;
         }
+
+
+        #region Product Tags
+
+        /*
+         The mute functions are so that we don't try to change the product tags
+        while the UI is being built. We only want to change the database when the
+        user manually clicks a checkbox. The ItemCheck event fires when you set the 
+        Checked value programmatically, and we don't want that. You have to call
+        MuteCheck every time you change the check state in code.
+         */
+
+        private static bool _muteCheck = false;
+
+        internal static void MuteCheck()
+        {
+            _muteCheck = true;
+        }
+        internal static void UnMuteCheck()
+        {
+            _muteCheck = false;
+        }
+
+
+        internal static List<ProductTag> TagsGetAll()
+        {
+            var sql = "SELECT tag_id AS Id, tag_name AS Name FROM tags ORDER BY tag_name";
+            using (var cxnAppCache = GetAppCacheCxn())
+            {
+                cxnAppCache.Open();
+                return cxnAppCache.Query<ProductTag>(sql).ToList();
+            }
+        }
+
+        internal static bool TagAssignToProduct(long productId, int tagId, bool assign)
+        {
+            if (_muteCheck)
+            {
+                _muteCheck = true;
+                return true;
+            }
+            bool result = false;
+            var sqlTrue = "INSERT INTO product_tags (product_id, tag_id) VALUES (@pid, @tid);";
+            var sqlFalse = "DELETE FROM product_tags WHERE product_id = @pid AND tag_id = @tid;";
+            var sql = assign ? sqlTrue : sqlFalse;
+            try
+            {
+                using (var cxnAppCache = GetAppCacheCxn())
+                {
+                    cxnAppCache.Open();
+                    cxnAppCache.Execute(sql, new { pid = productId, tid = tagId });
+                }
+                result = true;
+            }
+            catch (Exception exc)
+            {
+                var message = "Unable to change the tag assignment to this tune";
+                var title = "Database Error";
+                StyledMessageBox.Show(message, title);
+            }
+            return result;
+        }
+
+        internal static List<ProductTag> TagsGetForProduct(long productId)
+        {
+            using (SQLiteConnection cxnAppCache = GetAppCacheCxn())
+            {
+                cxnAppCache.Open();
+
+                var sqlTag = @"
+                    SELECT t.tag_id AS Id, t.tag_name AS Name
+                    FROM product_tags pt INNER JOIN tags t ON pt.tag_id = t.tag_id
+                    WHERE pt.product_id = @pid
+                    ORDER BY t.tag_name;";
+                var result = cxnAppCache.Query<ProductTag>(sqlTag, new { pid = productId }).ToList();
+                return result;
+            }
+        }
+
+        internal static ProductTag TagGetById(int tagId)
+        {
+            ProductTag result = null;
+            var sql = "SELECT tag_id AS Id, tag_name AS Name FROM tags WHERE tag_id = @tid";
+            using (var cxnAppCache = GetAppCacheCxn())
+            {
+                cxnAppCache.Open();
+                try
+                {
+                    var tag = cxnAppCache.Query<ProductTag>(sql, new { tid = tagId });
+                    result = tag.First();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+            }
+            return result;
+        }
+
+        internal static ProductTag TagCreateNew(string name)
+        {
+            ProductTag result = null;
+            using (var cxnAppCache = GetAppCacheCxn())
+            {
+                cxnAppCache.Open();
+                var sql = "INSERT INTO tags (tag_name) VALUES (@name);";
+                try
+                {
+                    cxnAppCache.Execute(sql, new { name = name });
+                    int lastId = cxnAppCache.ExecuteScalar<int>("SELECT last_insert_rowid();");
+                    if (lastId > 0)
+                    {
+                        result = new ProductTag { Id = lastId, Name = name };
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Debug.WriteLine(exc);
+                }
+            }
+
+            return result;
+        }
+
+        internal static void TagDelete(int tagId)
+        {
+            using (var cxnAppCache = GetAppCacheCxn())
+            {
+                cxnAppCache.Open();
+
+                try
+                {
+                    var sql = "DELETE FROM product_tags WHERE tag_id = @tid);";
+                    cxnAppCache.Execute(sql, new { tid = tagId });
+                    sql = "DELETE FROM tags WHERE tag_id = @tid);";
+                    cxnAppCache.Execute(sql, new { tid = tagId });
+                }
+                catch (Exception exc)
+                {
+                    Debug.WriteLine(exc);
+                }
+            }
+        }
+
+        #endregion
     }
 }

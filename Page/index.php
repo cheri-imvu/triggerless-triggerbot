@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-	$thisVersionShort = '1.0.6';
+	$thisVersionShort = '1.0.7';
 	$thisVersion = $thisVersionShort.'.2601';
 ?>
 <html lang="en">
@@ -55,6 +55,12 @@
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
         <p><iframe style="z-index: 10;" width="750" height="422" src="https://www.youtube.com/embed/6IPIWJSf5VM" title="YouTube video player" frameborder="0" 
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
+    </div>
+    <div class="center-div">
+      <div class="topic">What's new in Version 1.0.7.2601 (Release) 2026-01-16</div>
+      <ul>
+		<li>Super Fast Product Search</li>
+      </ul>
     </div>
     <div class="center-div">
       <div class="topic">What's new in Version 1.0.6.2601 (Hotfix) 2026-01-05</div>

@@ -316,6 +316,12 @@
     <Compile Include="Forms\DeepScanForm.Designer.cs">
       <DependentUpon>DeepScanForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\EditProductTagsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EditProductTagsForm.Designer.cs">
+      <DependentUpon>EditProductTagsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\LogForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -329,6 +335,12 @@
       <DependentUpon>LyricsPaste.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ProgressibleStreamContent.cs" />
+    <Compile Include="Forms\SearchTagsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SearchTagsForm.Designer.cs">
+      <DependentUpon>SearchTagsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\StyledMessageBox.cs" />
     <Compile Include="Forms\TechSupport.cs">
       <SubType>Form</SubType>
@@ -432,6 +444,9 @@
     <EmbeddedResource Include="Forms\DeepScanForm.resx">
       <DependentUpon>DeepScanForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EditProductTagsForm.resx">
+      <DependentUpon>EditProductTagsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\LogForm.resx">
       <DependentUpon>LogForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -443,6 +458,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Components\Triangle.resx">
       <DependentUpon>Triangle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SearchTagsForm.resx">
+      <DependentUpon>SearchTagsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TechSupport.resx">
       <DependentUpon>TechSupport.cs</DependentUpon>
@@ -491,10 +509,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Triggerless\XAFLib\Triggerless.XAFLib.csproj">
-      <Project>{a1312551-9229-4c9c-b2eb-5b5bf4d5adae}</Project>
-      <Name>Triggerless.XAFLib</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ManagedWinapi\ManagedWinapi.csproj">
       <Project>{fbd3ec1e-47e2-4d2d-81c9-d6506125a09a}</Project>
       <Name>ManagedWinapi</Name>
@@ -510,6 +524,10 @@
     <ProjectReference Include="..\WindowsInput\WindowsInput.csproj">
       <Project>{3549cd6f-80f8-450f-b99e-cf0a736b1f2a}</Project>
       <Name>WindowsInput</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XAFLib\Triggerless.XAFLib.csproj">
+      <Project>{a1312551-9229-4c9c-b2eb-5b5bf4d5adae}</Project>
+      <Name>Triggerless.XAFLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

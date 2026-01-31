@@ -39,7 +39,7 @@ namespace Triggerless.TriggerBot
             public long ProductId { get; set; }
         }
 
-
+        public event LinkClickedEventHandler OnTagLinkClicked;
 
         public ProductCtrl()
         {
@@ -179,6 +179,15 @@ namespace Triggerless.TriggerBot
         private void lblName_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void linkLabelTag_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                var args = new LinkClickedEventArgs(_productInfo);
+                OnTagLinkClicked?.Invoke(sender, args);
+            }
         }
     }
 }
