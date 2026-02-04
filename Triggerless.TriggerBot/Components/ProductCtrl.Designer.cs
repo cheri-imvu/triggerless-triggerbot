@@ -48,6 +48,7 @@
             // lblName
             // 
             this.lblName.AutoSize = true;
+            this.lblName.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblName.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblName.ForeColor = System.Drawing.Color.White;
             this.lblName.Location = new System.Drawing.Point(113, 3);
@@ -56,6 +57,8 @@
             this.lblName.TabIndex = 1;
             this.lblName.Text = "012345678 012345678 0123";
             this.lblName.Click += new System.EventHandler(this.lblName_Click);
+            this.lblName.MouseEnter += new System.EventHandler(this.lblName_MouseEnter);
+            this.lblName.MouseLeave += new System.EventHandler(this.lblName_MouseLeave);
             // 
             // lblCreator
             // 

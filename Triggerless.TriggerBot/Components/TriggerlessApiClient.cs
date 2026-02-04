@@ -30,6 +30,7 @@ namespace Triggerless.TriggerBot.Components
         public TriggerlessApiClient()
         {
             _client = new HttpClient();
+            _client.Timeout = new TimeSpan(0, 0, 6);
             _client.BaseAddress = new Uri(PlugIn.Location.TriggerlessDomain + "/api/");
             _client.DefaultRequestHeaders.Add("CustomerId", Program.Cid.ToString());
         }

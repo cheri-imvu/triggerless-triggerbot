@@ -5,6 +5,7 @@ using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Xml.Linq;
 using Triggerless.TriggerBot.Models;
 using static Triggerless.TriggerBot.Models.Discord;
@@ -81,6 +82,7 @@ namespace Triggerless.TriggerBot
             new Filter(Gender.Male, true,   "Miscellaneous",       3095),
             new Filter(Gender.Male, false,   "Miscellaneous",      3093),
             new Filter(Gender.Male, true, "Sounds & Effects (generic, new)", 3139),
+            new Filter(Gender.Male, true,   "Legacy",      165),  // <== get the right number
 
             new Filter(Gender.Female, true, "Spice Glasses",       3122, 144),
             new Filter(Gender.Female, true, "New Accessories",     155),
@@ -98,6 +100,7 @@ namespace Triggerless.TriggerBot
             new Filter(Gender.Female, true, "Sounds & Effects (generic, new)", 3120),
             new Filter(Gender.Female, true, "Jewelry (generic, new)", 3121),
             new Filter(Gender.Female, true, "Eyewear (generic, new)", 3122),
+            new Filter(Gender.Female, true, "Legacy", 155) // get the right number
         };
 
         private static readonly short[] MaleOldAcc = { 106, 41, 71 };
@@ -371,7 +374,7 @@ namespace Triggerless.TriggerBot
         }
 
 
-        internal static List<ProductDisplayInfo> GetProductSearch(string searchTerm)
+        internal static List<ProductDisplayInfo> GetProductSearch(string searchTerm, List<ProductTag> searchTags = null)
         {
             long currentProductId = 0;
             ProductDisplayInfo currentInfo = null;
@@ -381,7 +384,7 @@ namespace Triggerless.TriggerBot
             string andClause = string.Empty;
             string limitClause = string.Empty;
 
-            if (string.IsNullOrWhiteSpace(searchTerm))
+            if (string.IsNullOrWhiteSpace(searchTerm) && (searchTags == null || searchTags.Count == 0))
             {
                 limitClause = "LIMIT 3000";
             }
@@ -424,7 +427,28 @@ namespace Triggerless.TriggerBot
                     if (currentInfo != null)
                     {
                         currentInfo.Tags = TagsGetForProduct(currentInfo.Id);
-                        infoList.Add(currentInfo);
+                        if (searchTags == null || searchTags.Count == 0)
+                        {
+                            infoList.Add(currentInfo);
+                        }
+                        else
+                        {
+                            foreach (var searchTag in searchTags)
+                            {
+                                var foundTags = currentInfo.Tags;
+                                if (foundTags != null && foundTags.Count > 0)
+                                {
+                                    var matches = foundTags.Where(
+                                        productTag => productTag.Id == searchTag.Id
+                                        );
+                                    if (matches.Any())
+                                    {
+                                        infoList.Add(currentInfo);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
                     currentProductId = query.ProductId;
                     currentInfo = new ProductDisplayInfo();
@@ -446,7 +470,28 @@ namespace Triggerless.TriggerBot
             if (currentInfo != null && !string.IsNullOrEmpty(andClause))
             {
                 currentInfo.Tags = TagsGetForProduct(currentInfo.Id);
-                infoList.Add(currentInfo);
+                if (searchTags == null || searchTags.Count == 0)
+                {
+                    infoList.Add(currentInfo);
+                }
+                else
+                {
+                    foreach (var searchTag in searchTags)
+                    {
+                        var foundTags = currentInfo.Tags;
+                        if (foundTags != null && foundTags.Count > 0)
+                        {
+                            var matches = foundTags.Where(
+                                productTag => productTag.Id == searchTag.Id
+                                );
+                            if (matches.Any())
+                            {
+                                infoList.Add(currentInfo);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
             return infoList;
         }
@@ -455,10 +500,10 @@ namespace Triggerless.TriggerBot
         #region Product Tags
 
         /*
-         The mute functions are so that we don't try to change the product tags
+         The mute functions are so that we don'productTag try to change the product tags
         while the UI is being built. We only want to change the database when the
         user manually clicks a checkbox. The ItemCheck event fires when you set the 
-        Checked value programmatically, and we don't want that. You have to call
+        Checked value programmatically, and we don'productTag want that. You have to call
         MuteCheck every time you change the check state in code.
          */
 
@@ -506,7 +551,7 @@ namespace Triggerless.TriggerBot
             }
             catch (Exception exc)
             {
-                var message = "Unable to change the tag assignment to this tune";
+                var message = "Unable to change the searchTag assignment to this tune";
                 var title = "Database Error";
                 StyledMessageBox.Show(message, title);
             }
@@ -520,10 +565,10 @@ namespace Triggerless.TriggerBot
                 cxnAppCache.Open();
 
                 var sqlTag = @"
-                    SELECT t.tag_id AS Id, t.tag_name AS Name
-                    FROM product_tags pt INNER JOIN tags t ON pt.tag_id = t.tag_id
+                    SELECT productTag.tag_id AS Id, productTag.tag_name AS Name
+                    FROM product_tags pt INNER JOIN tags productTag ON pt.tag_id = productTag.tag_id
                     WHERE pt.product_id = @pid
-                    ORDER BY t.tag_name;";
+                    ORDER BY productTag.tag_name;";
                 var result = cxnAppCache.Query<ProductTag>(sqlTag, new { pid = productId }).ToList();
                 return result;
             }
@@ -592,6 +637,28 @@ namespace Triggerless.TriggerBot
                     Debug.WriteLine(exc);
                 }
             }
+        }
+
+        internal static void RenameSong(long productId, string name)
+        {
+            using (var cxnAppCache = GetAppCacheCxn())
+            {
+                cxnAppCache.Open();
+
+                try
+                {
+                    var sql = "UPDATE products SET title = @title WHERE product_id = @pid ;";
+                    cxnAppCache.Execute(sql, new { 
+                        title = name, 
+                        pid = productId
+                    });
+                }
+                catch (Exception exc)
+                {
+                    Debug.WriteLine(exc);
+                }
+            }
+
         }
 
         #endregion

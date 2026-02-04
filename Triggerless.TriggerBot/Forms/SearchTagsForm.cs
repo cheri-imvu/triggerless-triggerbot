@@ -7,7 +7,8 @@ namespace Triggerless.TriggerBot.Forms
 {
     public partial class SearchTagsForm : Form
     {
-        bool _muteCheck = false;
+        private bool _muteCheck = false;
+        private bool _update = true;
 
         public List<ProductTag> Tags { get; set; }
 
@@ -54,7 +55,7 @@ namespace Triggerless.TriggerBot.Forms
                 {
                     SearchTagAdded.Invoke(
                         this,
-                        new ProductTagEventArgs(tag)
+                        new ProductTagEventArgs(tag, _update)
                     );
                 }
                 break;
@@ -64,7 +65,7 @@ namespace Triggerless.TriggerBot.Forms
                 {
                     SearchTagDeleted.Invoke(
                         this,
-                        new ProductTagEventArgs(tag)
+                        new ProductTagEventArgs(tag, _update)
                     );
                 }
                 break;
@@ -73,12 +74,16 @@ namespace Triggerless.TriggerBot.Forms
 
         private void btnNone_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem lvi in lvTags.Items)
+            _update = false;
+
+            while (lvTags.CheckedItems.Count > 0)
             {
-                if (lvi.Checked)
+                if (lvTags.CheckedItems.Count == 1)
                 {
-                    lvi.Checked = false;
+                    _update = true;   // BEFORE last uncheck
                 }
+
+                lvTags.CheckedItems[0].Checked = false;
             }
         }
     }

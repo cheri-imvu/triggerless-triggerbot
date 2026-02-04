@@ -360,7 +360,7 @@ namespace Triggerless.TriggerBot
             SettingsSave();
 
             _searchResults = SQLiteDataAccess
-                .GetProductSearch(searchTerm)
+                .GetProductSearch(searchTerm, _searchTags)
                 .Take(600)
                 .ToList();
 
@@ -1144,6 +1144,7 @@ namespace Triggerless.TriggerBot
             f.SearchTagAdded += (s, args) => 
             {
                 _searchTags.Add(args.Tag);
+                DoSearch(sender, e);
             };
             f.SearchTagDeleted += (s, args) =>
             {
@@ -1151,6 +1152,10 @@ namespace Triggerless.TriggerBot
                 if (tag != null) 
                 {
                     _searchTags.Remove(tag);
+                    if (args.Update)
+                    {
+                        DoSearch(sender, e);
+                    }
                 }
             };
             f.ShowDialog(this);            

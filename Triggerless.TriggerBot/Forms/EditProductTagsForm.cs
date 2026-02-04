@@ -169,16 +169,13 @@ namespace Triggerless.TriggerBot.Forms
 
     public class ProductTagEventArgs: EventArgs
     {
-        private ProductTag _tag;
+        public ProductTag Tag {get; private set;}
+        public bool Update { get; private set; }
 
-        public ProductTag Tag { 
-            get => _tag; 
-            private set => _tag = value;
-        }
-
-        public ProductTagEventArgs(ProductTag tag)
+        public ProductTagEventArgs(ProductTag tag, bool update = false)
         {
-            _tag = tag;
+            Tag = tag;
+            Update = update;
         }
     }
 

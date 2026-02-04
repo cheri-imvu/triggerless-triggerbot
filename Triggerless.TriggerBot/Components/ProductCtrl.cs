@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.Windows.Forms;
+using Triggerless.TriggerBot.Forms;
 
 namespace Triggerless.TriggerBot
 {
@@ -104,14 +105,7 @@ namespace Triggerless.TriggerBot
 
         private void ShowWebPage(object sender, EventArgs e)
         {
-            if (_productInfo != null)
-            {
-                var uri = $"https://www.imvu.com/shop/_product.php?products_id={_productInfo.Id}";
-                var psi = new ProcessStartInfo();
-                psi.UseShellExecute = true;
-                psi.FileName = uri;
-                System.Diagnostics.Process.Start(psi);
-            }
+
         }
 
         private void WearItem(object sender, LinkLabelLinkClickedEventArgs e)
@@ -176,17 +170,36 @@ namespace Triggerless.TriggerBot
             link.VisitedLinkColor = link.ForeColor;
         }
 
-        private void lblName_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void linkLabelTag_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
                 var args = new LinkClickedEventArgs(_productInfo);
                 OnTagLinkClicked?.Invoke(sender, args);
+            }
+        }
+
+        private void lblName_MouseEnter(object sender, EventArgs e)
+        {
+            lblName.BackColor = Color.Black;
+            lblName.ForeColor = Color.Yellow;
+        }
+
+        private void lblName_MouseLeave(object sender, EventArgs e)
+        {
+            lblName.BackColor = Color.FromArgb(0, 29, 51);
+            lblName.ForeColor = Color.FromArgb(224, 224, 224);
+        }
+
+        private void lblName_Click(object sender, EventArgs e)
+        {
+            var f = new RenameSongForm();
+            f.ProductInfo = _productInfo;
+            var dr = f.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                lblName.Text = f.ProductInfo.Name;
+                SQLiteDataAccess.RenameSong(f.ProductInfo.Id, f.ProductInfo.Name);
             }
         }
     }
