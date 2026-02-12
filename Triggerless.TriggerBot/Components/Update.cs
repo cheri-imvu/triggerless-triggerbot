@@ -1,5 +1,4 @@
-﻿using Microsoft.WindowsAPICodePack.Shell;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -18,7 +17,9 @@ namespace Triggerless.TriggerBot
 
         public Update()
         {
-            _downloadsPath = KnownFolders.Downloads.Path;
+            _downloadsPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                "Downloads");
             _runSetupOnExit = false;
         }
 

@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Triggerless Triggerbot"
-#define MyAppVersion "1.0.7.2601"
+#define MyAppVersion "1.0.8.2602"
 #define MyAppPublisher "triggerless.com"
 #define MyAppURL "https://www.triggerless.com/triggerbot/"
 #define MyAppExeName "TriggerBot.exe"
@@ -199,7 +199,7 @@ var
   UninstallExePath: string;
   ResultCode: Integer;
 begin
-  CID := ReadCidFromUserConfig('triggerless.com', 'TriggerBot.exe', '1.0.6.2601');
+  CID := ReadCidFromUserConfig('triggerless.com', 'TriggerBot.exe', '1.0.7.2601');
   Log('Initial CID read: ' + IntToStr(CID));
   // Check if the application is already installed
   if IsAppInstalled() then
@@ -338,8 +338,6 @@ Source: "{#ReleaseBin}\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 Source: "{#ReleaseBin}\Microsoft.Extensions.DependencyInjection.dll"; DestDir: "{app}"; Flags: ignoreversion 
 Source: "{#ReleaseBin}\Microsoft.Extensions.Logging.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion 
 Source: "{#ReleaseBin}\Microsoft.Win32.Registry.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#ReleaseBin}\Microsoft.WindowsAPICodePack.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#ReleaseBin}\Microsoft.WindowsAPICodePack.Shell.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\NAudio.Asio.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\NAudio.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\NAudio.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -365,10 +363,10 @@ Source: "{#ReleaseBin}\System.Threading.Channels.dll"; DestDir: "{app}"; Flags: 
 Source: "{#ReleaseBin}\System.Threading.Tasks.Extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\System.ValueTuple.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\TriggerBot.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\Triggerless.PlugIn.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\Triggerless.XAFLib.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\WindowsInput.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#ReleaseBin}\TriggerBot.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

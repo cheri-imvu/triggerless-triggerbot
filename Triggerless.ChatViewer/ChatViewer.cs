@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -28,8 +29,9 @@ namespace Triggerless.ChatViewerPlugIn
             var names = new Dictionary<long, string>();
             var rx = new Regex(pattern);
             var chats = new List<Chat>();
-            var baseUrl = $"{PlugIn.Location.TriggerlessDomain}/api/user/";
+            var baseUrl = $"https://api.imvu.com/user/";
             var client = new HttpClient();
+            client.BaseAddress = new Uri(baseUrl);
             const int CID_INDEX = 1;
             const int TEXT_INDEX = 2;
 
@@ -46,11 +48,17 @@ namespace Triggerless.ChatViewerPlugIn
                         var cid = long.Parse(m.Groups[CID_INDEX].Value);
                         if (!names.ContainsKey(cid))
                         {
-                            var url = $"{baseUrl}{cid}";
+                            var url = $"user-{cid}";
                             var json = client.GetStringAsync(url).Result;
-                            var u = new user();
-                            JsonConvert.PopulateObject(json, u);
-                            names[cid] = u.avatarname;
+                            JObject root = JObject.Parse(json);
+                            string userKey = (string)root["id"];
+                            var avatarname = root["denormalized"][userKey]["avatarname"]                               ["avatarname"]?
+                                .Value<string>();
+                            if (avatarname == null)
+                            {
+                                avatarname = "unavailable";
+                            }
+                            names[cid] = avatarname;
                         }
                         var who = names[cid];
                         if (!what.StartsWith("*"))

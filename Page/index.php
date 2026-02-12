@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
-	$thisVersionShort = '1.0.7';
-	$thisVersion = $thisVersionShort.'.2601';
+	$thisVersionShort = '1.0.8';
+	$thisVersion = $thisVersionShort.'.2602';
 ?>
 <html lang="en">
   <head>
@@ -55,6 +55,14 @@
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
         <p><iframe style="z-index: 10;" width="750" height="422" src="https://www.youtube.com/embed/6IPIWJSf5VM" title="YouTube video player" frameborder="0" 
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
+    </div>
+    <div class="center-div">
+      <div class="topic">What's new in Version 1.0.8.2602 (Release) 2026-02-04</div>
+      <ul>
+		<li>Search Tags are Introduced</li>
+		<li>Product Name Editing</li>
+		<li>Included new category "Legacy Accessories" in filters</li>
+      </ul>
     </div>
     <div class="center-div">
       <div class="topic">What's new in Version 1.0.7.2601 (Release) 2026-01-16</div>

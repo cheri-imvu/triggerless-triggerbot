@@ -17,7 +17,6 @@ using Triggerless.PlugIn;
 using WindowsInput;
 using static Triggerless.TriggerBot.ProductCtrl;
 using KeyCode = WindowsInput.Native.VirtualKeyCode;
-using System.Globalization;
 using Triggerless.TriggerBot.Properties;
 
 namespace Triggerless.TriggerBot
@@ -441,6 +440,7 @@ namespace Triggerless.TriggerBot
              * Not using this feature yet.
             InjectPlugIns();
             */
+            
         }
 
         private void SettingsLoad()
@@ -1121,8 +1121,9 @@ namespace Triggerless.TriggerBot
                         }
                     }
                 }
-                catch (Exception) 
+                catch (Exception exc) 
                 {
+                    Debug.WriteLine(exc.ToString());
                     // not sure what to do but ignore it.
                 }
             }
