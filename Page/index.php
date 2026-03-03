@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-	$thisVersionShort = '1.0.8';
+	$thisVersionShort = '1.1.0';
 	$thisVersion = $thisVersionShort.'.2602';
 ?>
 <html lang="en">
@@ -28,7 +28,7 @@
       <img src="triggerbot.png" style="vertical-align: middle" alt="Triggerbot Logo" />
     </div>
     <div class="top-right">        
-        <div>Download v1.0</div>
+        <div>Download v1.1</div>
         <div><a class="top-link" href="triggerbot-setup.<?php echo $thisVersion ?>.zip">🠋</a></div>
     </div>
     <div class="center-div">
@@ -39,14 +39,13 @@
         <p class="img-popup">
           <a href="app-imvu.png" target="_blank"><img src="app.png" /></a>
         </p>
-        <p>Additionally, you can easily create new CHKN files from MP3 files on your local computer. This feature is still in
-          development and getting better every week.
+        <p>Additionally, you can easily create new CHKN files from MP3 files (and other formats) on your local computer. It only takes a few seconds, they come out great, and the hardest part is making a nice new product icon! Over 3,330 trigger tunes have been cut using Triggerbot so far (Feb. 2026). So what are you waiting for?
         </p>
         <p class="img-popup">
           <a href="audio-splice.png" target="_blank"><img src="audio-splice.png" /></a>
         </p>
         <div class="topic">Download Triggerbot</div>
-        <p>Download Triggerbot Setup <?php echo $thisVersionShort ?> (release): <a href="triggerbot-setup.<?php echo $thisVersion ?>.zip">triggerbot-setup.<?php echo $thisVersion ?>.zip</a> (55 MB). 
+        <p>Download Triggerbot Setup <?php echo $thisVersionShort ?> (release): <a href="triggerbot-setup.<?php echo $thisVersion ?>.zip">triggerbot-setup.<?php echo $thisVersion ?>.zip</a> (57 MB). 
           Once installed, you'll be prompted to upgrade when an update is available.</p>
 		<p>Join the Triggerless Discord server! Click here: <a href="https://discord.gg/<?php include 'invite-code.txt' ?>" target="_blank">https://discord.gg/<?php include 'invite-code.txt' ?></a></p>
         <div class="topic">Videos</div>
@@ -55,6 +54,13 @@
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
         <p><iframe style="z-index: 10;" width="750" height="422" src="https://www.youtube.com/embed/6IPIWJSf5VM" title="YouTube video player" frameborder="0" 
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></p>
+    </div>
+    <div class="center-div">
+      <div class="topic">What's new in Version 1.1.0.2602 (Release) 2026-02-11</div>
+      <ul>
+		<li>Blazing fast Inventory Scan</li>
+		<li>Update bug fix</li>
+      </ul>
     </div>
     <div class="center-div">
       <div class="topic">What's new in Version 1.0.8.2602 (Release) 2026-02-04</div>

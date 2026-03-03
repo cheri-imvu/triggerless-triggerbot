@@ -59,6 +59,69 @@ namespace Triggerless.XAFLib
             }
         }
 
+        public static MorphAnimation LoadXml(string filename)
+        {
+            string contents = File.ReadAllText(filename);
+            string xml = "<XPF>" + contents + "</XPF>";
+            try
+            {
+                var document = new XmlDocument();
+                document.LoadXml(xml);
+                var docEl = document.DocumentElement;
+                var headerEl = docEl.ChildNodes[0] as XmlElement;
+                if (headerEl == null)
+                {
+                    throw new XmlException("Malformed XML for XPF: Header not found");
+                }
+                if (headerEl.Name != "HEADER" || 
+                    headerEl.Attributes["MAGIC"].Value != "XPF" ||
+                    headerEl.Attributes["VERSION"].Value != "919")
+                {
+                    throw new XmlException("Malformed XML for XPF: Header values invalid");
+                }
+
+                var animEl = docEl.ChildNodes[1] as XmlElement;
+                if (animEl == null || animEl.Name != "ANIMATION")
+                {
+                    throw new XmlException("Malformed XML for XPF: ANIMATION not found");
+                }
+
+                var ma = new MorphAnimation();
+                float f;
+                if (!float.TryParse(animEl.Attributes["DURATION"].Value, out f))
+                {
+                    throw new XmlException("Malformed XML for XPF: Duration not found");
+                }
+                ma.Duration = f;
+                foreach(XmlElement trackEl in animEl.ChildNodes)
+                {
+                    if (trackEl.Name != "TRACK") continue;
+                    var track = new MorphTrack();
+                    track.Name = trackEl.Attributes["MORPHNAME"].Value;
+                    foreach (XmlElement kfEl in trackEl.ChildNodes)
+                    {
+                        if (kfEl.Name != "KEYFRAME") continue;
+                        var kf = new MorphKeyFrame();
+                        float time;
+                        float weight;
+                        if (!float.TryParse(kfEl.Attributes["TIME"].Value, out time)) continue;
+                        kf.Time = time;
+                        var weightEl = kfEl.ChildNodes[0] as XmlElement;
+                        if (weightEl == null || weightEl.Name != "WEIGHT") continue;
+                        if (!float.TryParse(weightEl.InnerText, out weight)) continue;
+                        kf.Weight = weight;
+                        track.KeyFrames.Add(kf);                            
+                    }
+                    ma.Tracks.Add(track);
+                }
+                return ma;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
         public string WriteXml() {
             string header = "<HEADER MAGIC=\"XPF\" VERSION=\"919\" />\n";
             XmlDocument doc = new XmlDocument();
