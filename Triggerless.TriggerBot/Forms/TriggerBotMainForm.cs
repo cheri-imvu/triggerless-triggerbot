@@ -585,7 +585,7 @@ namespace Triggerless.TriggerBot
                 trackBarLag.Value = LagMsToTrackBarValue();
                 lblLag.Text = _lagMS.ToString("0.00");
                 pnlLag.Visible = true;
-                cboAdditionalTriggers.Text = _currProductInfo.Triggers[_currTriggerIndex].AddnTriggers;
+                //cboAdditionalTriggers.Text = _currProductInfo.Triggers[_currTriggerIndex].AddnTriggers;
 
                 var hasLyrics = _currProductInfo.HasLyrics;
                 chkLyrics.Enabled = hasLyrics;
@@ -683,8 +683,6 @@ namespace Triggerless.TriggerBot
             Interlocked.Increment(ref _currTriggerIndex);
             if (_currTriggerIndex < _numberOfTriggers)
             {
-                cboAdditionalTriggers.Text = _currProductInfo.Triggers[_currTriggerIndex].AddnTriggers;
-                cboAdditionalTriggers.Update();
                 PullTrigger();
                 return;
             }
@@ -707,17 +705,7 @@ namespace Triggerless.TriggerBot
 
             gridTriggers.Rows[_currTriggerIndex].Selected = true;
             lblCurrPlayingTrigger.Text = GetTriggerLine();
-            if (!string.IsNullOrWhiteSpace(cboAdditionalTriggers.Text))
-            {
-                while (_usedAdditionals.Contains(cboAdditionalTriggers.Text))
-                {
-                    _usedAdditionals.Remove(cboAdditionalTriggers.Text);
-                }
-                _usedAdditionals.Insert(0, cboAdditionalTriggers.Text);
-                cboAdditionalTriggers.Items.Clear();
-                cboAdditionalTriggers.Items.AddRange(_usedAdditionals.ToArray());
-            }
-            cboAdditionalTriggers.Text = string.Empty;
+
             if (_currTriggerIndex == 0) 
             {
                 SQLiteDataAccess.UpdateProductPlay(_currProductInfo.Id);
@@ -756,35 +744,8 @@ namespace Triggerless.TriggerBot
         {
             var hideTriggers = chkHideTriggers.Checked;
             const string HIDER = "*imvu:trigger ";
-            bool hasAdditionalTriggers = !string.IsNullOrEmpty(cboAdditionalTriggers.Text);
             string result = string.Empty; // sometimes the first char gets cut off.
-            if (hasAdditionalTriggers)
-            {
-                result = hideTriggers ? $"  {HIDER}{TrimTrigger()}" : $"  /{TrimTrigger()}";
-                string[] addnTriggers = cboAdditionalTriggers.Text.Trim()
-                    .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (addnTriggers.Length > 0)
-                {
-                    for (int i = 0; i < addnTriggers.Length; i++)
-                    {
-                        result += " ";
-                        if (hideTriggers)
-                        {
-                            var addnTrigger = addnTriggers[i].Replace("/", "");
-                            result += $"{HIDER}{addnTrigger}";
-                        }
-                        else
-                        {
-                            if (!addnTriggers[i].StartsWith("/")) result += "/";
-                            result += addnTriggers[i];
-                        }
-                    }
-                }
-            }
-            else
-            {
-                result = hideTriggers ? $"  {HIDER}{TrimTrigger()}" : $"  {TrimTrigger()}";
-            }
+            result = hideTriggers ? $"  {HIDER}{TrimTrigger()}" : $"  {TrimTrigger()}";
             if (result.Contains("~")) result = result.Replace("~", "{~}");
             return result;
         }
@@ -934,14 +895,6 @@ namespace Triggerless.TriggerBot
         private void lnkPage_Clicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(lnkPage.Text);
-        }
-
-        private void AddnTriggersButtonClick(object sender, EventArgs e)
-        {
-            if (_currProductInfo == null) return;
-            var modalForm = new AddnTriggersForm() { Product = _currProductInfo };
-            modalForm.ShowDialog(this);
-            cboAdditionalTriggers.Text = _currProductInfo.Triggers[_currTriggerIndex].AddnTriggers;
         }
 
         private void gridTriggers_CellDoubleClick(object sender, DataGridViewCellEventArgs e)

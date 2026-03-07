@@ -304,12 +304,6 @@
     <Compile Include="Components\VirtualScrollPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Forms\AddnTriggersForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AddnTriggersForm.Designer.cs">
-      <DependentUpon>AddnTriggersForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\DeepScanForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -444,9 +438,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Components\UnderConstructionCtrl.resx">
       <DependentUpon>UnderConstructionCtrl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AddnTriggersForm.resx">
-      <DependentUpon>AddnTriggersForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DeepScanForm.resx">
       <DependentUpon>DeepScanForm.cs</DependentUpon>
