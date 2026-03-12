@@ -61,7 +61,6 @@ namespace Triggerless.TriggerBot.Components
             _mp3FileReader?.Dispose();
             _wavePlayer?.Dispose();
             picWave.Image?.Dispose();
-
         }
 
         /// <summary>
@@ -85,14 +84,14 @@ namespace Triggerless.TriggerBot.Components
         }
 
         /// <summary>
-        /// Just resize _cursorOverlay after this control is loaded
+        /// Once loaded the Triangle indicator is brought to the top
+        /// and also set the "Dirty" control to "Clean" (unchanged).
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// 
         private void LyricsCtrl_Load(object sender, EventArgs e)
         {
-            //_cursorOverlay.Size = picWave.Size;
             triangle1.Position = 0;
             triangle1.BringToFront();
 
@@ -100,12 +99,13 @@ namespace Triggerless.TriggerBot.Components
             PrepareFileDialog();
         }
 
+        /// <summary>
+        /// Called during load event, this looks for .json or .lyrics files where they 
+        /// might be downloaded, and sets the initial directory wherever we find them,
+        /// or Dowloads by default
+        /// </summary>
         private void PrepareFileDialog()
         {
-            // Deduce a sane place to start the Initial Directory.
-            // Normally Downloads, but if the user is a desktop clutterbug
-            // check there too.
-
             string downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
                                + @"\Downloads";
             string userDesktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
@@ -178,14 +178,13 @@ namespace Triggerless.TriggerBot.Components
         }
 
         /// <summary>
-        /// This was the solution ChatGPT came up with to extract the first
-        /// frame of the animated GIF. It works.
+        /// This extracts the first frame of the animated GIF. It seems to work.
         /// </summary>
-        /// <param name="imageBytes">the binary image data from the database</param>
+        /// <param name="gifBytes">the binary image data from the database</param>
         /// <returns>the first frame as a bitmap Image</returns>
-        private Image ExtractFirstFrame(byte[] imageBytes)
+        private Image ExtractFirstFrame(byte[] gifBytes)
         {
-            using (var ms = new MemoryStream(imageBytes))
+            using (var ms = new MemoryStream(gifBytes))
             using (var original = Image.FromStream(ms))
             {
                 // Select the first frame if it's animated
@@ -302,6 +301,12 @@ namespace Triggerless.TriggerBot.Components
             }
         }
 
+        /// <summary>
+        /// Initializes the MP3 file reader and audio player for the current product, 
+        /// updating UI elements accordingly.
+        /// </summary>
+        /// <returns>true if the MP3 file is successfully loaded and 
+        /// the player is initialized; otherwise, false.</returns>
         private bool InitReaderAndPlayer()
         {
             var mp3FileName = Path.Combine(PlugIn.Location.LyricSheetsPath, $"{_product.Id}.mp3");
@@ -330,6 +335,10 @@ namespace Triggerless.TriggerBot.Components
             return true;
         }
 
+        /// <summary>
+        /// Releases resources and resets UI elements and playback state to 
+        /// prepare for a new audio operation.
+        /// </summary>
         private void CleanupPrevious()
         {
             lblTimer.Text = TimeSpan.Zero.ToString(TIMESPAN_FORMAT);
@@ -428,10 +437,11 @@ namespace Triggerless.TriggerBot.Components
             ctlNeedsSave.Dirty = true;
 
             var lastCell = gridLyrics.CurrentCell;
+
             if (gridLyrics.CurrentRow.Index < gridLyrics.RowCount - 1)
             {
-                gridLyrics.CurrentCell = gridLyrics.Rows[gridLyrics.CurrentCell.RowIndex + 1].Cells[0];
-                gridLyrics.FirstDisplayedCell = lastCell;
+                gridLyrics.CurrentCell = gridLyrics.Rows[lastCell.RowIndex + 1].Cells[0];
+                gridLyrics.FirstDisplayedScrollingRowIndex = lastCell.RowIndex;
             }
         }
 
@@ -444,24 +454,12 @@ namespace Triggerless.TriggerBot.Components
         {
             try
             {
-                switch (_wavePlayer.PlaybackState)
+                if (_wavePlayer.PlaybackState == PlaybackState.Playing)
                 {
-                    case PlaybackState.Stopped:
-                        _mp3FileReader.CurrentTime = GetCurrentTime();
-                        _wavePlayer.Play();
-                        break;
-                    case PlaybackState.Playing:
-                        _wavePlayer.Pause();
-                        _mp3FileReader.CurrentTime = GetCurrentTime();
-                        _wavePlayer.Play();
-                        break;
-                    case PlaybackState.Paused:
-                        _mp3FileReader.CurrentTime = GetCurrentTime();
-                        _wavePlayer.Play();
-                        break;
-                    default:
-                        break;
+                    _wavePlayer.Pause();
                 }
+                _mp3FileReader.CurrentTime = GetCurrentTime();
+                _wavePlayer.Play();
                 _timer.Enabled = true;
             }
             catch (Exception ex)
@@ -471,7 +469,7 @@ namespace Triggerless.TriggerBot.Components
         }
 
         /// <summary>
-        /// Event handler that is triggered when playback is stopped.
+        /// Event triggered when playback is stopped. Stop timer, roll back to position 0:00.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -526,7 +524,7 @@ namespace Triggerless.TriggerBot.Components
 
             // Display the elapsed time in the format mm:ss.xxx
             lblTimer.Text = _mp3FileReader.CurrentTime.ToString(TIMESPAN_FORMAT);
-            UpdateCursor();
+            UpdateTriangle();
         }
 
         /// <summary>
@@ -714,13 +712,20 @@ namespace Triggerless.TriggerBot.Components
         /// <summary>
         /// This moves the triangle.
         /// </summary>
-        private void UpdateCursor()
+        private void UpdateTriangle()
         {
             var totalTime = _mp3FileReader.TotalTime.TotalMilliseconds;
             if (totalTime == 0) return;
             var currentTime = _mp3FileReader.CurrentTime.TotalMilliseconds;
             triangle1.Position = Convert.ToInt32(picWave.Width * currentTime / totalTime);
         }
+
+        /// <summary>
+        /// When the user clicks the waveform image, we change the triangle position
+        /// as well as the position in the playing or paused song. UI gets updated too.
+        /// </summary>
+        /// <param name="sender">this</param>
+        /// <param name="e">MouseEventArgs</param>
 
         private void picWave_MouseDown(object sender, MouseEventArgs e)
         {
@@ -730,16 +735,22 @@ namespace Triggerless.TriggerBot.Components
             triangle1.Position = e.X;
             TimeSpan newTime = TimeSpan.FromMilliseconds(fraction * _mp3FileReader.TotalTime.TotalMilliseconds);
             _mp3FileReader.CurrentTime = newTime;
-            UpdateCursor();
+            UpdateTriangle();
             lblTimer.Text = newTime.ToString(TIMESPAN_FORMAT);
         }
 
+        // We should get rid of this
         private void btnTimeIt_Click(object sender, EventArgs e)
         {
             if (ParentForm.TopMost) ParentForm.WindowState = FormWindowState.Minimized;
             Common.GenerateTimeItText(_product);
         }
 
+        /// <summary>
+        /// Stops audio playback, resets the timer and playback position, and updates the UI.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The event data.</param>
         private void btnStop_Click(object sender, EventArgs e)
         {
             if (_mp3FileReader == null || _wavePlayer == null) return;
@@ -749,7 +760,7 @@ namespace Triggerless.TriggerBot.Components
                 _timer.Stop();
                 _mp3FileReader.CurrentTime = TimeSpan.Zero;
                 lblTimer.Text = TimeSpan.Zero.ToString(TIMESPAN_FORMAT);
-                UpdateCursor();
+                UpdateTriangle();
             }
         }
 
@@ -806,11 +817,23 @@ namespace Triggerless.TriggerBot.Components
             AdjustTimeMarkers(-ms);
         }
 
+        /// <summary>
+        /// Changed grid cell value sets the changed state to Dirty
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">Provides data for the cell value changed event.</param>
         private void gridLyrics_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             ctlNeedsSave.Dirty = true;
         }
 
+        /// <summary>
+        /// Handles the Delete Lyrics button click event by confirming deletion, 
+        /// removing the lyrics file, clearing the
+        /// lyrics grid, and resetting the save state.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The event data.</param>
         private void btnDeleteLyrics_Click(object sender, EventArgs e)
         {
             var result = StyledMessageBox.Show(this, "You sure?", "Delete Lyrics", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
@@ -822,6 +845,10 @@ namespace Triggerless.TriggerBot.Components
             }
         }
 
+        /// <summary>
+        /// Calculates the current playback position of the MP3 file based on the triangle UI indicator.
+        /// </summary>
+        /// <returns>A TimeSpan representing the current playback position.</returns>
         private TimeSpan GetCurrentTime()
         {
             if (_mp3FileReader == null) return TimeSpan.Zero;
@@ -832,6 +859,10 @@ namespace Triggerless.TriggerBot.Components
             return new TimeSpan(currentTicks);
         }
 
+        /// <summary>
+        /// Invokes the save operation for the parent form, 
+        /// so this can be called from outside of this control
+        /// </summary>
         internal void Save()
         {
             btnSave_Click(this.ParentForm, null);
@@ -888,6 +919,12 @@ namespace Triggerless.TriggerBot.Components
             ctlNeedsSave.Dirty = true;
         }
 
+        /// <summary>
+        /// Handles the download of lyrics for the selected product and prompts the 
+        /// user to save the file.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The event data.</param>
         private async void btnDownloadLyrics_Click(object sender, EventArgs e)
         {
             if (_product == null) return;
@@ -941,6 +978,12 @@ namespace Triggerless.TriggerBot.Components
                 MessageBoxIcon.Warning);
         }
 
+        /// <summary>
+        /// Exports lyrics to triggerless.com after verifying that changes are saved 
+        /// and the lyrics file exists.
+        /// </summary>
+        /// <param name="sender">The source of the event, typically the export button.</param>
+        /// <param name="e">Event data associated with the button click.</param>
         private async void btnExportLyrics_Click(object sender, EventArgs e)
         {
             if (_product == null) return;
@@ -991,22 +1034,35 @@ namespace Triggerless.TriggerBot.Components
 
         private void gridLyrics_KeyDown(object sender, KeyEventArgs e)
         {
-            HandleKeyUpDown(e);
+            //HandleKeyUpDown(e);
         }
 
+        /*
         private void HandleKeyUpDown(KeyEventArgs e)
         {
+            var cell = gridLyrics.CurrentCell;
+            if (cell == null) return;
+            var row = cell.RowIndex;
+            var column = cell.ColumnIndex;
+
             if (e.KeyCode == Keys.Down)
-            { 
+            {
+                
             } 
             else if (e.KeyCode == Keys.Up) 
-            { 
+            {
+                if (row > 0)
+                {
+                    row--;
+                    gridLyrics.CurrentCell = gridLyrics.Rows[row].Cells[column];
+                }
             }
         }
+        */
 
         private void gridLyrics_KeyUp(object sender, KeyEventArgs e)
         {
-            HandleKeyUpDown(e);
+            //HandleKeyUpDown(e);
         }
     }
 }
