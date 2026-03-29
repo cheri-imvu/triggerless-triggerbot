@@ -42,7 +42,7 @@ namespace Triggerless.TriggerBot.Forms
         }
 
         private ProductDisplayInfo _productDisplayInfo;
-        public ProductDisplayInfo ProductDiscplayInfo
+        public ProductDisplayInfo ProductDisplayInfo
         {
             get { return _productDisplayInfo; }
             set

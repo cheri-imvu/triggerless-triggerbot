@@ -214,7 +214,7 @@ namespace Triggerless.TriggerBot
 
             CheckForImvu(false);
             SettingsLoad();
-            DoSearch(null, null);
+            bntSearch_Click(null, null);
 
         }
 
@@ -242,6 +242,13 @@ namespace Triggerless.TriggerBot
         #endregion
 
         #region Product Search
+
+        public enum ProductSearchType
+        {
+            Text = 0,
+            Recent,
+            Favorite
+        }
 
         private readonly List<ProductCtrl> _productPool = new List<ProductCtrl>();
         private List<ProductDisplayInfo> _searchResults = new List<ProductDisplayInfo>();
@@ -286,14 +293,14 @@ namespace Triggerless.TriggerBot
         private void EditProductTags(object sender, ProductCtrl.LinkClickedEventArgs e)
         {
             var f = new EditProductTagsForm();
-            f.ProductDiscplayInfo = e.ProductDisplayInfo;
+            f.ProductDisplayInfo = e.ProductDisplayInfo;
             f.StartPosition = FormStartPosition.CenterParent;
             f.ProductTagAdded += OnProductTagAdded;
             f.ProductTagDeleted += OnProductTagDeleted;
+            f.TopMost = Program.MainForm.TopMost;
             f.ShowDialog(this);
             f.ProductTagAdded -= OnProductTagAdded;
             f.ProductTagDeleted -= OnProductTagDeleted;
-
         }
 
         private void OnProductTagDeleted(object sender, ProductTagEventArgs e)
@@ -344,25 +351,43 @@ namespace Triggerless.TriggerBot
 
 
         // Product Search
-        private void DoSearch(object sender, EventArgs e)
+
+        private List<ProductDisplayInfo> ProductSearch(ProductSearchType type, string text = null)
         {
-            var searchTerm = txtSearch.Text.Trim().Replace("'", "''");
-
-            if (searchTerm.Equals("triggerboss", StringComparison.OrdinalIgnoreCase))
+            var result = new List<ProductDisplayInfo>();
+            string searchTerm;
+            switch (type)
             {
-                _splicer.ShowCheap();
-                Properties.Settings.Default.InstallationType = "triggerboss";
-                tabAppContainer.SelectedTab = tabConvertChkn;
-                return;
+                case ProductSearchType.Text:
+                    if (text == null)
+                    {
+                        searchTerm = txtSearch.Text.Trim().Replace("'", "''");
+                    } 
+                    else
+                    {
+                        searchTerm = text.Trim().Replace("'", "''");
+                    }
+                    result = SQLiteDataAccess
+                        .GetProductSearch(searchTerm, _searchTags)
+                        .Take(600)
+                        .ToList();
+                    break;
+                case ProductSearchType.Favorite:
+                    result = SQLiteDataAccess.GetProductsFavorites()
+                        .Take(600).ToList();
+                    break;
+                case ProductSearchType.Recent:
+                    result = SQLiteDataAccess.GetProductsLatest()
+                        .Take(600).ToList();
+                    break;
+
             }
-
-            SettingsSave();
-
-            _searchResults = SQLiteDataAccess
-                .GetProductSearch(searchTerm, _searchTags)
-                .Take(600)
-                .ToList();
-
+            _searchResults = result;
+            return result;
+        }
+        
+        private void DisplayProducts()
+        {
             lblNoResults.Visible = (_searchResults.Count == 0);
 
             pnlSearchResults.SuspendLayout();
@@ -381,6 +406,36 @@ namespace Triggerless.TriggerBot
 
             pnlSearchResults.ResumeLayout();
             RenderVisibleProducts();
+        }
+
+        private void bntSearch_Click(object sender, EventArgs e)
+        {
+            var searchTerm = txtSearch.Text.Trim().Replace("'", "''");
+
+            if (searchTerm.Equals("triggerboss", StringComparison.OrdinalIgnoreCase))
+            {
+                _splicer.ShowCheap();
+                Properties.Settings.Default.InstallationType = "triggerboss";
+                tabAppContainer.SelectedTab = tabConvertChkn;
+                return;
+            }
+
+            SettingsSave();
+
+            ProductSearch(ProductSearchType.Text);
+            DisplayProducts();
+        }
+
+        private void btnFavorites_Click(object sender, EventArgs e)
+        {
+            ProductSearch(ProductSearchType.Favorite);
+            DisplayProducts();
+        }
+
+        private void btnRecent_Click(object sender, EventArgs e)
+        {
+            ProductSearch(ProductSearchType.Recent);
+            DisplayProducts();
         }
 
         private void ExcludeSong(object sender, ExcludeSongEventArgs e)
@@ -409,7 +464,7 @@ namespace Triggerless.TriggerBot
         {
             if (e.KeyChar == Convert.ToChar(Keys.Return) && btnSearch.Enabled)
             {
-                DoSearch(null, null);
+                bntSearch_Click(null, null);
                 e.Handled = true;
             }
 
@@ -1098,7 +1153,7 @@ namespace Triggerless.TriggerBot
             f.SearchTagAdded += (s, args) => 
             {
                 _searchTags.Add(args.Tag);
-                DoSearch(sender, e);
+                bntSearch_Click(sender, e);
             };
             f.SearchTagDeleted += (s, args) =>
             {
@@ -1108,7 +1163,7 @@ namespace Triggerless.TriggerBot
                     _searchTags.Remove(tag);
                     if (args.Update)
                     {
-                        DoSearch(sender, e);
+                        bntSearch_Click(sender, e);
                     }
                 }
             };

@@ -373,6 +373,87 @@ namespace Triggerless.TriggerBot
             }
         }
 
+        internal static List<ProductDisplayInfo> GetProductsLatest()
+        {
+            return GetProductsQuery(
+                3000,
+                andClause: $"p.date_imported > '{DateTime.Now.AddMonths(-5):yyyy-MM-dd}'",
+                orderByClause: "p.date_imported desc, pt.sequence asc"
+                );
+        }
+
+        private static List<ProductDisplayInfo> GetProductsQuery(int limit = 0, 
+            string andClause = "", string orderByClause = "")
+        {
+            string limitClause = limit == 0 ? "" : $"LIMIT {limit}";
+            long currentProductId = 0;
+            ProductDisplayInfo currentInfo = null;
+            if (!String.IsNullOrWhiteSpace(andClause))
+            {
+                andClause = " AND " + andClause;
+            }
+
+            var sql = $@"SELECT p.product_id AS ProductId,
+                       p.title AS Name,
+                       p.creator AS Creator,
+                       p.image_bytes AS ImageBytes,
+                       pt.prefix AS Prefix,
+                       pt.sequence AS Sequence,
+                       pt.trigger AS Trigger,
+                       pt.length_ms AS LengthMS,
+                       pt.location As Location,
+                       pt.addn_triggers AS AddnTriggers
+                       FROM products p 
+                       INNER JOIN product_triggers pt ON (p.product_id = pt.product_id)
+                       WHERE p.has_ogg = 1
+                        {andClause}
+                       ORDER BY {orderByClause}
+                        {limitClause}
+                        ;";
+
+            List<dynamic> queryList = null;
+            var infoList = new List<ProductDisplayInfo>();
+
+            using (var cxnAppCache = GetAppCacheCxn())
+            {
+                queryList = cxnAppCache.Query(sql).ToList();
+            }
+            foreach (var query in queryList)
+            {
+                if (currentProductId != query.ProductId)
+                {
+                    if (currentInfo != null)
+                    {
+                        infoList.Add(currentInfo);
+                    }
+                    currentProductId = query.ProductId;
+                    currentInfo = new ProductDisplayInfo();
+                    currentInfo.Id = query.ProductId;
+                    currentInfo.Name = query.Name;
+                    currentInfo.ImageBytes = query.ImageBytes;
+                    currentInfo.Creator = query.Creator;
+                }
+                var triggerInfo = new TriggerDisplayInfo();
+                triggerInfo.Prefix = query.Prefix;
+                triggerInfo.Sequence = (int)query.Sequence;
+                triggerInfo.LengthMS = query.LengthMS;
+                triggerInfo.Location = query.Location;
+                triggerInfo.Trigger = query.Trigger;
+                triggerInfo.ProductId = query.ProductId;
+                triggerInfo.AddnTriggers = query.AddnTriggers;
+                currentInfo.Triggers.Add(triggerInfo);
+            }
+            return infoList;
+        }
+
+        internal static List<ProductDisplayInfo> GetProductsFavorites()
+        {
+            return GetProductsQuery(
+                3000,
+                andClause: "p.times_played > 0",
+                orderByClause: "p.times_played desc, p.last_played desc, pt.sequence asc"
+            );
+        }
 
         internal static List<ProductDisplayInfo> GetProductSearch(string searchTerm, List<ProductTag> searchTags = null)
         {

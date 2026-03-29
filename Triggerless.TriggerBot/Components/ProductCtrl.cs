@@ -195,6 +195,7 @@ namespace Triggerless.TriggerBot
         {
             var f = new RenameSongForm();
             f.ProductInfo = _productInfo;
+            f.TopMost = Program.MainForm.TopMost;
             var dr = f.ShowDialog();
             if (dr == DialogResult.OK)
             {
