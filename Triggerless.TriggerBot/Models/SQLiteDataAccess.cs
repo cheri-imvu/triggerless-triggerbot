@@ -82,7 +82,8 @@ namespace Triggerless.TriggerBot
             new Filter(Gender.Male, true,   "Miscellaneous",       3095),
             new Filter(Gender.Male, false,   "Miscellaneous",      3093),
             new Filter(Gender.Male, true, "Sounds & Effects (generic, new)", 3139),
-            new Filter(Gender.Male, true,   "Legacy",      165),  // <== get the right number
+            new Filter(Gender.Male, true,   "Legacy",      165),  
+            new Filter(Gender.Male, true,   "Tattoos",      3149, 3097), // Holding back PR on Music
 
             new Filter(Gender.Female, true, "Spice Glasses",       3122, 144),
             new Filter(Gender.Female, true, "New Accessories",     155),
@@ -100,7 +101,10 @@ namespace Triggerless.TriggerBot
             new Filter(Gender.Female, true, "Sounds & Effects (generic, new)", 3120),
             new Filter(Gender.Female, true, "Jewelry (generic, new)", 3121),
             new Filter(Gender.Female, true, "Eyewear (generic, new)", 3122),
-            new Filter(Gender.Female, true, "Legacy", 155) // get the right number
+            new Filter(Gender.Female, true, "Legacy", 155),
+            new Filter(Gender.Female, true, "Tattoos", 3128, 3096) // Holding back PR on Music
+            
+            // get the right number
         };
 
         private static readonly short[] MaleOldAcc = { 106, 41, 71 };
