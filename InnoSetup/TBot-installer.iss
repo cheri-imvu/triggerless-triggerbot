@@ -2,11 +2,12 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Triggerless Triggerbot"
-#define MyAppVersion "1.1.1.2603"
+#define MyAppVersion "1.1.2.2604"
 #define MyAppPublisher "triggerless.com"
 #define MyAppURL "https://www.triggerless.com/triggerbot/"
 #define MyAppExeName "TriggerBot.exe"
 #define MyAppIcoName "note3d.ico"
+#define SolutionPath "D:\DEV\CS\triggerless-triggerbot" 
 #define ProjectPath "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot"
 #define ReleaseBin "D:\DEV\CS\triggerless-triggerbot\Triggerless.TriggerBot\bin\x64\Release"
 
@@ -199,7 +200,7 @@ var
   UninstallExePath: string;
   ResultCode: Integer;
 begin
-  CID := ReadCidFromUserConfig('triggerless.com', 'TriggerBot.exe', '1.1.0.2602');
+  CID := ReadCidFromUserConfig('triggerless.com', 'TriggerBot.exe', '1.1.1.2603');
   Log('Initial CID read: ' + IntToStr(CID));
   // Check if the application is already installed
   if IsAppInstalled() then
@@ -323,17 +324,19 @@ Source: "{#ProjectPath}\assets\LiberationSans_Italic.ttf"; DestDir: "{localappda
 Source: "{#ProjectPath}\assets\LiberationSans_BoldItalic.ttf"; DestDir: "{localappdata}\Microsoft\Windows\Fonts"; FontInstall: "Liberation Sans Bold Italic"; Flags: onlyifdoesntexist uninsneveruninstall; Check: ShouldInstallFont('LiberationSans_BoldItalic.ttf', 'Liberation Sans Bold Italic')
 Source: "{#ReleaseBin}\ffmpeg\ffmpeg.exe"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
 Source: "{#ReleaseBin}\ffmpeg\ffprobe.exe"; DestDir: "{app}\ffmpeg"; Flags: ignoreversion
+Source: "{#SolutionPath}\Triggerless.ContextHelper\bin\Release\Triggerless.ContextHelper.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "{#ReleaseBin}\x64\SQLite.Interop.dll"; DestDir: "{app}\x64"; Flags: ignoreversion
 Source: "{#ReleaseBin}\x86\SQLite.Interop.dll"; DestDir: "{app}\x86"; Flags: ignoreversion
 Source: "{#ReleaseBin}\BouncyCastle.Crypto.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\Dapper.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\EntityFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\e_sqlite3.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\EntityFramework.SqlServer.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\ICSharpCode.SharpZipLib.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#ReleaseBin}\ManagedWinapi.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#ReleaseBin}\ManagedWinapiNativeHelper.dll"; DestDir: "{app}"; Flags: ignoreversion 
 Source: "{#ReleaseBin}\Microsoft.Bcl.AsyncInterfaces.dll"; DestDir: "{app}"; Flags: ignoreversion 
+Source: "{#ReleaseBin}\Microsoft.Bcl.HashCode.dll"; DestDir: "{app}"; Flags: ignoreversion 
+Source: "{#ReleaseBin}\Microsoft.Data.Sqlite.dll"; DestDir: "{app}"; Flags: ignoreversion 
 Source: "{#ReleaseBin}\Microsoft.Extensions.DependencyInjection.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion 
 Source: "{#ReleaseBin}\Microsoft.Extensions.DependencyInjection.dll"; DestDir: "{app}"; Flags: ignoreversion 
 Source: "{#ReleaseBin}\Microsoft.Extensions.Logging.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion 
@@ -349,21 +352,27 @@ Source: "{#ReleaseBin}\NAudio.WinForms.dll"; DestDir: "{app}"; Flags: ignorevers
 Source: "{#ReleaseBin}\NAudio.WinMM.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\NVorbis.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\SQLitePCLRaw.batteries_v2.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\SQLitePCLRaw.core.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\SQLitePCLRaw.provider.dynamic_cdecl.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\SQLitePCLRaw.provider.e_sqlite3.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\System.Buffers.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\System.Collections.Immutable.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#ReleaseBin}\System.Data.SQLite.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\System.Diagnostics.DiagnosticSource.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\System.Drawing.Common.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\System.Formats.Nrbf.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\System.Memory.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\System.Numerics.Vectors.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\System.Reflection.Metadata.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\System.Resources.Extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\System.Security.AccessControl.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\System.Security.Principal.Windows.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\System.Threading.Channels.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\System.Threading.Tasks.Extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#ReleaseBin}\System.ValueTuple.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\TriggerBot.exe.config"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\Triggerless.Native.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\Triggerless.PlugIn.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\Triggerless.XAFLib.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\WindowsInput.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -373,6 +382,41 @@ Source: "{#ReleaseBin}\WindowsInput.dll"; DestDir: "{app}"; Flags: ignoreversion
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{userdesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\{#MyAppIcoName}"; Tasks: desktopicon
 
-[Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+[Registry]
+; =========================
+; ProgID definition
+; =========================
+Root: HKCU; Subkey: "Software\Classes\Triggerbot.AudioHandler"; ValueType: string; ValueData: "Triggerbot"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Classes\Triggerbot.AudioHandler\DefaultIcon"; ValueType: string; ValueData: "{app}\note3d.ico"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Classes\Triggerbot.AudioHandler\shell\open\command"; ValueType: string; ValueData: """{app}\Triggerless.ContextHelper.exe"" ""%1"""; Flags: uninsdeletekey
 
+; =========================
+; Register as known application
+; =========================
+Root: HKCU; Subkey: "Software\Classes\Applications\Triggerless.ContextHelper.exe"; ValueType: string; ValueData: "Triggerbot"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Classes\Applications\Triggerless.ContextHelper.exe\DefaultIcon"; ValueType: string; ValueData: "{app}\3dnote.ico"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Classes\Applications\Triggerless.ContextHelper.exe\shell\open\command"; ValueType: string; ValueData: """{app}\Triggerless.ContextHelper.exe"" ""%1"""; Flags: uninsdeletekey
+
+; =========================
+; Associate with extensions
+; =========================
+Root: HKCU; Subkey: "Software\Classes\.mp3\OpenWithProgids";  ValueType: string; ValueName: "Triggerbot.AudioHandler"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKCU; Subkey: "Software\Classes\.flac\OpenWithProgids"; ValueType: string; ValueName: "Triggerbot.AudioHandler"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKCU; Subkey: "Software\Classes\.ogg\OpenWithProgids";  ValueType: string; ValueName: "Triggerbot.AudioHandler"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKCU; Subkey: "Software\Classes\.wma\OpenWithProgids";  ValueType: string; ValueName: "Triggerbot.AudioHandler"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKCU; Subkey: "Software\Classes\.aac\OpenWithProgids";  ValueType: string; ValueName: "Triggerbot.AudioHandler"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKCU; Subkey: "Software\Classes\.m4u\OpenWithProgids";  ValueType: string; ValueName: "Triggerbot.AudioHandler"; ValueData: ""; Flags: uninsdeletevalue
+
+; =========================
+; OpenWithList (visibility boost)
+; =========================
+Root: HKCU; Subkey: "Software\Classes\.mp3\OpenWithList\Triggerless.ContextHelper.exe";  ValueType: string; ValueData: ""; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Classes\.flac\OpenWithList\Triggerless.ContextHelper.exe"; ValueType: string; ValueData: ""; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Classes\.ogg\OpenWithList\Triggerless.ContextHelper.exe";  ValueType: string; ValueData: ""; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Classes\.wma\OpenWithList\Triggerless.ContextHelper.exe";  ValueType: string; ValueData: ""; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Classes\.aac\OpenWithList\Triggerless.ContextHelper.exe";  ValueType: string; ValueData: ""; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Classes\.m4u\OpenWithList\Triggerless.ContextHelper.exe";  ValueType: string; ValueData: ""; Flags: uninsdeletekey
+
+[Run]
+Filename: "{cmd}"; Parameters: "/c ie4uinit.exe -show"; Flags: runhidden
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
