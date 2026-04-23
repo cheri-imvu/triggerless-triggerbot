@@ -1,14 +1,12 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Xml.Linq;
 using Triggerless.TriggerBot.Models;
-using static Triggerless.TriggerBot.Models.Discord;
+using System.Data;
 
 namespace Triggerless.TriggerBot
 {
@@ -144,14 +142,23 @@ namespace Triggerless.TriggerBot
 
         #endregion
 
-        public static SQLiteConnection GetProductCacheCxn()
-        {            
-            if (!File.Exists(PlugIn.Location.ProductCacheFile))
+        public static SqliteConnection GetProductCacheCxn()
+        {
+            var location = PlugIn.Location.ProductCacheFile;
+            if (!File.Exists(location))
             {
                 throw new ApplicationException("IMVU Classic Client is not installed");
             }
-
-            return new SQLiteConnection($"Data Source={PlugIn.Location.ProductCacheFile}");
+            try
+            {
+                return new SqliteConnection($"Data Source={location}");
+            }
+            catch (Exception exc)
+            {
+                var lastExc = exc;
+                return null;
+            }
+            
         }
 
         public void DeleteAppCache()
@@ -169,7 +176,7 @@ namespace Triggerless.TriggerBot
 
         private static void UpdateProductSchema()
         {
-            using (var cxnAlter = new SQLiteConnection(PlugIn.Location.AppCacheConnectionString))
+            using (var cxnAlter = new SqliteConnection(PlugIn.Location.AppCacheConnectionString))
             {
                 cxnAlter.Open();
 
@@ -214,7 +221,7 @@ namespace Triggerless.TriggerBot
 
         private static void UpdateTagSchema()
         {
-            using (var cxnAlter = new SQLiteConnection(PlugIn.Location.AppCacheConnectionString))
+            using (var cxnAlter = new SqliteConnection(PlugIn.Location.AppCacheConnectionString))
             {
                 cxnAlter.Open();
                 var columns = cxnAlter.Query<ColumnInfo>("PRAGMA table_info(tags);")
@@ -290,7 +297,7 @@ namespace Triggerless.TriggerBot
 
         #endregion DDL Updates
 
-        public static SQLiteConnection GetAppCacheCxn() 
+        public static SqliteConnection GetAppCacheCxn() 
         {
             if (!Directory.Exists(PlugIn.Location.AppCachePath)) { 
                 Directory.CreateDirectory(PlugIn.Location.AppCachePath); 
@@ -299,7 +306,7 @@ namespace Triggerless.TriggerBot
             if (!File.Exists(PlugIn.Location.AppCacheFile))
             {
                 // initialize the tables
-                using (var cxnCreate = new SQLiteConnection(PlugIn.Location.AppCacheConnectionString))
+                using (var cxnCreate = new SqliteConnection(PlugIn.Location.AppCacheConnectionString))
                 {
                     try
                     {
@@ -307,7 +314,7 @@ namespace Triggerless.TriggerBot
 
                         var sqlCreate = "CREATE TABLE products (" +
                             "product_id BIGINT PRIMARY KEY, image_bytes BLOB, has_ogg BOOLEAN NOT NULL, title NVARCHAR(32), creator VARCHAR(32));";
-                        var cmd = new SQLiteCommand(sqlCreate, cxnCreate);
+                        var cmd = new SqliteCommand(sqlCreate, cxnCreate);
                         cmd.ExecuteNonQuery();
 
                         sqlCreate = "CREATE TABLE product_triggers (" +
@@ -325,16 +332,16 @@ namespace Triggerless.TriggerBot
             } 
 
             //Updates
-            using (var cxnAlter = new SQLiteConnection(PlugIn.Location.AppCacheConnectionString))
+            using (var cxnAlter = new SqliteConnection(PlugIn.Location.AppCacheConnectionString))
             {
                 cxnAlter.Open();
 
                 // > 0.8.4 add addn_triggers field to product_triggers
                 var sqlAddnTriggers = "select count(*) as theCount from pragma_table_info('product_triggers') where name = 'addn_triggers';";
-                var cmd = new SQLiteCommand(sqlAddnTriggers, cxnAlter);
+                var cmd = new SqliteCommand(sqlAddnTriggers, cxnAlter);
                 try
                 {
-                    var count = cmd.ExecuteScalar(System.Data.CommandBehavior.SingleResult);
+                    var count = cmd.ExecuteScalar();
                     if (Convert.ToInt32(count) == 0)
                     {
                         sqlAddnTriggers = "ALTER TABLE product_triggers ADD COLUMN addn_triggers VARCHAR(64) NULL;";
@@ -359,7 +366,7 @@ namespace Triggerless.TriggerBot
             }
             
 
-            return new SQLiteConnection(PlugIn.Location.AppCacheConnectionString);
+            return new SqliteConnection(PlugIn.Location.AppCacheConnectionString);
         }
 
         internal static void UpdateProductPlay(long productId)
@@ -634,7 +641,7 @@ namespace Triggerless.TriggerBot
                 }
                 result = true;
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 var message = "Unable to change the searchTag assignment to this tune";
                 var title = "Database Error";
@@ -645,7 +652,7 @@ namespace Triggerless.TriggerBot
 
         internal static List<ProductTag> TagsGetForProduct(long productId)
         {
-            using (SQLiteConnection cxnAppCache = GetAppCacheCxn())
+            using (SqliteConnection cxnAppCache = GetAppCacheCxn())
             {
                 cxnAppCache.Open();
 

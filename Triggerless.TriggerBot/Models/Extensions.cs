@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Triggerless.Native;
 
 namespace Triggerless.TriggerBot.Models
 {
@@ -15,16 +16,13 @@ namespace Triggerless.TriggerBot.Models
             prop?.SetValue(control, enable, null);
         }
 
-        const int WM_SETREDRAW = 0x000B;
-        [DllImport("user32.dll")]
-        static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
         public static void SuspendDrawing(this Control c)
-            => SendMessage(c.Handle, WM_SETREDRAW, IntPtr.Zero, IntPtr.Zero);
+            => Shell32.SendMessage(c.Handle, Shell32.WM_SETREDRAW, IntPtr.Zero, IntPtr.Zero);
 
         public static void ResumeDrawing(this Control c, bool invalidate = true)
         {
-            SendMessage(c.Handle, WM_SETREDRAW, new IntPtr(1), IntPtr.Zero);
+            Shell32.SendMessage(c.Handle, Shell32.WM_SETREDRAW, new IntPtr(1), IntPtr.Zero);
             if (invalidate) c.Invalidate(true);
         }
 

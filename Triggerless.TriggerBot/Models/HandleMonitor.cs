@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using Triggerless.Native;
 
 namespace Triggerless.TriggerBot.Models
 {
@@ -11,15 +12,12 @@ namespace Triggerless.TriggerBot.Models
         private static bool _running = false;
         private static string _fileName = null;
 
-        [DllImport("user32.dll")]
-        static extern int GetGuiResources(IntPtr hProcess, int uiFlags);
-
         // uiFlags: 0 = GDI, 1 = USER
         public static (int gdi, int user) GetHandleCounts()
         {
             var proc = Process.GetCurrentProcess();
-            int gdi = GetGuiResources(proc.Handle, 0);
-            int user = GetGuiResources(proc.Handle, 1);
+            int gdi = User32.GetGuiResources(proc.Handle, 0);
+            int user = User32.GetGuiResources(proc.Handle, 1);
             return (gdi, user);
         }
 

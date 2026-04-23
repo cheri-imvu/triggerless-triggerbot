@@ -15,7 +15,7 @@ namespace Triggerless.TriggerBot.Models
         public bool SendTrigger(string trigger)
         {
             if (Program.MainForm  == null) return false;
-            Program.MainForm.DispatchText(trigger);
+            ImvuWindow.SendText(trigger);
             return true;
         }
     }

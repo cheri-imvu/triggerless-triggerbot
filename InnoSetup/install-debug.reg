@@ -1,0 +1,35 @@
+Windows Registry Editor Version 5.00
+
+; Create a custom ProgID for Triggerbot
+[HKEY_CURRENT_USER\Software\Classes\Triggerbot.CutTune]
+@="Cut Tune with Triggerbot"
+"FriendlyTypeName"="Cut Tune with Triggerbot"
+"DefaultIcon"="C:\\Users\\crack\\AppData\\Roaming\\Triggerless\\TriggerBot\\note3d.ico"
+
+; Add the 'open' verb
+[HKEY_CURRENT_USER\Software\Classes\Triggerbot.CutTune\shell]
+
+[HKEY_CURRENT_USER\Software\Classes\Triggerbot.CutTune\shell\open]
+@="Cut Tune with Triggerbot"
+"Icon"="C:\\Users\\crack\\AppData\\Roaming\\Triggerless\\TriggerBot\\note3d.ico"
+
+[HKEY_CURRENT_USER\Software\Classes\Triggerbot.CutTune\shell\open\command]
+@="\"D:\\DEV\\CS\\triggerless-triggerbot\\Triggerless.ContextHelper\\bin\\x64\\Debug\\Triggerless.ContextHelper.exe\" \"%1\""
+
+
+
+; Register this ProgID as an OpenWith handler for file types
+[HKEY_CURRENT_USER\Software\Classes\.mp3\OpenWithProgids]
+"Triggerbot.CutTune"=""
+
+[HKEY_CURRENT_USER\Software\Classes\.flac\OpenWithProgids]
+"Triggerbot.CutTune"=""
+
+[HKEY_CURRENT_USER\Software\Classes\.wma\OpenWithProgids]
+"Triggerbot.CutTune"=""
+
+[HKEY_CURRENT_USER\Software\Classes\.aac\OpenWithProgids]
+"Triggerbot.CutTune"=""
+
+[HKEY_CURRENT_USER\Software\Classes\.ogg\OpenWithProgids]
+"Triggerbot.CutTune"=""

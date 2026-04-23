@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Triggerless.Native;
+
 namespace Triggerless.TriggerBot
 {
     //SingleProgamInstance uses a mutex synchronization 
@@ -12,13 +14,6 @@ namespace Triggerless.TriggerBot
     public class SingleProgramInstance : IDisposable
     {
 
-        //Win32 API calls necesary to raise an unowned processs main window
-        [DllImport("user32.dll")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
-        [DllImport("user32.dll")]
-        private static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
-        [DllImport("user32.dll")]
-        private static extern bool IsIconic(IntPtr hWnd);
 
         private const int SW_RESTORE = 9;
 
@@ -83,11 +78,11 @@ namespace Triggerless.TriggerBot
                     // Assume it is the one we want brought to the foreground.
                     // Use the Win32 API to bring it to the foreground.
                     IntPtr hWnd = otherProc.MainWindowHandle;
-                    if (IsIconic(hWnd))
+                    if (User32.IsIconic(hWnd))
                     {
-                        ShowWindowAsync(hWnd, SW_RESTORE);
+                        User32.ShowWindowAsync(hWnd, SW_RESTORE);
                     }
-                    SetForegroundWindow(hWnd);
+                    User32.SetForegroundWindow(hWnd);
                     break;
                 }
             }

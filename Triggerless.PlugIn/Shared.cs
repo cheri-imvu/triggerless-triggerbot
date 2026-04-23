@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using Triggerless.Native;
 
 namespace Triggerless.PlugIn
 {
@@ -63,6 +64,7 @@ namespace Triggerless.PlugIn
         public static string ImvuLocation => Path.Combine(AppData, "IMVUClient");
         public static string ImvuFileLocation => Path.Combine(AppData, "IMVU");
         public static string ProductCacheFile => Path.Combine(ImvuFileLocation, "productInfoCache.db");
+        public static string TriggerbotExePath => Path.Combine(AppCachePath, "Triggerbot.exe");
         public static string AppCachePath => Path.Combine(AppData, "Triggerless", "TriggerBot");
         public static string AppCacheFile => Path.Combine(AppCachePath, "appCache.sqlite");
         public static string AppCacheConnectionString => $"Data Source={AppCacheFile}";
@@ -96,11 +98,6 @@ namespace Triggerless.PlugIn
             }
         }
 
-        private static readonly Guid FOLDERID_Downloads = Guid.Parse("374DE290-123F-4565-9164-39C4925E467B");
-
-        [DllImport("shell32.dll")]
-        private static extern int SHGetKnownFolderPath(
-            [MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr ppszPath);
 
         private static string _downloadsPath = string.Empty;
         public static string DownloadsPath
@@ -110,7 +107,7 @@ namespace Triggerless.PlugIn
                 if (_downloadsPath == string.Empty)
                 {
                     IntPtr p;
-                    var hr = SHGetKnownFolderPath(FOLDERID_Downloads, 0, IntPtr.Zero, out p);
+                    var hr = Shell32.SHGetKnownFolderPath(Shell32.FOLDERID_Downloads, 0, IntPtr.Zero, out p);
                     if (hr != 0) Marshal.ThrowExceptionForHR(hr);
 
                     try

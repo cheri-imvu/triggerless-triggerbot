@@ -11,9 +11,11 @@ using System.Drawing.Imaging;
 // ADD at the top with other usings:
 using System.Globalization;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Triggerless.TriggerBot.Models;
@@ -97,21 +99,7 @@ namespace Triggerless.TriggerBot
                 dlgOpenFile.InitialDirectory = Path.GetDirectoryName(dlgOpenFile.FileName);
                 try
                 {
-                    _waveReader = UniversalAudioReader.Open(dlgOpenFile.FileName);
-                    _duration = _waveReader.TotalTime;
-                    txtFilename.Text = dlgOpenFile.FileName;
-                    lblDuration.Text = $"Duration: {_duration.Minutes:00}:{_duration.Seconds:00}";
-
-                    if (_duration.TotalSeconds > new TimeSpan(0, 3, 36).TotalSeconds)
-                    {
-                        rdoFMS.Checked = true;
-                    }
-                    else
-                    {
-                        rdoHQS.Checked = true;
-                    }
-                    WaveformCreate(txtFilename.Text);
-
+                    LoadFile(dlgOpenFile.FileName);
                 }
                 catch (Exception)
                 {
@@ -687,9 +675,69 @@ namespace Triggerless.TriggerBot
             target.Update();
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
+        public void LoadFile(string pathToAudioFile)
         {
+            _waveReader = UniversalAudioReader.Open(pathToAudioFile);
+            _duration = _waveReader.TotalTime;
+            txtFilename.Text = pathToAudioFile;
+            lblDuration.Text = $"Duration: {_duration.Minutes:00}:{_duration.Seconds:00}";
 
+            if (_duration.TotalSeconds > new TimeSpan(0, 3, 36).TotalSeconds)
+            {
+                rdoFMS.Checked = true;
+            }
+            else
+            {
+                rdoHQS.Checked = true;
+            }
+            WaveformCreate(txtFilename.Text);
+        }
+
+
+        public void StartPipeServer()
+        {
+            while (true)
+            {
+                try
+                {
+                    using (var server = new NamedPipeServerStream(
+                        "TriggerbotPipe",
+                        PipeDirection.In,
+                        1,
+                        PipeTransmissionMode.Message,
+                        PipeOptions.Asynchronous))
+                    {
+                        server.WaitForConnection();
+
+                        using (var reader = new StreamReader(server))
+                        {
+                            string command = reader.ReadLine();
+                            if (command != null && command.StartsWith("OPEN:"))
+                            {
+                                string file = command.Substring(5);
+                                this.Invoke((MethodInvoker)(() =>
+                                {
+                                    Program.MainForm.BringToFront();
+                                    Program.MainForm.WindowState = FormWindowState.Normal;
+                                    Program.MainForm.Activate();
+
+                                    // Switch tab
+                                    var tabControl = ((Parent as TabPage).Parent as TabControl);
+                                    tabControl?.SelectTab(tabControl.TabPages["tabConvertChkn"]);
+
+                                    // Open file
+                                    LoadFile(file);
+                                }));
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    // prevents high-CPU spin if failing repeatedly
+                    Thread.Sleep(50);
+                }
+            }
         }
     }
 

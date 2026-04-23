@@ -7,6 +7,8 @@ using System.Media;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using Triggerless.Native;
+
 
 namespace Triggerless.TriggerBot
 {
@@ -27,27 +29,7 @@ namespace Triggerless.TriggerBot
         }
 
         // ---- Win32 helpers for TopMost detection ----
-        private const int GWL_EXSTYLE = -20;
-        private const int WS_EX_TOPMOST = 0x00000008;
 
-        [DllImport("user32.dll", EntryPoint = "GetWindowLong")]
-        private static extern int GetWindowLong32(IntPtr hWnd, int nIndex);
-
-        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr")]
-        private static extern IntPtr GetWindowLongPtr64(IntPtr hWnd, int nIndex);
-
-        private static IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex)
-        {
-            if (IntPtr.Size == 8) return GetWindowLongPtr64(hWnd, nIndex);
-            return new IntPtr(GetWindowLong32(hWnd, nIndex));
-        }
-
-        private static bool IsWindowTopMost(IntPtr hwnd)
-        {
-            if (hwnd == IntPtr.Zero) return false;
-            long ex = GetWindowLongPtr(hwnd, GWL_EXSTYLE).ToInt64();
-            return (ex & WS_EX_TOPMOST) != 0;
-        }
 
         // -------- Public overloads mirroring MessageBox.Show --------
 
@@ -156,7 +138,7 @@ namespace Triggerless.TriggerBot
                 else if (owner != null)
                 {
                     ownerHandle = owner.Handle;
-                    ownerTopMost = IsWindowTopMost(ownerHandle);
+                    ownerTopMost = Native.User32.IsWindowTopMost(ownerHandle);
                 }
 
                 // Inherit TopMost from the owner so the dialog reliably appears above it
@@ -485,19 +467,10 @@ namespace Triggerless.TriggerBot
                 int on = enable ? 1 : 0;
 
                 // Try both known attributes; ignore failures on older builds
-                DwmSetWindowAttribute(hwnd, (DWMWINDOWATTRIBUTE)20, ref on, sizeof(int)); // DWMWA_USE_IMMERSIVE_DARK_MODE
-                DwmSetWindowAttribute(hwnd, (DWMWINDOWATTRIBUTE)19, ref on, sizeof(int)); // pre-20 constant on older builds
+                Shell32.DwmSetWindowAttribute(hwnd, (Shell32.DWMWINDOWATTRIBUTE)20, ref on, sizeof(int)); // DWMWA_USE_IMMERSIVE_DARK_MODE
+                Shell32.DwmSetWindowAttribute(hwnd, (Shell32.DWMWINDOWATTRIBUTE)19, ref on, sizeof(int)); // pre-20 constant on older builds
             }
 
-            private enum DWMWINDOWATTRIBUTE
-            {
-                DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20 = 19,
-                DWMWA_USE_IMMERSIVE_DARK_MODE = 20
-            }
-
-            [DllImport("dwmapi.dll")]
-            private static extern int DwmSetWindowAttribute(
-                IntPtr hwnd, DWMWINDOWATTRIBUTE attribute, ref int pvAttribute, int cbAttribute);
         }
     }
 }

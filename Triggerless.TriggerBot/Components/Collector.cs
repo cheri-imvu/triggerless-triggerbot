@@ -302,7 +302,7 @@ namespace Triggerless.TriggerBot
             }
         }
 
-        public async Task<ScanResult> ScanProductAsync(ProductSearchInfo product, System.Data.SQLite.SQLiteConnection connAppCache)
+        public async Task<ScanResult> ScanProductAsync(ProductSearchInfo product, Microsoft.Data.Sqlite.SqliteConnection connAppCache)
         {
 
             var processorCount = Environment.ProcessorCount;

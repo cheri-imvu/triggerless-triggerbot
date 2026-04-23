@@ -16,7 +16,7 @@ namespace Triggerless.TriggerBot
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        private static void Main()
+        private static void Main(string[] args)
         {
             //HandleMonitor.LogHandles("void Main()");
             bool pretendTurkish = false;
@@ -56,6 +56,7 @@ namespace Triggerless.TriggerBot
                         font: new Font("Liberation Sans", 11f),
                         followSystemDarkTitleBar: true
                     );
+                    SQLitePCL.Batteries.Init();
                     //_= Discord.CleanupChannel().Result;
                     int tryCount = 0;
                     int tryMax = 2;
@@ -71,6 +72,9 @@ namespace Triggerless.TriggerBot
                             {
                                 //HandleMonitor.LogHandles("before MainForm created");
                                 MainForm = new TriggerBotMainForm();
+                                if (args.Length > 0)
+                                    MainForm.StartFileArgument = args[0];
+
                                 //HandleMonitor.LogHandles("before Applcation.Run");
                                 Application.Run(MainForm);
                             }
