@@ -291,6 +291,7 @@ namespace Triggerless.TriggerBot
                 dynamic payload = new
                 {
                     Version = PlugIn.Shared.VersionNumber,
+                    ImvuVersion = PlugIn.Shared.ImvuVersion,
                     ElapsedSecs = timeElapsed.TotalSeconds,
                     ProductCount = workingProducts.Count,
                     LongestName = longestName,

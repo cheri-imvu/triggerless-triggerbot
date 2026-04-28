@@ -127,6 +127,7 @@ namespace Triggerless.TriggerBot
                 new
                 {
                     Version = PlugIn.Shared.VersionNumber.ToString(),
+                    ImvuVersion = PlugIn.Shared.ImvuVersion,
                     Exception = ex.ToString(),
                 }
             );

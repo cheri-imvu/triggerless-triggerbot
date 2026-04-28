@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Triggerless.TriggerBot.Components;
 using Triggerless.TriggerBot.Models;
 using Triggerless.XAFLib;
 
@@ -420,6 +421,14 @@ namespace Triggerless.TriggerBot
             var listsOfFiles = PackageCHKN(triggerPrefix);
 
             CreatePNG(triggerPrefix, listsOfFiles);
+
+            await TriggerlessApiClient.SendEventAsync(TriggerlessApiClient.EventType.CutTune,
+                new {
+                    Filename = Path.GetFileName(txtFilename.Text),
+                    TriggerPrefix = triggerPrefix,
+                    ChknCount = listsOfFiles.Count
+                }
+            );                
         }
 
         private void WaveformCreate(string filename)

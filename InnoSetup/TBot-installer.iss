@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Triggerless Triggerbot"
-#define MyAppVersion "1.1.2.2604"
+#define MyAppVersion "1.1.3.2604"
 #define MyAppPublisher "triggerless.com"
 #define MyAppURL "https://www.triggerless.com/triggerbot/"
 #define MyAppExeName "TriggerBot.exe"
@@ -384,21 +384,22 @@ Name: "{userdesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilen
 
 [Registry]
 ; =========================
-; ProgID definition
+; ProgID definition (used for association identity)
 ; =========================
 Root: HKCU; Subkey: "Software\Classes\Triggerbot.AudioHandler"; ValueType: string; ValueData: "Triggerbot"; Flags: uninsdeletekey
-Root: HKCU; Subkey: "Software\Classes\Triggerbot.AudioHandler\DefaultIcon"; ValueType: string; ValueData: "{app}\note3d.ico"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Classes\Triggerbot.AudioHandler\DefaultIcon"; ValueType: string; ValueData: "{app}\note3d.ico,0"; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\Classes\Triggerbot.AudioHandler\shell\open\command"; ValueType: string; ValueData: """{app}\Triggerless.ContextHelper.exe"" ""%1"""; Flags: uninsdeletekey
 
 ; =========================
-; Register as known application
+; Applications registration (THIS controls Open With name + icon)
 ; =========================
 Root: HKCU; Subkey: "Software\Classes\Applications\Triggerless.ContextHelper.exe"; ValueType: string; ValueData: "Triggerbot"; Flags: uninsdeletekey
-Root: HKCU; Subkey: "Software\Classes\Applications\Triggerless.ContextHelper.exe\DefaultIcon"; ValueType: string; ValueData: "{app}\3dnote.ico"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Classes\Applications\Triggerless.ContextHelper.exe"; ValueType: string; ValueName: "FriendlyAppName"; ValueData: "Triggerbot"; Flags: uninsdeletevalue
+Root: HKCU; Subkey: "Software\Classes\Applications\Triggerless.ContextHelper.exe\DefaultIcon"; ValueType: string; ValueData: "{app}\note3d.ico,0"; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\Classes\Applications\Triggerless.ContextHelper.exe\shell\open\command"; ValueType: string; ValueData: """{app}\Triggerless.ContextHelper.exe"" ""%1"""; Flags: uninsdeletekey
 
 ; =========================
-; Associate with extensions
+; Associate with extensions (makes it a valid Open With option)
 ; =========================
 Root: HKCU; Subkey: "Software\Classes\.mp3\OpenWithProgids";  ValueType: string; ValueName: "Triggerbot.AudioHandler"; ValueData: ""; Flags: uninsdeletevalue
 Root: HKCU; Subkey: "Software\Classes\.flac\OpenWithProgids"; ValueType: string; ValueName: "Triggerbot.AudioHandler"; ValueData: ""; Flags: uninsdeletevalue
@@ -408,7 +409,7 @@ Root: HKCU; Subkey: "Software\Classes\.aac\OpenWithProgids";  ValueType: string;
 Root: HKCU; Subkey: "Software\Classes\.m4u\OpenWithProgids";  ValueType: string; ValueName: "Triggerbot.AudioHandler"; ValueData: ""; Flags: uninsdeletevalue
 
 ; =========================
-; OpenWithList (visibility boost)
+; OpenWithList (push into suggested apps list immediately)
 ; =========================
 Root: HKCU; Subkey: "Software\Classes\.mp3\OpenWithList\Triggerless.ContextHelper.exe";  ValueType: string; ValueData: ""; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\Classes\.flac\OpenWithList\Triggerless.ContextHelper.exe"; ValueType: string; ValueData: ""; Flags: uninsdeletekey

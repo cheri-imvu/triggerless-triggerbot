@@ -171,11 +171,8 @@ namespace Triggerless.TriggerBot
 
         private void WearItem(object sender, WearItemEventArgs e)
         {
-            //if (_imvuChatWindow == IntPtr.Zero) return;
-            var line = $" *use {e.ProductId}";
+            var line = $"*use {e.ProductId}";
             ImvuWindow.SendText(line);
-            //DispatchText(line);
-
         }
         #endregion
 
@@ -189,6 +186,7 @@ namespace Triggerless.TriggerBot
                 {
                     Opening = true,
                     Version = PlugIn.Shared.VersionNumber.ToString(),
+                    ImvuVersion = PlugIn.Shared.ImvuVersion,
                 }
             );
 
@@ -474,7 +472,9 @@ namespace Triggerless.TriggerBot
             Common.CheckIfPaid();
             _updater.CheckForUpdate();
             txtSearch.Text = Settings.Default.LastSearch;
-
+#if !DEBUG
+            tabAppContainer.TabPages.Remove(tabDebug);
+#endif
             // Initialize Product Control apparatus
 
             InitializeSearchResultsPanel();
@@ -594,7 +594,8 @@ namespace Triggerless.TriggerBot
             };
             using (var trigClient = new TriggerlessApiClient())
             {
-                await trigClient.SendEvent(TriggerlessApiClient.EventType.AppCleanExit, new {Closing = true });
+                await trigClient.SendEvent(TriggerlessApiClient.EventType.AppCleanExit, 
+                    new { Closing = true });
                 await Task.Delay(1000); // give it a second to send the event before closing
             }
             if (reasons.Contains(e.CloseReason)) return;
@@ -614,7 +615,7 @@ namespace Triggerless.TriggerBot
             this.TopMost = chkKeepOnTop.Checked;
         }
 
-        #endregion
+#endregion
 
         #region Product Selection
         // Product Selection
@@ -779,7 +780,7 @@ namespace Triggerless.TriggerBot
             string result = string.Empty; // sometimes the first char gets cut off.
             if (hasAdditionalTriggers)
             {
-                result = hideTriggers ? $"  {HIDER}{TrimTrigger()}" : $"  /{TrimTrigger()}";
+                result = hideTriggers ? $" {HIDER}{TrimTrigger()}" : $"  /{TrimTrigger()}";
                 string[] addnTriggers = cboAdditionalTriggers.Text.Trim()
                     .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 if (addnTriggers.Length > 0)

@@ -63,6 +63,14 @@ namespace Triggerless.TriggerBot.Models
             return false;
         }
 
+        public static void Paste()
+        {
+            SetFocus();
+            _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_V);
+            _sim.Keyboard.KeyPress(KeyCode.RETURN);
+
+        }
+
         public static void SendText(string text)
         {
             SetFocus();
@@ -75,19 +83,29 @@ namespace Triggerless.TriggerBot.Models
                     currClipText = Clipboard.GetText();
                 }
                 
-                _sim.Keyboard.ModifiedKeyStroke(KeyCode.CONTROL, KeyCode.VK_A);
-                _sim.Keyboard.ModifiedKeyStroke(KeyCode.CONTROL, KeyCode.VK_X);
-                _sim.Keyboard.TextEntry(text);
+                _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_A);
+                _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_X);
+                string prevText = Clipboard.GetText();
+                // Change the way we send text to IMVU chat to avoid 'ax' being sent when
+                //_sim.Keyboard.TextEntry(text);
+
+                Clipboard.SetText(text);
+                _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_V);
+
                 _sim.Keyboard.KeyPress(KeyCode.RETURN);
-                if (Clipboard.ContainsText())
+                
+                if (!string.IsNullOrEmpty(prevText))
                 {
-                    string prevText = Clipboard.GetText();
+                    
                     if (prevText == currClipText || String.IsNullOrEmpty(prevText))
                     {
                         return;
                     }
-                    _sim.Keyboard.TextEntry(prevText);
+//                    _sim.Keyboard.TextEntry(prevText);
+                    Clipboard.SetText(prevText);
+                    _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_V);
                 }
+
             }
         }
 

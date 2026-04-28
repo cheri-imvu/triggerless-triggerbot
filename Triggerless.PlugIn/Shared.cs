@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
@@ -55,6 +56,19 @@ namespace Triggerless.PlugIn
                     return reader.ReadToEnd();
                 }
             }
+        }
+
+        public static string ImvuVersion {
+        get 
+            {
+                var versionFile = Path.Combine(Location.ImvuLocation, "IMVUClient.exe");
+                if (File.Exists(versionFile))
+                {
+                    var versionInfo = FileVersionInfo.GetVersionInfo(versionFile);
+                    return versionInfo.FileVersion;
+                }
+                return "Not Installed";
+            }        
         }
     }
 

@@ -135,12 +135,14 @@ namespace Triggerless.TriggerBot
             this.lblCopyright = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.tabDebug = new System.Windows.Forms.TabPage();
             this._toolTip = new System.Windows.Forms.ToolTip(this.components);
             this._triggerTimer = new System.Timers.Timer();
             this._progressTimer = new System.Windows.Forms.Timer(this.components);
             this._lyricTimer = new System.Windows.Forms.Timer(this.components);
             this.lblNoResults = new System.Windows.Forms.Label();
             this._collector = new Triggerless.TriggerBot.Collector();
+            this.debugCtrl1 = new Triggerless.TriggerBot.DebugCtrl();
             this.tabAppContainer.SuspendLayout();
             this.tabPlayback.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
@@ -167,6 +169,7 @@ namespace Triggerless.TriggerBot
             ((System.ComponentModel.ISupportInitialize)(this.picDiscord)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.tabDebug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._triggerTimer)).BeginInit();
             this.SuspendLayout();
             // 
@@ -177,6 +180,7 @@ namespace Triggerless.TriggerBot
             this.tabAppContainer.Controls.Add(this.tabLyrics);
             this.tabAppContainer.Controls.Add(this.tabTools);
             this.tabAppContainer.Controls.Add(this.tabAbout);
+            this.tabAppContainer.Controls.Add(this.tabDebug);
             this.tabAppContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabAppContainer.Location = new System.Drawing.Point(0, 0);
             this.tabAppContainer.Name = "tabAppContainer";
@@ -1424,6 +1428,17 @@ namespace Triggerless.TriggerBot
             this.pictureBox1.TabIndex = 14;
             this.pictureBox1.TabStop = false;
             // 
+            // tabDebug
+            // 
+            this.tabDebug.Controls.Add(this.debugCtrl1);
+            this.tabDebug.Location = new System.Drawing.Point(4, 26);
+            this.tabDebug.Name = "tabDebug";
+            this.tabDebug.Padding = new System.Windows.Forms.Padding(3);
+            this.tabDebug.Size = new System.Drawing.Size(1066, 630);
+            this.tabDebug.TabIndex = 5;
+            this.tabDebug.Text = "Debug";
+            this.tabDebug.UseVisualStyleBackColor = true;
+            // 
             // _triggerTimer
             // 
             this._triggerTimer.SynchronizingObject = this.picBanner;
@@ -1450,6 +1465,18 @@ namespace Triggerless.TriggerBot
             // _collector
             // 
             this._collector.CollectorEvent += new Triggerless.TriggerBot.Collector.CollectorEventHandler(this.OnCollectorEvent);
+            // 
+            // debugCtrl1
+            // 
+            this.debugCtrl1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
+            this.debugCtrl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.debugCtrl1.Font = new System.Drawing.Font("Liberation Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.debugCtrl1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.debugCtrl1.Location = new System.Drawing.Point(3, 3);
+            this.debugCtrl1.Margin = new System.Windows.Forms.Padding(4);
+            this.debugCtrl1.Name = "debugCtrl1";
+            this.debugCtrl1.Size = new System.Drawing.Size(1060, 624);
+            this.debugCtrl1.TabIndex = 0;
             // 
             // TriggerBotMainForm
             // 
@@ -1504,6 +1531,7 @@ namespace Triggerless.TriggerBot
             ((System.ComponentModel.ISupportInitialize)(this.picDiscord)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.tabDebug.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this._triggerTimer)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1615,6 +1643,8 @@ namespace Triggerless.TriggerBot
         private System.Windows.Forms.Button btnSearchTags;
         private System.Windows.Forms.Button btnRecentlyAdded;
         private System.Windows.Forms.Button btnFavorites;
+        private System.Windows.Forms.TabPage tabDebug;
+        private DebugCtrl debugCtrl1;
     }
 }
 
