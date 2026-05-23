@@ -101,6 +101,7 @@ namespace Triggerless.TriggerBot
             new Filter(Gender.Female, true, "Eyewear (generic, new)", 3122),
             new Filter(Gender.Female, true, "Legacy", 155),
             new Filter(Gender.Female, true, "Tattoos", 3128, 3096) // Holding back PR on Music
+            // cPath=3117_153_3120
             
             // get the right number
         };

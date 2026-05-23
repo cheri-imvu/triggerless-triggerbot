@@ -329,11 +329,23 @@
     <Compile Include="Components\DebugCtrl.Designer.cs">
       <DependentUpon>DebugCtrl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\WaveformEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\WaveformEditorControl.Designer.cs">
+      <DependentUpon>WaveformEditorControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\AddnTriggersForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\AddnTriggersForm.Designer.cs">
       <DependentUpon>AddnTriggersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CustomCutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CustomCutForm.Designer.cs">
+      <DependentUpon>CustomCutForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\DeepScanForm.cs">
       <SubType>Form</SubType>
@@ -474,8 +486,14 @@
     <EmbeddedResource Include="Components\DebugCtrl.resx">
       <DependentUpon>DebugCtrl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Components\WaveformEditorControl.resx">
+      <DependentUpon>WaveformEditorControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\AddnTriggersForm.resx">
       <DependentUpon>AddnTriggersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CustomCutForm.resx">
+      <DependentUpon>CustomCutForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DeepScanForm.resx">
       <DependentUpon>DeepScanForm.cs</DependentUpon>

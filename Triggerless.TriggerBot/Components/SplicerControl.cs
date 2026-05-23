@@ -19,6 +19,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Triggerless.TriggerBot.Components;
+using Triggerless.TriggerBot.Forms;
 using Triggerless.TriggerBot.Models;
 using Triggerless.XAFLib;
 
@@ -194,30 +195,28 @@ namespace Triggerless.TriggerBot
             lblCutStageIdle.Update();
             _stage = CutStage.SliceAudio;
             //timer1.Start();
+            var segmenterParams = new SegmenterParameters
+            {
+                InputFilePath = txtFilename.Text,
+                OutputDirectory = _outputPath,
+                OutputFileNamePrefix = triggerPrefix
+            };
 
             try
             {
                 if (rdoMinima.Checked)
                 {
-                    _audioSegmenter.SegmentBySmartCut(
-                        txtFilename.Text,
-                        _outputPath,
-                        triggerPrefix
-                    );
+                    segmenterParams.SegmentType = SegmentType.SmartCut;
                 }
                 else
                 {
-                    _audioSegmenter.SegmentAudio(
-                        txtFilename.Text,
-                        _outputPath,
-                        TimeSpan.FromSeconds(
-                            double.Parse(cboAudioLength.SelectedItem.ToString(), 
+                    segmenterParams.SegmentType = SegmentType.FixedDuration;
+                    segmenterParams.SegmentDuration = TimeSpan.FromSeconds(
+                        double.Parse(cboAudioLength.SelectedItem.ToString(),
                             NumberStyles.Float, CultureInfo.CurrentCulture)
-                        ),
-                        triggerPrefix
                     );
                 }
-
+                _audioSegmenter.Segment(segmenterParams);
             }
             catch (Exception ex)
             {
@@ -747,6 +746,14 @@ namespace Triggerless.TriggerBot
                     Thread.Sleep(50);
                 }
             }
+        }
+
+        private void btnCustom_Click(object sender, EventArgs e)
+        {
+            var f = new CustomCutForm();
+            f.AudioFilePath = txtFilename.Text;
+            f.TopMost = Program.MainForm.TopMost;
+            f.ShowDialog(Program.MainForm);
         }
     }
 

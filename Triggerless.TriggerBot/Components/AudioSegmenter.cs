@@ -43,6 +43,23 @@ namespace Triggerless.TriggerBot
             envKey.Close();
         }
 
+        public int Segment(SegmenterParameters parameters)
+        {
+            switch (parameters.SegmentType)
+            {
+                case SegmentType.FixedDuration:
+                    SegmentByFixedDuration(parameters.InputFilePath, parameters.OutputDirectory, parameters.SegmentDuration, parameters.OutputFileNamePrefix);
+                    return 0;
+                case SegmentType.SmartCut:
+                    return SegmentBySmartCut(parameters.InputFilePath, parameters.OutputDirectory, parameters.OutputFileNamePrefix);
+                case SegmentType.Custom:
+                    // Implement custom segmentation logic based on parameters.CustomCutPoints
+                    throw new NotImplementedException("Custom segmentation is not implemented yet.");
+                default:
+                    throw new ArgumentException("Invalid segment type specified.");
+            }
+        }
+
 
         public int SegmentBySmartCut(string inputFilePath, string outputDir, string filenamePrefix)
         {
@@ -173,7 +190,7 @@ namespace Triggerless.TriggerBot
             return successfulExports;
         }
 
-        public void SegmentAudio(string inputFilePath, string outputDirectory, TimeSpan segmentDuration, string outputFileNamePrefix)
+        public void SegmentByFixedDuration(string inputFilePath, string outputDirectory, TimeSpan segmentDuration, string outputFileNamePrefix)
         {
             if (string.IsNullOrWhiteSpace(outputFileNamePrefix))
             {
@@ -368,6 +385,23 @@ namespace Triggerless.TriggerBot
             }
         }
 
+    }
+
+    public class SegmenterParameters
+    {
+        public SegmentType SegmentType { get; set; }
+        public string InputFilePath { get; set; }
+        public string OutputDirectory { get; set; }
+        public TimeSpan SegmentDuration { get; set; }
+        public string OutputFileNamePrefix { get; set; }
+        public IEnumerable<TimeSpan> CustomCutPoints { get; set; }
+    }
+
+    public enum SegmentType
+    {
+        FixedDuration,
+        SmartCut,
+        Custom,
     }
 
 }
