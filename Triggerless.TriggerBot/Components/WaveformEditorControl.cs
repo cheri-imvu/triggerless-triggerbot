@@ -23,6 +23,8 @@ namespace Triggerless.TriggerBot
         private const int MarkerTriangleWidth = 5;
         private const int MarkerTriangleHeight = 6;
         private const int MarkerInvalidatePadding = 10;
+        private const int MarkerDashLength = 6;
+        private const int MarkerGapLength = 4;
 
         // =========================================================
         // AUDIO DATA
@@ -50,6 +52,14 @@ namespace Triggerless.TriggerBot
             new List<CutMarker>();
 
         private CutMarker _draggingMarker = null;
+
+        // =========================================================
+        // UNDO STACK
+        // =========================================================
+
+        private readonly Stack<WaveformEditorState> _undoStack = new Stack<WaveformEditorState>();
+        private bool _suppressUndoPush = false;
+
 
         // =========================================================
         // BITMAP CACHE
@@ -102,10 +112,77 @@ namespace Triggerless.TriggerBot
 
         }
 
+        private void PushUndoState()
+        {
+            if (_suppressUndoPush)
+            {
+                return;
+            }
+
+            WaveformEditorState state = new WaveformEditorState
+                {
+                    ViewportStartSeconds = _viewportStartSeconds,
+                    ViewportDurationSeconds = _viewportDurationSeconds,
+                    CutMarkers = CloneMarkers(_cutMarkers)
+                };
+
+            _undoStack.Push(state);
+        }
+
+        private void RestoreState(WaveformEditorState state)
+        {
+            _suppressUndoPush = true;
+
+            _viewportStartSeconds = state.ViewportStartSeconds;
+
+            _viewportDurationSeconds = state.ViewportDurationSeconds;
+
+            _cutMarkers.Clear();
+
+            _cutMarkers.AddRange(CloneMarkers(state.CutMarkers));
+
+            ClampViewport();
+
+            UpdateScrollbar();
+
+            viewportPanel.Invalidate();
+
+            _suppressUndoPush = false;
+        }
+
+        private List<CutMarker> CloneMarkers(List<CutMarker> source)
+        {
+            List<CutMarker> result =new List<CutMarker>();
+            foreach (CutMarker marker in source)
+            {
+                result.Add(new CutMarker {TimeSeconds = marker.TimeSeconds});
+            }
+
+            return result;
+        }
+
+        private void Undo()
+        {
+            if (_undoStack.Count == 0) return;
+
+            WaveformEditorState state = _undoStack.Pop();
+            RestoreState(state);
+        }
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             double centerTime = _viewportStartSeconds
                 + (_viewportDurationSeconds * 0.5);
+
+            // =====================================================
+            // CTRL + Z
+            // =====================================================
+
+            if (keyData == (Keys.Control | Keys.Z))
+            {
+                Undo();
+                return true;
+            }
 
             // =====================================================
             // CTRL + PLUS
@@ -152,6 +229,7 @@ namespace Triggerless.TriggerBot
 
             if (_cutMarkers.Count > 0)
             {
+                PushUndoState();
                 start = _cutMarkers[_cutMarkers.Count - 1].TimeSeconds;
             }
 
@@ -189,6 +267,9 @@ namespace Triggerless.TriggerBot
             RegenerateWaveformBitmap();
 
             viewportPanel.Invalidate();
+
+            _undoStack.Clear();
+            PushUndoState();
         }
 
         // =========================================================
@@ -412,16 +493,42 @@ namespace Triggerless.TriggerBot
             {
                 foreach (CutMarker marker in _cutMarkers)
                 {
-                    DrawSingleCutMarker(g, pen, brush, marker);
+                    DrawSingleCutMarker(g, marker);
                 }
             }
         }
 
-        private void DrawSingleCutMarker(Graphics g, Pen pen, Brush brush, CutMarker marker)
+        private void DrawSingleCutMarker(Graphics g, CutMarker marker)
         {
             int x = TimeToX(marker.TimeSeconds);
 
-            g.DrawLine(pen, x, 0, x, viewportPanel.Height);
+            // =====================================================
+            // BLACK / YELLOW DASHED LINE
+            // =====================================================
+
+            int y = MarkerTriangleHeight;
+            bool yellow = true;
+
+            while (y < viewportPanel.Height)
+            {
+                int y2 = Math.Min(
+                    y + MarkerDashLength,
+                    viewportPanel.Height);
+
+                using (Pen dashPen = new Pen(
+                    yellow ? Color.Yellow : Color.Black,
+                    1))
+                {
+                    g.DrawLine(dashPen, x, y, x, y2);
+                }
+
+                y += MarkerDashLength;
+                yellow = !yellow;
+            }
+
+            // =====================================================
+            // TRIANGLE
+            // =====================================================
 
             Point[] tri =
             {
@@ -430,9 +537,9 @@ namespace Triggerless.TriggerBot
                 new Point(x, MarkerTriangleHeight)
             };
 
-            g.FillPolygon(brush, tri);
+            g.FillPolygon(Brushes.Yellow, tri);
+            g.DrawPolygon(Pens.Black, tri);
         }
-
         private void DrawTimeline(Graphics g)
         {
             using (Pen pen = new Pen(Color.Black))
@@ -473,6 +580,7 @@ namespace Triggerless.TriggerBot
 
             if (nearest != null)
             {
+                PushUndoState();
                 _draggingMarker = nearest;
             }
         }
@@ -518,6 +626,8 @@ namespace Triggerless.TriggerBot
         private void ViewportPanel_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left) return;
+
+            PushUndoState();
 
             CutMarker nearest = FindMarkerAtPixel(e.X);
 
@@ -668,6 +778,8 @@ namespace Triggerless.TriggerBot
 
         private void ZoomViewport(double factor, double anchorTime)
         {
+            PushUndoState();
+                
             double newDuration = _viewportDurationSeconds * factor;
 
             if (newDuration < _minZoomSeconds)
@@ -840,5 +952,12 @@ namespace Triggerless.TriggerBot
     public class CutMarker
     {
         public double TimeSeconds {get; set;}
+    }
+
+    public class WaveformEditorState
+    {
+        public double ViewportStartSeconds { get; set; }
+        public double ViewportDurationSeconds { get; set; }
+        public List<CutMarker> CutMarkers { get; set; }
     }
 }
