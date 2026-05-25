@@ -24,8 +24,10 @@ namespace Triggerless.TriggerBot
         private const int MarkerTriangleHeight = 6;
         private const int MarkerInvalidatePadding = 10;
         private const int MarkerDashLength = 6;
-        private const int MarkerGapLength = 4;
 
+        private const double BeatDetectionThreshold = 0.008;
+        private const double MinBeatSpacingSeconds = 0.12;
+        private const int BeatSamplesPerWindow = 1024;
         // =========================================================
         // AUDIO DATA
         // =========================================================
@@ -34,6 +36,7 @@ namespace Triggerless.TriggerBot
             new List<WaveformPeak>();
         private string _loadedFile;
         private double _audioLengthSeconds;
+        private readonly List<double> _beatTimes = new List<double>();
 
         // =========================================================
         // VIEWPORT
@@ -248,17 +251,26 @@ namespace Triggerless.TriggerBot
             _loadedFile = filePath;
 
             _waveformPeaks.Clear();
+            _beatTimes.Clear();
+            _cutMarkers.Clear();
 
             using (WaveStream reader = UniversalAudioReader.Open(filePath))
             {
                 _audioLengthSeconds = reader.TotalTime.TotalSeconds;
                 _maxZoomSeconds = _audioLengthSeconds;
+
                 GenerateWaveformData(reader);
+            }
+
+            using (WaveStream reader = UniversalAudioReader.Open(filePath))
+            {
+                GenerateBeatMarkers(reader);
             }
 
             _viewportStartSeconds = 0;
 
-            _viewportDurationSeconds = Math.Min(20, _audioLengthSeconds);
+            _viewportDurationSeconds =
+                Math.Min(20, _audioLengthSeconds);
 
             ClampViewport();
 
@@ -272,6 +284,76 @@ namespace Triggerless.TriggerBot
             PushUndoState();
         }
 
+        private void GenerateBeatMarkers(WaveStream reader)
+        {
+            _beatTimes.Clear();
+
+            var sampleProvider = reader.ToSampleProvider();
+            int sampleRate = sampleProvider.WaveFormat.SampleRate;
+
+            const double windowMs = 20.0;
+            int windowSamples = (int)(sampleRate * windowMs / 1000.0);
+
+            float[] buffer = new float[windowSamples];
+
+            long totalSamples = 0;
+
+            double previousEnergy = 0;
+
+            List<double> onsetTimes = new List<double>();
+
+            double timeSeconds = 0;
+
+            // -----------------------------
+            // PASS 1: ONSET DETECTION ONLY
+            // -----------------------------
+            while (true)
+            {
+                int read = sampleProvider.Read(buffer, 0, buffer.Length);
+                if (read == 0)
+                    break;
+
+                double energy = 0;
+
+                for (int i = 0; i < read; i++)
+                    energy += buffer[i] * buffer[i];
+
+                energy /= read;
+                energy = Math.Sqrt(energy);
+
+                timeSeconds = totalSamples / (double)sampleRate;
+
+                bool rising = energy > previousEnergy * 1.2;
+                bool above = energy > BeatDetectionThreshold;
+
+                if (rising && above)
+                {
+                    onsetTimes.Add(timeSeconds);
+                }
+
+                previousEnergy = energy;
+                totalSamples += read;
+            }
+
+            // -----------------------------
+            // PASS 2: FIXED GRID (NO AUDIO DEPENDENCE)
+            // -----------------------------
+            double bpm = 120.0; // TEMPORARY: lock for stability test
+            double beatInterval = 60.0 / bpm;
+
+            double duration = reader.TotalTime.TotalSeconds;
+
+            for (double t = 0; t < duration; t += beatInterval)
+            {
+                _beatTimes.Add(t);
+            }
+
+            // -----------------------------
+            // OPTIONAL: store onsets separately
+            // -----------------------------
+            // _onsetTimes = onsetTimes;
+        }
+        
         // =========================================================
         // WAVEFORM GENERATION
         // =========================================================
@@ -441,6 +523,8 @@ namespace Triggerless.TriggerBot
 
             DrawVisibleWaveform(g);
 
+            DrawBeatMarkers(g);
+
             DrawCutMarkers(g);
         }
 
@@ -486,15 +570,47 @@ namespace Triggerless.TriggerBot
                 GraphicsUnit.Pixel);
         }
 
+        private void DrawBeatMarkers(Graphics g)
+        {
+            if (_beatTimes.Count == 0)
+            {
+                return;
+            }
+
+            Rectangle waveformRect = GetWaveformRect();
+
+            using (Pen pen = new Pen(Color.Red))
+            {
+                foreach (double beatTime in _beatTimes)
+                {
+                    if (beatTime < _viewportStartSeconds)
+                    {
+                        continue;
+                    }
+
+                    if (beatTime >
+                        _viewportStartSeconds + _viewportDurationSeconds)
+                    {
+                        break;
+                    }
+
+                    int x = TimeToX(beatTime);
+
+                    g.DrawLine(
+                        pen,
+                        x,
+                        waveformRect.Top,
+                        x,
+                        waveformRect.Bottom);
+                }
+            }
+        }
+
         private void DrawCutMarkers(Graphics g)
         {
-            using (Pen pen = new Pen(Color.Yellow, 1))
-            using (SolidBrush brush = new SolidBrush(Color.Yellow))
+            foreach (CutMarker marker in _cutMarkers)
             {
-                foreach (CutMarker marker in _cutMarkers)
-                {
-                    DrawSingleCutMarker(g, marker);
-                }
+                DrawSingleCutMarker(g, marker);
             }
         }
 
