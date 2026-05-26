@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Triggerless.TriggerBot.Models;
 
@@ -51,6 +52,7 @@ namespace Triggerless.TriggerBot.Components
         {
             Empty,
             Success,
+            Timeout,
             NetworkError,
             ServerError,
             OtherError,
@@ -139,22 +141,56 @@ namespace Triggerless.TriggerBot.Components
 
         public async Task<ApiResult> SendEvent<T>(EventType eventType, T info)
         {
-            var result = new ApiResult { Status = ApiResultStatus.Empty };
+            var result = new ApiResult{ Status = ApiResultStatus.Empty };
+
             var jsonText = JsonConvert.SerializeObject(info);
+
             short code = (short)eventType;
+
             try
             {
-                var response = await _client.PostAsync($"bot/event/{code}", new StringContent(jsonText));
+                using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
+                {
+                    var response = await _client.PostAsync(
+                        $"bot/event/{code}",
+                        new StringContent(jsonText),
+                        cts.Token
+                    );
+                    if (response != null)
+                    {
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            result.Status = ApiResultStatus.Success;
+                            result.Message = "Event sent successfully.";
+                        }
+                        else if (response.StatusCode == HttpStatusCode.InternalServerError)
+                        {
+                            result.Status = ApiResultStatus.ServerError;
+                            result.Message = await response.Content?.ReadAsStringAsync();
+                        }
+                        else
+                        {
+                            result.Status = ApiResultStatus.OtherError;
+                            result.Message = await response.Content?.ReadAsStringAsync();
+                        }
+                    }
+                }
+            }
+            catch (TaskCanceledException tce)
+            {
+                Debug.WriteLine("Request timed out.");
+                result.Status = ApiResultStatus.Timeout;
+                result.Exception = tce;
             }
             catch (Exception ex)
             {
-                Debug.Write(ex);
+                Debug.WriteLine(ex);
+                result.Status = ApiResultStatus.OtherError;
+                result.Exception = ex;
             }
-            
 
             return result;
         }
-
         public static async Task<ApiResult> SendEventAsync<T>(EventType eventType, T info)
         {
             using (var client = new TriggerlessApiClient())

@@ -21,6 +21,7 @@ namespace Triggerless.TriggerBot
 {
     public partial class TriggerBotMainForm : Form
     {
+        private DateTime _triggerbotStartTime = DateTime.Now;
         public string StartFileArgument { get; set; } = null;
 
         private Update _updater;
@@ -594,9 +595,22 @@ namespace Triggerless.TriggerBot
             };
             using (var trigClient = new TriggerlessApiClient())
             {
-                await trigClient.SendEvent(TriggerlessApiClient.EventType.AppCleanExit, 
-                    new { Closing = true });
-                await Task.Delay(1000); // give it a second to send the event before closing
+                try
+                {
+                    var result = await trigClient.SendEvent(
+                        TriggerlessApiClient.EventType.AppCleanExit, 
+                        new { 
+                            Closing = true,
+                            UptimeMinutes = (DateTime.Now - _triggerbotStartTime).TotalMinutes,
+                            Reason = e.CloseReason.ToString()
+                        }
+                    );
+                    await Task.Delay(6000); // give it a moment to send before the app fully closes
+                }
+                catch (Exception ex) 
+                {
+                    Debug.WriteLine($"Failed to send exit event to Triggerless API: {ex}");
+                }                
             }
             if (reasons.Contains(e.CloseReason)) return;
             _updater.RunSetupFileIfRequired();

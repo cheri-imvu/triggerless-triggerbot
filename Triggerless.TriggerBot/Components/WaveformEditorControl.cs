@@ -28,6 +28,11 @@ namespace Triggerless.TriggerBot
         private const double BeatDetectionThreshold = 0.008;
         private const double MinBeatSpacingSeconds = 0.12;
         private const int BeatSamplesPerWindow = 1024;
+
+        private const int PlayheadDashLength = 2;
+        private Bitmap _viewportBitmap;
+        private bool _viewportBitmapDirty = true;
+
         // =========================================================
         // AUDIO DATA
         // =========================================================
@@ -79,6 +84,19 @@ namespace Triggerless.TriggerBot
         private readonly Color _baselineColor = Color.FromArgb(120, 120, 180);
 
         // =========================================================
+        // PLAYHEAD
+        // =========================================================
+
+        private readonly Timer _playbackTimer = new Timer();
+        private bool _isPlaying;
+        private double _playheadTimeSeconds;
+        private double _playbackStartTimeSeconds;
+        private double _playbackEndTimeSeconds;
+        private int _previousPlayheadX = -1;
+        private IWavePlayer _waveOut;
+        private WaveStream _playbackReader;
+
+        // =========================================================
         // CONSTRUCTOR
         // =========================================================
 
@@ -113,6 +131,8 @@ namespace Triggerless.TriggerBot
             viewportPanel.MouseEnter += ViewportPanel_MouseEnter;
             this.TabStop = true;
 
+            _playbackTimer.Interval = 8;
+            _playbackTimer.Tick += PlaybackTimer_Tick;
         }
 
         private void PushUndoState()
@@ -147,6 +167,8 @@ namespace Triggerless.TriggerBot
             ClampViewport();
 
             UpdateScrollbar();
+
+            _viewportBitmapDirty = true;
 
             viewportPanel.Invalidate();
 
@@ -215,6 +237,10 @@ namespace Triggerless.TriggerBot
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
+        // =====================================================
+        // VIEWPORT INTERACTION
+        // =====================================================
+
         private void ViewportPanel_MouseWheel(object sender, MouseEventArgs e)
         {
             double factor = e.Delta > 0 ? 0.5 : 2.0;
@@ -240,6 +266,7 @@ namespace Triggerless.TriggerBot
             _viewportDurationSeconds = Math.Min(20, _audioLengthSeconds);
             ClampViewport();
             UpdateScrollbar();
+            _viewportBitmapDirty = true;
             viewportPanel.Invalidate();
         }
         // =========================================================
@@ -277,7 +304,7 @@ namespace Triggerless.TriggerBot
             UpdateScrollbar();
 
             RegenerateWaveformBitmap();
-
+            _viewportBitmapDirty = true;
             viewportPanel.Invalidate();
 
             _undoStack.Clear();
@@ -398,6 +425,8 @@ namespace Triggerless.TriggerBot
             if (_waveformPeaks.Count == 0) return;
 
             _fullWaveformBitmap?.Dispose();
+            _viewportBitmap?.Dispose();
+            _viewportBitmap = null;
 
             Rectangle waveformRect = GetWaveformRect();
 
@@ -422,7 +451,7 @@ namespace Triggerless.TriggerBot
             {
                 g.SmoothingMode = SmoothingMode.None;
                 g.PixelOffsetMode = PixelOffsetMode.Half;
-                g.Clear(_backgroundColor);
+                //g.Clear(_backgroundColor);
 
                 DrawWaveformBitmap(g, bitmapWidth, bitmapHeight);
             }
@@ -472,31 +501,16 @@ namespace Triggerless.TriggerBot
 
                     WaveformPeak peak = _waveformPeaks[peakIndex];
 
-                    int y1 =
-                        centerY
-                        - (int)(
-                            peak.Max
-                            * height
-                            * 0.45f);
+                    int y1 = centerY - (int)(peak.Max * height * 0.45f);
 
-                    int y2 =
-                        centerY
-                        - (int)(
-                            peak.Min
-                            * height
-                            * 0.45f);
+                    int y2 = centerY - (int)(peak.Min * height * 0.45f);
 
                     if (y1 == y2)
                     {
                         y2 = y1 + 1;
                     }
 
-                    g.DrawLine(
-                        pen,
-                        x,
-                        y1,
-                        x,
-                        y2);
+                    g.DrawLine(pen, x, y1, x, y2);
                 }
             }
         }
@@ -505,27 +519,85 @@ namespace Triggerless.TriggerBot
         // PAINTING
         // =========================================================
 
-        private void ViewportPanel_Paint(
-            object sender,
-            PaintEventArgs e)
+        private void RegenerateViewportBitmap()
+        {
+            if (viewportPanel.Width <= 0 ||
+                viewportPanel.Height <= 0)
+            {
+                return;
+            }
+
+            if (_viewportBitmap != null)
+            {
+                _viewportBitmap.Dispose();
+                _viewportBitmap = null;
+            }
+
+            _viewportBitmap = new Bitmap(
+                viewportPanel.Width,
+                viewportPanel.Height);
+
+            using (Graphics g =
+                Graphics.FromImage(_viewportBitmap))
+            {
+                //g.Clear(_backgroundColor);
+
+                DrawTimeline(g);
+
+                DrawVisibleWaveform(g);
+
+                DrawBeatMarkers(g);
+
+                DrawCutMarkers(g);
+            }
+
+            _viewportBitmapDirty = false;
+        }
+
+        private void ViewportPanel_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
 
-            g.SmoothingMode = SmoothingMode.None;
+            if (_viewportBitmapDirty ||
+                _viewportBitmap == null)
+            {
+                RegenerateViewportBitmap();
+            }
 
-            g.InterpolationMode = InterpolationMode.NearestNeighbor;
+            if (_viewportBitmap != null)
+            {
+                g.DrawImageUnscaled(_viewportBitmap, 0, 0);
+            }
 
-            g.PixelOffsetMode = PixelOffsetMode.Half;
+            DrawPlayHead(g);
+        }
 
-            g.Clear(_backgroundColor);
+        private void DrawPlayHead(Graphics g)
+        {
+            if (_playbackReader == null)
+            {
+                return;
+            }
 
-            DrawTimeline(g);
+            int x = TimeToX(_playheadTimeSeconds);
 
-            DrawVisibleWaveform(g);
+            bool drawLime = true;
 
-            DrawBeatMarkers(g);
+            for (int y = 0; y < viewportPanel.Height; y += PlayheadDashLength)
+            {
+                Pen pen = drawLime
+                    ? Pens.Lime
+                    : Pens.Black;
 
-            DrawCutMarkers(g);
+                int y2 =
+                    Math.Min(
+                        y + PlayheadDashLength - 1,
+                        viewportPanel.Height - 1);
+
+                g.DrawLine(pen, x, y, x, y2);
+
+                drawLime = !drawLime;
+            }
         }
 
         private void DrawVisibleWaveform(Graphics g)
@@ -535,39 +607,22 @@ namespace Triggerless.TriggerBot
 
             Rectangle waveformRect = GetWaveformRect();
 
-            double startPercent =
-                _viewportStartSeconds
-                / _audioLengthSeconds;
+            double startPercent = _viewportStartSeconds / _audioLengthSeconds;
 
-            double endPercent =
-                (_viewportStartSeconds
+            double endPercent = (_viewportStartSeconds
                 + _viewportDurationSeconds)
                 / _audioLengthSeconds;
 
-            int srcX =
-                (int)(
-                    startPercent
-                    * _fullWaveformBitmap.Width);
+            int srcX = (int)(startPercent * _fullWaveformBitmap.Width);
 
-            int srcWidth =
-                (int)(
-                    (endPercent - startPercent)
-                    * _fullWaveformBitmap.Width);
+            int srcWidth = (int)((endPercent - startPercent) * _fullWaveformBitmap.Width);
 
             if (srcWidth <= 0) return;
 
             Rectangle srcRect =
-                new Rectangle(
-                    srcX,
-                    0,
-                    srcWidth,
-                    _fullWaveformBitmap.Height);
+                new Rectangle(srcX, 0, srcWidth, _fullWaveformBitmap.Height);
 
-            g.DrawImage(
-                _fullWaveformBitmap,
-                waveformRect,
-                srcRect,
-                GraphicsUnit.Pixel);
+            g.DrawImage( _fullWaveformBitmap, waveformRect, srcRect, GraphicsUnit.Pixel);
         }
 
         private void DrawBeatMarkers(Graphics g)
@@ -596,12 +651,7 @@ namespace Triggerless.TriggerBot
 
                     int x = TimeToX(beatTime);
 
-                    g.DrawLine(
-                        pen,
-                        x,
-                        waveformRect.Top,
-                        x,
-                        waveformRect.Bottom);
+                    g.DrawLine(pen, x, waveformRect.Top, x, waveformRect.Bottom);
                 }
             }
         }
@@ -715,7 +765,7 @@ namespace Triggerless.TriggerBot
                 Rectangle.Union(
                     GetMarkerInvalidateRect(oldX),
                     GetMarkerInvalidateRect(newX));
-
+            _viewportBitmapDirty = true;
             viewportPanel.Invalidate(dirty);
         }
 
@@ -734,7 +784,7 @@ namespace Triggerless.TriggerBot
                             a.TimeSeconds.CompareTo(
                                 b.TimeSeconds);
                     });
-
+                _viewportBitmapDirty = true;
                 viewportPanel.Invalidate();
             }
         }
@@ -759,8 +809,9 @@ namespace Triggerless.TriggerBot
                         TimeSeconds = ClampTime(XToTime(e.X))
                     });
             }
-
+            _viewportBitmapDirty = true;
             viewportPanel.Invalidate();
+            
         }
 
         private CutMarker FindMarkerAtPixel(int x)
@@ -870,7 +921,7 @@ namespace Triggerless.TriggerBot
             }
 
             ClampViewport();
-
+            _viewportBitmapDirty = true;
             viewportPanel.Invalidate();
         }
 
@@ -918,6 +969,7 @@ namespace Triggerless.TriggerBot
 
             UpdateScrollbar();
 
+            _viewportBitmapDirty = true;
             viewportPanel.Invalidate();
         }
         // =========================================================
@@ -1043,10 +1095,156 @@ namespace Triggerless.TriggerBot
         // RESIZE
         // =========================================================
 
-        private void ViewportPanel_Resize(object sender, EventArgs e)
+
+
+        private void ViewportPanel_Resize(
+            object sender,
+            EventArgs e)
         {
             RegenerateWaveformBitmap();
+            _viewportBitmapDirty = true;
+
             viewportPanel.Invalidate();
+        }
+        private void PlaybackTimer_Tick(object sender, EventArgs e)
+        {
+            if (!_isPlaying || _playbackReader == null)
+                return;
+
+            _playheadTimeSeconds =
+                _playbackReader.CurrentTime.TotalSeconds;
+
+            if (_playheadTimeSeconds >= _playbackEndTimeSeconds)
+            {
+                StopPlayback();
+                return;
+            }
+
+            lblPlayheadTime.Text =
+                TimeSpan
+                    .FromSeconds(_playheadTimeSeconds)
+                    .ToString(@"mm\:ss\.ff");
+
+            int x = TimeToX(_playheadTimeSeconds);
+
+            if (_previousPlayheadX >= 0)
+            {
+                viewportPanel.Invalidate(
+                    new Rectangle(_previousPlayheadX - 1, 0, 2, Height)
+                    , false
+                );
+            }
+
+            viewportPanel.Invalidate(
+                new Rectangle(x - 1, 0, 2, Height)
+                , false
+            );
+
+            _previousPlayheadX = x;
+        }
+
+        private void BtnPlay_Click(object sender, EventArgs e)
+        {
+            if (_loadedFile == null)
+                return;
+
+            StopPlayback();
+
+            _playbackReader = UniversalAudioReader.Open(_loadedFile);
+
+            _waveOut = new WaveOutEvent();
+            _waveOut.Init(_playbackReader);
+
+            _playbackStartTimeSeconds = _viewportStartSeconds;
+            _playbackEndTimeSeconds = _viewportStartSeconds + _viewportDurationSeconds;
+
+            _playheadTimeSeconds = _playbackStartTimeSeconds;
+
+            _playbackReader.CurrentTime =
+                TimeSpan.FromSeconds(_playbackStartTimeSeconds);
+
+            _waveOut.Play();
+
+            _isPlaying = true;
+
+            _playbackTimer.Start();
+        }
+
+        private void StopPlayback()
+        {
+            _playbackTimer.Stop();
+
+            _waveOut?.Stop();
+            _waveOut?.Dispose();
+            _waveOut = null;
+
+            _playbackReader?.Dispose();
+            _playbackReader = null;
+
+            _isPlaying = false;
+            btnPause.Text = "Pause";
+        }
+
+        private void BtnPause_Click(object sender, EventArgs e)
+        {
+            if (_waveOut == null)
+            {
+                return;
+            }
+
+            // =========================================
+            // RESUME
+            // =========================================
+
+            if (!_isPlaying)
+            {
+                _waveOut.Play();
+
+                _playbackTimer.Start();
+
+                _isPlaying = true;
+
+                btnPause.Text = "Pause";
+
+                return;
+            }
+
+            // =========================================
+            // PAUSE
+            // =========================================
+
+            _waveOut.Pause();
+
+            _playbackTimer.Stop();
+
+            _isPlaying = false;
+
+            btnPause.Text = "Resume";
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                components?.Dispose();
+
+                _viewportBitmap?.Dispose();
+                _viewportBitmap = null;
+                _fullWaveformBitmap?.Dispose();
+                _fullWaveformBitmap = null;
+                _waveOut?.Dispose();
+                _waveOut = null;
+                _playbackReader?.Dispose();
+                _playbackReader = null;
+
+                if (_playbackTimer != null)
+                {
+                    _playbackTimer.Stop();
+                    _playbackTimer.Dispose();
+                }
+            }
+
+            base.Dispose(disposing);
         }
     }
 
@@ -1057,7 +1255,6 @@ namespace Triggerless.TriggerBot
     public struct WaveformPeak
     {
         public float Min;
-
         public float Max;
     }
 
