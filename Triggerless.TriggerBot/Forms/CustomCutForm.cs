@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -24,6 +25,32 @@ namespace Triggerless.TriggerBot.Forms
             AudioFilePath = AudioFilePath.Trim();
             if (!System.IO.File.Exists(AudioFilePath)) return;
             waveformEditorControl1.LoadAudio(AudioFilePath);
+        }
+
+        private string GetTimeString(double seconds)
+        {
+            TimeSpan time = TimeSpan.FromSeconds(seconds);
+            return time.ToString(@"mm\:ss\.ff");
+        }
+
+        private void CutsChanged(object sender, CutsChangedEventArgs e)
+        {
+            grdCuts.Rows.Clear();
+            
+            foreach (var cut in e.Cuts)
+            {
+                double lengthSeconds = cut.EndTimeSeconds - cut.StartTimeSeconds;
+                int rowIndex = grdCuts.Rows.Add(
+                    cut.Index,
+                    GetTimeString(cut.StartTimeSeconds), 
+                    GetTimeString(cut.EndTimeSeconds),
+                    GetTimeString(lengthSeconds)
+                );
+                if (lengthSeconds > 20)
+                {
+                    grdCuts.Rows[rowIndex].DefaultCellStyle.BackColor = Color.FromArgb(255, 200, 200);
+                }
+            }
         }
     }
 }

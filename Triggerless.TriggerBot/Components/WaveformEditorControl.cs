@@ -13,6 +13,11 @@ namespace Triggerless.TriggerBot
 {
     public partial class WaveformEditorControl : UserControl
     {
+        public event CutsChangedEventHandler CutsChanged;
+        private void FireCutsChanged()
+        {
+            CutsChanged?.Invoke(this, new CutsChangedEventArgs(GetCuts()));
+        }
         // =========================================================
         // CONSTANTS
         // =========================================================
@@ -37,7 +42,7 @@ namespace Triggerless.TriggerBot
         // AUDIO DATA
         // =========================================================
 
-        private readonly List<WaveformPeak> _waveformPeaks = 
+        private readonly List<WaveformPeak> _waveformPeaks =
             new List<WaveformPeak>();
         private string _loadedFile;
         private double _audioLengthSeconds;
@@ -133,6 +138,8 @@ namespace Triggerless.TriggerBot
 
             _playbackTimer.Interval = 8;
             _playbackTimer.Tick += PlaybackTimer_Tick;
+            lblPlayheadTime.Text = "00:00.00";
+            lblPlayheadTime.BringToFront();
         }
 
         private void PushUndoState()
@@ -143,11 +150,11 @@ namespace Triggerless.TriggerBot
             }
 
             WaveformEditorState state = new WaveformEditorState
-                {
-                    ViewportStartSeconds = _viewportStartSeconds,
-                    ViewportDurationSeconds = _viewportDurationSeconds,
-                    CutMarkers = CloneMarkers(_cutMarkers)
-                };
+            {
+                ViewportStartSeconds = _viewportStartSeconds,
+                ViewportDurationSeconds = _viewportDurationSeconds,
+                CutMarkers = CloneMarkers(_cutMarkers)
+            };
 
             _undoStack.Push(state);
         }
@@ -177,10 +184,10 @@ namespace Triggerless.TriggerBot
 
         private List<CutMarker> CloneMarkers(List<CutMarker> source)
         {
-            List<CutMarker> result =new List<CutMarker>();
+            List<CutMarker> result = new List<CutMarker>();
             foreach (CutMarker marker in source)
             {
-                result.Add(new CutMarker {TimeSeconds = marker.TimeSeconds});
+                result.Add(new CutMarker { TimeSeconds = marker.TimeSeconds });
             }
 
             return result;
@@ -309,6 +316,7 @@ namespace Triggerless.TriggerBot
 
             _undoStack.Clear();
             PushUndoState();
+            FireCutsChanged();
         }
 
         private void GenerateBeatMarkers(WaveStream reader)
@@ -380,7 +388,7 @@ namespace Triggerless.TriggerBot
             // -----------------------------
             // _onsetTimes = onsetTimes;
         }
-        
+
         // =========================================================
         // WAVEFORM GENERATION
         // =========================================================
@@ -412,7 +420,7 @@ namespace Triggerless.TriggerBot
                     if (sample > max) max = sample;
                 }
 
-                _waveformPeaks.Add(new WaveformPeak{Min = min, Max = max});
+                _waveformPeaks.Add(new WaveformPeak { Min = min, Max = max });
             }
         }
 
@@ -581,12 +589,12 @@ namespace Triggerless.TriggerBot
 
             int x = TimeToX(_playheadTimeSeconds);
 
-            bool drawLime = true;
+            bool firstColor = true;
 
             for (int y = 0; y < viewportPanel.Height; y += PlayheadDashLength)
             {
-                Pen pen = drawLime
-                    ? Pens.Lime
+                Pen pen = firstColor
+                    ? Pens.Magenta
                     : Pens.Black;
 
                 int y2 =
@@ -596,7 +604,7 @@ namespace Triggerless.TriggerBot
 
                 g.DrawLine(pen, x, y, x, y2);
 
-                drawLime = !drawLime;
+                firstColor = !firstColor;
             }
         }
 
@@ -622,7 +630,7 @@ namespace Triggerless.TriggerBot
             Rectangle srcRect =
                 new Rectangle(srcX, 0, srcWidth, _fullWaveformBitmap.Height);
 
-            g.DrawImage( _fullWaveformBitmap, waveformRect, srcRect, GraphicsUnit.Pixel);
+            g.DrawImage(_fullWaveformBitmap, waveformRect, srcRect, GraphicsUnit.Pixel);
         }
 
         private void DrawBeatMarkers(Graphics g)
@@ -786,6 +794,7 @@ namespace Triggerless.TriggerBot
                     });
                 _viewportBitmapDirty = true;
                 viewportPanel.Invalidate();
+                FireCutsChanged();
             }
         }
 
@@ -800,6 +809,7 @@ namespace Triggerless.TriggerBot
             if (nearest != null)
             {
                 _cutMarkers.Remove(nearest);
+                FireCutsChanged();
             }
             else
             {
@@ -808,10 +818,11 @@ namespace Triggerless.TriggerBot
                     {
                         TimeSeconds = ClampTime(XToTime(e.X))
                     });
+                FireCutsChanged();
             }
             _viewportBitmapDirty = true;
             viewportPanel.Invalidate();
-            
+
         }
 
         private CutMarker FindMarkerAtPixel(int x)
@@ -946,7 +957,7 @@ namespace Triggerless.TriggerBot
         private void ZoomViewport(double factor, double anchorTime)
         {
             PushUndoState();
-                
+
             double newDuration = _viewportDurationSeconds * factor;
 
             if (newDuration < _minZoomSeconds)
@@ -1222,6 +1233,33 @@ namespace Triggerless.TriggerBot
             btnPause.Text = "Resume";
         }
 
+        public List<Cut> GetCuts()
+        {
+            List<Cut> cuts = new List<Cut>();
+            double lastCutTime = 0;
+            for (int i = 0; i < _cutMarkers.Count; i++)
+            {
+                cuts.Add(new Cut
+                {
+                    Index = i + 1,
+                    StartTimeSeconds = lastCutTime,
+                    EndTimeSeconds = _cutMarkers[i].TimeSeconds
+                });
+                lastCutTime = _cutMarkers[i].TimeSeconds;
+            }
+            // fence post: add final cut from last marker to end of audio
+            if (lastCutTime < _audioLengthSeconds)
+            {
+                cuts.Add(new Cut
+                {
+                    Index = cuts.Count + 1,
+                    StartTimeSeconds = lastCutTime,
+                    EndTimeSeconds = _audioLengthSeconds
+                });
+            }
+            return cuts;
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -1246,6 +1284,11 @@ namespace Triggerless.TriggerBot
 
             base.Dispose(disposing);
         }
+
+        private void WaveformEditorControl_Load(object sender, EventArgs e)
+        {
+            
+        }
     }
 
     // =========================================================
@@ -1264,7 +1307,14 @@ namespace Triggerless.TriggerBot
 
     public class CutMarker
     {
-        public double TimeSeconds {get; set;}
+        public double TimeSeconds { get; set; }
+    }
+
+    public class Cut
+    {
+        public int Index { get; set; }
+        public double StartTimeSeconds { get; set; }
+        public double EndTimeSeconds { get; set; }
     }
 
     public class WaveformEditorState
@@ -1273,4 +1323,15 @@ namespace Triggerless.TriggerBot
         public double ViewportDurationSeconds { get; set; }
         public List<CutMarker> CutMarkers { get; set; }
     }
+
+    public class CutsChangedEventArgs : EventArgs
+    {
+        public List<Cut> Cuts { get; set; } = new List<Cut>();
+        public CutsChangedEventArgs(IEnumerable<Cut> cuts)
+        {
+            Cuts.AddRange(cuts);
+        }
+    }
+
+    public delegate void CutsChangedEventHandler(object sender, CutsChangedEventArgs e);
 }
