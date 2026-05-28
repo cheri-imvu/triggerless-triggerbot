@@ -154,7 +154,7 @@
             this.MinimizeBox = false;
             this.Name = "CustomCutForm";
             this.ShowInTaskbar = false;
-            this.Text = "i-Cut";
+            this.Text = "I-Cut | Triggerbot";
             this.Load += new System.EventHandler(this.CustomCutForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.grdCuts)).EndInit();
             this.ResumeLayout(false);

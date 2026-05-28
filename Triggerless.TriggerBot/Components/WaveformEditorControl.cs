@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -99,6 +100,9 @@ namespace Triggerless.TriggerBot
         private IWavePlayer _waveOut;
         private WaveStream _playbackReader;
 
+        private readonly HashSet<double> _playedSnipMarkers = new HashSet<double>();
+        private const double SnipLeadTimeSeconds = 0.020;
+
         public WaveformEditorControl()
         {
             InitializeComponent();
@@ -133,7 +137,63 @@ namespace Triggerless.TriggerBot
             _playbackTimer.Tick += PlaybackTimer_Tick;
             btnPlayheadTime.Text = "00:00.00";
             btnPlayheadTime.BringToFront();
-            Debug.WriteLine(btnPlayheadTime.Bounds);
+            InitializeSnipSound();
+        }
+
+        private WaveFileReader _snipReader;
+        private WaveOutEvent _snipWaveOut;
+
+        private void InitializeSnipSound()
+        {
+            Stream resourceStream = Properties.Resources.snip;
+
+            _snipReader = new WaveFileReader(resourceStream);
+
+            _snipWaveOut = new WaveOutEvent();
+
+            _snipWaveOut.Init(_snipReader);
+        }
+
+        private void CheckForUpcomingCutMarkers()
+        {
+            double triggerTime =
+                _playheadTimeSeconds + SnipLeadTimeSeconds;
+
+            foreach (CutMarker marker in _cutMarkers)
+            {
+                // only markers visible in viewport
+                if (marker.TimeSeconds < _viewportStartSeconds ||
+                    marker.TimeSeconds >
+                        (_viewportStartSeconds +
+                         _viewportDurationSeconds))
+                {
+                    continue;
+                }
+
+                // already triggered
+                if (_playedSnipMarkers.Contains(
+                    marker.TimeSeconds))
+                {
+                    continue;
+                }
+
+                // play slightly before marker
+                if (triggerTime >= marker.TimeSeconds)
+                {
+                    PlaySnip();
+
+                    _playedSnipMarkers.Add(
+                        marker.TimeSeconds);
+                }
+            }
+        }
+
+        private void PlaySnip()
+        {
+            if (_snipReader == null || _snipWaveOut == null) return; 
+            _snipWaveOut.Stop();
+            _snipReader.Position = 0;
+            _snipWaveOut.Play();
         }
 
         private void PushUndoState()
@@ -164,6 +224,8 @@ namespace Triggerless.TriggerBot
             _cutMarkers.Clear();
 
             _cutMarkers.AddRange(CloneMarkers(state.CutMarkers));
+
+            FireCutsChanged();
 
             ClampViewport();
 
@@ -626,8 +688,13 @@ namespace Triggerless.TriggerBot
             }
 
             Rectangle waveformRect = GetWaveformRect();
+            Color beatColor = Color.FromArgb(225, Color.Brown);
+            if (_viewportDurationSeconds > 20)
+            {
+                beatColor = Color.FromArgb(100, Color.Green);
+            }
 
-            using (Pen pen = new Pen(Color.Red))
+            using (Pen pen = new Pen(beatColor))
             {
                 foreach (double beatTime in _beatTimes)
                 {
@@ -1087,6 +1154,8 @@ namespace Triggerless.TriggerBot
             _playheadTimeSeconds =
                 _playbackReader.CurrentTime.TotalSeconds;
 
+            CheckForUpcomingCutMarkers();
+
             if (_playheadTimeSeconds >= _playbackEndTimeSeconds)
             {
                 StopPlayback();
@@ -1134,6 +1203,8 @@ namespace Triggerless.TriggerBot
 
             _playbackReader.CurrentTime =
                 TimeSpan.FromSeconds(_playbackStartTimeSeconds);
+
+            _playedSnipMarkers.Clear();
 
             _waveOut.Play();
 
@@ -1235,6 +1306,8 @@ namespace Triggerless.TriggerBot
                 _waveOut = null;
                 _playbackReader?.Dispose();
                 _playbackReader = null;
+                _snipReader?.Dispose();
+                _snipWaveOut?.Dispose();
 
                 if (_playbackTimer != null)
                 {

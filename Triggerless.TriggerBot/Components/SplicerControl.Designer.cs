@@ -40,6 +40,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.pnlCuts = new System.Windows.Forms.Panel();
+            this.rdoCustom = new System.Windows.Forms.RadioButton();
             this.rdoFixed = new System.Windows.Forms.RadioButton();
             this.rdoMinima = new System.Windows.Forms.RadioButton();
             this.label9 = new System.Windows.Forms.Label();
@@ -72,7 +73,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.rdoCustom = new System.Windows.Forms.RadioButton();
             this._audioSegmenter = new Triggerless.TriggerBot.AudioSegmenter();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -234,6 +234,18 @@
             this.pnlCuts.Name = "pnlCuts";
             this.pnlCuts.Size = new System.Drawing.Size(290, 36);
             this.pnlCuts.TabIndex = 64;
+            // 
+            // rdoCustom
+            // 
+            this.rdoCustom.AutoSize = true;
+            this.rdoCustom.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rdoCustom.Location = new System.Drawing.Point(123, 4);
+            this.rdoCustom.Name = "rdoCustom";
+            this.rdoCustom.Size = new System.Drawing.Size(57, 21);
+            this.rdoCustom.TabIndex = 2;
+            this.rdoCustom.Text = "I-Cut";
+            this.rdoCustom.UseVisualStyleBackColor = true;
+            this.rdoCustom.CheckedChanged += new System.EventHandler(this.RadioChanged);
             // 
             // rdoFixed
             // 
@@ -578,18 +590,6 @@
             // 
             this.timer1.Interval = 200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // rdoCustom
-            // 
-            this.rdoCustom.AutoSize = true;
-            this.rdoCustom.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rdoCustom.Location = new System.Drawing.Point(123, 4);
-            this.rdoCustom.Name = "rdoCustom";
-            this.rdoCustom.Size = new System.Drawing.Size(57, 21);
-            this.rdoCustom.TabIndex = 2;
-            this.rdoCustom.Text = "i-Cut";
-            this.rdoCustom.UseVisualStyleBackColor = true;
-            this.rdoCustom.CheckedChanged += new System.EventHandler(this.RadioChanged);
             // 
             // SplicerControl
             // 

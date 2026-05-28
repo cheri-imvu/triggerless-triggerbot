@@ -47,6 +47,13 @@ namespace Triggerless.TriggerBot.Forms
                     grdCuts.Rows[rowIndex].DefaultCellStyle.BackColor = Color.FromArgb(255, 200, 200);
                 }
             }
+
+            if (grdCuts.Rows.Count > 0)
+            {
+                int lastRowIndex = grdCuts.Rows.Count - 1;
+                grdCuts.FirstDisplayedScrollingRowIndex = lastRowIndex;
+                grdCuts.CurrentCell = grdCuts.Rows[lastRowIndex].Cells[0];
+            }
         }
 
         private bool ValidateCuts()
