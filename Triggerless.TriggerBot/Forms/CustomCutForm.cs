@@ -8,6 +8,7 @@ namespace Triggerless.TriggerBot.Forms
     public partial class CustomCutForm : Form
     {
         public List<Cut> Cuts { get; set; }
+        public long ProductId { get; set; }
         public string AudioFilePath { get; set; }
         public CustomCutForm()
         {

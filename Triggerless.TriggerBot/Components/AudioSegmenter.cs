@@ -266,6 +266,10 @@ namespace Triggerless.TriggerBot
 
                 while (reader.Position < reader.Length)
                 {
+                    if (segmentIndex > cutsList.Count)
+                    {
+                        break; // No more cuts to process
+                    }
                     var cut = cutsList[segmentIndex - 1];
                     if (cut == null) break;
 
