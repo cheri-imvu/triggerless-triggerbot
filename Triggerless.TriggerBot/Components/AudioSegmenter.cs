@@ -54,7 +54,8 @@ namespace Triggerless.TriggerBot
                     return SegmentBySmartCut(parameters.InputFilePath, parameters.OutputDirectory, parameters.OutputFileNamePrefix);
                 case SegmentType.Custom:
                     // Implement custom segmentation logic based on parameters.CustomCutPoints
-                    throw new NotImplementedException("Custom segmentation is not implemented yet.");
+                    SegmentByCustomCuts(parameters.InputFilePath, parameters.OutputDirectory, parameters.CustomCutPoints, parameters.OutputFileNamePrefix);
+                    return 0;
                 default:
                     throw new ArgumentException("Invalid segment type specified.");
             }
@@ -244,6 +245,65 @@ namespace Triggerless.TriggerBot
             }
         }
 
+        public void SegmentByCustomCuts(string inputFilePath, string outputDirectory, IEnumerable<Cut> cuts, string outputFileNamePrefix)
+        {
+            if (string.IsNullOrWhiteSpace(outputFileNamePrefix))
+            {
+                throw new ArgumentException("Output filename prefix cannot be empty.");
+            }
+
+            // Remove any spaces, commas, numbers, or DOS-forbidden characters
+            outputFileNamePrefix = Regex.Replace(outputFileNamePrefix, @"[\s,0-9<>:""/\\|?*]", "");
+
+            using (var reader = UniversalAudioReader.Open(inputFilePath))
+            {
+                int targetSampleRate = 48000;
+                ISampleProvider sampleProvider = reader.ToSampleProvider();
+                var resampler = new WdlResamplingSampleProvider(sampleProvider, targetSampleRate);
+
+                int segmentIndex = 1;
+                var cutsList = cuts.OrderBy(c => c.StartTimeSeconds).ToList();
+
+                while (reader.Position < reader.Length)
+                {
+                    var cut = cutsList[segmentIndex - 1];
+                    if (cut == null) break;
+
+                    int samplesToRead = (int)(cut.LengthSeconds * resampler.WaveFormat.SampleRate * resampler.WaveFormat.Channels);
+                    float[] buffer = new float[samplesToRead];
+                    int samplesRead = 0;
+                    int totalSamplesRead = 0;
+
+                    while (totalSamplesRead < samplesToRead)
+                    {
+                        samplesRead = resampler.Read(buffer, totalSamplesRead, samplesToRead - totalSamplesRead);
+                        if (samplesRead == 0) break;
+                        totalSamplesRead += samplesRead;
+                    }
+
+                    // Ensure the segment durationSec is at least 1% of the desired segment durationSec
+                    if (totalSamplesRead < samplesToRead / 100) break;
+
+                    if (totalSamplesRead > 0)
+                    {
+                        string outputFilePath = Path.Combine(outputDirectory, $"{outputFileNamePrefix}{segmentIndex:000}.wav");
+
+                        using (var fileStream = File.Create(outputFilePath))
+                        {
+                            // Write the PCM data to WAV format
+                            using (var wavWriter = new WaveFileWriter(fileStream, resampler.WaveFormat))
+                            {
+                                wavWriter.WriteSamples(buffer, 0, totalSamplesRead);
+                            }
+                        }
+                    }
+
+                    segmentIndex++;
+                }
+            }
+
+        }
+
         public class OutputEventArgs : EventArgs
         {
             public string Data { get; set; }
@@ -394,7 +454,7 @@ namespace Triggerless.TriggerBot
         public string OutputDirectory { get; set; }
         public TimeSpan SegmentDuration { get; set; }
         public string OutputFileNamePrefix { get; set; }
-        public IEnumerable<TimeSpan> CustomCutPoints { get; set; }
+        public IEnumerable<Cut> CustomCutPoints { get; set; }
     }
 
     public enum SegmentType

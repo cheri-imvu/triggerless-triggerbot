@@ -39,6 +39,7 @@ namespace Triggerless.TriggerBot
         private double _volume = INIT_VOLUME;
         private WaveStream _waveReader;
         private CutStage _stage = CutStage.Idle;
+        private List<Cut> _cuts;
 
         public new void Dispose()
         {
@@ -208,13 +209,22 @@ namespace Triggerless.TriggerBot
                 {
                     segmenterParams.SegmentType = SegmentType.SmartCut;
                 }
-                else
+                else if (rdoFixed.Checked)
                 {
                     segmenterParams.SegmentType = SegmentType.FixedDuration;
                     segmenterParams.SegmentDuration = TimeSpan.FromSeconds(
                         double.Parse(cboAudioLength.SelectedItem.ToString(),
                             NumberStyles.Float, CultureInfo.CurrentCulture)
                     );
+                } else if (rdoCustom.Checked)
+                {
+                    if (_cuts == null || _cuts.Count == 0)
+                    {
+
+                    }
+                    segmenterParams.SegmentType = SegmentType.Custom;
+                    segmenterParams.CustomCutPoints = _cuts;
+
                 }
                 _audioSegmenter.Segment(segmenterParams);
             }
@@ -754,6 +764,17 @@ namespace Triggerless.TriggerBot
             f.AudioFilePath = txtFilename.Text;
             f.TopMost = Program.MainForm.TopMost;
             f.ShowDialog(Program.MainForm);
+            if (f.DialogResult == DialogResult.OK)
+            {
+                _cuts = f.Cuts;
+            }
+        }
+
+        private void RadioChanged(object sender, EventArgs e)
+        {
+            lblFixed.Visible = rdoFixed.Checked;
+            cboAudioLength.Visible = rdoFixed.Checked;
+            btnCustom.Visible = rdoCustom.Checked;
         }
     }
 

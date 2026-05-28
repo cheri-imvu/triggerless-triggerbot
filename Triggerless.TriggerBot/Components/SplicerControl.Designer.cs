@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnCustom = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.rdoFMS = new System.Windows.Forms.RadioButton();
             this.label6 = new System.Windows.Forms.Label();
@@ -38,7 +39,7 @@
             this.rdoHQS = new System.Windows.Forms.RadioButton();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.panel4 = new System.Windows.Forms.Panel();
+            this.pnlCuts = new System.Windows.Forms.Panel();
             this.rdoFixed = new System.Windows.Forms.RadioButton();
             this.rdoMinima = new System.Windows.Forms.RadioButton();
             this.label9 = new System.Windows.Forms.Label();
@@ -64,18 +65,18 @@
             this.txtPrefix = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.cboAudioLength = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lblFixed = new System.Windows.Forms.Label();
             this.btnSelectFile = new System.Windows.Forms.Button();
             this.txtFilename = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.rdoCustom = new System.Windows.Forms.RadioButton();
             this._audioSegmenter = new Triggerless.TriggerBot.AudioSegmenter();
-            this.btnCustom = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.panel4.SuspendLayout();
+            this.pnlCuts.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picWaveform)).BeginInit();
             this.SuspendLayout();
@@ -84,7 +85,7 @@
             // 
             this.panel1.Controls.Add(this.btnCustom);
             this.panel1.Controls.Add(this.tableLayoutPanel1);
-            this.panel1.Controls.Add(this.panel4);
+            this.panel1.Controls.Add(this.pnlCuts);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.lblVolume);
             this.panel1.Controls.Add(this.panel3);
@@ -106,7 +107,7 @@
             this.panel1.Controls.Add(this.txtPrefix);
             this.panel1.Controls.Add(this.label10);
             this.panel1.Controls.Add(this.cboAudioLength);
-            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.lblFixed);
             this.panel1.Controls.Add(this.btnSelectFile);
             this.panel1.Controls.Add(this.txtFilename);
             this.panel1.Controls.Add(this.label2);
@@ -117,6 +118,20 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(851, 476);
             this.panel1.TabIndex = 0;
+            // 
+            // btnCustom
+            // 
+            this.btnCustom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnCustom.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCustom.ForeColor = System.Drawing.Color.Black;
+            this.btnCustom.Location = new System.Drawing.Point(347, 116);
+            this.btnCustom.Name = "btnCustom";
+            this.btnCustom.Size = new System.Drawing.Size(95, 30);
+            this.btnCustom.TabIndex = 66;
+            this.btnCustom.Text = "Cuts...";
+            this.btnCustom.UseVisualStyleBackColor = false;
+            this.btnCustom.Visible = false;
+            this.btnCustom.Click += new System.EventHandler(this.btnCustom_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -210,25 +225,27 @@
             this.label4.TabIndex = 41;
             this.label4.Text = "Audio Quality:";
             // 
-            // panel4
+            // pnlCuts
             // 
-            this.panel4.Controls.Add(this.rdoFixed);
-            this.panel4.Controls.Add(this.rdoMinima);
-            this.panel4.Location = new System.Drawing.Point(17, 116);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(238, 36);
-            this.panel4.TabIndex = 64;
+            this.pnlCuts.Controls.Add(this.rdoCustom);
+            this.pnlCuts.Controls.Add(this.rdoFixed);
+            this.pnlCuts.Controls.Add(this.rdoMinima);
+            this.pnlCuts.Location = new System.Drawing.Point(17, 116);
+            this.pnlCuts.Name = "pnlCuts";
+            this.pnlCuts.Size = new System.Drawing.Size(290, 36);
+            this.pnlCuts.TabIndex = 64;
             // 
             // rdoFixed
             // 
             this.rdoFixed.AutoSize = true;
             this.rdoFixed.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rdoFixed.Location = new System.Drawing.Point(130, 5);
+            this.rdoFixed.Location = new System.Drawing.Point(192, 4);
             this.rdoFixed.Name = "rdoFixed";
             this.rdoFixed.Size = new System.Drawing.Size(88, 21);
             this.rdoFixed.TabIndex = 1;
             this.rdoFixed.Text = "Fixed Cut";
             this.rdoFixed.UseVisualStyleBackColor = true;
+            this.rdoFixed.CheckedChanged += new System.EventHandler(this.RadioChanged);
             // 
             // rdoMinima
             // 
@@ -242,6 +259,7 @@
             this.rdoMinima.TabStop = true;
             this.rdoMinima.Text = "Smart Cut";
             this.rdoMinima.UseVisualStyleBackColor = true;
+            this.rdoMinima.CheckedChanged += new System.EventHandler(this.RadioChanged);
             // 
             // label9
             // 
@@ -491,20 +509,22 @@
             this.cboAudioLength.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboAudioLength.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboAudioLength.FormattingEnabled = true;
-            this.cboAudioLength.Location = new System.Drawing.Point(442, 119);
+            this.cboAudioLength.Location = new System.Drawing.Point(471, 119);
             this.cboAudioLength.Name = "cboAudioLength";
             this.cboAudioLength.Size = new System.Drawing.Size(115, 25);
             this.cboAudioLength.TabIndex = 40;
+            this.cboAudioLength.Visible = false;
             // 
-            // label3
+            // lblFixed
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(259, 122);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(162, 17);
-            this.label3.TabIndex = 39;
-            this.label3.Text = "Fixed OGG length (sec)";
+            this.lblFixed.AutoSize = true;
+            this.lblFixed.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFixed.Location = new System.Drawing.Point(309, 122);
+            this.lblFixed.Name = "lblFixed";
+            this.lblFixed.Size = new System.Drawing.Size(162, 17);
+            this.lblFixed.TabIndex = 39;
+            this.lblFixed.Text = "Fixed OGG length (sec)";
+            this.lblFixed.Visible = false;
             // 
             // btnSelectFile
             // 
@@ -559,18 +579,17 @@
             this.timer1.Interval = 200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // btnCustom
+            // rdoCustom
             // 
-            this.btnCustom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.btnCustom.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCustom.ForeColor = System.Drawing.Color.Black;
-            this.btnCustom.Location = new System.Drawing.Point(739, 161);
-            this.btnCustom.Name = "btnCustom";
-            this.btnCustom.Size = new System.Drawing.Size(95, 30);
-            this.btnCustom.TabIndex = 66;
-            this.btnCustom.Text = "Custom...";
-            this.btnCustom.UseVisualStyleBackColor = false;
-            this.btnCustom.Click += new System.EventHandler(this.btnCustom_Click);
+            this.rdoCustom.AutoSize = true;
+            this.rdoCustom.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rdoCustom.Location = new System.Drawing.Point(123, 4);
+            this.rdoCustom.Name = "rdoCustom";
+            this.rdoCustom.Size = new System.Drawing.Size(57, 21);
+            this.rdoCustom.TabIndex = 2;
+            this.rdoCustom.Text = "i-Cut";
+            this.rdoCustom.UseVisualStyleBackColor = true;
+            this.rdoCustom.CheckedChanged += new System.EventHandler(this.RadioChanged);
             // 
             // SplicerControl
             // 
@@ -589,8 +608,8 @@
             this.panel1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
+            this.pnlCuts.ResumeLayout(false);
+            this.pnlCuts.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picWaveform)).EndInit();
@@ -623,7 +642,7 @@
         private System.Windows.Forms.TextBox txtPrefix;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.ComboBox cboAudioLength;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblFixed;
         private System.Windows.Forms.Button btnSelectFile;
         private System.Windows.Forms.TextBox txtFilename;
         private System.Windows.Forms.Label label2;
@@ -638,11 +657,12 @@
         private System.Windows.Forms.RadioButton rdoHQS;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Panel pnlCuts;
         private System.Windows.Forms.RadioButton rdoFixed;
         private System.Windows.Forms.RadioButton rdoMinima;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.RadioButton rdoFMS;
         private System.Windows.Forms.Button btnCustom;
+        private System.Windows.Forms.RadioButton rdoCustom;
     }
 }

@@ -1,18 +1,13 @@
-﻿using NAudio.Wave;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Triggerless.TriggerBot.Forms
 {
     public partial class CustomCutForm : Form
     {
+        public List<Cut> Cuts { get; set; }
         public string AudioFilePath { get; set; }
         public CustomCutForm()
         {
@@ -35,22 +30,53 @@ namespace Triggerless.TriggerBot.Forms
 
         private void CutsChanged(object sender, CutsChangedEventArgs e)
         {
+            Cuts = e.Cuts;
             grdCuts.Rows.Clear();
             
-            foreach (var cut in e.Cuts)
+            foreach (Cut cut in e.Cuts)
             {
-                double lengthSeconds = cut.EndTimeSeconds - cut.StartTimeSeconds;
                 int rowIndex = grdCuts.Rows.Add(
                     cut.Index,
                     GetTimeString(cut.StartTimeSeconds), 
                     GetTimeString(cut.EndTimeSeconds),
-                    GetTimeString(lengthSeconds)
+                    GetTimeString(cut.LengthSeconds)
                 );
-                if (lengthSeconds > 20)
+                if (cut.LengthSeconds > 20)
                 {
                     grdCuts.Rows[rowIndex].DefaultCellStyle.BackColor = Color.FromArgb(255, 200, 200);
                 }
             }
+        }
+
+        private bool ValidateCuts()
+        {
+            if (Cuts == null || Cuts.Count == 0)
+            {
+                StyledMessageBox.Show(Program.MainForm, "No cuts defined. Please define at least one cut.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            foreach (Cut cut in Cuts)
+            {
+                if (cut.LengthSeconds > 20)
+                {
+                    StyledMessageBox.Show(Program.MainForm, $"Cut {cut.Index} has invalid length. Please ensure all cuts have a length of 20 seconds or less.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private void btnAccept_Click(object sender, EventArgs e)
+        {
+            if (!ValidateCuts()) return;
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel; 
+            Close();
         }
     }
 }

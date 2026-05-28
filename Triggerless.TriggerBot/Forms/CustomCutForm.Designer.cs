@@ -30,12 +30,12 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CustomCutForm));
             this.grdCuts = new System.Windows.Forms.DataGridView();
-            this.btnAccept = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
             this.colIndex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colStart = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colStop = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colLength = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnAccept = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
             this.waveformEditorControl1 = new Triggerless.TriggerBot.WaveformEditorControl();
             this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.grdCuts)).BeginInit();
@@ -54,52 +54,65 @@
             this.grdCuts.Location = new System.Drawing.Point(14, 227);
             this.grdCuts.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.grdCuts.Name = "grdCuts";
+            this.grdCuts.RowHeadersWidth = 51;
             this.grdCuts.Size = new System.Drawing.Size(527, 202);
             this.grdCuts.TabIndex = 1;
+            // 
+            // colIndex
+            // 
+            this.colIndex.HeaderText = "Index";
+            this.colIndex.MinimumWidth = 6;
+            this.colIndex.Name = "colIndex";
+            this.colIndex.ReadOnly = true;
+            this.colIndex.Width = 125;
+            // 
+            // colStart
+            // 
+            this.colStart.HeaderText = "Start";
+            this.colStart.MinimumWidth = 6;
+            this.colStart.Name = "colStart";
+            this.colStart.ReadOnly = true;
+            this.colStart.Width = 125;
+            // 
+            // colStop
+            // 
+            this.colStop.HeaderText = "End";
+            this.colStop.MinimumWidth = 6;
+            this.colStop.Name = "colStop";
+            this.colStop.ReadOnly = true;
+            this.colStop.Width = 125;
+            // 
+            // colLength
+            // 
+            this.colLength.HeaderText = "Length (s)";
+            this.colLength.MinimumWidth = 6;
+            this.colLength.Name = "colLength";
+            this.colLength.ReadOnly = true;
+            this.colLength.Width = 125;
             // 
             // btnAccept
             // 
             this.btnAccept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAccept.Font = new System.Drawing.Font("Liberation Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAccept.Location = new System.Drawing.Point(757, 380);
             this.btnAccept.Name = "btnAccept";
             this.btnAccept.Size = new System.Drawing.Size(130, 49);
             this.btnAccept.TabIndex = 2;
             this.btnAccept.Text = "Accept";
             this.btnAccept.UseVisualStyleBackColor = true;
+            this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
             // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCancel.Font = new System.Drawing.Font("Liberation Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancel.Location = new System.Drawing.Point(893, 380);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(130, 49);
             this.btnCancel.TabIndex = 3;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
-            // 
-            // colIndex
-            // 
-            this.colIndex.HeaderText = "Index";
-            this.colIndex.Name = "colIndex";
-            this.colIndex.ReadOnly = true;
-            // 
-            // colStart
-            // 
-            this.colStart.HeaderText = "Start";
-            this.colStart.Name = "colStart";
-            this.colStart.ReadOnly = true;
-            // 
-            // colStop
-            // 
-            this.colStop.HeaderText = "End";
-            this.colStop.Name = "colStop";
-            this.colStop.ReadOnly = true;
-            // 
-            // colLength
-            // 
-            this.colLength.HeaderText = "Length (s)";
-            this.colLength.Name = "colLength";
-            this.colLength.ReadOnly = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // waveformEditorControl1
             // 
@@ -137,7 +150,10 @@
             this.Font = new System.Drawing.Font("Liberation Sans", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "CustomCutForm";
+            this.ShowInTaskbar = false;
             this.Text = "i-Cut";
             this.Load += new System.EventHandler(this.CustomCutForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.grdCuts)).EndInit();
