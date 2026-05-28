@@ -226,15 +226,17 @@ namespace Triggerless.TriggerBot
             {
                 cxnAlter.Open();
                 var columns = cxnAlter.Query<ColumnInfo>("PRAGMA table_info(product_cut_markers);");
-                if (!columns.Any()  
+                if (!columns.Any())  
                 {
                     var sql = @"CREATE TABLE product_cut_markers (
                         pcm_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        product_id BIGINT NOT NULL,
+                        filename TEXT NOT NULL,
                         cut_location_sec REAL NOT NULL,
-                        modified_date DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-                        UNIQUE(product_id, cut_location_sec)
+                        modified_date DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP)
                     );";
+                    cxnAlter.Execute(sql);
+                    sql = @"CREATE UNIQUE INDEX marker_index ON product_cut_markers (
+                        filename, cut_location_sec);";
                     cxnAlter.Execute(sql);
                 }
             }
@@ -391,37 +393,46 @@ namespace Triggerless.TriggerBot
             return new SqliteConnection(PlugIn.Location.AppCacheConnectionString);
         }
 
-        internal static void AddCutMarker(long productId, double locationSec)
+        internal static void AddCutMarker(string filename, double locationSec)
         {
-            var sql = @"INSERT OR IGNORE INTO product_cut_markers (product_id, cut_location_sec) VALUES (@pid, @loc);";
+            var sql = @"INSERT OR IGNORE INTO product_cut_markers (filename, cut_location_sec) VALUES (@fn, @loc);";
             using (var cxnAppCache = GetAppCacheCxn())
             {
                 cxnAppCache.Open();
-                cxnAppCache.Execute(sql, new { pid = productId, loc = locationSec });
+                cxnAppCache.Execute(sql, new { fn = filename, loc = locationSec });
             }
         }
 
-        internal static void DeleteCutMarker(long productId, double locationSec)
+        internal static void DeleteCutMarker(string filename, double locationSec)
         {
-            var sql = @"DELETE FROM product_cut_markers WHERE product_id = @pid AND cut_location_sec = @loc;";
+            var sql = @"DELETE FROM product_cut_markers WHERE filename = @fn AND cut_location_sec = @loc;";
             using (var cxnAppCache = GetAppCacheCxn())
             {
                 cxnAppCache.Open();
-                cxnAppCache.Execute(sql, new { pid = productId, loc = locationSec });
+                cxnAppCache.Execute(sql, new { fn = filename, loc = locationSec });
             }
         }
 
-        internal static List<double> GetCutMarkersForProduct(long productId)
+        internal static void UpdateCutMarker(string filename, double oldLocationSec, double newLocationSec)
         {
-            var sql = @"SELECT cut_location_sec FROM product_cut_markers WHERE product_id = @pid ORDER BY cut_location_sec;";
+            var sql = @"UPDATE product_cut_markers SET cut_location_sec = @newLoc WHERE filename = @fn AND cut_location_sec = @oldLoc;";
             using (var cxnAppCache = GetAppCacheCxn())
-            {s
+            {
                 cxnAppCache.Open();
-                var result = cxnAppCache.Query<double>(sql, new { pid = productId }).ToList();
+                cxnAppCache.Execute(sql, new { fn = filename, oldLoc = oldLocationSec, newLoc = newLocationSec });
+            }
+        }
+
+        internal static IEnumerable<double> GetCutMarkers(string filename)
+        {
+            var sql = @"SELECT cut_location_sec FROM product_cut_markers WHERE filename = @fn ORDER BY cut_location_sec;";
+            using (var cxnAppCache = GetAppCacheCxn())
+            {
+                cxnAppCache.Open();
+                var result = cxnAppCache.Query<double>(sql, new { fn = filename });
                 return result;
             }
-        }>
-
+        }
 
         internal static void UpdateProductPlay(long productId)
         {

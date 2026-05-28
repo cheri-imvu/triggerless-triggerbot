@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Triggerless.TriggerBot
@@ -373,6 +374,15 @@ namespace Triggerless.TriggerBot
 
             _undoStack.Clear();
             PushUndoState();
+
+            // get any existing cut markers from a database.
+            var cutTimes = SQLiteDataAccess.GetCutMarkers(_loadedFile);
+            if (cutTimes != null && cutTimes.Any())            
+            {
+                _cutMarkers.Clear();
+                _cutMarkers.AddRange(cutTimes.Select(t => new CutMarker { TimeSeconds = t }));
+            }
+
             FireCutsChanged();
         }
 
@@ -726,6 +736,7 @@ namespace Triggerless.TriggerBot
 
             if (nearest != null)
             {
+                SQLiteDataAccess.DeleteCutMarker(_loadedFile, nearest.TimeSeconds);
                 PushUndoState();
                 _draggingMarker = nearest;
             }
@@ -753,6 +764,7 @@ namespace Triggerless.TriggerBot
         {
             if (_draggingMarker != null)
             {
+                SQLiteDataAccess.AddCutMarker(_loadedFile, _draggingMarker.TimeSeconds);
                 _draggingMarker = null;
 
                 _cutMarkers.Sort(
@@ -781,6 +793,7 @@ namespace Triggerless.TriggerBot
             if (nearest != null)
             {
                 _cutMarkers.Remove(nearest);
+                SQLiteDataAccess.DeleteCutMarker(_loadedFile, nearest.TimeSeconds);
                 FireCutsChanged();
             }
             else
@@ -790,6 +803,7 @@ namespace Triggerless.TriggerBot
                     {
                         TimeSeconds = ClampTime(XToTime(e.X))
                     });
+                SQLiteDataAccess.AddCutMarker(_loadedFile, ClampTime(XToTime(e.X)));
                 FireCutsChanged();
             }
             _viewportBitmapDirty = true;
