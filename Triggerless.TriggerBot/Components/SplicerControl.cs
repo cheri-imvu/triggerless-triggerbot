@@ -21,6 +21,7 @@ using System.Windows.Forms;
 using Triggerless.TriggerBot.Components;
 using Triggerless.TriggerBot.Forms;
 using Triggerless.TriggerBot.Models;
+using Triggerless.TriggerBot.Properties;
 using Triggerless.XAFLib;
 
 namespace Triggerless.TriggerBot
@@ -548,6 +549,22 @@ namespace Triggerless.TriggerBot
             var amtProfit = Common.Paid ? 0 : 250;
             lblProfit.Text = $"Please note that @Triggers will make {amtProfit} cr profit for every CHKN you submit using this tool.";
             chkCheap.Visible = Common.Paid;
+
+            switch (Settings.Default.CutType)
+            {
+                case "fixed":
+                    rdoFixed.Checked = true;
+                    break;
+                case "smart":
+                    rdoMinima.Checked = true;
+                    break;
+                case "custom":
+                    rdoCustom.Checked = true;
+                    break;
+                default:
+                    rdoMinima.Checked = true;
+                    break;
+            }
         }
 
         private const double CROP_STEP = 25;
@@ -776,6 +793,27 @@ namespace Triggerless.TriggerBot
             cboAudioLength.Visible = rdoFixed.Checked;
             btnCustom.Visible = rdoCustom.Checked;
         }
-    }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (rdoCustom.Checked)
+            {
+                Settings.Default.CutType = "custom";
+            }
+            else if (rdoMinima.Checked)
+            {
+                Settings.Default.CutType = "smart";
+            }
+            else if (rdoFixed.Checked)
+            {
+                Settings.Default.CutType = "fixed";
+            }
+            Settings.Default.Save();
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+    }
 }

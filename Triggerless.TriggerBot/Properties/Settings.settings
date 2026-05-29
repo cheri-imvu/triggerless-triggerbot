@@ -32,5 +32,8 @@
     <Setting Name="SearchTags" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="CutType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">smart</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
