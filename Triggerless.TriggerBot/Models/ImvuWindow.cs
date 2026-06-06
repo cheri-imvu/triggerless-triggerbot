@@ -76,33 +76,34 @@ namespace Triggerless.TriggerBot.Models
             SetFocus();
             lock (_kbdLock)
             {
-                
-                string currClipText = string.Empty;
-                if (Clipboard.ContainsText())
-                {
-                    currClipText = Clipboard.GetText();
-                }
-                
+                var currentClipboardText = Clipboard.GetText();
+                //const string method = "copy-paste";
+                const string method = "text-entry";
                 _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_A);
                 _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_X);
-                string prevText = Clipboard.GetText();
-                // Change the way we send text to IMVU chat to avoid 'ax' being sent when
-                //_sim.Keyboard.TextEntry(text);
-
-                Clipboard.SetText(text);
-                _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_V);
-
-                _sim.Keyboard.KeyPress(KeyCode.RETURN);
-                
-                if (!string.IsNullOrEmpty(prevText))
+                string existingChatText = Clipboard.GetText();
+                if (currentClipboardText ==  existingChatText) 
                 {
-                    
-                    if (prevText == currClipText || String.IsNullOrEmpty(prevText))
-                    {
-                        return;
-                    }
-//                    _sim.Keyboard.TextEntry(prevText);
-                    Clipboard.SetText(prevText);
+                    existingChatText = string.Empty;
+                }
+
+                if (method == "copy-paste")
+                {
+                    // Change the way we send text to IMVU chat to avoid 'ax' being sent when
+                    //_sim.Keyboard.TextEntry(text);
+
+                    Clipboard.SetText(text);
+                    _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_V);
+                } 
+                else
+                {
+                    _sim.Keyboard.TextEntry(text);
+                }
+                _sim.Keyboard.KeyPress(KeyCode.RETURN);
+
+                if (!string.IsNullOrEmpty(existingChatText))
+                {
+//                    Clipboard.SetText(existingChatText);
                     _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_V);
                 }
 

@@ -86,5 +86,11 @@ namespace Triggerless.TriggerBot.Forms
             DialogResult = DialogResult.Cancel; 
             Close();
         }
+
+        private void grdCuts_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.RowIndex >= Cuts.Count) return;
+            waveformEditorControl1.HighlightCut(Cuts[e.RowIndex]);
+        }
     }
 }

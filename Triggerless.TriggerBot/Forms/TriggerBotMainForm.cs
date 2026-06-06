@@ -819,7 +819,9 @@ namespace Triggerless.TriggerBot
             {
                 result = hideTriggers ? $"  {HIDER}{TrimTrigger()}" : $"  {TrimTrigger()}";
             }
-            if (result.Contains("~")) result = result.Replace("~", "{~}");
+            //if (result.Contains("~")) result = result.Replace("~", "{~}");
+            // no need for this, IMVU seems to handle it fine as is,
+            // and trying to escape it causes some triggers to fail.
             return result;
         }
 

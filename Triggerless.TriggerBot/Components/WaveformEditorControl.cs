@@ -996,6 +996,11 @@ namespace Triggerless.TriggerBot
             ZoomViewport(2.0, _viewportStartSeconds + (_viewportDurationSeconds * 0.5));
         }
 
+        private void BtnZoomRight_Click(object sender, EventArgs e)
+        {
+            ZoomViewport(0.5, _viewportStartSeconds + (_viewportDurationSeconds * 0.75));
+        }
+
         private void ZoomViewport(double factor, double anchorTime)
         {
             PushUndoState();
@@ -1318,6 +1323,20 @@ namespace Triggerless.TriggerBot
 
             base.Dispose(disposing);
         }
+
+        internal void HighlightCut(Cut cut)
+        {
+            //throw new NotImplementedException();
+            PushUndoState();
+
+            _viewportStartSeconds = cut.StartTimeSeconds;
+            _viewportDurationSeconds = cut.LengthSeconds;
+            ClampViewport();
+            UpdateScrollbar();
+            _viewportBitmapDirty = true;
+            viewportPanel.Invalidate();
+        }
+
     }
 
     public struct WaveformPeak

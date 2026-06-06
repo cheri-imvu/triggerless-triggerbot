@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Data.Sqlite;
 using NAudio.Vorbis;
 using Newtonsoft.Json;
 using System;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Triggerless.TriggerBot.Components;
 using Triggerless.TriggerBot.Models;
+using static Triggerless.TriggerBot.Models.Discord;
 
 namespace Triggerless.TriggerBot
 {
@@ -314,266 +316,43 @@ namespace Triggerless.TriggerBot
             // See if any ogg files exist
 
             #region JsonContents
-
-            _httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-            var url = GetUrl(product.ProductId, "_contents.json");
-            string httpResult;
-            ContentsJsonItem[] jsonContents;
-            try
-            {
-                httpResult = _httpClient.GetStringAsync(url).Result;
-            }
-            catch (Exception ex)
-            {
-                result.Message = ex.Message;
-                bool is404 = ex.Message.Contains("404") || (ex.InnerException != null && ex.InnerException.Message.Contains("404"));
-                if (is404)
-                {
-                    //NOTE: Very early products may give a 404 error. We should save to DB with has_ogg = 0
-                    var insertPayload = new { product_id = product.ProductId, has_ogg = 0, title = product.ProductName, creator = product.CreatorName };
-                    var sql = "INSERT INTO products (product_id, has_ogg, title, creator) VALUES (@product_id, @has_ogg, @title, @creator);";
-                    lock (_dbLock)
-                    {
-                        connAppCache.Execute(sql, insertPayload);
-                    }
-                    result.Message = "  Unavailable Product could not be downloaded (404)";
-                    LogLine($"  Done. {product.ProductName} {result.Message}");
-                    result.Result = ScanResultType.ProductUnavailable;
-                }
-                else
-                {
-                    LogLine($"**Done. ERROR {product.ProductName} {ex.Message}");
-                    result.Result = ScanResultType.NetworkError;
-                }
-                return result;
-            }
-
-            try
-            {
-                jsonContents = JsonConvert.DeserializeObject<ContentsJsonItem[]>(httpResult);
-            }
-            catch (Exception ex)
-            {
-                result.Message = ex.Message;
-                result.Result = ScanResultType.JsonError;
-                var insertPayload = new { product_id = product.ProductId, has_ogg = 0, title = product.ProductName, creator = product.CreatorName };
-                var sql = "INSERT INTO products (product_id, has_ogg, title, creator) VALUES (@product_id, @has_ogg, @title, @creator);";
-                lock (_dbLock)
-                {
-                    connAppCache.Execute(sql, insertPayload);
-                }
-                LogLine($"**ERROR: {product.ProductName} JSON can't be deserialized");
-                return result;
-            }
+            var jsonResult = await HandleJson(connAppCache, product).ConfigureAwait(false);
             #endregion
 
-            #region Any OGG Files?
-            if (!jsonContents.Any(c => c.Name.ToLowerInvariant().EndsWith(".ogg"))) // no OGG files found
+            ScanResult anyOggsResult = AnyOggs(jsonResult.Contents, connAppCache, product);
+            if (anyOggsResult.Result != ScanResultType.Success)
             {
-                result.Message = $"No OGG files found in product {product.ProductId}";
-                result.Result = ScanResultType.NoUsefulTriggers;
-                var insertPayload = new { product_id = product.ProductId, has_ogg = 0, title = product.ProductName, creator = product.CreatorName };
-                var sql = "INSERT INTO products (product_id, has_ogg, title, creator) VALUES (@product_id, @has_ogg, @title, @creator);";
-                lock (_dbLock)
-                {
-                    connAppCache.Execute(sql, insertPayload);
-                }
-                LogLine($"  Done: {result.Result} {product.ProductName}");
-                return result;
+                return anyOggsResult;
             }
-            #endregion
 
             // about 35 ms here
-
-            #region Product Image
-            byte[] imageBytes;
-            try
+            ScanResult imgResult = await DownloadImage(connAppCache, product).ConfigureAwait(false); ;
+            if (imgResult.Result != ScanResultType.Success)
             {
-                _httpClient.DefaultRequestHeaders.Clear();
-                imageBytes = _httpClient.GetByteArrayAsync(product.ProductImage).Result;
-
-                // about 75 ms here
-
-                var insertPayload = new
-                {
-                    product_id = product.ProductId,
-                    has_ogg = 1,
-                    title = product.ProductName,
-                    creator = product.CreatorName,
-                    image_bytes = imageBytes
-                };
-                var sql = "INSERT INTO products (product_id, has_ogg, title, creator, image_bytes) VALUES (@product_id, @has_ogg, @title, @creator, @image_bytes);";
-                lock (_dbLock)
-                {
-                    connAppCache.Execute(sql, insertPayload);
-                }
-            }
-            catch (Exception exc)
-            {
-                LogLine($"**ERROR: GET Image for {product.ProductName} not downloaded: {exc.Message}");
-                result.Message = "Unable to retrieve _product icon";
-                result.Result = ScanResultType.NetworkError;
-                return result;
-            }
-            #endregion
-
-            #region Read Index.xml and associate triggers
-
-            var pid = product.ProductId;
-            var docIndex = new XmlDocument();
-            try
-            {
-                var indexXml = _httpClient.GetStreamAsync(GetUrl(pid, "index.xml")).Result;
-                docIndex.Load(indexXml);
-                // 100-120 ms here
-
-            }
-            catch (XmlException exc) 
-            {
-                result.Result = ScanResultType.XmlError;
-                result.Message = "ERROR: Malformed index XML";
-                LogLine($"**{result.Message} {product.ProductName} {exc.Message}");
-                return result;
-
-            }
-            catch (Exception)
-            {
-                LogLine($"ERROR: GET for Index failed {product.ProductName}");
-                result.Result = ScanResultType.NetworkError;
-                result.Message = "Unable to retrieve index.xml file";
-                return result;
+                return imgResult;
             }
 
-            var root = docIndex.DocumentElement;
-            long parentId;
-            var triggerList = new List<TriggerEntry>();
-
-            foreach (XmlElement item in root.ChildNodes)
+            TriggerListScanResult triggerListResult =
+                    await GetTriggerListFromIndex(connAppCache, product, jsonResult).ConfigureAwait(false);
+            if (triggerListResult.Result != ScanResultType.Success)
             {
-                if (item.Name == "__DATAIMPORT")
-                {
-                    long tryparentId;
-                    string substituted = item.InnerText.Replace("product://", "").Replace("/index.xml", "");
-                    var parsed = long.TryParse(substituted, out tryparentId);
-                    if (!parsed)
-                    {
-                        var msg = $"**Error: Can't parse parent ID from {substituted} ";
-                        result.Result = ScanResultType.XmlError;
-                        result.Message = msg;
-                        LogLine(msg);
-                        return result;
-                    }
-                    else
-                    {
-                        parentId = tryparentId;
-                    }
-                }
-
-                if (item.Name.StartsWith("Action"))
-                {
-                    var nameEl = item.SelectSingleNode("Name") as XmlElement;
-                    if (nameEl == null) continue;
-
-                    var soundEl = item.SelectSingleNode("Sound") as XmlElement;
-                    if (soundEl == null) continue;
-
-                    var oggName = soundEl.InnerText;
-                    if (!oggName.ToLowerInvariant().EndsWith(".ogg")) continue;
-
-                    try
-                    {
-                        string location = String.Empty;
-                        if (jsonContents.Any(j => j.Name.ToLowerInvariant() == oggName.ToLowerInvariant())) 
-                        {
-                            location = jsonContents.First(j => j.Name.ToLowerInvariant() == oggName.ToLowerInvariant()).Location;
-                        } else // This means that the _contents.json file in IMVU has been corrupted
-                                // and we'll try to see if we can get it by name
-                        {
-                            var oggUrl = url.Replace("_contents.json", $"{oggName}");
-                            var headRequest = new HttpRequestMessage(HttpMethod.Head, oggUrl);
-                            var headResponse = await _httpClient.SendAsync(headRequest);
-                            if (headResponse.IsSuccessStatusCode)
-                            {
-                                if (headResponse.Content.Headers.ContentLength > 0)
-                                {
-                                    location = oggName;
-                                }
-                            }
-                        }
-
-                        if (location != String.Empty)
-                        {
-                            var triggerEntry = new TriggerEntry
-                            {
-                                ProductId = product.ProductId,
-                                OggName = oggName,
-                                TriggerName = nameEl.InnerText,
-                                Location = location,
-                                Sequence = 0
-                            };
-                            triggerList.Add(triggerEntry);
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        result.Result = ScanResultType.JsonError;
-                        result.Message = $"Malformed _product file for {product.ProductId}";
-                        lock (_dbLock)
-                        {
-                            connAppCache.Execute($"UPDATE products SET has_ogg = 0 WHERE product_id = {product.ProductId}");
-                        }
-                        return result;
-                    }
-                }
+                return triggerListResult;
             }
-            #endregion
 
-            #region OGG file in Template?
-            if (!triggerList.Any())
+            triggerListResult = AssignTriggerSequences(triggerListResult.Triggers);
+            if (triggerListResult.Result != ScanResultType.Success)
             {
-                result.Message = "Triggers were not found in XML file";
-                result.Result = ScanResultType.ZeroTriggers;
-                LogLine($"  Done. {product.ProductName} {result.Result}");
-                return result;
+                return triggerListResult;
             }
-            #endregion
 
-            #region Split Triggers and Prefixes
+            var triggerList = triggerListResult.Triggers;
 
-            var numbers = "0123456789".ToCharArray();
-            foreach (var trigger in triggerList)
+            TriggerListScanResult ancestorResult = await FindAncestorTriggers(connAppCache, triggerList, product).ConfigureAwait(false);
+            if (ancestorResult.Result != ScanResultType.Success)
             {
-                bool hitNumber = false;
-                string numberString = string.Empty;
-                foreach (var c in trigger.TriggerName)
-                {
-                    if (numbers.Contains(c))
-                    {
-                        hitNumber = true;
-                        numberString += c;
-                    }
-                    else
-                    {
-                        if (!hitNumber)
-                        {
-                            trigger.Prefix += c;
-                        }
-                        else
-                        {
-                            trigger.Sequence = -1;
-                        }
-                    }
-                    if (string.IsNullOrEmpty(numberString))
-                    {
-                        trigger.Sequence = -1;
-                    }
-                    else
-                    {
-                        trigger.Sequence = int.Parse(numberString);
-                    }
-                }
+                return ancestorResult;
             }
-            #endregion
+            triggerList = ancestorResult.Triggers;
 
             #region Filter Out Crappy Triggers
             triggerList = triggerList.Where(t => t.Sequence != -1).OrderBy(t => t.Prefix).ThenBy(t => t.Sequence).ToList();
@@ -629,6 +408,8 @@ namespace Triggerless.TriggerBot
             }
             #endregion
 
+
+
             #region Retrieve OGG file lengths
 
             bool hasOggLengths = false;
@@ -653,12 +434,13 @@ namespace Triggerless.TriggerBot
             {
                 payload.Triggers.Add(new Models.TriggerEntry
                 {
-                    ProductId = entry.ProductId,
+                    ProductId = entry.SourceId,
                     TriggerName = entry.TriggerName,
                     Prefix = entry.Prefix,
                     Sequence = entry.Sequence,
                     OggName = entry.OggName,
                     Location = entry.Location,
+                    SourceId = entry.SourceId,
                 });
             }
             var json = JsonConvert.SerializeObject(payload);
@@ -711,7 +493,8 @@ namespace Triggerless.TriggerBot
                     {
                         var start = DateTime.Now;
                         var urlLookup = trigger.Location;
-                        var musicUrl = GetUrl(product.ProductId, urlLookup);
+                        var pid = trigger.SourceId == 0 ? trigger.ProductId : trigger.SourceId;
+                        var musicUrl = GetUrl(pid, urlLookup);
 
                         using (var triggerClient = new HttpClient())
                         {
@@ -773,31 +556,12 @@ namespace Triggerless.TriggerBot
                 return result;
             }
 
-            #region Save Triggers to DB
-            var sqlInsertTrigger = "INSERT INTO product_triggers (product_id, prefix, sequence, trigger, ogg_name, length_ms, location) VALUES " +
-                    "(@ProductId, @Prefix, @Sequence, @TriggerName, @OggName, @LengthMS, @Location);";
+            ScanResult dbResult = SaveToDb(connAppCache, triggerList, product);
 
-            var triggers = triggerList.OrderBy(t => t.Sequence).ThenBy(t => t.TriggerName).ToList();
-            int seq = 1;
-            foreach (var t in triggers)
-            {
-                t.Sequence = seq++;
-            }
-
-            lock (_dbLock)
-            {
-                foreach (var trigger in triggers)
-                {
-                    connAppCache.Execute(sqlInsertTrigger, trigger);
-                }
-            }
-            result.Result = ScanResultType.Success;
-            result.Message = $"{triggerList.Count} triggers found and added";
-            LogLine($"  Done. {product.ProductName} {result.Message}");
-            #endregion
-
-            return result;
+            return dbResult;
         }
+
+
 
         public static async Task<double> GetOggLengthMsAsync(HttpClient client, string url)
         {

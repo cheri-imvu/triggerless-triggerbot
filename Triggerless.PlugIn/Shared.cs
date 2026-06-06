@@ -102,6 +102,8 @@ namespace Triggerless.PlugIn
         }
 
         public static string TriggerlessDomain = "https://www.triggerless.com";
+        public static string DebugDomain = "http://localhost:61120";
+
         public static string LyricSheetsPath
         {
             get

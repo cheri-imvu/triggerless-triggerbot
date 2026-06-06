@@ -57,6 +57,7 @@
             this.grdCuts.RowHeadersWidth = 51;
             this.grdCuts.Size = new System.Drawing.Size(527, 202);
             this.grdCuts.TabIndex = 1;
+            this.grdCuts.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.grdCuts_CellMouseDoubleClick);
             // 
             // colIndex
             // 

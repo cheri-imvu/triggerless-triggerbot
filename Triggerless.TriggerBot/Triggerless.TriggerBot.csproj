@@ -284,6 +284,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\Collector.ProductScan.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Components\ColorTabControl.cs">
       <SubType>Component</SubType>
     </Compile>

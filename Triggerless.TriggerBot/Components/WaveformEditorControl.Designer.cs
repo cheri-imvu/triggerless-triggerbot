@@ -21,6 +21,7 @@
             this.btnPlay = new System.Windows.Forms.Button();
             this.btnPause = new System.Windows.Forms.Button();
             this.btnPlayheadTime = new System.Windows.Forms.Button();
+            this.btnZoomRight = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // viewportPanel
@@ -70,7 +71,7 @@
             // btnNext20
             // 
             this.btnNext20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnNext20.Location = new System.Drawing.Point(171, 325);
+            this.btnNext20.Location = new System.Drawing.Point(287, 325);
             this.btnNext20.Margin = new System.Windows.Forms.Padding(2);
             this.btnNext20.Name = "btnNext20";
             this.btnNext20.Size = new System.Drawing.Size(75, 28);
@@ -81,7 +82,7 @@
             // btnPlay
             // 
             this.btnPlay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnPlay.Location = new System.Drawing.Point(347, 325);
+            this.btnPlay.Location = new System.Drawing.Point(463, 325);
             this.btnPlay.Margin = new System.Windows.Forms.Padding(2);
             this.btnPlay.Name = "btnPlay";
             this.btnPlay.Size = new System.Drawing.Size(75, 28);
@@ -93,7 +94,7 @@
             // btnPause
             // 
             this.btnPause.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnPause.Location = new System.Drawing.Point(427, 325);
+            this.btnPause.Location = new System.Drawing.Point(543, 325);
             this.btnPause.Margin = new System.Windows.Forms.Padding(2);
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(75, 28);
@@ -108,7 +109,7 @@
             this.btnPlayheadTime.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnPlayheadTime.Font = new System.Drawing.Font("Liberation Sans", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPlayheadTime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.btnPlayheadTime.Location = new System.Drawing.Point(518, 323);
+            this.btnPlayheadTime.Location = new System.Drawing.Point(634, 323);
             this.btnPlayheadTime.Margin = new System.Windows.Forms.Padding(2);
             this.btnPlayheadTime.Name = "btnPlayheadTime";
             this.btnPlayheadTime.Size = new System.Drawing.Size(118, 28);
@@ -116,11 +117,24 @@
             this.btnPlayheadTime.Text = "00:00.00";
             this.btnPlayheadTime.UseVisualStyleBackColor = true;
             // 
+            // btnZoomRight
+            // 
+            this.btnZoomRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnZoomRight.Location = new System.Drawing.Point(173, 325);
+            this.btnZoomRight.Margin = new System.Windows.Forms.Padding(2);
+            this.btnZoomRight.Name = "btnZoomRight";
+            this.btnZoomRight.Size = new System.Drawing.Size(75, 28);
+            this.btnZoomRight.TabIndex = 8;
+            this.btnZoomRight.Text = "Zoom ►";
+            this.btnZoomRight.UseVisualStyleBackColor = true;
+            this.btnZoomRight.Click += new System.EventHandler(this.BtnZoomRight_Click);
+            // 
             // WaveformEditorControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
+            this.Controls.Add(this.btnZoomRight);
             this.Controls.Add(this.btnPlayheadTime);
             this.Controls.Add(this.btnPause);
             this.Controls.Add(this.btnPlay);
@@ -140,5 +154,6 @@
         private System.Windows.Forms.Button btnPlay;
         private System.Windows.Forms.Button btnPause;
         private System.Windows.Forms.Button btnPlayheadTime;
+        private System.Windows.Forms.Button btnZoomRight;
     }
 }

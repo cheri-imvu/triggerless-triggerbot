@@ -13,6 +13,7 @@ namespace Triggerless.TriggerBot.Models
         public string Prefix { get; set; }
         public double LengthMS { get; set; }
         public double WaitMS { get; set; }
+        public long SourceId { get; set; }
     }
 
     public class ProductRecord

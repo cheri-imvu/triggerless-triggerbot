@@ -432,11 +432,15 @@ namespace Triggerless.TriggerBot
 
             CreatePNG(triggerPrefix, listsOfFiles);
 
+            string method = rdoFixed.Checked ? "Fixed" :
+                rdoCustom.Checked ? "I-Cut" : "Smart";
+
             await TriggerlessApiClient.SendEventAsync(TriggerlessApiClient.EventType.CutTune,
                 new {
                     Filename = Path.GetFileName(txtFilename.Text),
                     TriggerPrefix = triggerPrefix,
-                    ChknCount = listsOfFiles.Count
+                    ChknCount = listsOfFiles.Count,
+                    Method = method
                 }
             );                
         }

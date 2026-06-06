@@ -21,6 +21,8 @@ namespace Triggerless.TriggerBot
         public double LengthMS { get; set; }
         public int Sequence { get; set; }
         public string Prefix { get; set; }
+        public long SourceId { get; set; }
+        public long AncestorId { get; set; }
     }
 
     public class ScanResult
@@ -47,6 +49,7 @@ namespace Triggerless.TriggerBot
         MixedPrefixes = 11,
         NotEnoughOggs = 12,
         ProductUnavailable = 13,
+        AncestorUnavailable = 14,
     }
 
     public class ProductSearchInfo
