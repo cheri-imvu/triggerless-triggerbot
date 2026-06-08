@@ -396,6 +396,29 @@ namespace Triggerless.TriggerBot
                     return result;
                 }
 
+                if (jsonResult.Contents == null || jsonResult.Contents.Length == 0)
+                {
+                    // The ancestor product has no JSON contents, so we can't find any triggers.
+                    // This is normal and typical, assume that this product doesn't
+                    // have any ancestor triggers and return what we have with a Success status.
+                    result.Result = ScanResultType.Success;
+                    result.Triggers = accumulatedTriggers;
+                    result.Message = $"Ancestor product {ancestorId} has no contents, assuming no triggers.";
+                    return result;
+                }
+
+                bool ancestorHasOggs = jsonResult.Contents.Any(j =>
+                    j.Name.ToLowerInvariant().EndsWith(".ogg") ||
+                    j.Url.ToLowerInvariant().EndsWith(".ogg"));
+
+                if (!ancestorHasOggs)
+                {
+                    result.Result = ScanResultType.Success;
+                    result.Triggers = accumulatedTriggers;
+                    result.Message = $"Ancestor product {ancestorId} has no ogg files, assuming no triggers.";
+                    return result;
+                }
+
                 // Get the triggers for the ancestor product from the index.xml
                 var ancestorResult = await GetTriggerListFromIndex(
                     connAppCache, currentProduct, jsonResult).ConfigureAwait(false);
@@ -445,11 +468,9 @@ namespace Triggerless.TriggerBot
             result = new TriggerListScanResult
             {
                 Result = ScanResultType.Success,
-                Triggers = triggerList,
+                Triggers = accumulatedTriggers,
                 Message = "Found Trigger 1"
             };
-            result.Triggers.Clear();
-            result.Triggers.AddRange(accumulatedTriggers);
             result.Triggers = result.Triggers.OrderBy(t => t.Sequence).ToList();
             return result;
 
