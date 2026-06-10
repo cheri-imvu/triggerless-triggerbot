@@ -287,7 +287,17 @@ namespace Triggerless.TriggerBot
             {
                 bool hitNumber = false;
                 string numberString = string.Empty;
-                foreach (var c in trigger.TriggerName)
+                var pieces = trigger.TriggerName.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string firstPiece = pieces.Length > 0 ? pieces[0] : string.Empty;
+                if (firstPiece == string.Empty)
+                {
+                    result.Message = "At least one trigger has a null prefix";
+                    result.Result = ScanResultType.NullPrefixes;
+                    LogLine(result.Message);
+                    return result;
+                }
+
+                foreach (var c in firstPiece)
                 {
                     if (numbers.Contains(c))
                     {
@@ -376,6 +386,7 @@ namespace Triggerless.TriggerBot
             // will not need to enter the loop at all.
             // 
 
+            int minSequence = getMinSequence(accumulatedTriggers);
             while (getMinSequence(accumulatedTriggers) > 1)
             {
                 currentPid = ancestorId;

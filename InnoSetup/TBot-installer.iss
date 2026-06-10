@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Triggerless Triggerbot"
-#define MyAppVersion "1.1.7.2606"
+#define MyAppVersion "1.1.8.2606"
 #define MyAppPublisher "triggerless.com"
 #define MyAppURL "https://www.triggerless.com/triggerbot/"
 #define MyAppExeName "TriggerBot.exe"
@@ -27,7 +27,7 @@ DisableDirPage=yes
 DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
-OutputBaseFilename=mysetup
+OutputBaseFilename=triggerbot-setup.{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern

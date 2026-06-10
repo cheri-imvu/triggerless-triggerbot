@@ -36,6 +36,13 @@
             this.viewportPanel.Name = "viewportPanel";
             this.viewportPanel.Size = new System.Drawing.Size(900, 300);
             this.viewportPanel.TabIndex = 0;
+            this.viewportPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.ViewportPanel_Paint);
+            this.viewportPanel.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ViewportPanel_MouseDoubleClick);
+            this.viewportPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ViewportPanel_MouseDown);
+            this.viewportPanel.MouseEnter += new System.EventHandler(this.ViewportPanel_MouseEnter);
+            this.viewportPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ViewportPanel_MouseMove);
+            this.viewportPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ViewportPanel_MouseUp);
+            this.viewportPanel.Resize += new System.EventHandler(this.ViewportPanel_Resize);
             // 
             // hScrollBar
             // 

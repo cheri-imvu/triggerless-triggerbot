@@ -305,7 +305,7 @@ namespace Triggerless.TriggerBot
             }
         }
 
-        public async Task<ScanResult> ScanProductAsync(ProductSearchInfo product, Microsoft.Data.Sqlite.SqliteConnection connAppCache)
+        public async Task<ScanResult> ScanProductAsync(ProductSearchInfo product, SqliteConnection connAppCache)
         {
 
             var processorCount = Environment.ProcessorCount;
@@ -470,10 +470,16 @@ namespace Triggerless.TriggerBot
                     }
                     hasOggLengths = true;
                 }
+                if (response.Triggers.Any(t => t.LengthMS == 0))
+                {
+                    hasOggLengths = false;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 hasOggLengths = false;
+                var @message = $"  **ERROR calling online OGG length service: {ex.Message}";
+                LogLine(@message);
             }
 
             // If we couldn't do this online, it could be that triggerless.com is down

@@ -80,8 +80,9 @@ namespace Triggerless.TriggerBot
             new Filter(Gender.Male, true,   "Miscellaneous",       3095),
             new Filter(Gender.Male, false,   "Miscellaneous",      3093),
             new Filter(Gender.Male, true, "Sounds & Effects (generic, new)", 3139),
-            new Filter(Gender.Male, true,   "Legacy",      165),  
-            new Filter(Gender.Male, true,   "Tattoos",      3149, 3097), // Holding back PR on Music
+            new Filter(Gender.Male, true,   "Legacy",               165),  
+            new Filter(Gender.Male, true,   "Tattoos",              3149, 3097), // Holding back PR on Music
+            new Filter(Gender.Male, true,   "Eyewear/Glasses)",     3140, 416),
 
             new Filter(Gender.Female, true, "Spice Glasses",       3122, 144),
             new Filter(Gender.Female, true, "New Accessories",     155),

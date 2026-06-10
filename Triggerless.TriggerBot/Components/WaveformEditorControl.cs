@@ -91,6 +91,7 @@ namespace Triggerless.TriggerBot
         // PLAYBACK
         // =========================================================
 
+        private bool _playheadSetByUser;
         private readonly Timer _playbackTimer = new Timer();
         private bool _isPlaying;
         private double _playheadTimeSeconds;
@@ -115,22 +116,15 @@ namespace Triggerless.TriggerBot
 
             DoubleBuffered = true;
 
-            viewportPanel.Paint += ViewportPanel_Paint;
-            viewportPanel.Resize += ViewportPanel_Resize;
-
-            viewportPanel.MouseDown += ViewportPanel_MouseDown;
-            viewportPanel.MouseMove += ViewportPanel_MouseMove;
-            viewportPanel.MouseUp += ViewportPanel_MouseUp;
-            viewportPanel.MouseDoubleClick += ViewportPanel_MouseDoubleClick;
-
             hScrollBar.Scroll += HScrollBar_Scroll;
 
             btnZoomIn.Click += BtnZoomIn_Click;
             btnZoomOut.Click += BtnZoomOut_Click;
             btnNext20.Click += BtnNext20_Click;
 
+            // This event handler isn't shown in the designer, strangely.
             viewportPanel.MouseWheel += ViewportPanel_MouseWheel;
-            viewportPanel.MouseEnter += ViewportPanel_MouseEnter;
+
             this.TabStop = true;
 
             _playbackTimer.Interval = 8;
@@ -324,6 +318,7 @@ namespace Triggerless.TriggerBot
 
             _viewportStartSeconds = ClampTime(start);
             _viewportDurationSeconds = Math.Min(20, _audioLengthSeconds);
+            ResetPlayhead();
             ClampViewport();
             UpdateScrollbar();
             _viewportBitmapDirty = true;
@@ -629,7 +624,7 @@ namespace Triggerless.TriggerBot
 
         private void DrawPlayHead(Graphics g)
         {
-            if (_playbackReader == null)
+            if (!_playheadSetByUser && !_isPlaying)
             {
                 return;
             }
@@ -640,9 +635,7 @@ namespace Triggerless.TriggerBot
 
             for (int y = 0; y < viewportPanel.Height; y += PLAYHEAD_DASH_LENGTH)
             {
-                Pen pen = firstColor
-                    ? Pens.Magenta
-                    : Pens.Black;
+                Pen pen = firstColor ? Pens.Magenta : Pens.Black;
 
                 int y2 =
                     Math.Min(
@@ -654,7 +647,6 @@ namespace Triggerless.TriggerBot
                 firstColor = !firstColor;
             }
         }
-
         private void DrawVisibleWaveform(Graphics g)
         {
             if (_fullWaveformBitmap == null)
@@ -831,22 +823,41 @@ namespace Triggerless.TriggerBot
         {
             if (_draggingMarker != null)
             {
-                SQLiteDataAccess.AddCutMarker(_loadedFile, _draggingMarker.TimeSeconds);
-                _draggingMarker = null;
-
-                _cutMarkers.Sort(
-                    delegate (
-                        CutMarker a,
-                        CutMarker b)
-                    {
-                        return
-                            a.TimeSeconds.CompareTo(
-                                b.TimeSeconds);
-                    });
-                _viewportBitmapDirty = true;
-                viewportPanel.Invalidate();
-                FireCutsChanged();
+                FinishMarkerDrag();
             }
+            else
+            {
+                MovePlayheadToX(e.X);
+            }
+        }
+
+        private void MovePlayheadToX(int x)
+        {
+            _playheadTimeSeconds =
+                ClampTime(XToTime(x));
+
+            _playheadSetByUser = true;
+
+            viewportPanel.Invalidate();
+        }
+
+
+        private void FinishMarkerDrag()
+        {
+            SQLiteDataAccess.AddCutMarker(_loadedFile, _draggingMarker.TimeSeconds);
+            _draggingMarker = null;
+            _cutMarkers.Sort(
+                delegate (
+                    CutMarker a,
+                    CutMarker b)
+                {
+                    return
+                        a.TimeSeconds.CompareTo(
+                            b.TimeSeconds);
+                });
+            _viewportBitmapDirty = true;
+            viewportPanel.Invalidate();
+            FireCutsChanged();
         }
 
         private void ViewportPanel_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -979,12 +990,11 @@ namespace Triggerless.TriggerBot
 
                 _viewportStartSeconds = percent * maxStart;
             }
-
+            ResetPlayhead();
             ClampViewport();
             _viewportBitmapDirty = true;
             viewportPanel.Invalidate();
         }
-
 
         private void BtnZoomIn_Click(object sender, EventArgs e)
         {
@@ -1022,6 +1032,8 @@ namespace Triggerless.TriggerBot
             _viewportStartSeconds = anchorTime - (anchorPercent * newDuration);
 
             _viewportDurationSeconds = newDuration;
+
+            ResetPlayhead();
 
             ClampViewport();
 
@@ -1145,6 +1157,7 @@ namespace Triggerless.TriggerBot
 
         private void ViewportPanel_Resize(object sender, EventArgs e)
         {
+            ResetPlayhead();
             RegenerateWaveformBitmap();
             _viewportBitmapDirty = true;
 
@@ -1189,25 +1202,53 @@ namespace Triggerless.TriggerBot
             _previousPlayheadX = x;
         }
 
+        private void ResetPlayhead()
+        {
+            if (_isPlaying) StopPlayback();
+
+            _playheadSetByUser = false;
+            _playheadTimeSeconds = _viewportStartSeconds;
+
+            viewportPanel.Invalidate();
+        }
         private void BtnPlay_Click(object sender, EventArgs e)
         {
-            if (_loadedFile == null)
-                return;
+            if (_loadedFile == null) return;
 
+            double startTime;
+
+            if (_playheadSetByUser)
+            {
+                startTime = _playheadTimeSeconds;
+            }
+            else
+            {
+                startTime = _viewportStartSeconds;
+            }
+
+            StartPlayback(startTime);
+        }
+        private void StartPlayback(double startTime)
+        {
             StopPlayback();
 
-            _playbackReader = UniversalAudioReader.Open(_loadedFile);
+            _playbackReader =
+                UniversalAudioReader.Open(_loadedFile);
 
             _waveOut = new WaveOutEvent();
+
             _waveOut.Init(_playbackReader);
 
-            _playbackStartTimeSeconds = _viewportStartSeconds;
-            _playbackEndTimeSeconds = _viewportStartSeconds + _viewportDurationSeconds;
-
-            _playheadTimeSeconds = _playbackStartTimeSeconds;
-
             _playbackReader.CurrentTime =
-                TimeSpan.FromSeconds(_playbackStartTimeSeconds);
+                TimeSpan.FromSeconds(startTime);
+
+            _playbackStartTimeSeconds = startTime;
+
+            _playbackEndTimeSeconds =
+                _viewportStartSeconds +
+                _viewportDurationSeconds;
+
+            _playheadTimeSeconds = startTime;
 
             _playedSnipMarkers.Clear();
 
@@ -1216,6 +1257,8 @@ namespace Triggerless.TriggerBot
             _isPlaying = true;
 
             _playbackTimer.Start();
+
+            viewportPanel.Invalidate();
         }
 
         private void StopPlayback()
@@ -1326,7 +1369,6 @@ namespace Triggerless.TriggerBot
 
         internal void HighlightCut(Cut cut)
         {
-            //throw new NotImplementedException();
             PushUndoState();
 
             _viewportStartSeconds = cut.StartTimeSeconds;
