@@ -419,8 +419,8 @@ namespace Triggerless.TriggerBot
                 }
 
                 bool ancestorHasOggs = jsonResult.Contents.Any(j =>
-                    j.Name.ToLowerInvariant().EndsWith(".ogg") ||
-                    j.Url.ToLowerInvariant().EndsWith(".ogg"));
+                    (j.Name != null && j.Name.ToLowerInvariant().EndsWith(".ogg")) ||
+                    (j.Url != null && j.Url.ToLowerInvariant().EndsWith(".ogg")));
 
                 if (!ancestorHasOggs)
                 {
