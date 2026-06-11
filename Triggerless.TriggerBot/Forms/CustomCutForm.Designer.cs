@@ -36,7 +36,7 @@
             this.colLength = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnAccept = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.waveformEditorControl1 = new Triggerless.TriggerBot.WaveformEditorControl();
+            this.waveformEditorControl1 = new Triggerless.TriggerBot.ICutControl();
             this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.grdCuts)).BeginInit();
             this.SuspendLayout();
@@ -165,7 +165,7 @@
 
         #endregion
 
-        private WaveformEditorControl waveformEditorControl1;
+        private ICutControl waveformEditorControl1;
         private System.Windows.Forms.DataGridView grdCuts;
         private System.Windows.Forms.Button btnAccept;
         private System.Windows.Forms.Button btnCancel;

@@ -1,6 +1,6 @@
 ﻿namespace Triggerless.TriggerBot
 {
-    partial class WaveformEditorControl
+    partial class ICutControl
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -136,7 +136,7 @@
             this.btnZoomRight.UseVisualStyleBackColor = true;
             this.btnZoomRight.Click += new System.EventHandler(this.BtnZoomRight_Click);
             // 
-            // WaveformEditorControl
+            // ICutControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -152,7 +152,7 @@
             this.Controls.Add(this.btnZoomOut);
             this.Font = new System.Drawing.Font("Liberation Sans", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "WaveformEditorControl";
+            this.Name = "ICutControl";
             this.Size = new System.Drawing.Size(901, 360);
             this.ResumeLayout(false);
 

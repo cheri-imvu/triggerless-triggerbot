@@ -1,5 +1,5 @@
 ﻿// ============================================================
-// File: WaveformEditorControl.cs
+// File: ICutControl.cs
 // ============================================================
 
 using NAudio.Wave;
@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace Triggerless.TriggerBot
 {
-    public partial class WaveformEditorControl : UserControl
+    public partial class ICutControl : UserControl
     {
         public event CutsChangedEventHandler CutsChanged;
         private void FireCutsChanged()
@@ -104,7 +104,7 @@ namespace Triggerless.TriggerBot
         private readonly HashSet<double> _playedSnipMarkers = new HashSet<double>();
         private const double SnipLeadTimeSeconds = 0.020;
 
-        public WaveformEditorControl()
+        public ICutControl()
         {
             InitializeComponent();
 
@@ -647,6 +647,7 @@ namespace Triggerless.TriggerBot
                 firstColor = !firstColor;
             }
         }
+
         private void DrawVisibleWaveform(Graphics g)
         {
             if (_fullWaveformBitmap == null)
@@ -837,10 +838,10 @@ namespace Triggerless.TriggerBot
                 ClampTime(XToTime(x));
 
             _playheadSetByUser = true;
+            _playheadTimeSeconds = ClampTime(_playheadTimeSeconds);
 
             viewportPanel.Invalidate();
         }
-
 
         private void FinishMarkerDrag()
         {
@@ -884,6 +885,7 @@ namespace Triggerless.TriggerBot
                 SQLiteDataAccess.AddCutMarker(_loadedFile, ClampTime(XToTime(e.X)));
                 FireCutsChanged();
             }
+            ResetPlayhead();
             _viewportBitmapDirty = true;
             viewportPanel.Invalidate();
 
@@ -1211,6 +1213,7 @@ namespace Triggerless.TriggerBot
 
             viewportPanel.Invalidate();
         }
+
         private void BtnPlay_Click(object sender, EventArgs e)
         {
             if (_loadedFile == null) return;
@@ -1228,6 +1231,7 @@ namespace Triggerless.TriggerBot
 
             StartPlayback(startTime);
         }
+
         private void StartPlayback(double startTime)
         {
             StopPlayback();
@@ -1373,6 +1377,7 @@ namespace Triggerless.TriggerBot
 
             _viewportStartSeconds = cut.StartTimeSeconds;
             _viewportDurationSeconds = cut.LengthSeconds;
+            ResetPlayhead();
             ClampViewport();
             UpdateScrollbar();
             _viewportBitmapDirty = true;
