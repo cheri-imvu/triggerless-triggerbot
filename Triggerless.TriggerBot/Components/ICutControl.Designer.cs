@@ -13,6 +13,7 @@
 
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.viewportPanel = new System.Windows.Forms.Panel();
             this.hScrollBar = new System.Windows.Forms.HScrollBar();
             this.btnZoomIn = new System.Windows.Forms.Button();
@@ -21,7 +22,7 @@
             this.btnPlay = new System.Windows.Forms.Button();
             this.btnPause = new System.Windows.Forms.Button();
             this.btnPlayheadTime = new System.Windows.Forms.Button();
-            this.btnZoomRight = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // viewportPanel
@@ -52,6 +53,7 @@
             this.hScrollBar.Name = "hScrollBar";
             this.hScrollBar.Size = new System.Drawing.Size(901, 18);
             this.hScrollBar.TabIndex = 1;
+            this.toolTip1.SetToolTip(this.hScrollBar, "Pan Left/Right");
             // 
             // btnZoomIn
             // 
@@ -62,6 +64,7 @@
             this.btnZoomIn.Size = new System.Drawing.Size(75, 28);
             this.btnZoomIn.TabIndex = 2;
             this.btnZoomIn.Text = "Zoom In";
+            this.toolTip1.SetToolTip(this.btnZoomIn, "Zoom In 2x");
             this.btnZoomIn.UseVisualStyleBackColor = true;
             // 
             // btnZoomOut
@@ -73,17 +76,19 @@
             this.btnZoomOut.Size = new System.Drawing.Size(75, 28);
             this.btnZoomOut.TabIndex = 3;
             this.btnZoomOut.Text = "Zoom Out";
+            this.toolTip1.SetToolTip(this.btnZoomOut, "Zoom Out 2x");
             this.btnZoomOut.UseVisualStyleBackColor = true;
             // 
             // btnNext20
             // 
             this.btnNext20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnNext20.Location = new System.Drawing.Point(287, 325);
+            this.btnNext20.Location = new System.Drawing.Point(189, 325);
             this.btnNext20.Margin = new System.Windows.Forms.Padding(2);
             this.btnNext20.Name = "btnNext20";
             this.btnNext20.Size = new System.Drawing.Size(75, 28);
             this.btnNext20.TabIndex = 3;
             this.btnNext20.Text = "20 ▶";
+            this.toolTip1.SetToolTip(this.btnNext20, "Last marker + 20 sec of audio");
             this.btnNext20.UseVisualStyleBackColor = true;
             // 
             // btnPlay
@@ -95,6 +100,7 @@
             this.btnPlay.Size = new System.Drawing.Size(75, 28);
             this.btnPlay.TabIndex = 4;
             this.btnPlay.Text = "▶";
+            this.toolTip1.SetToolTip(this.btnPlay, "Play Audio");
             this.btnPlay.UseVisualStyleBackColor = true;
             this.btnPlay.Click += new System.EventHandler(this.BtnPlay_Click);
             // 
@@ -107,6 +113,7 @@
             this.btnPause.Size = new System.Drawing.Size(75, 28);
             this.btnPause.TabIndex = 5;
             this.btnPause.Text = "Pause";
+            this.toolTip1.SetToolTip(this.btnPause, "Pause/Resume Audio");
             this.btnPause.UseVisualStyleBackColor = true;
             this.btnPause.Click += new System.EventHandler(this.BtnPause_Click);
             // 
@@ -122,26 +129,14 @@
             this.btnPlayheadTime.Size = new System.Drawing.Size(118, 28);
             this.btnPlayheadTime.TabIndex = 7;
             this.btnPlayheadTime.Text = "00:00.00";
+            this.toolTip1.SetToolTip(this.btnPlayheadTime, "Playhead position");
             this.btnPlayheadTime.UseVisualStyleBackColor = true;
-            // 
-            // btnZoomRight
-            // 
-            this.btnZoomRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnZoomRight.Location = new System.Drawing.Point(173, 325);
-            this.btnZoomRight.Margin = new System.Windows.Forms.Padding(2);
-            this.btnZoomRight.Name = "btnZoomRight";
-            this.btnZoomRight.Size = new System.Drawing.Size(75, 28);
-            this.btnZoomRight.TabIndex = 8;
-            this.btnZoomRight.Text = "Zoom ►";
-            this.btnZoomRight.UseVisualStyleBackColor = true;
-            this.btnZoomRight.Click += new System.EventHandler(this.BtnZoomRight_Click);
             // 
             // ICutControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
-            this.Controls.Add(this.btnZoomRight);
             this.Controls.Add(this.btnPlayheadTime);
             this.Controls.Add(this.btnPause);
             this.Controls.Add(this.btnPlay);
@@ -161,6 +156,6 @@
         private System.Windows.Forms.Button btnPlay;
         private System.Windows.Forms.Button btnPause;
         private System.Windows.Forms.Button btnPlayheadTime;
-        private System.Windows.Forms.Button btnZoomRight;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

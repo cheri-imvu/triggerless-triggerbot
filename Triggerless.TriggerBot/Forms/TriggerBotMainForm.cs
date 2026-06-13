@@ -789,13 +789,16 @@ namespace Triggerless.TriggerBot
         private string GetTriggerLine()
         {
             var hideTriggers = chkHideTriggers.Checked;
+            
             const string HIDER = "*imvu:trigger ";
-            bool hasAdditionalTriggers = !string.IsNullOrEmpty(cboAdditionalTriggers.Text);
+            string addnTriggerText = cboAdditionalTriggers.Text;
+
+            bool hasAdditionalTriggers = !string.IsNullOrWhiteSpace(addnTriggerText);
             string result = string.Empty; // sometimes the first char gets cut off.
             if (hasAdditionalTriggers)
             {
                 result = hideTriggers ? $" {HIDER}{TrimTrigger()}" : $"  /{TrimTrigger()}";
-                string[] addnTriggers = cboAdditionalTriggers.Text.Trim()
+                string[] addnTriggers = addnTriggerText.Trim()
                     .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 if (addnTriggers.Length > 0)
                 {

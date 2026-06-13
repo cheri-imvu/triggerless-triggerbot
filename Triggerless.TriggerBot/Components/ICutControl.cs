@@ -70,7 +70,7 @@ namespace Triggerless.TriggerBot
         // UNDO STACK
         // =========================================================
 
-        private readonly Stack<WaveformEditorState> _undoStack = new Stack<WaveformEditorState>();
+        private readonly Stack<ICutState> _undoStack = new Stack<ICutState>();
         private bool _suppressUndoPush = false;
 
         // =========================================================
@@ -197,7 +197,7 @@ namespace Triggerless.TriggerBot
                 return;
             }
 
-            WaveformEditorState state = new WaveformEditorState
+            ICutState state = new ICutState
             {
                 ViewportStartSeconds = _viewportStartSeconds,
                 ViewportDurationSeconds = _viewportDurationSeconds,
@@ -207,7 +207,7 @@ namespace Triggerless.TriggerBot
             _undoStack.Push(state);
         }
 
-        private void RestoreState(WaveformEditorState state)
+        private void RestoreState(ICutState state)
         {
             _suppressUndoPush = true;
 
@@ -236,7 +236,7 @@ namespace Triggerless.TriggerBot
         {
             if (_undoStack.Count == 0) return;
 
-            WaveformEditorState state = _undoStack.Pop();
+            ICutState state = _undoStack.Pop();
             RestoreState(state);
         }
 
@@ -1405,7 +1405,7 @@ namespace Triggerless.TriggerBot
         public double LengthSeconds => EndTimeSeconds - StartTimeSeconds;
     }
 
-    public class WaveformEditorState
+    public class ICutState
     {
         public double ViewportStartSeconds { get; set; }
         public double ViewportDurationSeconds { get; set; }

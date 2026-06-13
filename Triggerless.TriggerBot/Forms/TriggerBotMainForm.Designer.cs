@@ -136,13 +136,13 @@ namespace Triggerless.TriggerBot
             this.label21 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabDebug = new System.Windows.Forms.TabPage();
+            this.debugCtrl1 = new Triggerless.TriggerBot.DebugCtrl();
             this._toolTip = new System.Windows.Forms.ToolTip(this.components);
             this._triggerTimer = new System.Timers.Timer();
             this._progressTimer = new System.Windows.Forms.Timer(this.components);
             this._lyricTimer = new System.Windows.Forms.Timer(this.components);
             this.lblNoResults = new System.Windows.Forms.Label();
             this._collector = new Triggerless.TriggerBot.Collector();
-            this.debugCtrl1 = new Triggerless.TriggerBot.DebugCtrl();
             this.tabAppContainer.SuspendLayout();
             this.tabPlayback.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
@@ -254,6 +254,7 @@ namespace Triggerless.TriggerBot
             this.btnRecentlyAdded.Name = "btnRecentlyAdded";
             this.btnRecentlyAdded.Size = new System.Drawing.Size(31, 33);
             this.btnRecentlyAdded.TabIndex = 5;
+            this.btnRecentlyAdded.TabStop = false;
             this.btnRecentlyAdded.Text = "📅";
             this._toolTip.SetToolTip(this.btnRecentlyAdded, "Recently Added");
             this.btnRecentlyAdded.UseVisualStyleBackColor = true;
@@ -267,6 +268,7 @@ namespace Triggerless.TriggerBot
             this.btnFavorites.Name = "btnFavorites";
             this.btnFavorites.Size = new System.Drawing.Size(31, 33);
             this.btnFavorites.TabIndex = 4;
+            this.btnFavorites.TabStop = false;
             this.btnFavorites.Text = "❤️";
             this._toolTip.SetToolTip(this.btnFavorites, "Most Played");
             this.btnFavorites.UseVisualStyleBackColor = true;
@@ -280,6 +282,7 @@ namespace Triggerless.TriggerBot
             this.btnSearchTags.Name = "btnSearchTags";
             this.btnSearchTags.Size = new System.Drawing.Size(31, 33);
             this.btnSearchTags.TabIndex = 3;
+            this.btnSearchTags.TabStop = false;
             this.btnSearchTags.Text = "#";
             this.btnSearchTags.UseVisualStyleBackColor = true;
             this.btnSearchTags.Click += new System.EventHandler(this.btnSearchTags_Click);
@@ -305,6 +308,7 @@ namespace Triggerless.TriggerBot
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(31, 33);
             this.btnSearch.TabIndex = 2;
+            this.btnSearch.TabStop = false;
             this.btnSearch.Text = "🔍";
             this._toolTip.SetToolTip(this.btnSearch, "Search Title, Creator & Triggers");
             this.btnSearch.UseVisualStyleBackColor = true;
@@ -364,6 +368,7 @@ namespace Triggerless.TriggerBot
             this.btnLyricLag.Name = "btnLyricLag";
             this.btnLyricLag.Size = new System.Drawing.Size(44, 24);
             this.btnLyricLag.TabIndex = 24;
+            this.btnLyricLag.TabStop = false;
             this.btnLyricLag.Text = "L▶";
             this._toolTip.SetToolTip(this.btnLyricLag, "Push Lyrics Forward");
             this.btnLyricLag.UseVisualStyleBackColor = true;
@@ -377,6 +382,7 @@ namespace Triggerless.TriggerBot
             this.chkHideTriggers.Name = "chkHideTriggers";
             this.chkHideTriggers.Size = new System.Drawing.Size(92, 21);
             this.chkHideTriggers.TabIndex = 18;
+            this.chkHideTriggers.TabStop = false;
             this.chkHideTriggers.Text = "Hide Trigs";
             this._toolTip.SetToolTip(this.chkHideTriggers, "Hide triggers");
             this.chkHideTriggers.UseVisualStyleBackColor = true;
@@ -389,6 +395,7 @@ namespace Triggerless.TriggerBot
             this.chkLyrics.Name = "chkLyrics";
             this.chkLyrics.Size = new System.Drawing.Size(95, 21);
             this.chkLyrics.TabIndex = 23;
+            this.chkLyrics.TabStop = false;
             this.chkLyrics.Text = "Use Lyrics";
             this.chkLyrics.UseVisualStyleBackColor = true;
             // 
@@ -400,6 +407,7 @@ namespace Triggerless.TriggerBot
             this.chkKeepOnTop.Name = "chkKeepOnTop";
             this.chkKeepOnTop.Size = new System.Drawing.Size(112, 21);
             this.chkKeepOnTop.TabIndex = 19;
+            this.chkKeepOnTop.TabStop = false;
             this.chkKeepOnTop.Text = "Keep On Top";
             this._toolTip.SetToolTip(this.chkKeepOnTop, "Keep This On Top while playing");
             this.chkKeepOnTop.UseVisualStyleBackColor = true;
@@ -413,6 +421,7 @@ namespace Triggerless.TriggerBot
             this.chkMinimizeOnPlay.Name = "chkMinimizeOnPlay";
             this.chkMinimizeOnPlay.Size = new System.Drawing.Size(140, 21);
             this.chkMinimizeOnPlay.TabIndex = 20;
+            this.chkMinimizeOnPlay.TabStop = false;
             this.chkMinimizeOnPlay.Text = "Minimize On Play";
             this._toolTip.SetToolTip(this.chkMinimizeOnPlay, "Minimize window when playing");
             this.chkMinimizeOnPlay.UseVisualStyleBackColor = true;
@@ -672,6 +681,7 @@ namespace Triggerless.TriggerBot
             this.trackBarLag.Name = "trackBarLag";
             this.trackBarLag.Size = new System.Drawing.Size(383, 42);
             this.trackBarLag.TabIndex = 12;
+            this.trackBarLag.TabStop = false;
             this.trackBarLag.TickFrequency = 4;
             this.trackBarLag.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.trackBarLag.Value = 16;
@@ -877,6 +887,7 @@ namespace Triggerless.TriggerBot
             this.chkAutoCue.Name = "chkAutoCue";
             this.chkAutoCue.Size = new System.Drawing.Size(233, 21);
             this.chkAutoCue.TabIndex = 5;
+            this.chkAutoCue.TabStop = false;
             this.chkAutoCue.Text = "Auto play after this song is done";
             this.chkAutoCue.UseVisualStyleBackColor = true;
             // 
@@ -888,6 +899,7 @@ namespace Triggerless.TriggerBot
             this.btnEjectFromDeck.Name = "btnEjectFromDeck";
             this.btnEjectFromDeck.Size = new System.Drawing.Size(30, 32);
             this.btnEjectFromDeck.TabIndex = 4;
+            this.btnEjectFromDeck.TabStop = false;
             this._toolTip.SetToolTip(this.btnEjectFromDeck, "Remove from On Deck");
             this.btnEjectFromDeck.UseVisualStyleBackColor = true;
             this.btnEjectFromDeck.Click += new System.EventHandler(this.RemoveFromDeck);
@@ -901,6 +913,7 @@ namespace Triggerless.TriggerBot
             this.btnLoadToPlaying.Name = "btnLoadToPlaying";
             this.btnLoadToPlaying.Size = new System.Drawing.Size(30, 32);
             this.btnLoadToPlaying.TabIndex = 3;
+            this.btnLoadToPlaying.TabStop = false;
             this._toolTip.SetToolTip(this.btnLoadToPlaying, "Add to Now Playing");
             this.btnLoadToPlaying.UseVisualStyleBackColor = true;
             this.btnLoadToPlaying.Click += new System.EventHandler(this.MoveToPlaying);
@@ -928,6 +941,7 @@ namespace Triggerless.TriggerBot
             this.productOnDeck.ProductInfo = null;
             this.productOnDeck.Size = new System.Drawing.Size(324, 85);
             this.productOnDeck.TabIndex = 2;
+            this.productOnDeck.TabStop = false;
             this._toolTip.SetToolTip(this.productOnDeck, "Trigger Product On Deck");
             this.productOnDeck.Visible = false;
             // 
@@ -1439,6 +1453,18 @@ namespace Triggerless.TriggerBot
             this.tabDebug.Text = "Debug";
             this.tabDebug.UseVisualStyleBackColor = true;
             // 
+            // debugCtrl1
+            // 
+            this.debugCtrl1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
+            this.debugCtrl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.debugCtrl1.Font = new System.Drawing.Font("Liberation Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.debugCtrl1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.debugCtrl1.Location = new System.Drawing.Point(3, 3);
+            this.debugCtrl1.Margin = new System.Windows.Forms.Padding(4);
+            this.debugCtrl1.Name = "debugCtrl1";
+            this.debugCtrl1.Size = new System.Drawing.Size(1060, 624);
+            this.debugCtrl1.TabIndex = 0;
+            // 
             // _triggerTimer
             // 
             this._triggerTimer.SynchronizingObject = this.picBanner;
@@ -1465,18 +1491,6 @@ namespace Triggerless.TriggerBot
             // _collector
             // 
             this._collector.CollectorEvent += new Triggerless.TriggerBot.Collector.CollectorEventHandler(this.OnCollectorEvent);
-            // 
-            // debugCtrl1
-            // 
-            this.debugCtrl1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
-            this.debugCtrl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.debugCtrl1.Font = new System.Drawing.Font("Liberation Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.debugCtrl1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.debugCtrl1.Location = new System.Drawing.Point(3, 3);
-            this.debugCtrl1.Margin = new System.Windows.Forms.Padding(4);
-            this.debugCtrl1.Name = "debugCtrl1";
-            this.debugCtrl1.Size = new System.Drawing.Size(1060, 624);
-            this.debugCtrl1.TabIndex = 0;
             // 
             // TriggerBotMainForm
             // 

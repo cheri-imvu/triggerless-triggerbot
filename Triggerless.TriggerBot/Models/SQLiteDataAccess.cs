@@ -79,7 +79,7 @@ namespace Triggerless.TriggerBot
             new Filter(Gender.Male, true,   "Music Items",         3139, 2501),
             new Filter(Gender.Male, true,   "Miscellaneous",       3095),
             new Filter(Gender.Male, false,   "Miscellaneous",      3093),
-            new Filter(Gender.Male, true, "Sounds & Effects (generic, new)", 3139),
+            new Filter(Gender.Male, true,   "Sounds & Effects (generic, new)", 3139),
             new Filter(Gender.Male, true,   "Legacy",               165),  
             new Filter(Gender.Male, true,   "Tattoos",              3149, 3097), // Holding back PR on Music
             new Filter(Gender.Male, true,   "Eyewear/Glasses)",     3140, 416),
@@ -138,9 +138,20 @@ namespace Triggerless.TriggerBot
             return r;
         }
 
-        // If you had this before, it still works:
-        public static string AccessoryFilter =>
-            " cPath IN ('" + string.Join("', '", FilterCpaths.Select(arr => arr.ToCpath())) + "')";
+        public static string AccessoryFilter
+        {
+            get
+            {
+                string result = String.Empty;
+
+                result += " cPath IN ('";
+                result += string.Join("', '", FilterCpaths.Select(arr => arr.ToCpath()));
+                result += "', '[106, 41, 70, 1657]"; // legacy for clothing items that don't fit the other patterns (mostly old ones)
+                result += "')";
+                return result;
+            }
+        }
+            
 
         #endregion
 

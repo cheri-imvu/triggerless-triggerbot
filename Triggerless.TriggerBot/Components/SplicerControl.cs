@@ -179,6 +179,15 @@ namespace Triggerless.TriggerBot
                 txtPrefix.Focus();
                 return false;
             }
+
+            var cutsVal = ValidateCuts();
+            var acceptedReasons = new HashSet<CutsReason> { CutsReason.Valid, CutsReason.NotICut };
+            if (!acceptedReasons.Contains(cutsVal.Reason))
+            {
+                StyledMessageBox.Show(this.ParentForm, cutsVal.Message, "I-Cut Isn't Valid", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
             return true;
         }
 
@@ -237,6 +246,81 @@ namespace Triggerless.TriggerBot
                 lblCutStageIdle.Text = "Aborted Audio Slice";
                 return;
             }
+        }
+
+        private struct CutValidationResult
+        {
+            public CutsReason Reason { get; set; }
+            public string Message { get; set; }
+        }
+
+        private enum CutsReason
+        {
+            NotICut = -1,
+            Valid = 0,
+            NoCuts = 1,
+            CutBeforeZero = 2,
+            CutPastEnd = 3,
+            CutBadOrder = 4,
+            OverLengthLimit = 5,
+        }
+
+        private CutValidationResult ValidateCuts()
+        {
+            if (!rdoCustom.Checked) return new CutValidationResult
+            {
+                Reason = CutsReason.NotICut,
+                Message = "Cuts are only relevant for the I-Cut method."
+            };
+
+            if (_cuts == null || _cuts.Count == 0) return new CutValidationResult
+            {
+                Reason = CutsReason.NoCuts,
+                Message = "No custom cut points are defined yet. You have to click Accept for I-Cut to cut this track."
+            };
+            foreach (var cut in _cuts)
+            {
+                if (cut.StartTimeSeconds < 0)
+                {
+                    return new CutValidationResult
+                    {
+                        Reason = CutsReason.CutBeforeZero,
+                        Message = $"Cut point {cut.Index} has a negative start time."
+                    };
+                }
+
+                if (cut.EndTimeSeconds > _duration.TotalSeconds)
+                {
+                    return new CutValidationResult
+                    {
+                        Reason = CutsReason.CutBadOrder,
+                        Message = $"Cut point {cut.Index} has start time after the end time."
+                    };
+                }
+
+                if (cut.StartTimeSeconds >= cut.EndTimeSeconds)
+                {
+                    return new CutValidationResult
+                    {
+                        Reason = CutsReason.CutPastEnd,
+                        Message = $"Cut point {cut.Index} runs past the end of the song."
+                    };
+                }
+                
+                if (cut.LengthSeconds > 20)
+                {
+                    return new CutValidationResult
+                    {
+                        Reason = CutsReason.OverLengthLimit,
+                        Message = $"Cut point {cut.Index} is over 20 seconds long."
+                    };
+                }
+            }
+            return new CutValidationResult
+            {
+                Reason = CutsReason.Valid,
+                Message = "All cut points are valid."
+            };
         }
 
         private void ConvertWAVtoOGG()
