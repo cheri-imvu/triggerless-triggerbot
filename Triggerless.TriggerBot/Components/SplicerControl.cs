@@ -880,6 +880,7 @@ namespace Triggerless.TriggerBot
             lblFixed.Visible = rdoFixed.Checked;
             cboAudioLength.Visible = rdoFixed.Checked;
             btnCustom.Visible = rdoCustom.Checked;
+            picHelp.Visible = rdoCustom.Checked;
         }
 
         protected override void Dispose(bool disposing)
@@ -902,6 +903,16 @@ namespace Triggerless.TriggerBot
                 components.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private void picHelp_Click(object sender, EventArgs e)
+        {
+            var psi = new ProcessStartInfo
+            {
+                 FileName = "https://www.triggerless.com/triggerbot/page-icut.php",
+                 UseShellExecute = true
+            };
+            Process.Start(psi);
         }
     }
 }

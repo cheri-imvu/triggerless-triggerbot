@@ -43,7 +43,6 @@
             this.radioFemale = new System.Windows.Forms.RadioButton();
             this.lblDuration = new System.Windows.Forms.Label();
             this.btnShowMe = new System.Windows.Forms.Button();
-            this.picWaveform = new System.Windows.Forms.PictureBox();
             this.btnResetVolume = new System.Windows.Forms.Button();
             this.btnDecreaseVolume = new System.Windows.Forms.Button();
             this.btnIncreaseVolume = new System.Windows.Forms.Button();
@@ -66,16 +65,20 @@
             this.label1 = new System.Windows.Forms.Label();
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.picWaveform = new System.Windows.Forms.PictureBox();
+            this.picHelp = new System.Windows.Forms.PictureBox();
             this._audioSegmenter = new Triggerless.TriggerBot.AudioSegmenter();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.pnlCuts.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picWaveform)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picHelp)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.picHelp);
             this.panel1.Controls.Add(this.btnCustom);
             this.panel1.Controls.Add(this.tableLayoutPanel1);
             this.panel1.Controls.Add(this.pnlCuts);
@@ -342,15 +345,6 @@
             this.btnShowMe.UseVisualStyleBackColor = false;
             this.btnShowMe.Click += new System.EventHandler(this.ShowMeTheFile);
             // 
-            // picWaveform
-            // 
-            this.picWaveform.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picWaveform.Location = new System.Drawing.Point(604, 57);
-            this.picWaveform.Name = "picWaveform";
-            this.picWaveform.Size = new System.Drawing.Size(200, 70);
-            this.picWaveform.TabIndex = 56;
-            this.picWaveform.TabStop = false;
-            // 
             // btnResetVolume
             // 
             this.btnResetVolume.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -584,6 +578,27 @@
             this.timer1.Interval = 200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // picWaveform
+            // 
+            this.picWaveform.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picWaveform.Location = new System.Drawing.Point(604, 57);
+            this.picWaveform.Name = "picWaveform";
+            this.picWaveform.Size = new System.Drawing.Size(200, 70);
+            this.picWaveform.TabIndex = 56;
+            this.picWaveform.TabStop = false;
+            // 
+            // picHelp
+            // 
+            this.picHelp.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picHelp.Image = global::Triggerless.TriggerBot.Properties.Resources.help24;
+            this.picHelp.Location = new System.Drawing.Point(319, 119);
+            this.picHelp.Name = "picHelp";
+            this.picHelp.Size = new System.Drawing.Size(25, 25);
+            this.picHelp.TabIndex = 67;
+            this.picHelp.TabStop = false;
+            this.picHelp.Visible = false;
+            this.picHelp.Click += new System.EventHandler(this.picHelp_Click);
+            // 
             // SplicerControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -606,6 +621,7 @@
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picWaveform)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picHelp)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -657,5 +673,6 @@
         private System.Windows.Forms.RadioButton rdoFMS;
         private System.Windows.Forms.Button btnCustom;
         private System.Windows.Forms.RadioButton rdoCustom;
+        private System.Windows.Forms.PictureBox picHelp;
     }
 }
