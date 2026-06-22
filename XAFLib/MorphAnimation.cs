@@ -116,7 +116,7 @@ namespace Triggerless.XAFLib
                 }
                 return ma;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

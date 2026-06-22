@@ -14,10 +14,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 using Triggerless.TriggerBot.Components;
 using Triggerless.TriggerBot.Models;
-using static Triggerless.TriggerBot.Models.Discord;
 
 namespace Triggerless.TriggerBot
 {

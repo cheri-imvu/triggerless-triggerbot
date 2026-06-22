@@ -395,12 +395,12 @@ namespace Triggerless.TriggerBot
             {
                 UpdateTagSchema();
                 UpdateProductCutMarkerSchema();
+                Cleanup2026Blackout();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-            }
-            
+            }            
 
             return new SqliteConnection(PlugIn.Location.AppCacheConnectionString);
         }
@@ -457,6 +457,19 @@ namespace Triggerless.TriggerBot
             using (var cxnAppCache = GetAppCacheCxn()) 
             { 
                 cxnAppCache.Open();
+                cxnAppCache.Execute(sql);
+            }
+        }
+
+        internal static void Cleanup2026Blackout()
+        {
+            var sel = "SELECT product_id FROM products WHERE date_imported BETWEEN '2026-06-06' AND '2026-06-10'";
+            using (var cxnAppCache = new SqliteConnection(PlugIn.Location.AppCacheConnectionString))
+            {
+                cxnAppCache.Open();
+                var sql = $"DELETE FROM product_triggers Where product_id IN ({sel})";
+                cxnAppCache.Execute(sql);
+                sql = $"DELETE FROM products Where product_id IN ({sel})";
                 cxnAppCache.Execute(sql);
             }
         }

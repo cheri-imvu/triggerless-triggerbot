@@ -7,6 +7,8 @@ namespace Triggerless.TriggerBot.Forms
 {
     public partial class CustomCutForm : Form
     {
+        public const double MAX_CUT_LENGTH_SEC = 20;
+        public const double MIN_CUT_LENGTH_SEC = 0.250;
         public List<Cut> Cuts { get; set; }
         public string AudioFilePath { get; set; }
 
@@ -42,9 +44,13 @@ namespace Triggerless.TriggerBot.Forms
                     GetTimeString(cut.EndTimeSeconds),
                     GetTimeString(cut.LengthSeconds)
                 );
-                if (cut.LengthSeconds > 20)
+                if (cut.LengthSeconds > MAX_CUT_LENGTH_SEC)
                 {
                     grdCuts.Rows[rowIndex].DefaultCellStyle.BackColor = Color.FromArgb(255, 200, 200);
+                }
+                else if (cut.LengthSeconds < MIN_CUT_LENGTH_SEC)
+                {
+                    grdCuts.Rows[rowIndex].DefaultCellStyle.BackColor = Color.FromArgb(255, 192, 148);
                 }
             }
 
@@ -65,9 +71,15 @@ namespace Triggerless.TriggerBot.Forms
             }
             foreach (Cut cut in Cuts)
             {
-                if (cut.LengthSeconds > 20)
+                if (cut.LengthSeconds > MAX_CUT_LENGTH_SEC)
                 {
                     StyledMessageBox.Show(Program.MainForm, $"Cut {cut.Index} has invalid length. Please ensure all cuts have a length of 20 seconds or less.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+
+                if (cut.LengthSeconds < MIN_CUT_LENGTH_SEC)
+                {
+                    StyledMessageBox.Show(Program.MainForm, $"Cut {cut.Index} has invalid length. Please ensure all cuts have a length of 250 milliseconds or more.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
             }
