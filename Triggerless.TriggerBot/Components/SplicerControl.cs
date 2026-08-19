@@ -1,4 +1,5 @@
 ﻿using ICSharpCode.SharpZipLib.Zip;
+using CompressionLevel = ICSharpCode.SharpZipLib.Zip.Compression.Deflater.CompressionLevel;
 using NAudio.Wave;
 using NAudio.WaveFormRenderer;
 using System;
@@ -446,7 +447,7 @@ namespace Triggerless.TriggerBot
                     File.Copy(filename, Path.Combine(tempDir, Path.GetFileName(filename)));
                 }
 
-                var fz = new FastZip();
+                var fz = new FastZip { CompressionLevel = CompressionLevel.BEST_COMPRESSION };
                 var chknFileNameOnly = listsOfFiles.Count == 1 ?
                     $"{triggerPrefix}.chkn" : $"{triggerPrefix}-{templateIndex + 1}.chkn";
                 var chknFile = Path.Combine(_outputPath, chknFileNameOnly);
@@ -617,8 +618,7 @@ namespace Triggerless.TriggerBot
 
             var chkn = Path.Combine(folder, $"{outputFilename}");
             if (File.Exists(chkn)) File.Delete(chkn);
-            var fz = new FastZip();
-            fz.CompressionLevel = ICSharpCode.SharpZipLib.Zip.Compression.Deflater.CompressionLevel.BEST_COMPRESSION;
+            var fz = new FastZip { CompressionLevel = CompressionLevel.BEST_COMPRESSION };
 
             if (filenames == null)
             {

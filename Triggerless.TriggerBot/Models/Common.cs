@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Triggerless.PlugIn;
 
@@ -37,7 +37,7 @@ namespace Triggerless.TriggerBot.Models
                 var tbName = Path.Combine(Location.LyricSheetsPath, $"{product.Id}.lyrics");
                 if (File.Exists(tbName))
                 {
-                    tbLyricList = JsonConvert.DeserializeObject<List<LyricEntry>>(File.ReadAllText(tbName));
+                    tbLyricList = JsonSerializer.Deserialize<List<LyricEntry>>(File.ReadAllText(tbName));
                 }
                 lyricList.AddRange(tbLyricList);
                 foreach (var lyricEntry in lyricList.OrderBy(l => l.Time))

@@ -1,6 +1,6 @@
 ﻿using NAudio.Wave;
 using Location = Triggerless.PlugIn.Location;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -578,7 +579,11 @@ namespace Triggerless.TriggerBot.Components
             }
             if (list.Count == 0) return;
             list = list.OrderBy(e => e.Time).ToList();
-            var jsonText= JsonConvert.SerializeObject(list, Formatting.Indented);
+            var indented = new JsonSerializerOptions { 
+                WriteIndented = true                
+            };
+            var jsonText = JsonSerializer.Serialize(list, indented);
+            //var jsonText= JsonConvert.SerializeObject(list, Formatting.Indented);
             var filename = Path.Combine(PlugIn.Location.LyricSheetsPath, $"{_product.Id}.lyrics");
             if (File.Exists(filename)) File.Delete(filename);
             File.WriteAllText(filename, jsonText);
@@ -605,7 +610,7 @@ namespace Triggerless.TriggerBot.Components
             gridLyrics.Rows.Clear();
             var filename = Path.Combine(PlugIn.Location.LyricSheetsPath, $"{_product.Id}.lyrics");
             if (!File.Exists(filename)) return;
-            var list = JsonConvert.DeserializeObject<List<LyricEntry>>(File.ReadAllText(filename));
+            var list = JsonSerializer.Deserialize<List<LyricEntry>>(File.ReadAllText(filename));
             foreach ( var entry in list )
             { 
                 gridLyrics.Rows.Add(entry.Time.ToString(TIMESPAN_FORMAT), entry.Lyric);
@@ -888,7 +893,7 @@ namespace Triggerless.TriggerBot.Components
             List<LyricEntry> list = null;
             try
             {
-                list = JsonConvert.DeserializeObject<List<LyricEntry>>(json);
+                list = JsonSerializer.Deserialize<List<LyricEntry>>(json);
             }
             catch
             {

@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 
 namespace Triggerless.TriggerBot
 {
@@ -20,7 +20,7 @@ namespace Triggerless.TriggerBot
 
         public string LyricsPath => Path.Combine(PlugIn.Location.LyricSheetsPath, $"{Id}.lyrics");
         public bool HasLyrics => File.Exists(LyricsPath);
-        public List<LyricEntry> Lyrics => JsonConvert.DeserializeObject<List<LyricEntry>>(File.ReadAllText(LyricsPath));
+        public List<LyricEntry> Lyrics => JsonSerializer.Deserialize<List<LyricEntry>>(File.ReadAllText(LyricsPath));
     }
 
     public class TriggerDisplayInfo

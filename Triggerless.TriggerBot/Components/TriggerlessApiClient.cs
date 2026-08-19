@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿//using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Triggerless.TriggerBot.Models;
@@ -143,7 +144,7 @@ namespace Triggerless.TriggerBot.Components
         {
             var result = new ApiResult{ Status = ApiResultStatus.Empty };
 
-            var jsonText = JsonConvert.SerializeObject(info);
+            var jsonText = JsonSerializer.Serialize(info);
 
             short code = (short)eventType;
 

@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -50,15 +50,25 @@ namespace Triggerless.ChatViewerPlugIn
                         {
                             var url = $"user-{cid}";
                             var json = client.GetStringAsync(url).Result;
-                            JObject root = JObject.Parse(json);
-                            string userKey = (string)root["id"];
-                            var avatarname = root["denormalized"][userKey]["avatarname"]                               ["avatarname"]?
-                                .Value<string>();
-                            if (avatarname == null)
+
+                            using (JsonDocument jdoc = JsonDocument.Parse(json))
                             {
-                                avatarname = "unavailable";
+                                JsonElement root = jdoc.RootElement;
+
+                                string userKey = root.GetProperty("id").GetString();
+
+                                string avatarname = "unavailable";
+
+                                if (root.TryGetProperty("denormalized", out JsonElement denormalized) &&
+                                    denormalized.TryGetProperty(userKey, out JsonElement user) &&
+                                    user.TryGetProperty("avatarname", out JsonElement avatarnameObj) &&
+                                    avatarnameObj.TryGetProperty("avatarname", out JsonElement avatarnameValue))
+                                {
+                                    avatarname = avatarnameValue.GetString() ?? "unavailable";
+                                }
+
+                                names[cid] = avatarname;
                             }
-                            names[cid] = avatarname;
                         }
                         var who = names[cid];
                         if (!what.StartsWith("*"))

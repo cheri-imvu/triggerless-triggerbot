@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
+using System.Text.Json;
 using System.Windows.Forms;
 using Triggerless.TriggerBot.Models;
 
@@ -50,13 +50,23 @@ namespace Triggerless.TriggerBot
                 Common.HasTriggerlessConnection = false;
                 return;
             }
-            JObject jsonObject = JObject.Parse(jsonText);
-            _setup = jsonObject["setup"].ToString();
-            _latestVersion = new Version(jsonObject["version"].ToString());
-            var whatsNew = jsonObject["whatsNew"]?.ToString().Replace("|", Environment.NewLine);
 
-            // Get expected MD5 hash
-            var md5String = jsonObject["md5"].ToString();
+            var md5String = String.Empty;
+            var whatsNew = string.Empty;
+            using (JsonDocument doc = JsonDocument.Parse(jsonText))
+            {
+                JsonElement root = doc.RootElement;
+
+                _setup = root.GetStringOrNull("setup");
+                _latestVersion = new Version(root.GetStringOrNull("version"));
+
+                whatsNew = root.GetStringOrNull("whatsNew")
+                    ?.Replace("|", Environment.NewLine);
+
+                // Get expected MD5 hash
+                md5String = root.GetStringOrNull("md5");
+            }
+
             if (md5String.Length != 32)
             {
                 throw new ArgumentException("MD5 Exception. Unable to update");

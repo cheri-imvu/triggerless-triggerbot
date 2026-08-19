@@ -1,2 +1,2 @@
-CertUtil -hashfile Output\triggerbot-setup.1.1.3.2604.exe MD5
+CertUtil -hashfile Output\triggerbot-setup.1.2.1.2606.exe MD5
 pause

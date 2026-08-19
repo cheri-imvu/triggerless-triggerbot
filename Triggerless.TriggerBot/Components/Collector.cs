@@ -1,17 +1,18 @@
 ﻿using Dapper;
 using Microsoft.Data.Sqlite;
 using NAudio.Vorbis;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
-
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Triggerless.TriggerBot.Components;
@@ -441,7 +442,8 @@ namespace Triggerless.TriggerBot
                     SourceId = entry.SourceId,
                 });
             }
-            var json = JsonConvert.SerializeObject(payload);
+            var json = JsonSerializer.Serialize(payload);
+            //var json = JsonConvert.SerializeObject(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             try
@@ -454,7 +456,8 @@ namespace Triggerless.TriggerBot
                 }
                 // this is where most of the time is spent 300-800 ms
 
-                var response = JsonConvert.DeserializeObject<CollectorResponsePayload>(json);
+                var response = JsonSerializer.Deserialize<CollectorResponsePayload>(json);
+                //var response = JsonConvert.DeserializeObject<CollectorResponsePayload>(json);
                 if (response != null && response.Result == ScanResultType.Success && response.Triggers.Any())
                 {
                     foreach (var trigger in response.Triggers)

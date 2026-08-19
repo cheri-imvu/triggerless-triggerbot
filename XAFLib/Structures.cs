@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace Triggerless.XAFLib
 {
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+#pragma warning disable CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
+
     [Serializable]
     public struct Quaternion
     {
@@ -114,6 +117,8 @@ namespace Triggerless.XAFLib
             return new EulerAngles(this);
         }
     }
+#pragma warning restore CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
 
     public struct Vector {
         private float _x;

@@ -1,5 +1,6 @@
 ﻿using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
+using CompressionLevel = ICSharpCode.SharpZipLib.Zip.Compression.Deflater.CompressionLevel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,7 +24,7 @@ namespace Triggerless.XAFLib
 
             var chkn = Path.Combine(Directory.GetParent(folder).FullName, $"{Path.GetFileName(folder)}.chkn");
             if (File.Exists(chkn)) File.Delete(chkn);
-            var fz = new FastZip();
+            var fz = new FastZip { CompressionLevel = CompressionLevel.BEST_COMPRESSION };
 
             if (filenames == null) {
                 fz.CreateZip(chkn, folder, false, null);

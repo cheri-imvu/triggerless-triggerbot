@@ -78,7 +78,7 @@ namespace Triggerless.TriggerBot.Models
             {
                 var currentClipboardText = Clipboard.GetText();
                 //const string method = "copy-paste";
-                const string method = "text-entry";
+                //const string method = "text-entry";
                 _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_A);
                 _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_X);
                 string existingChatText = Clipboard.GetText();
@@ -87,6 +87,7 @@ namespace Triggerless.TriggerBot.Models
                     existingChatText = string.Empty;
                 }
 
+                /*
                 if (method == "copy-paste")
                 {
                     // Change the way we send text to IMVU chat to avoid 'ax' being sent when
@@ -97,8 +98,9 @@ namespace Triggerless.TriggerBot.Models
                 } 
                 else
                 {
+                */
                     _sim.Keyboard.TextEntry(text);
-                }
+                //}
                 _sim.Keyboard.KeyPress(KeyCode.RETURN);
 
                 if (!string.IsNullOrEmpty(existingChatText))

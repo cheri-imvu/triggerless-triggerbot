@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Triggerless Triggerbot"
-#define MyAppVersion "1.1.9.2606"
+#define MyAppVersion "1.2.1.2606"
 #define MyAppPublisher "triggerless.com"
 #define MyAppURL "https://www.triggerless.com/triggerbot/"
 #define MyAppExeName "TriggerBot.exe"
@@ -200,7 +200,7 @@ var
   UninstallExePath: string;
   ResultCode: Integer;
 begin
-  CID := ReadCidFromUserConfig('triggerless.com', 'TriggerBot.exe', '1.1.3.2604');
+  CID := ReadCidFromUserConfig('triggerless.com', 'TriggerBot.exe', '1.2.0.2606');
   Log('Initial CID read: ' + IntToStr(CID));
   // Check if the application is already installed
   if IsAppInstalled() then
@@ -328,11 +328,8 @@ Source: "{#SolutionPath}\Triggerless.ContextHelper\bin\Release\Triggerless.Conte
 
 Source: "{#ReleaseBin}\x64\SQLite.Interop.dll"; DestDir: "{app}\x64"; Flags: ignoreversion
 Source: "{#ReleaseBin}\x86\SQLite.Interop.dll"; DestDir: "{app}\x86"; Flags: ignoreversion
-Source: "{#ReleaseBin}\BouncyCastle.Crypto.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\Dapper.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#ReleaseBin}\EntityFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\e_sqlite3.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#ReleaseBin}\EntityFramework.SqlServer.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\ICSharpCode.SharpZipLib.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\Microsoft.Bcl.AsyncInterfaces.dll"; DestDir: "{app}"; Flags: ignoreversion 
 Source: "{#ReleaseBin}\Microsoft.Bcl.HashCode.dll"; DestDir: "{app}"; Flags: ignoreversion 
@@ -350,7 +347,6 @@ Source: "{#ReleaseBin}\NAudio.Wasapi.dll"; DestDir: "{app}"; Flags: ignoreversio
 Source: "{#ReleaseBin}\NAudio.WaveFormRenderer.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\NAudio.WinForms.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\NAudio.WinMM.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#ReleaseBin}\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\NVorbis.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\SQLitePCLRaw.batteries_v2.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\SQLitePCLRaw.core.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -369,6 +365,7 @@ Source: "{#ReleaseBin}\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{a
 Source: "{#ReleaseBin}\System.Security.AccessControl.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\System.Security.Principal.Windows.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\System.Threading.Channels.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ReleaseBin}\System.Text.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\System.Threading.Tasks.Extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleaseBin}\TriggerBot.exe.config"; DestDir: "{app}"; Flags: ignoreversion

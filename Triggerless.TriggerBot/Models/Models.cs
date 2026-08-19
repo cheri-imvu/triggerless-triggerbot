@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿//using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Triggerless.TriggerBot
 {
@@ -66,10 +68,10 @@ namespace Triggerless.TriggerBot
 
     public class ContentsJsonItem
     {
-        [JsonProperty("url")] public string Url { get; set; }
-        [JsonProperty("original_dimensions")] public string OriginalDimensions { get; set; }
-        [JsonProperty("name")] public string Name { get; set; }
-        [JsonProperty("tags")] public string[] Tags { get; set; }
+        [JsonPropertyName("url")] public string Url { get; set; }
+        [JsonPropertyName("original_dimensions")] public string OriginalDimensions { get; set; }
+        [JsonPropertyName("name")] public string Name { get; set; }
+        [JsonPropertyName("tags")] public string[] Tags { get; set; }
         public string Location => string.IsNullOrWhiteSpace(Url) ? Name : Url;
     }
 

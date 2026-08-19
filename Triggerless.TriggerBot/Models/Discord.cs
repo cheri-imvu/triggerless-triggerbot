@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Triggerless.TriggerBot.Models
@@ -56,7 +57,7 @@ namespace Triggerless.TriggerBot.Models
                 body = body
             };
 
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(payload);
+            var json = JsonSerializer.Serialize(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             using (var client = new HttpClient())
