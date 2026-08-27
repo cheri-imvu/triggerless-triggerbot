@@ -111,8 +111,8 @@ namespace Triggerless.TriggerBot
                     _waveReader?.Dispose();
                     _waveReader = null;
                     _duration = TimeSpan.Zero;
-                    txtFilename.Text = string.Empty;
-                    var ext = Path.GetExtension(txtFilename.Text).ToUpperInvariant();
+                    lblSelectedFile.Text = string.Empty;
+                    var ext = Path.GetExtension(lblSelectedFile.Text).ToUpperInvariant();
 
                     StyledMessageBox.Show(this.ParentForm, 
                         $"Unable to read {ext} file. Skipping this file", 
@@ -151,16 +151,16 @@ namespace Triggerless.TriggerBot
 
         private bool FormIsValid()
         {
-            if (string.IsNullOrWhiteSpace(txtFilename.Text))
+            if (string.IsNullOrWhiteSpace(lblSelectedFile.Text))
             {
                 StyledMessageBox.Show(this.ParentForm, "Please select a file to slice", "Unable to Continue", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 btnSelectFile.Focus();
                 return false;
             }
 
-            if (!File.Exists(txtFilename.Text))
+            if (!File.Exists(lblSelectedFile.Text))
             {
-                StyledMessageBox.Show(this.ParentForm, $"The file '{txtFilename.Text}' doesn't exist", "Unable to Continue", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                StyledMessageBox.Show(this.ParentForm, $"The file '{lblSelectedFile.Text}' doesn't exist", "Unable to Continue", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 btnSelectFile.Focus();
                 return false;
             }
@@ -209,7 +209,7 @@ namespace Triggerless.TriggerBot
             //timer1.Start();
             var segmenterParams = new SegmenterParameters
             {
-                InputFilePath = txtFilename.Text,
+                InputFilePath = lblSelectedFile.Text,
                 OutputDirectory = _outputPath,
                 OutputFileNamePrefix = triggerPrefix
             };
@@ -522,7 +522,7 @@ namespace Triggerless.TriggerBot
 
             await TriggerlessApiClient.SendEventAsync(TriggerlessApiClient.EventType.CutTune,
                 new {
-                    Filename = Path.GetFileName(txtFilename.Text),
+                    Filename = Path.GetFileName(lblSelectedFile.Text),
                     TriggerPrefix = triggerPrefix,
                     ChknCount = listsOfFiles.Count,
                     Method = method
@@ -802,7 +802,7 @@ namespace Triggerless.TriggerBot
         {
             _waveReader = UniversalAudioReader.Open(pathToAudioFile);
             _duration = _waveReader.TotalTime;
-            txtFilename.Text = pathToAudioFile;
+            lblSelectedFile.Text = pathToAudioFile;
             lblDuration.Text = $"Duration: {_duration.Minutes:00}:{_duration.Seconds:00}";
 
             if (_duration.TotalSeconds > new TimeSpan(0, 3, 36).TotalSeconds)
@@ -813,7 +813,7 @@ namespace Triggerless.TriggerBot
             {
                 rdoHQS.Checked = true;
             }
-            WaveformCreate(txtFilename.Text);
+            WaveformCreate(lblSelectedFile.Text);
         }
 
 
@@ -866,7 +866,7 @@ namespace Triggerless.TriggerBot
         private void btnCustom_Click(object sender, EventArgs e)
         {
             var f = new CustomCutForm();
-            f.AudioFilePath = txtFilename.Text;
+            f.AudioFilePath = lblSelectedFile.Text;
             f.TopMost = Program.MainForm.TopMost;
             f.ShowDialog(Program.MainForm);
             if (f.DialogResult == DialogResult.OK)
@@ -913,6 +913,11 @@ namespace Triggerless.TriggerBot
                  UseShellExecute = true
             };
             Process.Start(psi);
+        }
+
+        private void txtPrefix_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
