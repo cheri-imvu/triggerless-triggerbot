@@ -112,6 +112,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\AutoDJCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\AutoDJCtrl.Designer.cs">
+      <DependentUpon>AutoDJCtrl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\Collector.ProductScan.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -235,6 +241,7 @@
     <Compile Include="Models\HandleMonitor.cs" />
     <Compile Include="Models\ImvuWindow.cs" />
     <Compile Include="Models\JsonElementExtensions.cs" />
+    <Compile Include="Models\LiveList.cs" />
     <Compile Include="Models\Models.cs" />
     <Compile Include="Components\SplicerControl.cs">
       <SubType>UserControl</SubType>
@@ -301,6 +308,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Components\AutoDJCtrl.resx">
+      <DependentUpon>AutoDJCtrl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\DirtyControl.resx">
       <DependentUpon>DirtyControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -471,16 +481,16 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dapper">
-      <Version>2.1.79</Version>
+      <Version>2.1.86</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Data.Sqlite">
-      <Version>10.0.11</Version>
+      <Version>10.0.12</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
-      <Version>10.0.11</Version>
+      <Version>10.0.12</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions">
-      <Version>10.0.11</Version>
+      <Version>10.0.12</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.Platforms">
       <Version>7.0.4</Version>
@@ -507,7 +517,7 @@
       <Version>3.0.5</Version>
     </PackageReference>
     <PackageReference Include="System.Drawing.Common">
-      <Version>10.0.11</Version>
+      <Version>10.0.12</Version>
     </PackageReference>
     <PackageReference Include="System.IO">
       <Version>4.3.0</Version>
@@ -519,7 +529,7 @@
       <Version>4.3.2</Version>
     </PackageReference>
     <PackageReference Include="System.Resources.Extensions">
-      <Version>10.0.11</Version>
+      <Version>10.0.12</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime">
       <Version>4.3.1</Version>
@@ -537,10 +547,10 @@
       <Version>4.3.2</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Json">
-      <Version>10.0.11</Version>
+      <Version>10.0.12</Version>
     </PackageReference>
     <PackageReference Include="System.Threading.Channels">
-      <Version>10.0.11</Version>
+      <Version>10.0.12</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -143,6 +143,7 @@ namespace Triggerless.TriggerBot
             this._lyricTimer = new System.Windows.Forms.Timer(this.components);
             this.lblNoResults = new System.Windows.Forms.Label();
             this._collector = new Triggerless.TriggerBot.Collector();
+            this.tabAutoDJ = new System.Windows.Forms.TabPage();
             this.tabAppContainer.SuspendLayout();
             this.tabPlayback.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
@@ -176,6 +177,7 @@ namespace Triggerless.TriggerBot
             // tabAppContainer
             // 
             this.tabAppContainer.Controls.Add(this.tabPlayback);
+            this.tabAppContainer.Controls.Add(this.tabAutoDJ);
             this.tabAppContainer.Controls.Add(this.tabConvertChkn);
             this.tabAppContainer.Controls.Add(this.tabLyrics);
             this.tabAppContainer.Controls.Add(this.tabTools);
@@ -1492,6 +1494,16 @@ namespace Triggerless.TriggerBot
             // 
             this._collector.CollectorEvent += new Triggerless.TriggerBot.Collector.CollectorEventHandler(this.OnCollectorEvent);
             // 
+            // tabAutoDJ
+            // 
+            this.tabAutoDJ.Location = new System.Drawing.Point(4, 26);
+            this.tabAutoDJ.Name = "tabAutoDJ";
+            this.tabAutoDJ.Padding = new System.Windows.Forms.Padding(3);
+            this.tabAutoDJ.Size = new System.Drawing.Size(1066, 630);
+            this.tabAutoDJ.TabIndex = 6;
+            this.tabAutoDJ.Text = "Auto DJ ⚡";
+            this.tabAutoDJ.UseVisualStyleBackColor = true;
+            // 
             // TriggerBotMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
@@ -1659,6 +1671,7 @@ namespace Triggerless.TriggerBot
         private System.Windows.Forms.Button btnFavorites;
         private System.Windows.Forms.TabPage tabDebug;
         private DebugCtrl debugCtrl1;
+        private System.Windows.Forms.TabPage tabAutoDJ;
     }
 }
 

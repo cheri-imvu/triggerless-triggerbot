@@ -23,9 +23,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.pnlContent = new System.Windows.Forms.Panel();
-            this.label10 = new System.Windows.Forms.Label();
-            this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.roundedPanel2 = new RoundedPanel();
             this.label8 = new System.Windows.Forms.Label();
             this.btnStart = new System.Windows.Forms.Button();
@@ -79,6 +76,9 @@
             this.lblSelectedFile = new System.Windows.Forms.Label();
             this.lblChooseFile = new System.Windows.Forms.Label();
             this.lblDuration = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this._audioSegmenter = new Triggerless.TriggerBot.AudioSegmenter();
             this.pnlContent.SuspendLayout();
             this.roundedPanel2.SuspendLayout();
@@ -116,28 +116,10 @@
             this.pnlContent.Size = new System.Drawing.Size(924, 516);
             this.pnlContent.TabIndex = 0;
             // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(31, 235);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(98, 17);
-            this.label10.TabIndex = 42;
-            this.label10.Text = "Trigger Prefix:";
-            // 
-            // dlgOpenFile
-            // 
-            this.dlgOpenFile.Filter = "All supported audio files|*.mp3;*.wav;*.wma;*.aac;*.m4a;*.mp4;*.asf;*.3gp;*.flac;" +
-    "*.ogg|MP3 Audio|*.mp3|FLAC Audio|*.flac";
-            // 
-            // timer1
-            // 
-            this.timer1.Interval = 200;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
             // roundedPanel2
             // 
+            this.roundedPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.roundedPanel2.BorderColor = System.Drawing.Color.DodgerBlue;
             this.roundedPanel2.BorderRadius = 25;
             this.roundedPanel2.BorderWidth = 3;
@@ -169,6 +151,8 @@
             // 
             // btnStart
             // 
+            this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStart.BackColor = System.Drawing.Color.DodgerBlue;
             this.btnStart.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStart.ForeColor = System.Drawing.Color.White;
@@ -192,6 +176,8 @@
             // 
             // lblProfit
             // 
+            this.lblProfit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblProfit.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblProfit.Location = new System.Drawing.Point(22, 257);
             this.lblProfit.Name = "lblProfit";
@@ -202,6 +188,8 @@
             // 
             // btnShowMe
             // 
+            this.btnShowMe.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnShowMe.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnShowMe.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnShowMe.ForeColor = System.Drawing.Color.Black;
@@ -215,6 +203,8 @@
             // 
             // label15
             // 
+            this.label15.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label15.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label15.Location = new System.Drawing.Point(22, 207);
             this.label15.Name = "label15";
@@ -224,6 +214,8 @@
             // 
             // label9
             // 
+            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.Location = new System.Drawing.Point(22, 317);
@@ -713,7 +705,7 @@
             // label2
             // 
             this.label2.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(26, 89);
+            this.label2.Location = new System.Drawing.Point(26, 88);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(243, 39);
             this.label2.TabIndex = 52;
@@ -736,11 +728,11 @@
             this.btnSelectFile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnSelectFile.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSelectFile.ForeColor = System.Drawing.Color.Black;
-            this.btnSelectFile.Location = new System.Drawing.Point(103, 51);
+            this.btnSelectFile.Location = new System.Drawing.Point(51, 45);
             this.btnSelectFile.Name = "btnSelectFile";
-            this.btnSelectFile.Size = new System.Drawing.Size(75, 30);
+            this.btnSelectFile.Size = new System.Drawing.Size(174, 30);
             this.btnSelectFile.TabIndex = 38;
-            this.btnSelectFile.Text = "Select...";
+            this.btnSelectFile.Text = "Select Audio...";
             this.btnSelectFile.UseVisualStyleBackColor = false;
             this.btnSelectFile.Click += new System.EventHandler(this.SelectFile);
             // 
@@ -787,6 +779,26 @@
             this.lblDuration.Size = new System.Drawing.Size(99, 17);
             this.lblDuration.TabIndex = 53;
             this.lblDuration.Text = "Duration: 0:00";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(31, 235);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(98, 17);
+            this.label10.TabIndex = 42;
+            this.label10.Text = "Trigger Prefix:";
+            // 
+            // dlgOpenFile
+            // 
+            this.dlgOpenFile.Filter = "All supported audio files|*.mp3;*.wav;*.wma;*.aac;*.m4a;*.mp4;*.asf;*.3gp;*.flac;" +
+    "*.ogg|MP3 Audio|*.mp3|FLAC Audio|*.flac";
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 200;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // SplicerControl
             // 
