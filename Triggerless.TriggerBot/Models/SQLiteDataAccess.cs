@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using Triggerless.TriggerBot.Models;
 using System.Data;
+using System.Runtime.InteropServices;
 
 namespace Triggerless.TriggerBot
 {
@@ -513,12 +514,12 @@ namespace Triggerless.TriggerBot
                         {limitClause}
                         ;";
 
-            List<dynamic> queryList = null;
+            List<QueryRecord> queryList = null;
             var infoList = new List<ProductDisplayInfo>();
 
             using (var cxnAppCache = GetAppCacheCxn())
             {
-                queryList = cxnAppCache.Query(sql).ToList();
+                queryList = cxnAppCache.Query<QueryRecord>(sql).ToList();
             }
             foreach (var query in queryList)
             {
@@ -529,20 +530,24 @@ namespace Triggerless.TriggerBot
                         infoList.Add(currentInfo);
                     }
                     currentProductId = query.ProductId;
-                    currentInfo = new ProductDisplayInfo();
-                    currentInfo.Id = query.ProductId;
-                    currentInfo.Name = query.Name;
-                    currentInfo.ImageBytes = query.ImageBytes;
-                    currentInfo.Creator = query.Creator;
+                    currentInfo = new ProductDisplayInfo
+                    {
+                        Id = query.ProductId,
+                        Name = query.Name,
+                        ImageBytes = query.ImageBytes,
+                        Creator = query.Creator
+                    };
                 }
-                var triggerInfo = new TriggerDisplayInfo();
-                triggerInfo.Prefix = query.Prefix;
-                triggerInfo.Sequence = (int)query.Sequence;
-                triggerInfo.LengthMS = query.LengthMS;
-                triggerInfo.Location = query.Location;
-                triggerInfo.Trigger = query.Trigger;
-                triggerInfo.ProductId = query.ProductId;
-                triggerInfo.AddnTriggers = query.AddnTriggers;
+                var triggerInfo = new TriggerDisplayInfo
+                {
+                    Prefix = query.Prefix,
+                    Sequence = query.Sequence,
+                    LengthMS = query.LengthMS,
+                    Location = query.Location,
+                    Trigger = query.Trigger,
+                    ProductId = query.ProductId,
+                    AddnTriggers = query.AddnTriggers
+                };
                 currentInfo.Triggers.Add(triggerInfo);
             }
             return infoList;
@@ -557,11 +562,27 @@ namespace Triggerless.TriggerBot
             );
         }
 
-        internal static List<ProductDisplayInfo> GetProductSearch(string searchTerm, List<ProductTag> searchTags = null)
+        private class QueryRecord
         {
+            public long ProductId { get; set; }
+            public string Name { get; set; }
+            public string Creator { get; set; }
+            public byte[] ImageBytes { get; set; }
+            public string Prefix { get; set; }
+            public int Sequence { get; set; }
+            public string Trigger { get; set; }
+            public double LengthMS { get; set; }
+            public string Location { get; set; }
+            public string AddnTriggers { get; set; }
+        }
+
+        internal static List<ProductDisplayInfo> GetProductSearch(
+            string searchTerm, List<ProductTag> searchTags = null)
+        {
+            var sw = new Stopwatch();
             long currentProductId = 0;
             ProductDisplayInfo currentInfo = null;
-            List<dynamic> queryList = null;
+            List<QueryRecord> queryList = null;
             var infoList = new List<ProductDisplayInfo>();
 
             string andClause = string.Empty;
@@ -600,16 +621,26 @@ namespace Triggerless.TriggerBot
 
             using (var cxnAppCache = GetAppCacheCxn())
             {
-                queryList = cxnAppCache.Query(sql).ToList();
+                sw.Start();
+                queryList = cxnAppCache.Query<QueryRecord>(sql).ToList();
+                sw.Stop();
+                Debug.WriteLine($"QueryList: {sw.ElapsedMilliseconds:0.00} ms");
             }
 
-            foreach (var query in queryList)
+            var tagDict = new Dictionary<long, List<ProductTag>>();
+            if (searchTags != null)
             {
-                if (currentProductId != query.ProductId)
+                tagDict = TagsGetForProducts(queryList.Select(x => x.ProductId).Distinct());
+            }
+
+
+            foreach (var queryRecord in queryList)
+            {
+                if (currentProductId != queryRecord.ProductId)
                 {
                     if (currentInfo != null)
                     {
-                        currentInfo.Tags = TagsGetForProduct(currentInfo.Id);
+                        currentInfo.Tags = tagDict[currentInfo.Id];
                         if (searchTags == null || searchTags.Count == 0)
                         {
                             infoList.Add(currentInfo);
@@ -633,26 +664,30 @@ namespace Triggerless.TriggerBot
                             }
                         }
                     }
-                    currentProductId = query.ProductId;
-                    currentInfo = new ProductDisplayInfo();
-                    currentInfo.Id = query.ProductId;
-                    currentInfo.Name = query.Name;
-                    currentInfo.ImageBytes = query.ImageBytes;
-                    currentInfo.Creator = query.Creator;
+                    currentProductId = queryRecord.ProductId;
+                    currentInfo = new ProductDisplayInfo
+                    {
+                        Id = queryRecord.ProductId,
+                        Name = queryRecord.Name,
+                        ImageBytes = queryRecord.ImageBytes,
+                        Creator = queryRecord.Creator
+                    };
                 }
-                var triggerInfo = new TriggerDisplayInfo();
-                triggerInfo.Prefix = query.Prefix;
-                triggerInfo.Sequence = (int)query.Sequence;
-                triggerInfo.LengthMS = query.LengthMS;
-                triggerInfo.Location = query.Location;
-                triggerInfo.Trigger = query.Trigger;
-                triggerInfo.ProductId = query.ProductId;
-                triggerInfo.AddnTriggers = query.AddnTriggers;
+                var triggerInfo = new TriggerDisplayInfo
+                {
+                    Prefix = queryRecord.Prefix,
+                    Sequence = (int)queryRecord.Sequence,
+                    LengthMS = queryRecord.LengthMS,
+                    Location = queryRecord.Location,
+                    Trigger = queryRecord.Trigger,
+                    ProductId = queryRecord.ProductId,
+                    AddnTriggers = queryRecord.AddnTriggers
+                };
                 currentInfo.Triggers.Add(triggerInfo);
             }
             if (currentInfo != null && !string.IsNullOrEmpty(andClause))
             {
-                currentInfo.Tags = TagsGetForProduct(currentInfo.Id);
+                currentInfo.Tags = tagDict[currentInfo.Id];
                 if (searchTags == null || searchTags.Count == 0)
                 {
                     infoList.Add(currentInfo);
@@ -741,18 +776,64 @@ namespace Triggerless.TriggerBot
             return result;
         }
 
+        private class TagQuery
+        {
+            public long ProductId { get; set; }
+            public int TagId { get; set; }
+            public string Name { get; set; }
+
+        }
+
+        internal static Dictionary<long, List<ProductTag>> TagsGetForProducts(IEnumerable<long> productIds)
+        {
+            var result = new Dictionary<long, List<ProductTag>>();
+            foreach (var productId in productIds)
+            {
+                result[productId] = null;
+            }
+
+            var inClause = "IN (" + string.Join(", ", productIds.Select(l => l.ToString())) + ") ";
+
+            using (SqliteConnection cxnAppCache = GetAppCacheCxn())
+            {
+                cxnAppCache.Open();
+                var sqlTag = $@"
+                    SELECT pt.product_id AS ProductId, t.tag_id AS TagId, t.tag_name AS Name
+                    FROM product_tags pt INNER JOIN tags t ON pt.tag_id = t.tag_id
+                    WHERE pt.product_id {inClause}
+                    ORDER BY t.tag_name;";
+                var dbResult = cxnAppCache.Query<TagQuery>(sqlTag);
+
+                foreach (TagQuery entry in dbResult)
+                {
+                    if (result[entry.ProductId] is null)
+                    {
+                        result[entry.ProductId] = new List<ProductTag>();
+                    }
+                    result[entry.ProductId].Add(new ProductTag { Id = entry.TagId, Name = entry.Name });
+                }
+            }
+
+            return result;
+
+        }
+
         internal static List<ProductTag> TagsGetForProduct(long productId)
         {
+            var sw = new Stopwatch();
+            sw.Start();
             using (SqliteConnection cxnAppCache = GetAppCacheCxn())
             {
                 cxnAppCache.Open();
 
                 var sqlTag = @"
-                    SELECT productTag.tag_id AS Id, productTag.tag_name AS Name
-                    FROM product_tags pt INNER JOIN tags productTag ON pt.tag_id = productTag.tag_id
+                    SELECT t.tag_id AS Id, t.tag_name AS Name
+                    FROM product_tags pt INNER JOIN tags t ON pt.tag_id = t.tag_id
                     WHERE pt.product_id = @pid
-                    ORDER BY productTag.tag_name;";
+                    ORDER BY t.tag_name;";
                 var result = cxnAppCache.Query<ProductTag>(sqlTag, new { pid = productId }).ToList();
+                sw.Stop();
+                Debug.WriteLine($"Tags for Product {productId}: {sw.ElapsedMilliseconds:0.00} ms");
                 return result;
             }
         }

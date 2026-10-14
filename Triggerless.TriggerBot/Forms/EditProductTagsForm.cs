@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -18,6 +19,10 @@ namespace Triggerless.TriggerBot.Forms
             if (_productDisplayInfo == null) {
                 StyledMessageBox.Show(this, "Product Info not supplied", "Coding Error");
                 return;
+            }
+            if (_productDisplayInfo.Tags is null)
+            {
+                _productDisplayInfo.Tags = new List<ProductTag>();
             }
             var tags = SQLiteDataAccess.TagsGetAll();
             lvTags.Items.Clear();

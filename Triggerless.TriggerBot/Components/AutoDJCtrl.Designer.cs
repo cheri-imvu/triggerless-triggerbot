@@ -31,6 +31,7 @@
             this.lblTitle = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.rdoGoLive = new System.Windows.Forms.RadioButton();
+            this.autoDJListCtrl1 = new Triggerless.TriggerBot.Components.AutoDJListCtrl();
             this.SuspendLayout();
             // 
             // lblTitle
@@ -68,17 +69,30 @@
             this.rdoGoLive.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rdoGoLive.UseVisualStyleBackColor = false;
             // 
+            // autoDJListCtrl1
+            // 
+            this.autoDJListCtrl1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
+            this.autoDJListCtrl1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.autoDJListCtrl1.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.autoDJListCtrl1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.autoDJListCtrl1.Location = new System.Drawing.Point(23, 76);
+            this.autoDJListCtrl1.Margin = new System.Windows.Forms.Padding(4);
+            this.autoDJListCtrl1.Name = "autoDJListCtrl1";
+            this.autoDJListCtrl1.Size = new System.Drawing.Size(558, 361);
+            this.autoDJListCtrl1.TabIndex = 3;
+            // 
             // AutoDJCtrl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
+            this.Controls.Add(this.autoDJListCtrl1);
             this.Controls.Add(this.rdoGoLive);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblTitle);
             this.Font = new System.Drawing.Font("Liberation Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "AutoDJCtrl";
             this.Size = new System.Drawing.Size(821, 470);
             this.ResumeLayout(false);
@@ -91,5 +105,6 @@
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.RadioButton rdoGoLive;
+        private AutoDJListCtrl autoDJListCtrl1;
     }
 }

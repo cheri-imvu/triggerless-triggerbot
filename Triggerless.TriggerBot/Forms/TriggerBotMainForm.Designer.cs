@@ -88,6 +88,7 @@ namespace Triggerless.TriggerBot
             this.pnlBanner = new System.Windows.Forms.Panel();
             this.picBanner = new System.Windows.Forms.PictureBox();
             this.pnlOnDeck = new System.Windows.Forms.Panel();
+            this.picOnDeck = new System.Windows.Forms.PictureBox();
             this.label27 = new System.Windows.Forms.Label();
             this.lblSendToNP = new System.Windows.Forms.Label();
             this.chkAutoCue = new System.Windows.Forms.CheckBox();
@@ -100,6 +101,7 @@ namespace Triggerless.TriggerBot
             this.progScan = new System.Windows.Forms.ProgressBar();
             this.lblProgress = new System.Windows.Forms.Label();
             this.lblProduct = new System.Windows.Forms.Label();
+            this.tabAutoDJ = new System.Windows.Forms.TabPage();
             this.tabConvertChkn = new System.Windows.Forms.TabPage();
             this._splicer = new Triggerless.TriggerBot.SplicerControl();
             this.tabLyrics = new System.Windows.Forms.TabPage();
@@ -143,7 +145,7 @@ namespace Triggerless.TriggerBot
             this._lyricTimer = new System.Windows.Forms.Timer(this.components);
             this.lblNoResults = new System.Windows.Forms.Label();
             this._collector = new Triggerless.TriggerBot.Collector();
-            this.tabAutoDJ = new System.Windows.Forms.TabPage();
+            this.autoDJCtrl = new Triggerless.TriggerBot.Components.AutoDJCtrl();
             this.tabAppContainer.SuspendLayout();
             this.tabPlayback.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitter)).BeginInit();
@@ -159,7 +161,9 @@ namespace Triggerless.TriggerBot
             this.pnlBanner.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBanner)).BeginInit();
             this.pnlOnDeck.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picOnDeck)).BeginInit();
             this.pnlCollector.SuspendLayout();
+            this.tabAutoDJ.SuspendLayout();
             this.tabConvertChkn.SuspendLayout();
             this.tabLyrics.SuspendLayout();
             this.tabTools.SuspendLayout();
@@ -849,6 +853,7 @@ namespace Triggerless.TriggerBot
             // pnlOnDeck
             // 
             this.pnlOnDeck.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(55)))), ((int)(((byte)(94)))));
+            this.pnlOnDeck.Controls.Add(this.picOnDeck);
             this.pnlOnDeck.Controls.Add(this.label27);
             this.pnlOnDeck.Controls.Add(this.lblSendToNP);
             this.pnlOnDeck.Controls.Add(this.chkAutoCue);
@@ -861,6 +866,18 @@ namespace Triggerless.TriggerBot
             this.pnlOnDeck.Name = "pnlOnDeck";
             this.pnlOnDeck.Size = new System.Drawing.Size(660, 128);
             this.pnlOnDeck.TabIndex = 3;
+            // 
+            // picOnDeck
+            // 
+            this.picOnDeck.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picOnDeck.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picOnDeck.Image = global::Triggerless.TriggerBot.Properties.Resources.home_plate;
+            this.picOnDeck.Location = new System.Drawing.Point(13, 4);
+            this.picOnDeck.Name = "picOnDeck";
+            this.picOnDeck.Size = new System.Drawing.Size(30, 30);
+            this.picOnDeck.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picOnDeck.TabIndex = 12;
+            this.picOnDeck.TabStop = false;
             // 
             // label27
             // 
@@ -885,7 +902,7 @@ namespace Triggerless.TriggerBot
             // chkAutoCue
             // 
             this.chkAutoCue.AutoSize = true;
-            this.chkAutoCue.Location = new System.Drawing.Point(95, 9);
+            this.chkAutoCue.Location = new System.Drawing.Point(139, 9);
             this.chkAutoCue.Name = "chkAutoCue";
             this.chkAutoCue.Size = new System.Drawing.Size(233, 21);
             this.chkAutoCue.TabIndex = 5;
@@ -924,7 +941,7 @@ namespace Triggerless.TriggerBot
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(5, 10);
+            this.label2.Location = new System.Drawing.Point(49, 10);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(78, 17);
             this.label2.TabIndex = 1;
@@ -993,6 +1010,17 @@ namespace Triggerless.TriggerBot
             this.lblProduct.Size = new System.Drawing.Size(67, 17);
             this.lblProduct.TabIndex = 3;
             this.lblProduct.Text = "Product: ";
+            // 
+            // tabAutoDJ
+            // 
+            this.tabAutoDJ.Controls.Add(this.autoDJCtrl);
+            this.tabAutoDJ.Location = new System.Drawing.Point(4, 26);
+            this.tabAutoDJ.Name = "tabAutoDJ";
+            this.tabAutoDJ.Padding = new System.Windows.Forms.Padding(3);
+            this.tabAutoDJ.Size = new System.Drawing.Size(1066, 630);
+            this.tabAutoDJ.TabIndex = 6;
+            this.tabAutoDJ.Text = "Auto DJ ⚡";
+            this.tabAutoDJ.UseVisualStyleBackColor = true;
             // 
             // tabConvertChkn
             // 
@@ -1494,15 +1522,17 @@ namespace Triggerless.TriggerBot
             // 
             this._collector.CollectorEvent += new Triggerless.TriggerBot.Collector.CollectorEventHandler(this.OnCollectorEvent);
             // 
-            // tabAutoDJ
+            // autoDJCtrl
             // 
-            this.tabAutoDJ.Location = new System.Drawing.Point(4, 26);
-            this.tabAutoDJ.Name = "tabAutoDJ";
-            this.tabAutoDJ.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAutoDJ.Size = new System.Drawing.Size(1066, 630);
-            this.tabAutoDJ.TabIndex = 6;
-            this.tabAutoDJ.Text = "Auto DJ ⚡";
-            this.tabAutoDJ.UseVisualStyleBackColor = true;
+            this.autoDJCtrl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
+            this.autoDJCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.autoDJCtrl.Font = new System.Drawing.Font("Liberation Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.autoDJCtrl.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.autoDJCtrl.Location = new System.Drawing.Point(3, 3);
+            this.autoDJCtrl.Margin = new System.Windows.Forms.Padding(4);
+            this.autoDJCtrl.Name = "autoDJCtrl";
+            this.autoDJCtrl.Size = new System.Drawing.Size(1060, 624);
+            this.autoDJCtrl.TabIndex = 0;
             // 
             // TriggerBotMainForm
             // 
@@ -1543,8 +1573,10 @@ namespace Triggerless.TriggerBot
             ((System.ComponentModel.ISupportInitialize)(this.picBanner)).EndInit();
             this.pnlOnDeck.ResumeLayout(false);
             this.pnlOnDeck.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picOnDeck)).EndInit();
             this.pnlCollector.ResumeLayout(false);
             this.pnlCollector.PerformLayout();
+            this.tabAutoDJ.ResumeLayout(false);
             this.tabConvertChkn.ResumeLayout(false);
             this.tabLyrics.ResumeLayout(false);
             this.tabTools.ResumeLayout(false);
@@ -1672,6 +1704,8 @@ namespace Triggerless.TriggerBot
         private System.Windows.Forms.TabPage tabDebug;
         private DebugCtrl debugCtrl1;
         private System.Windows.Forms.TabPage tabAutoDJ;
+        private System.Windows.Forms.PictureBox picOnDeck;
+        private Components.AutoDJCtrl autoDJCtrl;
     }
 }
 

@@ -53,7 +53,7 @@ namespace Triggerless.TriggerBot
         {
             get { return _hideOnDeck; } 
             set {
-                linkOnDeck.Visible = !value;
+                picOnDeck.Visible = !value;
                 _hideOnDeck = value;
             }
         }
@@ -96,22 +96,23 @@ namespace Triggerless.TriggerBot
 
         private void linkOnDeck_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
-            {
-                var args = new LinkClickedEventArgs(_productInfo);
-                OnDeckLinkClicked?.Invoke(sender, args);
-            }
+
         }
 
-        private void ShowWebPage(object sender, EventArgs e)
+        private void SendToOnDeck(object sender, EventArgs e)
         {
+            var args = new LinkClickedEventArgs(_productInfo);
+            OnDeckLinkClicked?.Invoke(sender, args);
+        }
 
+        private void WearItem(object sender, EventArgs e)
+        {
+            OnWearItem?.Invoke(this, new WearItemEventArgs(_productInfo.Id));
         }
 
         private void WearItem(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (_productInfo == null) return;
-            OnWearItem?.Invoke(this, new WearItemEventArgs(_productInfo.Id));
+
         }
 
         private void ProductImageClicked(object sender, EventArgs e)

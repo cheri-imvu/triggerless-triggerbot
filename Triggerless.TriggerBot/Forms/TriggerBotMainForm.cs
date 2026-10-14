@@ -21,6 +21,8 @@ namespace Triggerless.TriggerBot
 {
     public partial class TriggerBotMainForm : Form
     {
+
+        private LiveList<ProductDisplayInfo> _autoDJList;
         private DateTime _triggerbotStartTime = DateTime.Now;
         public string StartFileArgument { get; set; } = null;
 
@@ -35,6 +37,14 @@ namespace Triggerless.TriggerBot
             this.FormBorderStyle = FormBorderStyle.Sizable;
             _updater = new Update();
             linkDiscord.Text = Discord.GetInviteLink().Result;
+            _autoDJList = new LiveList<ProductDisplayInfo>();
+            _autoDJList.FrontChanged += LiveListFrontChanged;
+            autoDJCtrl.LiveList = _autoDJList;
+        }
+
+        private void LiveListFrontChanged(object sender, FrontChangedEventArgs<ProductDisplayInfo> e)
+        {
+            throw new NotImplementedException();
         }
 
         #region Dark Mode Title Bar
@@ -283,8 +293,16 @@ namespace Triggerless.TriggerBot
             f.StartPosition = FormStartPosition.CenterParent;
             f.ProductTagAdded += OnProductTagAdded;
             f.ProductTagDeleted += OnProductTagDeleted;
+            f.Name = nameof(EditProductTagsForm);
             f.TopMost = Program.MainForm.TopMost;
-            f.ShowDialog(this);
+            try
+            {
+                f.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), ex.Message);
+            }
             f.ProductTagAdded -= OnProductTagAdded;
             f.ProductTagDeleted -= OnProductTagDeleted;
         }
@@ -305,12 +323,14 @@ namespace Triggerless.TriggerBot
 
         private void RenderVisibleProducts()
         {
+            var sw = new Stopwatch();
             if (_searchResults == null || _searchResults.Count == 0)
             {
                 foreach (var pc in _productPool)
                     pc.Visible = false;
                 return;
             }
+            sw.Start();
 
             int scrollY = pnlSearchResults.VerticalScroll.Value;
             int firstIndex = Math.Max(0, scrollY / ItemHeight);
@@ -332,6 +352,10 @@ namespace Triggerless.TriggerBot
                 pc.Left = 5;
             }
 
+            sw.Stop();
+            Debug.WriteLine($"RenderVisibleProducts: {sw.ElapsedMilliseconds:0.00}");
+
+
             lblNoResults.Visible = (_searchResults.Count == 0);
         }
 
@@ -341,6 +365,9 @@ namespace Triggerless.TriggerBot
         private List<ProductDisplayInfo> ProductSearch(ProductSearchType type, string text = null)
         {
             var result = new List<ProductDisplayInfo>();
+            var sw = new Stopwatch();
+            sw.Start();
+
             string searchTerm;
             switch (type)
             {
@@ -369,6 +396,8 @@ namespace Triggerless.TriggerBot
 
             }
             _searchResults = result;
+            sw.Stop();
+            Debug.WriteLine($"Product Search: {sw.ElapsedMilliseconds:0.00}");
             return result;
         }
         

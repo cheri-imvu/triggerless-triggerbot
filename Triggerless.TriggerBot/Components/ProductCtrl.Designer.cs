@@ -33,16 +33,22 @@
             this.lblName = new System.Windows.Forms.Label();
             this.lblCreator = new System.Windows.Forms.Label();
             this.lblTriggers = new System.Windows.Forms.Label();
-            this.linkOnDeck = new System.Windows.Forms.LinkLabel();
-            this.linkWearItem = new System.Windows.Forms.LinkLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.linkLabelTag = new System.Windows.Forms.LinkLabel();
             this.picLips = new System.Windows.Forms.PictureBox();
-            this.picProductImage = new System.Windows.Forms.PictureBox();
             this.picDeleteItem = new System.Windows.Forms.PictureBox();
+            this.picProductImage = new System.Windows.Forms.PictureBox();
+            this.picAutoFront = new System.Windows.Forms.PictureBox();
+            this.picAutoQueue = new System.Windows.Forms.PictureBox();
+            this.picOnDeck = new System.Windows.Forms.PictureBox();
+            this.picWear = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.picLips)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picDeleteItem)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picAutoFront)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picAutoQueue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picOnDeck)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picWear)).BeginInit();
             this.SuspendLayout();
             // 
             // lblName
@@ -80,40 +86,6 @@
             this.lblTriggers.TabIndex = 3;
             this.lblTriggers.Text = "Triggers: xyz1 - xyz24";
             // 
-            // linkOnDeck
-            // 
-            this.linkOnDeck.BackColor = System.Drawing.Color.Transparent;
-            this.linkOnDeck.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkOnDeck.LinkColor = System.Drawing.Color.Aqua;
-            this.linkOnDeck.Location = new System.Drawing.Point(237, 64);
-            this.linkOnDeck.Name = "linkOnDeck";
-            this.linkOnDeck.Size = new System.Drawing.Size(128, 18);
-            this.linkOnDeck.TabIndex = 4;
-            this.linkOnDeck.TabStop = true;
-            this.linkOnDeck.Text = "ON DECK >>";
-            this.toolTip1.SetToolTip(this.linkOnDeck, "Move this song to ON DECK");
-            this.linkOnDeck.VisitedLinkColor = System.Drawing.Color.Aqua;
-            this.linkOnDeck.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOnDeck_LinkClicked);
-            this.linkOnDeck.MouseEnter += new System.EventHandler(this.LinkEnter);
-            this.linkOnDeck.MouseLeave += new System.EventHandler(this.LinkLeave);
-            // 
-            // linkWearItem
-            // 
-            this.linkWearItem.BackColor = System.Drawing.Color.Transparent;
-            this.linkWearItem.Font = new System.Drawing.Font("Liberation Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkWearItem.LinkColor = System.Drawing.Color.Aqua;
-            this.linkWearItem.Location = new System.Drawing.Point(113, 64);
-            this.linkWearItem.Name = "linkWearItem";
-            this.linkWearItem.Size = new System.Drawing.Size(106, 18);
-            this.linkWearItem.TabIndex = 5;
-            this.linkWearItem.TabStop = true;
-            this.linkWearItem.Text = "Wear Item";
-            this.toolTip1.SetToolTip(this.linkWearItem, "Wear this item in IMVU classic");
-            this.linkWearItem.VisitedLinkColor = System.Drawing.Color.Aqua;
-            this.linkWearItem.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WearItem);
-            this.linkWearItem.MouseEnter += new System.EventHandler(this.LinkEnter);
-            this.linkWearItem.MouseLeave += new System.EventHandler(this.LinkLeave);
-            // 
             // linkLabelTag
             // 
             this.linkLabelTag.BackColor = System.Drawing.Color.Transparent;
@@ -142,6 +114,17 @@
             this.picLips.TabStop = false;
             this.toolTip1.SetToolTip(this.picLips, "This song has lyrics.");
             // 
+            // picDeleteItem
+            // 
+            this.picDeleteItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.picDeleteItem.Image = global::Triggerless.TriggerBot.Properties.Resources.exclude16;
+            this.picDeleteItem.Location = new System.Drawing.Point(357, 0);
+            this.picDeleteItem.Name = "picDeleteItem";
+            this.picDeleteItem.Size = new System.Drawing.Size(16, 16);
+            this.picDeleteItem.TabIndex = 6;
+            this.picDeleteItem.TabStop = false;
+            this.picDeleteItem.Click += new System.EventHandler(this.ExcludeSong);
+            // 
             // picProductImage
             // 
             this.picProductImage.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picProductImage.BackgroundImage")));
@@ -157,16 +140,59 @@
             this.toolTip1.SetToolTip(this.picProductImage, "Browse Product Page");
             this.picProductImage.Click += new System.EventHandler(this.ProductImageClicked);
             // 
-            // picDeleteItem
+            // picAutoFront
             // 
-            this.picDeleteItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.picDeleteItem.Image = global::Triggerless.TriggerBot.Properties.Resources.exclude16;
-            this.picDeleteItem.Location = new System.Drawing.Point(357, 0);
-            this.picDeleteItem.Name = "picDeleteItem";
-            this.picDeleteItem.Size = new System.Drawing.Size(16, 16);
-            this.picDeleteItem.TabIndex = 6;
-            this.picDeleteItem.TabStop = false;
-            this.picDeleteItem.Click += new System.EventHandler(this.ExcludeSong);
+            this.picAutoFront.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picAutoFront.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picAutoFront.Image = global::Triggerless.TriggerBot.Properties.Resources.bolt_2;
+            this.picAutoFront.Location = new System.Drawing.Point(327, 61);
+            this.picAutoFront.Name = "picAutoFront";
+            this.picAutoFront.Size = new System.Drawing.Size(24, 24);
+            this.picAutoFront.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picAutoFront.TabIndex = 9;
+            this.picAutoFront.TabStop = false;
+            this.toolTip1.SetToolTip(this.picAutoFront, "AUTO DJ - Add to Front");
+            // 
+            // picAutoQueue
+            // 
+            this.picAutoQueue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picAutoQueue.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picAutoQueue.Image = global::Triggerless.TriggerBot.Properties.Resources.bolt_1;
+            this.picAutoQueue.Location = new System.Drawing.Point(297, 61);
+            this.picAutoQueue.Name = "picAutoQueue";
+            this.picAutoQueue.Size = new System.Drawing.Size(24, 24);
+            this.picAutoQueue.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picAutoQueue.TabIndex = 10;
+            this.picAutoQueue.TabStop = false;
+            this.toolTip1.SetToolTip(this.picAutoQueue, "AUTO DJ - Add to Back");
+            // 
+            // picOnDeck
+            // 
+            this.picOnDeck.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picOnDeck.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picOnDeck.Image = global::Triggerless.TriggerBot.Properties.Resources.home_plate;
+            this.picOnDeck.Location = new System.Drawing.Point(267, 61);
+            this.picOnDeck.Name = "picOnDeck";
+            this.picOnDeck.Size = new System.Drawing.Size(24, 24);
+            this.picOnDeck.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picOnDeck.TabIndex = 11;
+            this.picOnDeck.TabStop = false;
+            this.toolTip1.SetToolTip(this.picOnDeck, "SEND TO ON DECK");
+            this.picOnDeck.Click += new System.EventHandler(this.SendToOnDeck);
+            // 
+            // picWear
+            // 
+            this.picWear.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picWear.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picWear.Image = global::Triggerless.TriggerBot.Properties.Resources.shirt;
+            this.picWear.Location = new System.Drawing.Point(239, 61);
+            this.picWear.Name = "picWear";
+            this.picWear.Size = new System.Drawing.Size(24, 24);
+            this.picWear.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picWear.TabIndex = 12;
+            this.picWear.TabStop = false;
+            this.toolTip1.SetToolTip(this.picWear, "WEAR ITEM");
+            this.picWear.Click += new System.EventHandler(this.WearItem);
             // 
             // ProductCtrl
             // 
@@ -174,11 +200,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(29)))), ((int)(((byte)(51)))));
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.picWear);
+            this.Controls.Add(this.picOnDeck);
+            this.Controls.Add(this.picAutoQueue);
+            this.Controls.Add(this.picAutoFront);
             this.Controls.Add(this.linkLabelTag);
             this.Controls.Add(this.picLips);
             this.Controls.Add(this.picDeleteItem);
-            this.Controls.Add(this.linkWearItem);
-            this.Controls.Add(this.linkOnDeck);
             this.Controls.Add(this.lblTriggers);
             this.Controls.Add(this.lblCreator);
             this.Controls.Add(this.lblName);
@@ -189,8 +217,12 @@
             this.Name = "ProductCtrl";
             this.Size = new System.Drawing.Size(376, 87);
             ((System.ComponentModel.ISupportInitialize)(this.picLips)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picDeleteItem)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picAutoFront)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picAutoQueue)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picOnDeck)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picWear)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -202,11 +234,13 @@
         private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.Label lblCreator;
         private System.Windows.Forms.Label lblTriggers;
-        private System.Windows.Forms.LinkLabel linkOnDeck;
-        private System.Windows.Forms.LinkLabel linkWearItem;
         private System.Windows.Forms.PictureBox picDeleteItem;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.PictureBox picLips;
         private System.Windows.Forms.LinkLabel linkLabelTag;
+        private System.Windows.Forms.PictureBox picAutoFront;
+        private System.Windows.Forms.PictureBox picAutoQueue;
+        private System.Windows.Forms.PictureBox picOnDeck;
+        private System.Windows.Forms.PictureBox picWear;
     }
 }

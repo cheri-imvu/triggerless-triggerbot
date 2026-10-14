@@ -118,6 +118,18 @@
     <Compile Include="Components\AutoDJCtrl.Designer.cs">
       <DependentUpon>AutoDJCtrl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\AutoDJListCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\AutoDJListCtrl.Designer.cs">
+      <DependentUpon>AutoDJListCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\AutoDJListItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\AutoDJListItem.Designer.cs">
+      <DependentUpon>AutoDJListItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\Collector.ProductScan.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -311,6 +323,12 @@
     <EmbeddedResource Include="Components\AutoDJCtrl.resx">
       <DependentUpon>AutoDJCtrl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Components\AutoDJListCtrl.resx">
+      <DependentUpon>AutoDJListCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\AutoDJListItem.resx">
+      <DependentUpon>AutoDJListItem.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\DirtyControl.resx">
       <DependentUpon>DirtyControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -432,9 +450,19 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app-imvu.png" />
+    <Content Include="Assets\bad24.png" />
+    <Content Include="Assets\bolt-1.png" />
+    <Content Include="Assets\bolt-2.png" />
     <Content Include="Assets\discord.png" />
+    <Content Include="Assets\help.png" />
+    <Content Include="Assets\home-plate.png" />
     <Content Include="Assets\note10.ico" />
     <Content Include="Assets\note3d.ico" />
+    <Content Include="Assets\shirt.png" />
+    <Content Include="Assets\snip.mp3" />
+    <Content Include="Assets\snip.wav" />
+    <Content Include="Assets\warn24.png" />
+    <Content Include="Assets\waveform.png" />
     <Content Include="ffmpeg\ffprobe.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

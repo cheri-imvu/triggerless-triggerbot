@@ -18,6 +18,17 @@ namespace Triggerless.TriggerBot.Models
         }
     }
 
+    public class IsLiveChangedEventArgs: EventArgs
+    {
+        public bool IsLive { get; private set; }
+        public IsLiveChangedEventArgs(bool isLive)
+        {
+            IsLive = isLive;
+        }
+    }
+
+    public delegate void IsLiveChangedHandler(object sender, IsLiveChangedEventArgs e);
+
     public delegate void FrontChangeEventHandler<T>(
         object sender,
         FrontChangedEventArgs<T> e);
@@ -74,6 +85,7 @@ namespace Triggerless.TriggerBot.Models
             {
                 T current = default(T);
                 bool raiseFrontChanged = false;
+                bool raiseIsLiveChanged = value != _isLive;
 
                 lock (_syncRoot)
                 {
@@ -93,6 +105,8 @@ namespace Triggerless.TriggerBot.Models
                         }
                     }
                 }
+
+                if (raiseIsLiveChanged) RaiseIsLiveChanged(_isLive);
 
                 if (raiseFrontChanged)
                     RaiseFrontChanged(default(T), current);
@@ -159,6 +173,8 @@ namespace Triggerless.TriggerBot.Models
         public event FrontChangeEventHandler<T> FrontChanged;
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        public event IsLiveChangedHandler IsLiveChanged;
 
         public void Push(T item)
         {
@@ -486,6 +502,12 @@ namespace Triggerless.TriggerBot.Models
                 return default(T);
 
             return _items[0];
+        }
+
+        private void RaiseIsLiveChanged(bool isLive)
+        {
+            IsLiveChangedHandler handler = IsLiveChanged;
+            if (handler != null) handler(this, new IsLiveChangedEventArgs(isLive));
         }
 
         private void RaiseFrontChanged(T previous, T current)
