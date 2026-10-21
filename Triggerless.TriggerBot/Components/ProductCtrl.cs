@@ -42,6 +42,45 @@ namespace Triggerless.TriggerBot
 
         public event LinkClickedEventHandler OnTagLinkClicked;
 
+        public enum AddToAutoDJPosition
+        {
+            BackOfQueue, FrontOfQueue
+        }
+
+        public class AddToAutoDJEventArgs : EventArgs
+        {
+            public AddToAutoDJPosition Position { get; private set; }
+            public bool Cancel { get; set; } = false;
+            public ProductDisplayInfo Product { get; set; }
+
+            public AddToAutoDJEventArgs(AddToAutoDJPosition position, ProductDisplayInfo product)
+            {
+                Position = position;
+                Cancel = false;
+                Product = product;
+            }
+        }
+        public delegate void AddToAutoDJEventHandler(object sender, AddToAutoDJEventArgs e);
+
+        public event AddToAutoDJEventHandler OnAddToAutoDJ;
+        private void FireAddToAutoDJ(AddToAutoDJPosition position)
+        {
+            if (OnAddToAutoDJ == null) return;
+            OnAddToAutoDJ.Invoke(this, new AddToAutoDJEventArgs(
+                position,
+                _productInfo
+            ));
+        }
+        private void ClickedAddToAutoDJFront(object sender, EventArgs e)
+        {
+            FireAddToAutoDJ(AddToAutoDJPosition.FrontOfQueue);
+        }
+
+        private void ClickedAddToAutoDJBack(object sender, EventArgs e)
+        {
+            FireAddToAutoDJ(AddToAutoDJPosition.BackOfQueue);
+        }
+
         public ProductCtrl()
         {
             InitializeComponent();

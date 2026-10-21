@@ -36,19 +36,19 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.linkLabelTag = new System.Windows.Forms.LinkLabel();
             this.picLips = new System.Windows.Forms.PictureBox();
-            this.picDeleteItem = new System.Windows.Forms.PictureBox();
             this.picProductImage = new System.Windows.Forms.PictureBox();
             this.picAutoFront = new System.Windows.Forms.PictureBox();
             this.picAutoQueue = new System.Windows.Forms.PictureBox();
             this.picOnDeck = new System.Windows.Forms.PictureBox();
             this.picWear = new System.Windows.Forms.PictureBox();
+            this.picDeleteItem = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.picLips)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picDeleteItem)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picAutoFront)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picAutoQueue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picOnDeck)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picWear)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picDeleteItem)).BeginInit();
             this.SuspendLayout();
             // 
             // lblName
@@ -114,17 +114,6 @@
             this.picLips.TabStop = false;
             this.toolTip1.SetToolTip(this.picLips, "This song has lyrics.");
             // 
-            // picDeleteItem
-            // 
-            this.picDeleteItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.picDeleteItem.Image = global::Triggerless.TriggerBot.Properties.Resources.exclude16;
-            this.picDeleteItem.Location = new System.Drawing.Point(357, 0);
-            this.picDeleteItem.Name = "picDeleteItem";
-            this.picDeleteItem.Size = new System.Drawing.Size(16, 16);
-            this.picDeleteItem.TabIndex = 6;
-            this.picDeleteItem.TabStop = false;
-            this.picDeleteItem.Click += new System.EventHandler(this.ExcludeSong);
-            // 
             // picProductImage
             // 
             this.picProductImage.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picProductImage.BackgroundImage")));
@@ -152,6 +141,7 @@
             this.picAutoFront.TabIndex = 9;
             this.picAutoFront.TabStop = false;
             this.toolTip1.SetToolTip(this.picAutoFront, "AUTO DJ - Add to Front");
+            this.picAutoFront.Click += new System.EventHandler(this.ClickedAddToAutoDJFront);
             // 
             // picAutoQueue
             // 
@@ -165,6 +155,7 @@
             this.picAutoQueue.TabIndex = 10;
             this.picAutoQueue.TabStop = false;
             this.toolTip1.SetToolTip(this.picAutoQueue, "AUTO DJ - Add to Back");
+            this.picAutoQueue.Click += new System.EventHandler(this.ClickedAddToAutoDJBack);
             // 
             // picOnDeck
             // 
@@ -194,6 +185,17 @@
             this.toolTip1.SetToolTip(this.picWear, "WEAR ITEM");
             this.picWear.Click += new System.EventHandler(this.WearItem);
             // 
+            // picDeleteItem
+            // 
+            this.picDeleteItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.picDeleteItem.Image = global::Triggerless.TriggerBot.Properties.Resources.exclude16;
+            this.picDeleteItem.Location = new System.Drawing.Point(357, 0);
+            this.picDeleteItem.Name = "picDeleteItem";
+            this.picDeleteItem.Size = new System.Drawing.Size(16, 16);
+            this.picDeleteItem.TabIndex = 6;
+            this.picDeleteItem.TabStop = false;
+            this.picDeleteItem.Click += new System.EventHandler(this.ExcludeSong);
+            // 
             // ProductCtrl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -217,12 +219,12 @@
             this.Name = "ProductCtrl";
             this.Size = new System.Drawing.Size(376, 87);
             ((System.ComponentModel.ISupportInitialize)(this.picLips)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picDeleteItem)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picProductImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picAutoFront)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picAutoQueue)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picOnDeck)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picWear)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picDeleteItem)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

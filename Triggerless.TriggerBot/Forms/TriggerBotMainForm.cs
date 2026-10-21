@@ -22,80 +22,21 @@ namespace Triggerless.TriggerBot
     public partial class TriggerBotMainForm : Form
     {
 
-        private LiveList<ProductDisplayInfo> _autoDJList;
         private DateTime _triggerbotStartTime = DateTime.Now;
         public string StartFileArgument { get; set; } = null;
 
         private Update _updater;
-        //private IInputSimulator _sim = new InputSimulator();
 
         public TriggerBotMainForm()
         {
             InitializeComponent();
-            //HandleMonitor.LogHandles("after InitializeComponent");
 
             this.FormBorderStyle = FormBorderStyle.Sizable;
             _updater = new Update();
             linkDiscord.Text = Discord.GetInviteLink().Result;
-            _autoDJList = new LiveList<ProductDisplayInfo>();
-            _autoDJList.FrontChanged += LiveListFrontChanged;
-            autoDJCtrl.LiveList = _autoDJList;
+            InitializeAutoDJ();
         }
 
-        private void LiveListFrontChanged(object sender, FrontChangedEventArgs<ProductDisplayInfo> e)
-        {
-            throw new NotImplementedException();
-        }
-
-        #region Dark Mode Title Bar
-
-        protected override void OnHandleCreated(EventArgs e)
-        {
-            base.OnHandleCreated(e);
-            ApplyImmersiveDarkAccordingToSystem();
-        }
-
-        protected override void WndProc(ref Message m)
-        {
-            base.WndProc(ref m);
-
-            const int WM_SETTINGCHANGE = 0x001A;
-            const int WM_THEMECHANGED = 0x031A;
-
-            if (m.Msg == WM_SETTINGCHANGE || m.Msg == WM_THEMECHANGED)
-                ApplyImmersiveDarkAccordingToSystem();
-        }
-
-        private void ApplyImmersiveDarkAccordingToSystem()
-        {
-            bool useDark = Theme.IsAppsDarkMode();
-            Theme.SetImmersiveDarkMode(this.Handle, useDark);
-        }
-
-        static class Theme
-        {
-            // Windows stores “apps theme” here: 0 = Dark, 1 = Light
-            public static bool IsAppsDarkMode()
-            {
-                const string keyPath = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
-                using (var key = Registry.CurrentUser.OpenSubKey(keyPath))
-                {
-                    var v = key?.GetValue("AppsUseLightTheme");
-                    return (v is int i) ? (i == 0) : false; // default to Light if missing
-                }
-            }
-
-            public static void SetImmersiveDarkMode(IntPtr hwnd, bool enabled)
-            {
-                if (hwnd == IntPtr.Zero) return;
-                int on = enabled ? 1 : 0;
-
-                // Win10 1809 used 19; Win10 1903+/Win11 use 20. Try both, ignore failures.
-                Shell32.DwmSetWindowAttribute(hwnd, (Shell32.DWMWINDOWATTRIBUTE)20, ref on, sizeof(int));
-                Shell32.DwmSetWindowAttribute(hwnd, (Shell32.DWMWINDOWATTRIBUTE)19, ref on, sizeof(int));
-            }
-        }
-        #endregion
 
         #region IMVU Presence and Interation
 
@@ -278,11 +219,13 @@ namespace Triggerless.TriggerBot
                 pc.OnWearItem += WearItem;
                 pc.OnExcludeSong += ExcludeSong;
                 pc.OnTagLinkClicked += EditProductTags;
+                AttachToProductCtrl(pc);
 
                 pnlSearchResults.Controls.Add(pc);
                 _productPool.Add(pc);
             }
         }
+
 
         private List<ProductTag> _searchTags = new List<ProductTag>();
 
@@ -358,9 +301,6 @@ namespace Triggerless.TriggerBot
 
             lblNoResults.Visible = (_searchResults.Count == 0);
         }
-
-
-        // Product Search
 
         private List<ProductDisplayInfo> ProductSearch(ProductSearchType type, string text = null)
         {
@@ -548,6 +488,9 @@ namespace Triggerless.TriggerBot
                 case "About":
                     tabAppContainer.SelectedTab = tabAbout;
                     break;
+                case "AutoDJ":
+                    tabAppContainer.SelectedTab = tabAutoDJ;
+                    break;
                 default:
                     tabAppContainer.SelectedTab = tabPlayback;
                     break;
@@ -596,6 +539,7 @@ namespace Triggerless.TriggerBot
                 case nameof(tabConvertChkn): sets.LastTab = "Splice"; break;
                 case nameof(tabLyrics): sets.LastTab = "Lyrics"; break;
                 case nameof(tabAbout): sets.LastTab = "About"; break;
+                case nameof(tabAutoDJ): sets.LastTab = "AutoDJ"; break;
                 default: sets.LastTab = "Playback"; break;
             }
             sets.Save();
@@ -896,6 +840,11 @@ namespace Triggerless.TriggerBot
             _lyricTimer.Enabled = false;
             _lyricsIndex = -1;
 
+            if (_autoDJList != null && _autoDJList.IsLive)
+            {
+
+            }
+
             if (productOnDeck.Visible && chkAutoCue.Checked)
             {
                 MoveToPlaying(null, null);
@@ -1118,7 +1067,6 @@ namespace Triggerless.TriggerBot
         {
             picBanner.Left = (pnlBanner.Width - picBanner.Width) / 2;
         }
-
 
         private void tabAppContainer_Deselecting(object sender, TabControlCancelEventArgs e)
         {
