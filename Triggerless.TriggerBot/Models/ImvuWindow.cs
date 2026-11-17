@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
@@ -45,20 +46,25 @@ namespace Triggerless.TriggerBot.Models
             }
             _imvuChatWindow = IntPtr.Zero;
             Process[] p = Process.GetProcesses();
-            Process imvuProc = null;
+            var imvuProcs = new List<Process>();
             foreach (var proc in p)
             {
-                if (proc.ToString().ToLowerInvariant().Contains("imvuclient"))
+                var procName = proc.ToString().ToLowerInvariant();
+                // We added IMVUQualityAgent to support IMVU Lite.
+                if (procName.Contains("imvuclient") || procName.Contains("imvuqualityagent"))
                 {
-                    imvuProc = proc;
-                    break;
+                    if (proc.MainWindowHandle != IntPtr.Zero &&
+                        !proc.MainWindowTitle.StartsWith("[#]")) //don't send to Sandboxie
+                    {
+                        imvuProcs.Add(proc);
+                    }
                 }
             }
 
-            if (imvuProc != null)
-            {
-                _imvuChatWindow = imvuProc.MainWindowHandle;
-                return true;
+            if (imvuProcs.Count == 0) { return false; }
+            if (imvuProcs.Count == 1) {
+                _imvuChatWindow = imvuProcs[0].MainWindowHandle;
+                return true; 
             }
             return false;
         }

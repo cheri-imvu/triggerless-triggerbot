@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -9,7 +8,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Triggerless.Native;
 using Triggerless.PlugIn;
 using Triggerless.TriggerBot.Components;
 using Triggerless.TriggerBot.Forms;
