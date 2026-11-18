@@ -69,9 +69,11 @@ namespace Triggerless.TriggerBot.Models
         public static void Paste()
         {
             SetFocus();
-            _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_V);
-            _sim.Keyboard.KeyPress(KeyCode.RETURN);
-
+            lock (_kbdLock)
+            {
+                _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_V);
+                _sim.Keyboard.KeyPress(KeyCode.RETURN);
+            }
         }
 
         public static void SendText(string text)
