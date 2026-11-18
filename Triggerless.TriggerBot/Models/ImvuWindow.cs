@@ -13,7 +13,6 @@ namespace Triggerless.TriggerBot.Models
     {
         private static IInputSimulator _sim = new InputSimulator();
         private static object _kbdLock = new object();
-
         private static IntPtr _imvuChatWindow = IntPtr.Zero;
 
         public static bool IsRunning
@@ -54,19 +53,17 @@ namespace Triggerless.TriggerBot.Models
                 if (procName.Contains("imvuclient") || procName.Contains("imvuqualityagent"))
                 {
                     if (proc.MainWindowHandle != IntPtr.Zero &&
-                        !proc.MainWindowTitle.StartsWith("[#]")) //don't send to Sandboxie
+                        proc.MainWindowTitle != null &&
+                        proc.MainWindowTitle.StartsWith("[#]")) //don't send to Sandboxie
                     {
                         imvuProcs.Add(proc);
                     }
                 }
             }
 
-            if (imvuProcs.Count == 0) { return false; }
-            if (imvuProcs.Count == 1) {
-                _imvuChatWindow = imvuProcs[0].MainWindowHandle;
-                return true; 
-            }
-            return false;
+            if (imvuProcs.Count == 0) return false;
+            _imvuChatWindow = imvuProcs[0].MainWindowHandle;
+            return true;
         }
 
         public static void Paste()
@@ -83,8 +80,6 @@ namespace Triggerless.TriggerBot.Models
             lock (_kbdLock)
             {
                 var currentClipboardText = Clipboard.GetText();
-                //const string method = "copy-paste";
-                //const string method = "text-entry";
                 _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_A);
                 _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_X);
                 string existingChatText = Clipboard.GetText();
@@ -93,25 +88,11 @@ namespace Triggerless.TriggerBot.Models
                     existingChatText = string.Empty;
                 }
 
-                /*
-                if (method == "copy-paste")
-                {
-                    // Change the way we send text to IMVU chat to avoid 'ax' being sent when
-                    //_sim.Keyboard.TextEntry(text);
-
-                    Clipboard.SetText(text);
-                    _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_V);
-                } 
-                else
-                {
-                */
-                    _sim.Keyboard.TextEntry(text);
-                //}
+                _sim.Keyboard.TextEntry(text);
                 _sim.Keyboard.KeyPress(KeyCode.RETURN);
 
                 if (!string.IsNullOrEmpty(existingChatText))
                 {
-//                    Clipboard.SetText(existingChatText);
                     _sim.Keyboard.ModifiedKeyStroke(KeyCode.LCONTROL, KeyCode.VK_V);
                 }
 
